@@ -62,6 +62,30 @@ End Code
 Else
     @<div class="container">
         <b>Total Payment</b>
+    @If dt.Rows.Count>0 Then
+        @<table>
+    <tr>
+        <td>Dr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
+        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;Cr. Witt-holding Tax (Company)&nbsp;&nbsp;&nbsp;</td>
+        <td></td>
+        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;Cr. Witt-holding Tax (Customer)&nbsp;&nbsp;&nbsp;</td>
+        <td></td>
+        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;Cr. Cash Payment&nbsp;&nbsp;&nbsp;</td>
+        <td></td>
+        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
+    </tr>
+</table>
+    End If        
         <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
             <thead>
                 <tr>
@@ -85,7 +109,7 @@ Else
             </tbody>
         </table>
     </div>
-    @msg
+    @sql
     @Code
         sql = sqlHead & "
 declare @@paynet float;
@@ -110,31 +134,52 @@ select @@paynet+@@unduevatbuy as CreditDebtSum,@@unduevatbuy as DebitVatBuy,@@pa
         End If
     End Code
     @<div class="container">
-        <b>Total Payables</b>
-        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-            <thead>
-                <tr>
+    <b>Total Payables</b>
+    @If dt.Rows.Count > 0 Then
+        @<table>
+    <tr>
+        <td>Dr. Accrue Expenses&nbsp;&nbsp;&nbsp;</td>
+        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
+        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
+        <td></td>
+        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+    </tr>
+</table>
+    Else
+        @msg
+    End If
+   <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+        <thead>
+            <tr>
+                @For each dc As Data.DataColumn In dt.Columns
+                    @<th>@dc.ColumnName</th>
+                Next
+            </tr>
+        </thead>
+        <tbody>
+            @For Each dr As Data.DataRow In dt.Rows
+                @<tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        @<th>@dc.ColumnName</th>
+                        If Not IsDBNull(dr(dc.ColumnName)) Then
+                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                        Else
+                            @<td></td>
+                        End If
                     Next
                 </tr>
-            </thead>
-            <tbody>
-                @For Each dr As Data.DataRow In dt.Rows
-                    @<tr>
-                        @For each dc As Data.DataColumn In dt.Columns
-                            If Not IsDBNull(dr(dc.ColumnName)) Then
-                                @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                            Else
-                                @<td></td>
-                            End If
-                        Next
-                    </tr>
-                Next
-            </tbody>
-        </table>
-    </div>
-    @msg
+            Next
+        </tbody>
+    </table>
+</div>
+    @sql
     @code
         sql = sqlHead & "
 select sum(TotalCharge) as TotalCreditIncome,
@@ -156,31 +201,62 @@ and DocDate>=@@datefrom and DocDate<=@@dateto
         End If
     End Code
     @<div class="container">
-        <b>Total Receivables</b>
-        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-            <thead>
-                <tr>
+    <b>Total Receivables</b>
+    @If dt.Rows.Count > 0 Then
+        @<table>
+            <tr>
+                <td>Dr. Account Receivables-Advance&nbsp;&nbsp;&nbsp;</td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Dr. Account Receivables-Service&nbsp;&nbsp;&nbsp;</td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Undue Output Vat&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Sales Revenue&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
+            </tr>
+        </table>
+    Else
+        @msg
+    End If
+    <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+        <thead>
+            <tr>
+                @For each dc As Data.DataColumn In dt.Columns
+                    @<th>@dc.ColumnName</th>
+                Next
+            </tr>
+        </thead>
+        <tbody>
+            @For Each dr As Data.DataRow In dt.Rows
+                @<tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        @<th>@dc.ColumnName</th>
+                        If Not IsDBNull(dr(dc.ColumnName)) Then
+                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                        Else
+                            @<td></td>
+                        End If
                     Next
                 </tr>
-            </thead>
-            <tbody>
-                @For Each dr As Data.DataRow In dt.Rows
-                    @<tr>
-                        @For each dc As Data.DataColumn In dt.Columns
-                            If Not IsDBNull(dr(dc.ColumnName)) Then
-                                @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                            Else
-                                @<td></td>
-                            End If
-                        Next
-                    </tr>
-                Next
-            </tbody>
-        </table>
-    </div>
-    @msg
+            Next
+        </tbody>
+    </table>
+</div>
+    @sql
     @Code
         sql = sqlHead & "
 declare @@netserv float;
@@ -214,31 +290,62 @@ and rh.ReceiptDate>=@@datefrom and rh.ReceiptDate<=@@dateto
 
     End Code
     @<div class="container">
-        <b>Total Received</b>
-        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-            <thead>
-                <tr>
+    <b>Total Received</b>
+    @If dt.Rows.Count > 0 Then
+        @<table>
+            <tr>
+                <td>Dr. Cash Received&nbsp;&nbsp;&nbsp;</td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Dr. Output Tax&nbsp;&nbsp;&nbsp;</td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Account Receivables-Service&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(4)).ToString("#,##0.00")</td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Account Receivables-Advance&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(Convert.ToDouble(dt.Rows(0)(6)) + Convert.ToDouble(dt.Rows(0)(7))).ToString("#,##0.00")</td>
+            </tr>
+        </table>
+    Else
+        @msg
+    End If
+    <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+        <thead>
+            <tr>
+                @For each dc As Data.DataColumn In dt.Columns
+                    @<th>@dc.ColumnName</th>
+                Next
+            </tr>
+        </thead>
+        <tbody>
+            @For Each dr As Data.DataRow In dt.Rows
+                @<tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        @<th>@dc.ColumnName</th>
+                        If Not IsDBNull(dr(dc.ColumnName)) Then
+                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                        Else
+                            @<td></td>
+                        End If
                     Next
                 </tr>
-            </thead>
-            <tbody>
-                @For Each dr As Data.DataRow In dt.Rows
-                    @<tr>
-                        @For each dc As Data.DataColumn In dt.Columns
-                            If Not IsDBNull(dr(dc.ColumnName)) Then
-                                @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                            Else
-                                @<td></td>
-                            End If
-                        Next
-                    </tr>
-                Next
-            </tbody>
-        </table>
-    </div>
-    @msg
+            Next
+        </tbody>
+    </table>
+</div>
+    @sql
     @Code
         sql = sqlHead & "
 select
@@ -272,29 +379,61 @@ and isnull(cd.VenderbillingNo,'')=''
         End If
     End Code
     @<div class="container">
-        <b>Total Cost</b>
-        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-            <thead>
-                <tr>
+    <b>Total Cost</b>
+    @If dt.Rows.Count > 0 Then
+        @<table>
+            <tr>
+                <td>Dr. Sales Cost&nbsp;&nbsp;&nbsp;</td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Dr. Input Vat&nbsp;&nbsp;&nbsp;</td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(Convert.ToDouble(dt.Rows(0)(3)) + Convert.ToDouble(dt.Rows(0)(4))).ToString("#,##0.00")</td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
+                <td></td>
+                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
+            </tr>
+        </table>
+    Else
+        @msg
+    End If
+    <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+        <thead>
+            <tr>
+                @For each dc As Data.DataColumn In dt.Columns
+                    @<th>@dc.ColumnName</th>
+                Next
+            </tr>
+        </thead>
+        <tbody>
+            @For Each dr As Data.DataRow In dt.Rows
+                @<tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        @<th>@dc.ColumnName</th>
+                        If Not IsDBNull(dr(dc.ColumnName)) Then
+                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                        Else
+                            @<td></td>
+                        End If
                     Next
                 </tr>
-            </thead>
-            <tbody>
-                @For Each dr As Data.DataRow In dt.Rows
-                    @<tr>
-                        @For each dc As Data.DataColumn In dt.Columns
-                            If Not IsDBNull(dr(dc.ColumnName)) Then
-                                @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                            Else
-                                @<td></td>
-                            End If
-                        Next
-                    </tr>
-                Next
-            </tbody>
-        </table>
-    </div>
-    @msg
+            Next
+        </tbody>
+    </table>
+</div>
+    @sql
         End If
