@@ -1,9 +1,21 @@
 ﻿@Code
     ViewData("Title") = "LinkJob"
     Dim dbName = "job_ace"
+    If Not Request.QueryString("DB") Is Nothing Then
+        dbName = Request.QueryString("DB")
+    End If
     Dim branch = "00"
+    If Not Request.QueryString("Branch") Is Nothing Then
+        branch = Request.QueryString("Branch")
+    End If
     Dim datefrom = "2020-01-01"
+    If Not Request.QueryString("DateFrom") Is Nothing Then
+        datefrom = Request.QueryString("DateFrom")
+    End If
     Dim dateto = "2025-02-28"
+    If Not Request.QueryString("DateTo") Is Nothing Then
+        dateto = Request.QueryString("DateTo")
+    End If
     Dim sqlHead = "
 declare @@datefrom date='{1}';
 declare @@dateto date='{2}';
