@@ -22,6 +22,29 @@ Public Class CUtil
     Public Function IsConnect() As Boolean
         Return isConn
     End Function
+    Public Function GetDouble(o As Object) As Double
+        Try
+            Return Convert.ToDouble(o)
+        Catch ex As Exception
+            Return 0
+        End Try
+    End Function
+    Public Function ExecuteSQL(str As String) As String
+        msg = "OK"
+        Try
+            If cn.State <> ConnectionState.Open Then
+                cn.Open()
+            End If
+            Using cm = New SqlCommand(str, cn)
+                cm.CommandType = CommandType.Text
+                cm.ExecuteNonQuery()
+            End Using
+        Catch ex As Exception
+            msg = ex.Message
+        End Try
+        cn.Close()
+        Return msg
+    End Function
     Public Function GetDataFromSQL(str As String) As DataTable
         msg = ""
         Dim dt As New DataTable

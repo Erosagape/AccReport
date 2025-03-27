@@ -16,6 +16,317 @@
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateto = Request.QueryString("DateTo")
     End If
+    Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
+    Dim obj = New AccReport.CUtil(cnnStr)
+    Dim msg As String = ""
+    Dim sqlAlterView = "
+ALTER procedure [dbo].[Insert_SIToJournal_ByDate]
+(
+@@datefrom date,
+@@dateto date,
+@@userid nvarchar(50)
+)
+as
+begin
+declare @@maxid int;
+set @@maxid=(SELECT MAX(EntryId) as t from Acc_JournalHD)
+
+SET IDENTITY_INSERT Acc_JournalHD ON
+
+insert into Acc_JournalHD(EntryID,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
+select @@maxid+ROW_NuMBER() OVER(ORDER BY h.AccDocNo) as EntryID,
+h.AccDocNo,h.AccBatchDate  as EntryDate,
+h.AccEffectiveDate,@@userid as UserID,
+h.DocRefNo,0,0
+from vAR_H h
+where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
+
+SET IDENTITY_INSERT Acc_JournalHD OFF
+
+insert into Acc_JournalDT
+select * from (
+select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
+ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
+b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
+(
+select
+dbo.GetAccConfig('AR_CONFIG','Sales') as AccCode,
+h.AccDocNo,h.TotalAmount+h.TotalVat as Debit,0 as Credit,
+h.PartyName as AccDesc,h.DocRefNo as RefNo
+from vAR_H h
+where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+union all
+select
+dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') as AccCode,
+h.AccDocNo,0 as Debit,h.TotalVat as Credit,
+h.PartyName as AccDesc,h.DocRefNo as RefNo
+from vAR_H h
+where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+and h.TotalVat>0
+union all
+select
+d.IncomeAccCode as AccCode,
+d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
+d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+from vAR_D d
+where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
+) a inner join vMas_AccCode b on a.AccCode=b.AccCode
+) tb
+where tb.EntryId not in(select EntryID from Acc_JournalDT)
+
+update a
+set a.TotalDebit=b.sumA,a.TotalCredit=b.sumb
+from Acc_JournalHD a inner join
+(select EntryId,sum(Debit) sumA,sum(Credit) sumb from Acc_JournalDT  group by EntryID) b
+on a.EntryID=b.EntryID
+where a.EffectiveDate>=@@datefrom and a.EffectiveDate<=@@dateto
+
+update a set a.AccPostDate=b.EntryDate,a.DocStatus=2
+from Acc_TransactionHD a
+inner join Acc_JournalHD b
+on a.AccDocNo=b.JournalNo
+where a.DocStatus=1
+end
+"
+    msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
+
+    sqlAlterView = "
+ALTER procedure [dbo].[Insert_PIToJournal_ByDate]
+(
+@@datefrom date,
+@@dateto date,
+@@userid nvarchar(50)
+)
+as
+begin
+declare @@maxid int;
+set @@maxid=(SELECT MAX(EntryId) as t from Acc_JournalHD)
+
+SET IDENTITY_INSERT Acc_JournalHD ON
+
+insert into Acc_JournalHD(EntryID,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
+select @@maxid+ROW_NuMBER() OVER(ORDER BY h.AccDocNo) as EntryID,
+h.AccDocNo,h.AccBatchDate  as EntryDate,
+h.AccEffectiveDate,@@userid as UserID,
+h.DocRefNo,0,0
+from vAP_H h
+where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
+
+SET IDENTITY_INSERT Acc_JournalHD OFF
+
+insert into Acc_JournalDT
+select * from (
+select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
+ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
+b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
+(
+    select
+    dbo.GetAccConfig('AP_CONFIG','Purchase') as AccCode,
+    h.AccDocNo,0 as Debit,h.TotalAmount+h.TotalVat as Credit,
+    h.PartyName as AccDesc,h.DocRefNo as RefNo
+    from vAP_H h
+    where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+        union all
+        select
+        dbo.GetAccConfig('VAT_CONFIG','UndueInputVat') as AccCode,
+        h.AccDocNo,h.TotalVat as Debit,0 as Credit,
+        h.PartyName as AccDesc,h.DocRefNo as RefNo
+        from vAP_H h
+        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+            and h.TotalVat>0
+            union all
+            select
+            d.AssetAccCode as AccCode,
+            d.AccDocNo,d.TotalAmount as Debit,0 as Credit,
+            d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+            from vAP_D d
+            where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
+) a inner join vMas_AccCode b on a.AccCode=b.AccCode
+) tb
+where tb.EntryId not in(select EntryID from Acc_JournalDT)
+
+update a
+set a.TotalDebit=b.sumA,a.TotalCredit=b.sumb
+from Acc_JournalHD a inner join
+(select EntryId,sum(Debit) sumA,sum(Credit) sumb from Acc_JournalDT  group by EntryID) b
+on a.EntryID=b.EntryID
+where a.EffectiveDate>=@@datefrom and a.EffectiveDate<=@@dateto
+
+update a set a.AccPostDate=b.EntryDate,a.DocStatus=2
+from Acc_TransactionHD a
+inner join Acc_JournalHD b
+on a.AccDocNo=b.JournalNo
+where a.DocStatus=1
+
+end
+"
+    msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
+
+    sqlAlterView = "
+ALTER procedure [dbo].[Insert_ProductsCodeFromJob]
+as
+begin
+--ลบก่อน
+delete a
+from dbo.Mas_Products a inner join [" + dbName + "].dbo.Job_SrvSingle s 
+on a.ProductCode=s.SICode 
+--รหัสค่าบริการที่คิด VAT หัก 3 เข้ากลุ่มสินค้า SV1
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV1'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=3
+--รหัสค่าบริการที่ไม่คิด VAT หัก 1 เข้ากลุ่มสินค้า SV2 (ค่าขนส่งต่างๆ)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV2'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=1
+--รหัสค่าบริการที่คิด VAT และ หัก 1 เข้ากลุ่ม SV3 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV3'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=1
+--รหัสค่าบริการที่คิด VAT และ ไม่มีหัก  เข้ากลุ่ม SV4 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV4'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=0
+--รหัสค่าบริการที่ไม่คิด VAT และ หัก 3 เข้ากลุ่ม SV5 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV5'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=3
+--รหัสค่าบริการที่ไม่คิด VAT และ ไม่หักเลยเข้ากลุ่ม SV6 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV6'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=0
+--รหัสค่าใช้จ่ายต้นทุนที่คิด VAT หัก 3 เข้ากลุ่ม CSV
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CSV'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่คิด VAT หัก 1 เข้ากลุ่ม CTR
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CTR'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND s.Rate50Tavi=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่คิด VAT ไม่ได้หัก 1 เข้ากลุ่ม CSN
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CSN'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND NOT s.Rate50Tavi=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่มีใบเสร็จเข้ากลุ่ม CEX
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CEX'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=0 and s.IsExpense=1
+--รหัสเงินค่าใช้จ่ายของลูกค้าเข้า ADV
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','ADV'
+from [" + dbName + "].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsCredit=1 and s.IsExpense=0
+end
+"
+    msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
+
+    sqlAlterView = "
+alter view vRV_LinkJob 
+as 
+select BranchCode,DocNo,ItemNo,CustTaxID,CustBranch,custName,SICode,AmtCharge,AmtAdvance,ReceiptNet,ReceiptWht,ReceiptNo,ReceiptDAte,ReceiptItemNo,
+case when CountAdvPay>0 then 1 else 0 end as IsFromAdv,
+case when CountAdvPay=0 and CountBillPay>0 then 1 else 0 end as IsFromAP,
+case when CountAdvPay=0 and CountBillPay=0 then 1 else 0 end as IsAccrue
+from (
+select BranchCode,custTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net-Amt50Tavi as ReceiptNet,Amt50Tavi as ReceiptWht,
+count(*) as countRec,
+sum(case when isnull(AdvNO,'')<>'' then 1 else 0 end) as CountAdvPay,
+sum(case when not isnull(AdvNO,'')<>'' and isnull(VenderBillingNo,'')<>'' then 1 else 0 end) as CountBillPay,
+sum(case when not isnull(AdvNO,'')<>'' and not isnull(VenderBillingNo,'')<>'' then 1 else 0 end) as CountAP
+from (
+	select rh.BillToCustCode,rh.BillToCustBranch,isnull(cu.NameThai,'-') as CustName,
+	isnull(cu.TaxNumber,'-') as CustTaxID,isnull(cu.Branch,'-') as CustBranch,
+	rd.InvoiceNo as DocNo,rd.InvoiceItemNo as ItemNo,id.AmtCharge,id.AmtAdvance,rd.SICode,cd.AdvNO,cd.VenderBillingNo,rd.ReceiptNo,rh.ReceiptDate,rd.ItemNo as ReceiptItemNo,rd.Net,rd.Amt50Tavi,
+	cd.ClrNo,cd.JobNo,rh.BranchCode 
+	from [" + dbName + "].dbo.Job_ReceiptDetail rd
+	inner join [" + dbName + "].dbo.Job_ReceiptHeader rh
+	on rd.BranchCode=rh.BranchCode and rd.ReceiptNo=rh.ReceiptNo
+	left join [" + dbName + "].dbo.Job_InvoiceDetail id 
+	on rd.BranchCode=id.BranchCode and rd.InvoiceNo=id.DocNo and rd.InvoiceItemNo=id.ItemNo 	
+	left join [" + dbName + "].dbo.Mas_Company cu
+	on rh.BillToCustCode=cu.CustCode and rh.BillToCustBranch=cu.Branch
+	left join 
+	(
+		select a.* from [" + dbName + "].dbo.Job_ClearDetail a
+		inner join [" + dbName + "].dbo.Job_ClearHeader b
+		on a.ClrNo=b.ClrNO and a.BranchCode=b.BranchCode
+		where b.DocStatus<>99
+	) cd 
+	on rd.BranchCode=cd.BranchCode and rd.InvoiceNo=cd.LinkBillNo and rd.InvoiceItemNo=cd.LinkItem 	
+	and rd.SICode=cd.SICode 
+	where not rh.CancelProve<>''
+) r
+group by BranchCode,CustTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net ,Amt50Tavi
+) t
+"
+    msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
+
     Dim sqlHead = "
 declare @@datefrom date='{1}';
 declare @@dateto date='{2}';
@@ -43,49 +354,68 @@ round(@@whdcomp,2) as CreditWhtComp,
 round(@@whdcust,2) as CreditWhtCust,
 round(@@netadv,2) as CreditCashOut
 "
-    Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
-    Dim obj = New AccReport.CUtil(cnnStr)
     sql = String.Format(sql, branch, datefrom, dateto)
     Dim dt = obj.GetDataFromSQL(sql)
-    Dim msg As String = "Ready"
-    Dim bComplete = False
-    If obj.Message = "" Then
-        bComplete = True
-        msg = dt.Rows.Count
-    Else
-        msg = obj.Message
-    End If
+
+    Dim bComplete = obj.IsConnect()
 End Code
 <h2>Link Job</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            Database : <input type="text" id="txtDatabase" value="@dbName" />
+        </div>
+        <div class="col-md-3">
+            Date From : <input type="date" id="txtDateFrom" value="@datefrom" />
+        </div>
+        <div class="col-md-3">
+            To : <input type="date" id="txtDateTo" value="@dateto" />
+        </div>
+        <div class="col-md-3">
+            Branch : <input type="text" id="txtBranch" value="@branch" />            
+        </div>
+    </div>
+</div>
+<input type="button" onclick="RefreshPage()" value="Submit" />
 @If Not bComplete Then
     @msg
 Else
+    @msg
+    @Code
+        If obj.Message = "" Then
+            msg = dt.Rows.Count
+        Else
+            msg = obj.Message
+        End If
+    End Code
     @<div class="container">
         <b>Total Payment</b>
-    @If dt.Rows.Count>0 Then
-        @<table>
-    <tr>
-        <td>Dr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
-        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>&nbsp;&nbsp;&nbsp;Cr. Witt-holding Tax (Company)&nbsp;&nbsp;&nbsp;</td>
-        <td></td>
-        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
-    </tr>
-    <tr>
-        <td>&nbsp;&nbsp;&nbsp;Cr. Witt-holding Tax (Customer)&nbsp;&nbsp;&nbsp;</td>
-        <td></td>
-        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
-    </tr>
-    <tr>
-        <td>&nbsp;&nbsp;&nbsp;Cr. Cash Payment&nbsp;&nbsp;&nbsp;</td>
-        <td></td>
-        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
-    </tr>
-</table>
-    End If        
+        @If dt.Rows.Count > 0 Then
+            @<table>
+                <tr>
+                    <td>Dr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Witt-holding Tax (Company)&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Witt-holding Tax (Customer)&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Cash Payment&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
+                </tr>
+            </table>
+        Else
+            @msg
+        End If
         <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
             <thead>
                 <tr>
@@ -99,7 +429,7 @@ Else
                     @<tr>
                         @For each dc As Data.DataColumn In dt.Columns
                             If Not IsDBNull(dr(dc.ColumnName)) Then
-                                @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
                             Else
                                 @<td></td>
                             End If
@@ -109,7 +439,6 @@ Else
             </tbody>
         </table>
     </div>
-    @sql
     @Code
         sql = sqlHead & "
 declare @@paynet float;
@@ -134,52 +463,52 @@ select @@paynet+@@unduevatbuy as CreditDebtSum,@@unduevatbuy as DebitVatBuy,@@pa
         End If
     End Code
     @<div class="container">
-    <b>Total Payables</b>
-    @If dt.Rows.Count > 0 Then
-        @<table>
-    <tr>
-        <td>Dr. Accrue Expenses&nbsp;&nbsp;&nbsp;</td>
-        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
-        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
-        <td></td>
-        <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
-    </tr>
-</table>
-    Else
-        @msg
-    End If
-   <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-        <thead>
-            <tr>
-                @For each dc As Data.DataColumn In dt.Columns
-                    @<th>@dc.ColumnName</th>
-                Next
-            </tr>
-        </thead>
-        <tbody>
-            @For Each dr As Data.DataRow In dt.Rows
-                @<tr>
+        <b>Total Payables</b>
+        @If dt.Rows.Count > 0 Then
+            @<table>
+                <tr>
+                    <td>Dr. Accrue Expenses&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+                </tr>
+            </table>
+        Else
+            @msg
+
+        End If
+        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+            <thead>
+                <tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        If Not IsDBNull(dr(dc.ColumnName)) Then
-                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                        Else
-                            @<td></td>
-                        End If
+                        @<th>@dc.ColumnName</th>
                     Next
                 </tr>
-            Next
-        </tbody>
-    </table>
-</div>
-    @sql
+            </thead>
+            <tbody>
+                @For Each dr As Data.DataRow In dt.Rows
+                    @<tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            If Not IsDBNull(dr(dc.ColumnName)) Then
+                                @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                            Else
+                                @<td></td>
+                            End If
+                        Next
+                    </tr>
+                Next
+            </tbody>
+        </table>
+    </div>
     @code
         sql = sqlHead & "
 select sum(TotalCharge) as TotalCreditIncome,
@@ -201,62 +530,61 @@ and DocDate>=@@datefrom and DocDate<=@@dateto
         End If
     End Code
     @<div class="container">
-    <b>Total Receivables</b>
-    @If dt.Rows.Count > 0 Then
-        @<table>
-            <tr>
-                <td>Dr. Account Receivables-Advance&nbsp;&nbsp;&nbsp;</td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Dr. Account Receivables-Service&nbsp;&nbsp;&nbsp;</td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Undue Output Vat&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
-            </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Sales Revenue&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
-            </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
-            </tr>
-        </table>
-    Else
-        @msg
-    End If
-    <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-        <thead>
-            <tr>
-                @For each dc As Data.DataColumn In dt.Columns
-                    @<th>@dc.ColumnName</th>
-                Next
-            </tr>
-        </thead>
-        <tbody>
-            @For Each dr As Data.DataRow In dt.Rows
-                @<tr>
+        <b>Total Receivables</b>
+        @If dt.Rows.Count > 0 Then
+            @<table>
+                <tr>
+                    <td>Dr. Account Receivables-Advance&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Dr. Account Receivables-Service&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Undue Output Vat&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Sales Revenue&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
+                </tr>
+            </table>
+            Else
+            @msg
+            End If
+        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+            <thead>
+                <tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        If Not IsDBNull(dr(dc.ColumnName)) Then
-                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                        Else
-                            @<td></td>
-                        End If
+                        @<th>@dc.ColumnName</th>
                     Next
                 </tr>
-            Next
-        </tbody>
-    </table>
-</div>
-    @sql
+            </thead>
+            <tbody>
+                @For Each dr As Data.DataRow In dt.Rows
+                    @<tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            If Not IsDBNull(dr(dc.ColumnName)) Then
+                                @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                            Else
+                                @<td></td>
+                            End If
+                        Next
+                    </tr>
+                Next
+            </tbody>
+        </table>
+    </div>
     @Code
         sql = sqlHead & "
 declare @@netserv float;
@@ -266,18 +594,24 @@ declare @@rcvadv float;
 declare @@rcvap float;
 declare @@custwht float;
 
-select @@netserv=sum(ReceiptNet),@@compwht=sum(ReceiptWht),@@rcvserv=sum(ReceiptNet+ReceiptWht) from vRV_LinkJob where amtCharge>0
-select @@rcvadv=sum(case when IsFromAdv=1 then ReceiptNet else 0 end),@@rcvap=sum(case when IsFromAdv=0 then ReceiptNet else 0 end),@@custwht=sum(ReceiptWht)
-from vRV_LinkJob where amtAdvance>0
+select @@netserv=sum(ReceiptNet),@@compwht=sum(ReceiptWht),
+@@rcvserv=sum(ReceiptNet+ReceiptWht) from vRV_LinkJob where amtCharge>0
+and ReceiptDate>=@@datefrom and ReceiptDate<=@@dateto
 
-select sum(rd.Net) as DebitCal,@@netserv +@@rcvadv+@@rcvap+@@custwht as DebitCash,@@compwht as DebitWhtComp,@@netserv +@@rcvadv+@@rcvap+@@custwht+@@compwht as DebitSum
+select @@rcvadv=sum(case when IsFromAdv=1 then ReceiptNet else 0 end),
+@@rcvap=sum(case when IsFromAdv=0 then ReceiptNet else 0 end),@@custwht=sum(ReceiptWht)
+from vRV_LinkJob where amtAdvance>0
+and ReceiptDate>=@@datefrom and ReceiptDate<=@@dateto
+
+select sum(rd.Net) as DebitCal,isnull(@@netserv,0)+isnull(@@rcvadv,0)+isnull(@@rcvap,0)+isnull(@@custwht,0) as DebitCash,@@compwht as DebitWhtComp,
+isnull(@@netserv,0)+isnull(@@rcvadv,0)+isnull(@@rcvap,0)+isnull(@@custwht,0)+isnull(@@compwht,0) as DebitSum
 ,@@rcvserv as CreditServ,@@rcvadv as CreditAdv,@@rcvap as CreditAP,@@custwht as CreditCustWht
 from [" + dbName + "].dbo.Job_ReceiptDetail rd
 inner join [" + dbName + "].dbo.Job_ReceiptHeader rh
 on rd.BranchCode=rh.BranchCode and rd.ReceiptNo=rh.ReceiptNo
-where rh.BranchCode=@@branchcode and
-not isnull(rh.CancelProve,'')<>''
+where rh.BranchCode=@@branchcode 
 and rh.ReceiptDate>=@@datefrom and rh.ReceiptDate<=@@dateto
+and not isnull(rh.CancelProve,'')<>''
 "
         sql = String.Format(sql, branch, datefrom, dateto)
         dt = obj.GetDataFromSQL(sql)
@@ -290,62 +624,61 @@ and rh.ReceiptDate>=@@datefrom and rh.ReceiptDate<=@@dateto
 
     End Code
     @<div class="container">
-    <b>Total Received</b>
-    @If dt.Rows.Count > 0 Then
-        @<table>
-            <tr>
-                <td>Dr. Cash Received&nbsp;&nbsp;&nbsp;</td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Dr. Output Tax&nbsp;&nbsp;&nbsp;</td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Account Receivables-Service&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(4)).ToString("#,##0.00")</td>
-            </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Account Receivables-Advance&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
-            </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(Convert.ToDouble(dt.Rows(0)(6)) + Convert.ToDouble(dt.Rows(0)(7))).ToString("#,##0.00")</td>
-            </tr>
-        </table>
-    Else
-        @msg
-    End If
-    <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-        <thead>
-            <tr>
-                @For each dc As Data.DataColumn In dt.Columns
-                    @<th>@dc.ColumnName</th>
-                Next
-            </tr>
-        </thead>
-        <tbody>
-            @For Each dr As Data.DataRow In dt.Rows
-                @<tr>
+        <b>Total Received</b>
+        @If dt.Rows.Count > 0 Then
+            @<table>
+                <tr>
+                    <td>Dr. Cash Received&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Dr. Output Tax&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Receivables-Service&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(4)).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Receivables-Advance&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(obj.GetDouble(dt.Rows(0)(6)) + obj.GetDouble(dt.Rows(0)(7))).ToString("#,##0.00")</td>
+                </tr>
+            </table>
+            Else
+            @msg
+            End If
+        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+            <thead>
+                <tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        If Not IsDBNull(dr(dc.ColumnName)) Then
-                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                        Else
-                            @<td></td>
-                        End If
+                        @<th>@dc.ColumnName</th>
                     Next
                 </tr>
-            Next
-        </tbody>
-    </table>
-</div>
-    @sql
+            </thead>
+            <tbody>
+                @For Each dr As Data.DataRow In dt.Rows
+                    @<tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            If Not IsDBNull(dr(dc.ColumnName)) Then
+                                @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                            Else
+                                @<td></td>
+                            End If
+                        Next
+                    </tr>
+                Next
+            </tbody>
+        </table>
+    </div>
     @Code
         sql = sqlHead & "
 select
@@ -379,61 +712,69 @@ and isnull(cd.VenderbillingNo,'')=''
         End If
     End Code
     @<div class="container">
-    <b>Total Cost</b>
-    @If dt.Rows.Count > 0 Then
-        @<table>
-            <tr>
-                <td>Dr. Sales Cost&nbsp;&nbsp;&nbsp;</td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Dr. Input Vat&nbsp;&nbsp;&nbsp;</td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(Convert.ToDouble(dt.Rows(0)(3)) + Convert.ToDouble(dt.Rows(0)(4))).ToString("#,##0.00")</td>
-            </tr>
+        <b>Total Cost</b>
+        @If dt.Rows.Count > 0 Then
+            @<table>
+                <tr>
+                    <td>Dr. Sales Cost&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Dr. Input Vat&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(obj.GetDouble(dt.Rows(0)(3)) + obj.GetDouble(dt.Rows(0)(4))).ToString("#,##0.00")</td>
+                </tr>
 
-            <tr>
-                <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
-                <td></td>
-                <td style="text-align:right;">@Convert.ToDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
-            </tr>
-        </table>
-    Else
-        @msg
-    End If
-    <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
-        <thead>
-            <tr>
-                @For each dc As Data.DataColumn In dt.Columns
-                    @<th>@dc.ColumnName</th>
-                Next
-            </tr>
-        </thead>
-        <tbody>
-            @For Each dr As Data.DataRow In dt.Rows
-                @<tr>
+                <tr>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
+                    <td></td>
+                    <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
+                </tr>
+            </table>
+            Else
+            @msg
+           End If
+        <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+            <thead>
+                <tr>
                     @For each dc As Data.DataColumn In dt.Columns
-                        If Not IsDBNull(dr(dc.ColumnName)) Then
-                            @<td style="text-align:right;">@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
-                        Else
-                            @<td></td>
-                        End If
+                        @<th>@dc.ColumnName</th>
                     Next
                 </tr>
-            Next
-        </tbody>
-    </table>
-</div>
-    @sql
-        End If
+            </thead>
+            <tbody>
+                @For Each dr As Data.DataRow In dt.Rows
+                    @<tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            If Not IsDBNull(dr(dc.ColumnName)) Then
+                                @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                            Else
+                                @<td></td>
+                            End If
+                        Next
+                    </tr>
+                Next
+            </tbody>
+        </table>
+    </div>
+End If
+<script type="text/javascript">
+    function RefreshPage() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href="?Form=LinkJob&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
+</script>
