@@ -56,10 +56,11 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute(".")>  _
-        Public ReadOnly Property WebHosting() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist"& _ 
+            " Security Info=False;")>  _
+        Public ReadOnly Property WebConnect() As String
             Get
-                Return CType(Me("WebHosting"),String)
+                Return CType(Me("WebConnect"),String)
             End Get
         End Property
     End Class

@@ -171,6 +171,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Controllers\HomeController.vb" />
+    <Compile Include="Settings.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -214,6 +215,8 @@
     <Content Include="Views\Home\TrialBalance.vbhtml" />
     <Content Include="Views\Home\GeneralLedger.vbhtml" />
     <Content Include="Views\Home\LinkJob.vbhtml" />
+    <Content Include="Views\Home\TransferJob.vbhtml" />
+    <Content Include="Views\Home\CheckJob.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

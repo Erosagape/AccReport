@@ -16,8 +16,9 @@
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateto = Request.QueryString("DateTo")
     End If
-    Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
-    Dim obj = New AccReport.CUtil(cnnStr)
+    'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
+    'Dim obj = New AccReport.CUtil(cnnStr)
+    Dim obj = New AccReport.CUtil()
     Dim msg As String = ""
     Dim sqlAlterView = "
 ALTER procedure [dbo].[Insert_SIToJournal_ByDate]
@@ -696,8 +697,6 @@ on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo
 and cd.BranchCode=a.BranchCode
 inner join [" + dbName + "].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode
-inner join vMas_Product p
-on cd.SICode=p.ProductCode
 where ch.BranchCode=@@branchcode and ch.ClrDate>=@@datefrom and ch.ClrDate<=@@dateto
 and ch.DocStatus<>99 and s.IsExpense=1
 and isnull(cd.VenderbillingNo,'')=''

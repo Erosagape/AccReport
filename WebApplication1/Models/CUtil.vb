@@ -8,6 +8,9 @@ Public Class CUtil
     Public Function Message() As String
         Return msg
     End Function
+    Public Sub New()
+        Me.New(My.Settings.WebConnect)
+    End Sub
     Public Sub New(str As String)
         conn = str
         cn = New SqlConnection(conn)
@@ -29,6 +32,13 @@ Public Class CUtil
             Return 0
         End Try
     End Function
+    Public Function IsDouble(o As Object) As Boolean
+        Try
+            Return Convert.ToDouble(o)
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
     Public Function ExecuteSQL(str As String) As String
         msg = "OK"
         Try
@@ -37,6 +47,7 @@ Public Class CUtil
             End If
             Using cm = New SqlCommand(str, cn)
                 cm.CommandType = CommandType.Text
+                cm.CommandTimeout = 600
                 cm.ExecuteNonQuery()
             End Using
         Catch ex As Exception
@@ -54,6 +65,7 @@ Public Class CUtil
             End If
             Using cm = New SqlCommand(str, cn)
                 cm.CommandType = CommandType.Text
+                cm.CommandTimeout = 600
                 Using da As New SqlDataAdapter(cm)
                     da.Fill(dt)
                 End Using

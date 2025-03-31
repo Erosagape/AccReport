@@ -1,0 +1,125 @@
+﻿@Code
+    ViewData("Title") = "CheckJob"
+    Dim dbName = "job_ace"
+    If Not Request.QueryString("DB") Is Nothing Then
+        dbName = Request.QueryString("DB")
+    End If
+    Dim branch = "00"
+    If Not Request.QueryString("Branch") Is Nothing Then
+        branch = Request.QueryString("Branch")
+    End If
+    Dim datefrom = "2020-01-01"
+    If Not Request.QueryString("DateFrom") Is Nothing Then
+        datefrom = Request.QueryString("DateFrom")
+    End If
+    Dim dateto = "2025-02-28"
+    If Not Request.QueryString("DateTo") Is Nothing Then
+        dateto = Request.QueryString("DateTo")
+    End If
+    'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
+    'Dim obj = New AccReport.CUtil(cnnStr)
+    Dim obj = New AccReport.CUtil()
+    Dim msg As String = ""
+    Dim bConn = obj.IsConnect()
+
+    Dim sqlHead = "
+declare @@datefrom date='{1}';
+declare @@dateto date='{2}';
+declare @@branchcode varchar(3)='{0}';
+"
+    Dim sql = ""
+End Code
+<h2>Check Job</h2>
+@If Not bConn Then
+    @<div class="container">
+        Cannot connect database
+    </div>
+Else
+    sql = sqlHead & "
+select a.AdvNo,round(b.TotalDebit,2),round(b.TotalCredit,2),round(a.TotalAdvance+a.Total50Tavi,2) as TotalAdvance,
+format(a.TotalAdvance+a.Total50Tavi,'0.00'),format(isnull(b.TotalDebit,0),'0.00')
+from [" + dbName + "].dbo.Job_AdvHeader a left join Acc_JournalHD b
+on a.AdvNo=b.JournalNo
+where a.BranchCode=@@branchcode and format(a.TotalAdvance+a.Total50Tavi,'0.00')<>format(isnull(b.TotalDebit,0),'0.00')
+and a.DocStatus<>99 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    Dim dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Advance Incomplete</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName)</td>           
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
+    sql = sqlHead & "
+select c.AccCode,d.AccName,sum(c.Debit) as Debit,sum(c.Credit) as Credit
+from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_JournalHD b
+on a.AdvNo=b.JournalNo
+inner join Acc_JournalDT c
+on b.EntryId=c.EntryId
+inner join Mas_AccCode d on c.AccCode=d.AccCode
+where a.BranchCode=@@branchcode
+and format(a.TotalAdvance+a.Total50Tavi,'0.00')=format(isnull(b.TotalDebit,0),'0.00')
+and a.DocStatus<>99 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
+group by c.AccCode,d.AccName order by c.AccCode
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Advance Posted</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName) &nbsp;&nbsp;&nbsp;</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+                </table>
+        </div>
+    End If
+End If
+

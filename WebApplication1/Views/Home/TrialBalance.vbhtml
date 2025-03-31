@@ -6,8 +6,9 @@
         yy = Request.QueryString("Period")
     End If
     Dim sql = String.Format("select * from vTrial_Balance where Period={0}", yy)
-    Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm8';Persist Security Info=False"
-    Dim obj = New AccReport.CUtil(cnnStr)
+    'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
+    'Dim obj = New AccReport.CUtil(cnnStr)
+    Dim obj = New AccReport.CUtil()
     Dim dt = obj.GetDataFromSQL(sql)
     Dim msg As String = "Ready"
     If obj.Message = "" Then
@@ -33,7 +34,7 @@ End Code
         <tbody>
             @For Each dr In dt.Rows
                 @<tr>
-    <td><a href="/?Form=GeneralLedger&Code=@dr("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@dr("AccCode").ToString()</a></td>
+    <td><a href="?Form=GeneralLedger&Code=@dr("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@dr("AccCode").ToString()</a></td>
     <td>@dr("AccName").ToString()</td>
     <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
     <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
