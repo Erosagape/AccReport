@@ -62,12 +62,12 @@ and a.DocStatus<>99 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
                             @For each dc As Data.DataColumn In dt.Columns
                                 If Not IsDBNull(dr(dc.ColumnName)) Then
                                     If Not obj.IsDouble(dr(dc.ColumnName)) Then
-                                        @<td>@dr(dc.ColumnName)</td>           
+                                        @<td>@dr(dc.ColumnName)</td>
                                     Else
                                         @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
                                     End If
                                 Else
-                                @<td></td>
+                                    @<td></td>
                                 End If
                             Next
                         </tr>
@@ -84,7 +84,6 @@ inner join Acc_JournalDT c
 on b.EntryId=c.EntryId
 inner join Mas_AccCode d on c.AccCode=d.AccCode
 where a.BranchCode=@@branchcode
-and format(a.TotalAdvance+a.Total50Tavi,'0.00')=format(isnull(b.TotalDebit,0),'0.00')
 and a.DocStatus<>99 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 group by c.AccCode,d.AccName order by c.AccCode
 "
@@ -118,7 +117,201 @@ group by c.AccCode,d.AccName order by c.AccCode
                         </tr>
                     Next
                 </tbody>
-                </table>
+            </table>
+        </div>
+    End If
+    'pay-in not transfer completely
+    sql = sqlHead & "
+select a.DocNo,
+b.TotalDebit as TotalDebit,
+b.TotalCredit as TotalCredit,
+c.TotalExpense,b.TotalCredit-c.TotalExpense as Diff
+from [" + dbName + "].dbo.Job_PaymentHeader a left join Acc_JournalHD b
+on a.DocNo=b.JournalNo
+inner join
+(
+select c.BranchCode,c.DocNo,sum(c.Amt-c.AmtDisc+c.AmtVAT) as TotalExpense
+from [" + dbName + "].dbo.Job_PaymentDetail c
+inner join [" + dbName + "].dbo.Job_SrvSingle s
+on c.SICode=s.SICode
+where s.IsExpense=1
+group by c.BranchCode,c.DocNo
+) c on a.BranchCode=c.BranchCode and a.DocNo=c.DocNo
+where a.BranchCode=@@branchcode and not isnull(a.CancelProve,'')<>''
+and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
+and format(c.TotalExpense,'0.00')<>format(isnull(b.TotalCredit,0),'0.00')
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Pay-in Incomplete</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName)</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
+    'payin completed
+    sql = sqlHead & "
+select c.AccCode,d.AccName,sum(c.Debit) as Debit,sum(c.Credit) as Credit
+from [" + dbName + "].dbo.Job_PaymentHeader a inner join Acc_JournalHD b
+on a.DocNo=b.JournalNo
+inner join Acc_JournalDT c
+on b.EntryId=c.EntryId
+inner join Mas_AccCode d on c.AccCode=d.AccCode
+where a.BranchCode=@@branchcode and not isnull(a.CancelProve,'')<>''
+and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
+group by c.AccCode,d.AccName order by c.AccCode
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Pay-In Posted</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName) &nbsp;&nbsp;&nbsp;</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
+    sql = sqlHead & "
+select a.*,b.TotalAmt from (
+select DocNo,h.BillToCustCode,NameThai,
+TotalCharge,TotalAdvance
+from [" + dbName + "].dbo.Job_InvoiceHeader h
+left join [" + dbName + "].dbo.Mas_Company c
+on h.BillToCustCode=c.CustCode and h.BillToCustBranch=c.Branch
+where h.BranchCode=@@branchcode and not isnull(cancelprove,'')<>''
+and DocDate>=@@datefrom and DocDate<=@@dateto
+) a left join
+(
+select accdocno,sum(Amount) TotalAmt from vTransaction_All
+where AccDocType='SI'
+group by accdocno
+) b
+on a.DocNo=b.AccDocNo
+where round(a.TotalCharge+a.TotalAdvance,3)-round(b.TotalAmt,3)<>0 or b.accdocno is null
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Invoice Incomplete</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName)</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
+    sql = sqlHead & "
+select c.AccCode,d.AccName,sum(c.Debit) as Debit,sum(c.Credit) as Credit
+from [" + dbName + "].dbo.Job_InvoiceHeader a inner join Acc_JournalHD b
+on a.DocNo=b.JournalNo
+inner join Acc_JournalDT c
+on b.EntryId=c.EntryId
+inner join Mas_AccCode d on c.AccCode=d.AccCode
+where a.BranchCode=@@branchcode and not isnull(a.CancelProve,'')<>''
+and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
+group by c.AccCode,d.AccName order by c.AccCode
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Invoice Posted</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName) &nbsp;&nbsp;&nbsp;</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
         </div>
     End If
 End If

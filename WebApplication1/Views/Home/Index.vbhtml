@@ -9,12 +9,17 @@ End Code
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=LinkJob">Link Job</a>
+            <a href="?Form=LinkJob">Link Job For Creating G/L</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=TransferJob">Transfer Job</a>
+            <a href="?Form=TransferJob">Transfer Job to G/L</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="?Form=CheckJob">Check Job Posted To G/L</a>
         </div>
     </div>
 </div>
