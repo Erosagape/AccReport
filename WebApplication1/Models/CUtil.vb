@@ -47,7 +47,7 @@ Public Class CUtil
             End If
             Using cm = New SqlCommand(str, cn)
                 cm.CommandType = CommandType.Text
-                cm.CommandTimeout = 600
+                cm.CommandTimeout = 1800
                 cm.ExecuteNonQuery()
             End Using
         Catch ex As Exception
@@ -65,7 +65,7 @@ Public Class CUtil
             End If
             Using cm = New SqlCommand(str, cn)
                 cm.CommandType = CommandType.Text
-                cm.CommandTimeout = 600
+                cm.CommandTimeout = 1800
                 Using da As New SqlDataAdapter(cm)
                     da.Fill(dt)
                 End Using

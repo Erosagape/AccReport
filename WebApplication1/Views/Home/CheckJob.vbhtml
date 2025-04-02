@@ -314,5 +314,95 @@ group by c.AccCode,d.AccName order by c.AccCode
             </table>
         </div>
     End If
+    sql = sqlHead & "
+select a.*,b.TotalDebit,b.TotalCredit from
+(
+select rh.ReceiptNo,sum(rd.Net) as TotalReceipt
+from [" + dbName + "].dbo.Job_ReceiptDetail rd
+inner join [" + dbName + "].dbo.Job_ReceiptHeader rh
+on rd.BranchCode=rh.BranchCode and rd.ReceiptNo=rh.ReceiptNo
+where rh.BranchCode=@@branchcode and not isnull(rh.CancelProve,'')<>''
+and rh.ReceiptDate>=@@datefrom and rh.ReceiptDate<=@@dateto
+group by rh.ReceiptNo
+) a left join Acc_JournalHD b on a.ReceiptNo=b.JournalNo
+where FORMAT(a.TotalReceipt,'0.00')<>FORMAT(b.TotalDebit,'0.00') or b.JournalNo is null
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Receipt Incomplete</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName) &nbsp;&nbsp;&nbsp;</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
+    sql = sqlHead & "
+select c.AccCode,d.AccName,sum(c.Debit) as Debit,sum(c.Credit) as Credit
+from [" + dbName + "].dbo.Job_ReceiptHeader a inner join Acc_JournalHD b
+on a.ReceiptNo=b.JournalNo
+inner join Acc_JournalDT c
+on b.EntryId=c.EntryId
+inner join Mas_AccCode d on c.AccCode=d.AccCode
+where a.BranchCode=@@branchcode and not isnull(a.CancelProve,'')<>''
+and a.ReceiptDate>=@@datefrom and a.ReceiptDate<=@@dateto
+group by c.AccCode,d.AccName order by c.AccCode
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Receipt Posted</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName) &nbsp;&nbsp;&nbsp;</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
 End If
 

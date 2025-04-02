@@ -104,13 +104,13 @@ delete c
 from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_JournalHD b
 on a.AdvNo=b.JournalNo
 inner join Acc_JournalDT c on b.EntryID=c.EntryID
-where a.BranchCode=@@branchcode and a.DocStatus<>99
+where a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 
 delete b
 from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_JournalHD b
 on a.AdvNo=b.JournalNo
-where a.BranchCode=@@branchcode and a.DocStatus<>99
+where a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 "
         sql = String.Format(sql, branch, datefrom, dateto)
@@ -198,21 +198,21 @@ delete d
 from [" + dbName + "].dbo.Job_PaymentHeader h
 inner join Acc_TransactionDT d
 on h.DocNo=d.AccDocNo
-where h.BranchCode=@@branchcode and not h.CancelProve<>''
+where h.BranchCode=@@branchcode
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 delete d
 from [" + dbName + "].dbo.Job_PaymentHeader h
 inner join Acc_TransactionHD d
 on h.DocNo=d.AccDocNo
-where h.BranchCode=@@branchcode and not h.CancelProve<>''
+where h.BranchCode=@@branchcode
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 delete d
 from [" + dbName + "].dbo.Job_PaymentHeader h
 inner join Acc_JournalHD d
 on h.DocNo=d.JournalNo
-where  h.BranchCode=@@branchcode and not h.CancelProve<>''
+where  h.BranchCode=@@branchcode
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 delete h
@@ -283,7 +283,6 @@ from [" + dbName + "].dbo.Job_InvoiceHeader h
 inner join Acc_TransactionDT d
 on h.DocNo=d.AccDocNo
 where h.BranchCode=@@branchcode
-and not isnull(h.CancelProve,'')<>''
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 delete d
@@ -291,7 +290,6 @@ from [" + dbName + "].dbo.Job_InvoiceHeader h
 inner join Acc_TransactionHD d
 on h.DocNo=d.AccDocNo
 where h.BranchCode=@@branchcode
-and not isnull(h.CancelProve,'')<>''
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 delete d
@@ -299,7 +297,6 @@ from [" + dbName + "].dbo.Job_InvoiceHeader h
 inner join Acc_JournalHD d
 on h.DocNo=d.JournalNo
 where h.BranchCode=@@branchcode
-and not isnull(h.CancelProve,'')<>''
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 delete h
@@ -358,13 +355,60 @@ EXEC dbo.Insert_SIToJournal_ByDate @@datefrom,@@dateto,@@userid
     End If
 
     If postrc Then
+
+        sql = "
+alter view vRV_LinkJob
+as
+select BranchCode,DocNo,ItemNo,CustTaxID,CustBranch,custName,SICode,AmtCharge,AmtAdvance,ReceiptNet,ReceiptWht,ReceiptNo,ReceiptDAte,ReceiptItemNo,
+case when CountAdvPay>0 then 1 else 0 end as IsFromAdv,
+case when CountAdvPay=0 and CountBillPay>0 then 1 else 0 end as IsFromAP,
+case when CountAdvPay=0 and CountBillPay=0 then 1 else 0 end as IsAccrue
+from (
+select BranchCode,custTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net-Amt50Tavi as ReceiptNet,Amt50Tavi as ReceiptWht,
+count(*) as countRec,
+sum(case when isnull(AdvNO,'')<>'' then 1 else 0 end) as CountAdvPay,
+sum(case when not isnull(AdvNO,'')<>'' and isnull(VenderBillingNo,'')<>'' then 1 else 0 end) as CountBillPay,
+sum(case when not isnull(AdvNO,'')<>'' and not isnull(VenderBillingNo,'')<>'' then 1 else 0 end) as CountAP
+from (
+    select rh.BillToCustCode,rh.BillToCustBranch,isnull(cu.NameThai,'-') as CustName,
+    isnull(cu.TaxNumber,'-') as CustTaxID,isnull(cu.Branch,'-') as CustBranch,
+    rd.InvoiceNo as DocNo,rd.InvoiceItemNo as ItemNo,id.AmtCharge,id.AmtAdvance,rd.SICode,cd.AdvNO,cd.VenderBillingNo,rd.ReceiptNo,rh.ReceiptDate,rd.ItemNo as ReceiptItemNo,rd.Net,rd.Amt50Tavi,
+    cd.ClrNo,cd.JobNo,rh.BranchCode
+    from [" + dbName + "].dbo.Job_ReceiptDetail rd
+    inner join [" + dbName + "].dbo.Job_ReceiptHeader rh
+    on rd.BranchCode=rh.BranchCode and rd.ReceiptNo=rh.ReceiptNo
+    left join [" + dbName + "].dbo.Job_InvoiceDetail id
+    on rd.BranchCode=id.BranchCode and rd.InvoiceNo=id.DocNo and rd.InvoiceItemNo=id.ItemNo
+    left join [" + dbName + "].dbo.Mas_Company cu
+    on rh.BillToCustCode=cu.CustCode and rh.BillToCustBranch=cu.Branch
+    left join
+    (
+    select a.* from [" + dbName + "].dbo.Job_ClearDetail a
+    inner join [" + dbName + "].dbo.Job_ClearHeader b
+    on a.ClrNo=b.ClrNO and a.BranchCode=b.BranchCode
+    where b.DocStatus<>99
+    ) cd
+    on rd.BranchCode=cd.BranchCode and rd.InvoiceNo=cd.LinkBillNo and rd.InvoiceItemNo=cd.LinkItem
+    and rd.SICode=cd.SICode
+    where rh.BranchCode={0} and 
+    rh.ReceiptDate>='{1}' and rh.ReceiptDate<='{2}' and
+    not rh.CancelProve<>''
+) r
+group by BranchCode,CustTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net ,Amt50Tavi
+) t
+"
+        sql = String.Format(sql, branch, datefrom, dateto)
+        msg = obj.ExecuteSQL(sql)
+        @<ul>
+            <li>Prepare View @msg</li>
+        </ul>
+
         sql = sqlHead & "
 delete d
 from [" + dbName + "].dbo.Job_ReceiptHeader h
 inner join Acc_TransactionDT d
 on h.ReceiptNo=d.AccDocNo
 where h.BranchCode=@@branchcode
-and not isnull(h.CancelProve,'')<>''
 and h.ReceiptDate>=@@datefrom and h.ReceiptDate<=@@dateto
 
 delete d
@@ -372,7 +416,6 @@ from [" + dbName + "].dbo.Job_ReceiptHeader h
 inner join Acc_TransactionHD d
 on h.ReceiptNo=d.AccDocNo
 where h.BranchCode=@@branchcode
-and not isnull(h.CancelProve,'')<>''
 and h.ReceiptDate>=@@datefrom and h.ReceiptDate<=@@dateto
 
 delete b
@@ -380,7 +423,6 @@ from [" + dbName + "].dbo.Job_ReceiptHeader a inner join Acc_JournalHD b
 on a.ReceiptNo=b.JournalNo
 where  a.BranchCode=@@branchcode
 and a.ReceiptDate>=@@datefrom and a.ReceiptDate<=@@dateto
-and not a.CancelProve<>''
 
 delete h
 from Acc_JournalDT h
@@ -398,7 +440,7 @@ insert into Acc_TransactionHD
 select h.ReceiptNo,h.ReceiptDate,h.ReceiptDate,
 isnull(c.CustCode,'-'),isnull(c.TaxNumber,'-'),
 isnull(c.NameThai,'-'),CONCAT(isnull(c.TAddress1,''),' ',isnull(c.TAddress2,'')),@@userid,
-'SI',h.ReceiptDate,h.ReceiptDate,1,h.ReceiveRef
+'DO',h.ReceiptDate,h.ReceiptDate,1,h.ReceiveRef
 from [" + dbName + "].dbo.Job_ReceiptHeader h
 left join [" + dbName + "].dbo.Mas_Company c
 on h.BillToCustCode=c.CustCode and h.BillToCustBranch=c.Branch
@@ -426,7 +468,14 @@ on d.SICode=s.SICode
 where h.BranchCode=@@branchcode
 and not isnull(h.CancelProve,'')<>''
 and h.ReceiptDate>=@@datefrom and h.ReceiptDate<=@@dateto
+"
+        sql = String.Format(sql, branch, datefrom, dateto)
+        msg = obj.ExecuteSQL(sql)
+        @<ul>
+            <li>Process Receipt Data @msg</li>
+        </ul>
 
+        sql = sqlHead & "
 set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 
 SET IDENTITY_INSERT Acc_JournalHD ON
@@ -437,9 +486,7 @@ r.ReceiptNo,GETDATE(),r.ReceiptDAte,@@userid,concat(r.CustTaxID,' / ',r.custName
 from vRV_LinkJob r
 inner join vMas_Product p
 on r.SICode=p.ProductCode
-where  r.BranchCode=@@branchcode
-and r.ReceiptNo not in(select JournalNo from Acc_JournalHD)
-and r.ReceiptDAte>=@@datefrom and r.ReceiptDAte<=@@dateto
+where r.ReceiptNo not in(select JournalNo from Acc_JournalHD)
 group by r.ReceiptNo,r.ReceiptDAte,r.CustTaxID,r.custName
 
 SET IDENTITY_INSERT Acc_JournalHD OFF
@@ -455,9 +502,7 @@ a.AccCode,a.AccName,r.DocNo as AccDesc,
 sum(case when r.AmtAdvance>0 then r.ReceiptNet+r.ReceiptWht else r.ReceiptNet end) as Debit,0 as Credit
 from vRV_LinkJob r,
 vMas_AccCode a
-where r.BranchCode=@@branchcode
-and r.ReceiptDAte>=@@datefrom and r.ReceiptDAte<=@@dateto
-and a.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
+where a.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
 group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
 union all
 select r.ReceiptNo,
@@ -465,18 +510,14 @@ p.AssetAccCode,p.AssetAccName,p.ProductName,0,r.ReceiptNet
 from vRV_LinkJob r
 inner join vMas_Product p
 on r.SICode=p.ProductCode
-where  r.BranchCode=@@branchcode
-and r.ReceiptDAte>=@@datefrom and r.ReceiptDAte<=@@dateto
-and r.IsFromAdv=1 and r.AmtAdvance>0
+where r.IsFromAdv=1 and r.AmtAdvance>0
 union all
 select r.ReceiptNo,
 p.AssetAccCode,p.AssetAccName,p.ProductName,0,r.ReceiptNet+r.ReceiptWht
 from vRV_LinkJob r
 inner join vMas_Product p
 on r.SICode=p.ProductCode
-where r.BranchCode=@@branchcode
-and r.ReceiptDAte>=@@datefrom and r.ReceiptDAte<=@@dateto
-and r.AmtCharge>0
+where r.AmtCharge>0
 union all
 select r.ReceiptNo,
 a.AccCode,a.AccName,p.ProductName,0,r.ReceiptNet
@@ -484,18 +525,14 @@ from vRV_LinkJob r
 inner join vMas_Product p
 on r.SICode=p.ProductCode,
 vMas_AccCode a
-where r.BranchCode=@@branchcode
-and r.AmtAdvance>0
-and r.ReceiptDAte>=@@datefrom and r.ReceiptDAte<=@@dateto
+where r.AmtAdvance>0
 and r.IsFromAdv=0 and a.AccCode=dbo.GetAccConfig('AP_CONFIG','Purchase')
 union all
 select r.ReceiptNo,
 a.AccCode,a.AccName,'ถูกหัก ณ ที่จ่าย' as AccDesc,sum(r.ReceiptWht) as Debit,0 as Credit
 from vRV_LinkJob r,
 vMas_AccCode a
-where r.BranchCode=@@branchcode
-and r.ReceiptDAte>=@@datefrom and r.ReceiptDAte<=@@dateto
-and r.Amtcharge>0
+where r.Amtcharge>0
 and a.AccCode=dbo.GetAccConfig('WHT_CONFIG','IncomeTax')
 group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
 union all
@@ -503,9 +540,7 @@ select r.ReceiptNo,
 a.AccCode,a.AccName,'หัก ณ ที่จ่าย' as AccDesc,0 as Debit,sum(r.ReceiptWht) as Credit
 from vRV_LinkJob r,
 vMas_AccCode a
-where r.BranchCode=@@branchcode
-and r.ReceiptDAte>=@@datefrom and r.ReceiptDAte<=@@dateto
-and r.AmtAdvance>0
+where r.AmtAdvance>0
 and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxCustomer')
 group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
 ) t
@@ -513,7 +548,7 @@ group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
         sql = String.Format(sql, branch, datefrom, dateto)
         msg = obj.ExecuteSQL(sql)
         @<ul>
-            <li>Process Receipt Data @msg</li>
+            <li>Posting Receipt Data @msg</li>
         </ul>
     End If
 End If
