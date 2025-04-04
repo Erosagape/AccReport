@@ -375,9 +375,10 @@ End Code
         <div class="col-md-3">
             Branch : <input type="text" id="txtBranch" value="@branch" />            
         </div>
-    </div>
+    </div>    
 </div>
-<input type="button" onclick="RefreshPage()" value="Submit" />
+<input type="button" onclick="RefreshPage()" value="Show Pre-Process Data" />
+<input type="button" onclick="ProcessData()" value="Process Data" />
 @If Not bComplete Then
     @msg
 Else
@@ -560,9 +561,9 @@ and DocDate>=@@datefrom and DocDate<=@@dateto
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
                 </tr>
             </table>
-            Else
+        Else
             @msg
-            End If
+        End If
         <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
             <thead>
                 <tr>
@@ -654,9 +655,9 @@ and not isnull(rh.CancelProve,'')<>''
                     <td style="text-align:right;">@obj.GetDouble(obj.GetDouble(dt.Rows(0)(6)) + obj.GetDouble(dt.Rows(0)(7))).ToString("#,##0.00")</td>
                 </tr>
             </table>
-            Else
+        Else
             @msg
-            End If
+        End If
         <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
             <thead>
                 <tr>
@@ -741,9 +742,9 @@ and isnull(cd.VenderbillingNo,'')=''
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
                 </tr>
             </table>
-            Else
+        Else
             @msg
-           End If
+        End If
         <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
             <thead>
                 <tr>
@@ -775,5 +776,12 @@ End If
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
         window.location.href="?Form=LinkJob&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
+    function ProcessData() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href = "?Form=TransferJob&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt +"&Adv=Y&AR=Y&AP=Y&RCV=Y&CST=Y";
     }
 </script>

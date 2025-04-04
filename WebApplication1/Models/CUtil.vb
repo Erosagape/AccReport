@@ -29,7 +29,7 @@ Public Class CUtil
         Try
             Return Convert.ToDouble(o)
         Catch ex As Exception
-            Return 0
+            Return 0.00
         End Try
     End Function
     Public Function IsDouble(o As Object) As Boolean

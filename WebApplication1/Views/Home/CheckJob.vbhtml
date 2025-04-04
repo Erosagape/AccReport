@@ -404,5 +404,108 @@ group by c.AccCode,d.AccName order by c.AccCode
             </table>
         </div>
     End If
+    sql = sqlHead & "
+select h.*,d.TotalDebit,d.TotalCredit from (
+    select cd.ClrNo,sum(cd.UsedAmount+cd.ChargeVAT) as TotalCost
+    from [" + dbName + "].dbo.Job_ClearDetail cd
+    inner join [" + dbName + "].dbo.Job_ClearHeader ch
+    on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
+    left join [" + dbName + "].dbo.Job_AdvDetail a
+    on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo
+    and cd.BranchCode=a.BranchCode
+    inner join [" + dbName + "].dbo.Job_SrvSingle s
+    on cd.SICode=s.SICode
+    inner join vMas_Product p
+    on cd.SICode=p.ProductCode
+    where ch.BranchCode=@@branchcode
+    and ch.ClrDate>=@@datefrom and ch.ClrDate<=@@dateto
+    and ch.DocStatus<>99 and ((s.IsExpense=1
+    and isnull(cd.VenderbillingNo,'')='') or (cd.BNet=0 and isnull(cd.LinkBillNo,'')<>''))
+    group by cd.ClrNo
+) h left join ( 
+    select JournalNo,sum(TotalDebit) as TotalDebit,sum(TotalCredit) as TotalCredit
+    from Acc_JournalHD 
+    group by JournalNo
+) d
+on h.ClrNo=d.JournalNo
+where FORMAT(h.TotalCost,'0.00')<>FORMAT(d.TotalDebit,'0.00')
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Cost incomplete</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName) &nbsp;&nbsp;&nbsp;</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
+    sql = sqlHead & "
+select c.AccCode,d.AccName,sum(c.Debit) as Debit,sum(c.Credit) as Credit
+from [" + dbName + "].dbo.Job_ClearHeader a inner join Acc_JournalHD b
+on a.ClrNo=b.JournalNo
+inner join Acc_JournalDT c
+on b.EntryId=c.EntryId
+inner join Mas_AccCode d on c.AccCode=d.AccCode
+where a.BranchCode=@@branchcode and not isnull(a.CancelProve,'')<>''
+and a.ClrDate>=@@datefrom and a.ClrDate<=@@dateto
+group by c.AccCode,d.AccName order by c.AccCode
+"
+    sql = String.Format(sql, branch, datefrom, dateto)
+    dt = obj.GetDataFromSQL(sql)
+    If obj.Message = "" And dt.Rows.Count > 0 Then
+        @<div>
+            <b>Cost Posted</b>
+            <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+                <thead>
+                    <tr>
+                        @For each dc As Data.DataColumn In dt.Columns
+                            @<th>@dc.ColumnName</th>
+                        Next
+                    </tr>
+                </thead>
+                <tbody>
+                    @For Each dr As Data.DataRow In dt.Rows
+                        @<tr>
+                            @For each dc As Data.DataColumn In dt.Columns
+                                If Not IsDBNull(dr(dc.ColumnName)) Then
+                                    If Not obj.IsDouble(dr(dc.ColumnName)) Then
+                                        @<td>@dr(dc.ColumnName) &nbsp;&nbsp;&nbsp;</td>
+                                    Else
+                                        @<td style="text-align:right;">@obj.GetDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                    End If
+                                Else
+                                    @<td></td>
+                                End If
+                            Next
+                        </tr>
+                    Next
+                </tbody>
+            </table>
+        </div>
+    End If
 End If
 
