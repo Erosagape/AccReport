@@ -405,30 +405,30 @@ group by c.AccCode,d.AccName order by c.AccCode
         </div>
     End If
     sql = sqlHead & "
-select h.*,d.TotalDebit,d.TotalCredit from (
-    select cd.ClrNo,sum(cd.UsedAmount+cd.ChargeVAT) as TotalCost
-    from [" + dbName + "].dbo.Job_ClearDetail cd
-    inner join [" + dbName + "].dbo.Job_ClearHeader ch
-    on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
-    left join [" + dbName + "].dbo.Job_AdvDetail a
-    on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo
-    and cd.BranchCode=a.BranchCode
-    inner join [" + dbName + "].dbo.Job_SrvSingle s
-    on cd.SICode=s.SICode
-    inner join vMas_Product p
-    on cd.SICode=p.ProductCode
-    where ch.BranchCode=@@branchcode
-    and ch.ClrDate>=@@datefrom and ch.ClrDate<=@@dateto
-    and ch.DocStatus<>99 and ((s.IsExpense=1
-    and isnull(cd.VenderbillingNo,'')='') or (cd.BNet=0 and isnull(cd.LinkBillNo,'')<>''))
-    group by cd.ClrNo
-) h left join ( 
-    select JournalNo,sum(TotalDebit) as TotalDebit,sum(TotalCredit) as TotalCredit
-    from Acc_JournalHD 
-    group by JournalNo
-) d
-on h.ClrNo=d.JournalNo
-where FORMAT(h.TotalCost,'0.00')<>FORMAT(d.TotalDebit,'0.00')
+    select h.*,d.TotalDebit,d.TotalCredit from (
+        select cd.ClrNo,sum(cd.UsedAmount+cd.ChargeVAT) as TotalCost
+        from [" + dbName + "].dbo.Job_ClearDetail cd
+        inner join [" + dbName + "].dbo.Job_ClearHeader ch
+        on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
+        left join [" + dbName + "].dbo.Job_AdvDetail a
+        on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo
+        and cd.BranchCode=a.BranchCode
+        inner join [" + dbName + "].dbo.Job_SrvSingle s
+        on cd.SICode=s.SICode
+        inner join vMas_Product p
+        on cd.SICode=p.ProductCode
+        where ch.BranchCode=@@branchcode
+        and ch.ClrDate>=@@datefrom and ch.ClrDate<=@@dateto
+        and ch.DocStatus<>99 and s.IsExpense=1
+        and isnull(cd.VenderbillingNo,'')=''
+        group by cd.ClrNo
+    ) h left join ( 
+        select JournalNo,sum(TotalDebit) as TotalDebit,sum(TotalCredit) as TotalCredit
+        from Acc_JournalHD 
+        group by JournalNo
+    ) d
+    on h.ClrNo=d.JournalNo
+    where FORMAT(h.TotalCost,'0.00')<>FORMAT(d.TotalDebit,'0.00')
 "
     sql = String.Format(sql, branch, datefrom, dateto)
     dt = obj.GetDataFromSQL(sql)

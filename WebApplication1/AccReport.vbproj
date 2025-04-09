@@ -217,6 +217,7 @@
     <Content Include="Views\Home\LinkJob.vbhtml" />
     <Content Include="Views\Home\TransferJob.vbhtml" />
     <Content Include="Views\Home\CheckJob.vbhtml" />
+    <Content Include="Views\Home\MonthlyBalance.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

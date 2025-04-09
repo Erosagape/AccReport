@@ -5,7 +5,7 @@
     If Not Request.QueryString("Period") Is Nothing Then
         yy = Request.QueryString("Period")
     End If
-    Dim sql = String.Format("select * from vTrial_Balance where Period={0}", yy)
+    Dim sql = String.Format("select * from vTrial_Balance where Period={0} ORDER BY AccCode", yy)
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
     Dim obj = New AccReport.CUtil()
@@ -18,6 +18,7 @@
     End If
     Dim dateFrom = New Date(yy, 1, 1).ToString("yyyy-MM-dd")
     Dim dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
+
 End Code
 <h3>งบทดลอง</h3>
 <h4>ประจำปีภาษี @(Convert.ToInt32(yy) + 543)</h4>
