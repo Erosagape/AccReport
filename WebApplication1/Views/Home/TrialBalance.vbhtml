@@ -1,5 +1,4 @@
 ﻿@Code
-    Layout = Nothing
     ViewData("Title") = "Trial Balance"
     Dim yy = DateTime.Now.Year
     If Not Request.QueryString("Period") Is Nothing Then

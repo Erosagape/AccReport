@@ -645,7 +645,7 @@ select @@maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
 ClrNo,GETDATE(),ClrDate,@@userid,'-',TotalClr,TotalClr
 from (
 select ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
-from [job_ace].dbo.Job_ClearDetail cd
+from [" + dbName + "].dbo.Job_ClearDetail cd
 inner join [" + dbName + "].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo and cd.BranchCode=ch.BranchCode
 inner join [" + dbName + "].dbo.Job_SrvSingle s
