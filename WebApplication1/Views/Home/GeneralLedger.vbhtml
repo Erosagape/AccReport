@@ -4,6 +4,10 @@
     If Not Request.QueryString("Code") Is Nothing Then
         accCode = Request.QueryString("Code")
     End If
+    Dim dbname = "job_demo"
+    If Not Request.QueryString("DB") Is Nothing Then
+        dbname = Request.QueryString("DB").ToString()
+    End If
     Dim dateFrom = New Date(DateTime.Now.Year, Now.Month, 1)
     If Not Request.QueryString("DateFrom") Is Nothing Then
         dateFrom = Request.QueryString("DateFrom")

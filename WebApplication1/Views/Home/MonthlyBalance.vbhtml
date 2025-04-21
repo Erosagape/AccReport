@@ -5,6 +5,10 @@
 </style>
 @Code
     ViewData("Title") = "Monthly Balance"
+    Dim dbName = "job_demo"
+    If Not Request.QueryString("DB") Is Nothing Then
+        dbName = Request.QueryString("DB")
+    End If
     Dim sql As String = ""
     sql = "
 select distinct Period from vSum_BalanceMonthly
@@ -55,7 +59,7 @@ End Code
             End If
         Next
     </select>
-    <a href="?Form=TrialBalance&Period=@period"> Trial Balance</a>
+    <a href="?Form=TrialBalance&DB=@dbName&Period=@period"> Trial Balance</a>
     @Code
         @<input type="button" value="Switch to @nextpage" onclick="SetAccu(@type,'@period')" />
         sql = String.Format("SELECT * FROM vSum_BalanceMonthly" & accu & " WHERE Period='{0}' ORDER BY AccCode", period)
@@ -74,12 +78,15 @@ End Code
             Dim nov(2) As Double
             Dim dec(2) As Double
             Dim tot(2) As Double
-
+            Dim bal(2) As Double
             @<table border="1" style="border-style:solid;border-width:thin;">
                 <thead>
                     <tr>
                         <th rowspan="2">Acc Code</th>
                         <th rowspan="2">Acc Name</th>
+                        @If accu <> "" Then
+                            @<th colspan="2">Balance</th>
+                        End If
                         <th colspan="2">Jan</th>
                         <th colspan="2">Feb</th>
                         <th colspan="2">Mar</th>
@@ -98,6 +105,10 @@ End Code
                         End If
                     </tr>
                     <tr>
+                        @If accu <> "" Then
+                            @<td>Debit</td>
+                            @<td>Credit</td>
+                        End If
                         <td>Debit</td>
                         <td>Credit</td>
                         <td>Debit</td>
@@ -157,43 +168,55 @@ End Code
                         dec(1) += obj.GetDouble(dr("Cr_Dec"))
                         tot(0) += (jan(0) + feb(0) + mar(0) + apr(0) + may(0) + jun(0) + jul(0) + aug(0) + sep(0) + oct(0) + nov(0) + dec(0))
                         tot(1) += (jan(1) + feb(1) + mar(1) + apr(1) + may(1) + jun(1) + jul(1) + aug(1) + sep(1) + oct(1) + nov(1) + dec(1))
+                        If accu <> "" Then
+                            bal(0) += obj.GetDouble(dr("BalDr"))
+                            bal(1) += obj.GetDouble(dr("BalCr"))
+                        End If
                         @<tr>
-                            <td>@dr("AccCode")</td>
-                            <td>@dr("AccName")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Jan")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Jan")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Feb")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Feb")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Mar")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Mar")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Apr")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Apr")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_May")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_May")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Jun")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Jun")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Jul")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Jul")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Aug")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Aug")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Sep")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Sep")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Oct")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Oct")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Nov")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Nov")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Dr_Dec")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@obj.GetDouble(dr("Cr_Dec")).ToString("#,##0.00")</td>
-                            @If accu = "" Then
-                                @<td style="text-align:right;">@obj.GetDouble(dr("TotalDr")).ToString("#,##0.00")</td>
-                                @<td style="text-align:right;">@obj.GetDouble(dr("TotalCr")).ToString("#,##0.00")</td>
-                            End If
-                        </tr>
+    <td>@dr("AccCode")</td>
+    <td>@dr("AccName")</td>
+    @If accu <> "" Then
+        @<td style="text-align:right;">@obj.GetDouble(dr("BalDr")).ToString("#,##0.00")</td>
+        @<td style="text-align:right;">@obj.GetDouble(dr("BalCr")).ToString("#,##0.00")</td>
+    End If
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Jan")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Jan")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Feb")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Feb")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Mar")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Mar")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Apr")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Apr")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_May")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_May")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Jun")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Jun")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Jul")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Jul")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Aug")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Aug")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Sep")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Sep")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Oct")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Oct")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Nov")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Nov")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Dr_Dec")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@obj.GetDouble(dr("Cr_Dec")).ToString("#,##0.00")</td>
+    @If accu = "" Then
+        @<td style="text-align:right;">@obj.GetDouble(dr("TotalDr")).ToString("#,##0.00")</td>
+        @<td style="text-align:right;">@obj.GetDouble(dr("TotalCr")).ToString("#,##0.00")</td>
+    End If
+</tr>
                     Next
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="2"> Total</td>
+                        @If accu <> "" Then
+                            @<td style="text-align:right;">@bal(0).ToString("#,##0.00")</td>
+                            @<td style="text-align:right;">@bal(1).ToString("#,##0.00")</td>
+                        End If
                         <td style="text-align:right;">@jan(0).ToString("#,##0.00")</td>
                         <td style="text-align:right;">@jan(1).ToString("#,##0.00")</td>
                         <td style="text-align:right;">@feb(0).ToString("#,##0.00")</td>
@@ -232,7 +255,7 @@ End If
 <script type="text/javascript">
     var accu = '@type';
     function SetPeriod(period) {
-        window.location.href = "?Form=MonthlyBalance&Period=" + period + (accu==''?'':'&Type='+accu);
+        window.location.href = "?Form=MonthlyBalance&DB=@dbName&Period=" + period + (accu==''?'':'&Type='+accu);
     }
     function SetAccu(val, period) {
         switch (val) {

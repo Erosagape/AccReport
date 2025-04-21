@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@Code
+    Dim dbName = "job_demo"
+    If Not Request.QueryString("DB") Is Nothing Then
+        dbName = Request.QueryString("DB")
+    End If
+End Code
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -16,11 +22,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Reports", "Index", "Home", New With {.area = ""}, New With {.class = "navbar-brand"})
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li><a href="/AccReport?DB=@dbName">Home</a></li>
                 </ul>
             </div>
         </div>
