@@ -61,6 +61,10 @@
     Dim dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
     Dim sumDebit = 0
     Dim sumCredit = 0
+    Dim sumPDebit = 0
+    Dim sumPCredit = 0
+    Dim sumNDebit = 0
+    Dim sumNCredit = 0
 End Code
 <h3>งบทดลอง</h3>
 <div style="display:flex;">
@@ -105,6 +109,10 @@ End Code
             @For Each dr In dt.Rows
                 sumDebit += obj.GetDouble(dr("Dr"))
                 sumCredit += obj.GetDouble(dr("Cr"))
+                sumPDebit += obj.GetDouble(dr("PrevDr"))
+                sumPCredit += obj.GetDouble(dr("PrevCr"))
+                sumNDebit += obj.GetDouble(dr("NextDr"))
+                sumNCredit += obj.GetDouble(dr("NextCr"))
                 @<tr>
     <td><a href="?Form=GeneralLedger&DB=@dbName&Code=@dr("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@dr("AccCode").ToString()</a></td>
     <td>@dr("AccName").ToString()</td>
@@ -120,12 +128,12 @@ End Code
         <tfoot>
             <tr>
                 <td colspan="2">TOTAL</td>
-                <td></td>
-                <td></td>
+                <td style="text-align:right;">@sumPDebit.ToString("#,##0.00")</td>
+                <td style="text-align:right;">@sumPCredit.ToString("#,##0.00")</td>
                 <td style="text-align:right;">@sumDebit.ToString("#,##0.00")</td>
                 <td style="text-align:right;">@sumCredit.ToString("#,##0.00")</td>
-                <td></td>
-                <td></td>
+                <td style="text-align:right;">@sumNDebit.ToString("#,##0.00")</td>
+                <td style="text-align:right;">@sumNCredit.ToString("#,##0.00")</td>
             </tr>
         </tfoot>
     </table>

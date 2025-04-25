@@ -59,10 +59,10 @@ End Code
             End If
         Next
     </select>
-    <a href="?Form=TrialBalance&DB=@dbName&Period=@period"> Trial Balance</a>
+    <a href="?Form=TrialBalance&DB=@dbName&Period=@period&month=@DateTime.Now.Month()"> Trial Balance</a>
     @Code
         @<input type="button" value="Switch to @nextpage" onclick="SetAccu(@type,'@period')" />
-        sql = String.Format("SELECT * FROM vSum_BalanceMonthly" & accu & " WHERE Period='{0}' ORDER BY AccCode", period)
+        sql = String.Format("SELECT * FROM vSum_BalanceMonthly" & accu & " WHERE Period='{0}' and (balDr+Balcr+dr_jan+cr_jan+dr_feb+cr_feb+dr_mar+cr_mar+dr_jun+cr_jun+dr_jul+cr_jul+dr_aug+cr_aug+dr_sep+cr_sep+dr_oct+cr_oct+dr_nov+cr_nov+dr_dec+cr_dec)>0 ORDER BY AccCode", period)
         dt = obj.GetDataFromSQL(sql)
         If dt.Rows.Count > 0 Then
             Dim jan(2) As Double

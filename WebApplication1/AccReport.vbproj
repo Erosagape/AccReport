@@ -219,6 +219,8 @@
     <Content Include="Views\Home\CheckJob.vbhtml" />
     <Content Include="Views\Home\MonthlyBalance.vbhtml" />
     <Content Include="Views\Home\Admin.vbhtml" />
+    <Content Include="Views\Home\BalanceSheet.vbhtml" />
+    <Content Include="Views\Home\ProfitLoss.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

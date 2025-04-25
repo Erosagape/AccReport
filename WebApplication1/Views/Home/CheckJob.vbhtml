@@ -29,10 +29,10 @@ declare @@branchcode varchar(3)='{0}';
 "
     Dim sql = ""
 End Code
-<h2>Check Job</h2>
+<h2>ตรวจสอบข้อมูลหลังลงบัญชี</h2>
 @If Not bConn Then
     @<div class="container">
-        Cannot connect database
+        เชิ่อมต่อฐานข้อมูลไม่ได้
     </div>
 Else
     sql = sqlHead & "
@@ -47,7 +47,7 @@ and a.DocStatus<>99 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
     Dim dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Advance Incomplete</b>
+            <b>ใบเบิกที่มีปัญหาต้องตรวจสอบ</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -91,7 +91,7 @@ group by c.AccCode,d.AccName order by c.AccCode
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Advance Posted</b>
+            <b>ใบเบิกที่ลงบัญชีได้</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -145,7 +145,7 @@ and format(c.TotalExpense,'0.00')<>format(isnull(b.TotalCredit,0),'0.00')
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Pay-in Incomplete</b>
+            <b>ใบ Pay-in ที่ต้องตรวจสอบ</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -190,7 +190,7 @@ group by c.AccCode,d.AccName order by c.AccCode
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Pay-In Posted</b>
+            <b>ใบ Pay-In ที่ลงบัญชีได้</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -241,7 +241,7 @@ where round(a.TotalCharge+a.TotalAdvance,3)-round(b.TotalAmt,3)<>0 or b.accdocno
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Invoice Incomplete</b>
+            <b>ใบแจ้งหนี้ที่ต้องตรวจสอบ</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -285,7 +285,7 @@ group by c.AccCode,d.AccName order by c.AccCode
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Invoice Posted</b>
+            <b>ใบแจ้งหนี้ที่ลงบัญชีได้</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -331,7 +331,7 @@ where FORMAT(a.TotalReceipt,'0.00')<>FORMAT(b.TotalDebit,'0.00') or b.JournalNo 
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Receipt Incomplete</b>
+            <b>ใบเสร็จรับเงินที่ต้องตรวจสอบ</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -375,7 +375,7 @@ group by c.AccCode,d.AccName order by c.AccCode
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Receipt Posted</b>
+            <b>ใบเสร็จรับเงินที่ลงบัญชีได้</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -434,7 +434,7 @@ group by c.AccCode,d.AccName order by c.AccCode
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Cost incomplete</b>
+            <b>ใบต้นทุนที่ต้องตรวจสอบ</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>
@@ -478,7 +478,7 @@ group by c.AccCode,d.AccName order by c.AccCode
     dt = obj.GetDataFromSQL(sql)
     If obj.Message = "" And dt.Rows.Count > 0 Then
         @<div>
-            <b>Cost Posted</b>
+            <b>ใบต้นทุนที่ลงบัญชีได้</b>
             <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
                 <thead>
                     <tr>

@@ -8,32 +8,43 @@ End Code
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=LinkJob&DB=@dbname">Link Job For Creating G/L</a>
+            <a href="?Form=LinkJob&DB=@dbname">เช็คยอดที่จะลงบันทึกบัญชีคร่าวๆ</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=TransferJob&DB=@dbname">Transfer Job to G/L</a>
+            <a href="?Form=TransferJob&DB=@dbname">ดึงรายการไประบบบัญชีแยกประเภท</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=CheckJob&DB=@dbname">Check Job Posted To G/L</a>
+            <a href="?Form=CheckJob&DB=@dbname">เช็คยอดหลังจากดึงรายการไประบบบัญชี</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=MonthlyBalance&DB=@dbname">Trial Balance Monthly (Draft)</a>
+            <a href="?Form=MonthlyBalance&DB=@dbname">งบทดลองแบบแสดงยอดเคลื่อนไหวรายเดือน</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=MonthlyBalance&DB=@dbname&Type=1">Trial Balance Monthly (Calculated)</a>
+            <a href="?Form=MonthlyBalance&DB=@dbname&Type=1">งบทดลองแบบสรุปยอดคงเหลือรายเดือน</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=MonthlyBalance&DB=@dbname&Type=2">Trial Balance Monthly (Final)</a>
+            <a href="?Form=MonthlyBalance&DB=@dbname&Type=2">งบทดลองแบบสรุปยอดยกไป ณ วันสิ้นเดือน</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="?Form=ProfitLoss&DB=@dbname">งบกำไรขาดทุน</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <a href="?Form=BalanceSheet&DB=@dbname">งบแสดงสถานะทางการเงิน</a>
         </div>
     </div>
 </div>
