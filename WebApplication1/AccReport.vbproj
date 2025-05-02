@@ -221,6 +221,7 @@
     <Content Include="Views\Home\Admin.vbhtml" />
     <Content Include="Views\Home\BalanceSheet.vbhtml" />
     <Content Include="Views\Home\ProfitLoss.vbhtml" />
+    <Content Include="Views\Home\LinkJobAdv.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

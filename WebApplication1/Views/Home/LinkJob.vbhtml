@@ -391,7 +391,7 @@ Else
         End If
     End Code
     @<div class="container">
-        <b>รายการจ่ายใบเบิกทั้งหมด</b>
+        <b><a href="#" onclick="GetDetailAdv()">รายการจ่ายใบเบิกทั้งหมด</a></b>
         @If dt.Rows.Count > 0 Then
             @<table>
                 <tr>
@@ -770,6 +770,13 @@ and isnull(cd.VenderbillingNo,'')=''
     </div>
 End If
 <script type="text/javascript">
+    function GetDetailAdv() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href = "?Form=LinkJobAdv&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
     function RefreshPage() {
         var br = document.getElementById('txtBranch').value;
         var db = document.getElementById('txtDatabase').value;
