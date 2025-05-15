@@ -127,32 +127,32 @@ and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
 
 insert into Acc_JournalDT
 select * from (
-select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
-ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
-b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
-(
-select
-d.AssetAccCode as AccCode,
-d.AccDocNo,d.TotalAmount+d.VatAmount as Debit,0 as Credit,
-d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
-from vAR_D d
-where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
-union all
-select
-dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') as AccCode,
-h.AccDocNo,0 as Debit,h.TotalVat as Credit,
-h.PartyName as AccDesc,h.DocRefNo as RefNo
-from vAR_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
-and h.TotalVat>0
-union all
-select
-d.IncomeAccCode as AccCode,
-d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
-d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
-from vAR_D d
-where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
-) a inner join vMas_AccCode b on a.AccCode=b.AccCode
+    select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
+    ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
+    b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
+    (
+        select
+        d.AssetAccCode as AccCode,
+        d.AccDocNo,d.TotalAmount+d.VatAmount as Debit,0 as Credit,
+        d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+        from vAR_D d
+        where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
+        union all
+        select
+        dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') as AccCode,
+        h.AccDocNo,0 as Debit,h.TotalVat as Credit,
+        h.PartyName as AccDesc,h.DocRefNo as RefNo
+        from vAR_H h
+        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+        and h.TotalVat>0
+        union all
+        select
+        d.IncomeAccCode as AccCode,
+        d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
+        d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+        from vAR_D d
+        where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
+    ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
 ) tb
 where tb.EntryId not in(select EntryID from Acc_JournalDT)
 
@@ -199,32 +199,32 @@ and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
 
 insert into Acc_JournalDT
 select * from (
-select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
-ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
-b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
-(
-select
-dbo.GetAccConfig('AP_CONFIG','Purchase') as AccCode,
-h.AccDocNo,0 as Debit,h.TotalAmount+h.TotalVat as Credit,
-h.PartyName as AccDesc,h.DocRefNo as RefNo
-from vAP_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
-union all
-select
-dbo.GetAccConfig('VAT_CONFIG','UndueInputVat') as AccCode,
-h.AccDocNo,h.TotalVat as Debit,0 as Credit,
-h.PartyName as AccDesc,h.DocRefNo as RefNo
-from vAP_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
-and h.TotalVat>0
-union all
-select
-d.AssetAccCode as AccCode,
-d.AccDocNo,d.TotalAmount as Debit,0 as Credit,
-d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
-from vAP_D d
-where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
-) a inner join vMas_AccCode b on a.AccCode=b.AccCode
+    select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
+    ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
+    b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
+    (
+        select
+        dbo.GetAccConfig('AP_CONFIG','Purchase') as AccCode,
+        h.AccDocNo,0 as Debit,h.TotalAmount+h.TotalVat as Credit,
+        h.PartyName as AccDesc,h.DocRefNo as RefNo
+        from vAP_H h
+        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+        union all
+        select
+        dbo.GetAccConfig('VAT_CONFIG','UndueInputVat') as AccCode,
+        h.AccDocNo,h.TotalVat as Debit,0 as Credit,
+        h.PartyName as AccDesc,h.DocRefNo as RefNo
+        from vAP_H h
+        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+        and h.TotalVat>0
+        union all
+        select
+        d.AssetAccCode as AccCode,
+        d.AccDocNo,d.TotalAmount as Debit,0 as Credit,
+        d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+        from vAP_D d
+        where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
+    ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
 ) tb
 where tb.EntryId not in(select EntryID from Acc_JournalDT)
 

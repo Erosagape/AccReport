@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Controllers\HomeController.vb" />
     <Compile Include="Settings.vb" />
+    <Compile Include="Views\FormController.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -222,6 +223,12 @@
     <Content Include="Views\Home\BalanceSheet.vbhtml" />
     <Content Include="Views\Home\ProfitLoss.vbhtml" />
     <Content Include="Views\Home\LinkJobAdv.vbhtml" />
+    <Content Include="Views\Form\FormPV.vbhtml" />
+    <Content Include="Views\Form\FormRV.vbhtml" />
+    <Content Include="Views\Form\FormGL.vbhtml" />
+    <Content Include="Views\Form\FormPO.vbhtml" />
+    <Content Include="Views\Form\FormPR.vbhtml" />
+    <Content Include="Views\Form\FormDI.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
