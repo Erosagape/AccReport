@@ -17,7 +17,7 @@ select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
 End Code
 <h2>Purchase Order / ใบสั่งซื้อ</h2>
-@If dt.Rows.Count > 1 Then
+@If dt.Rows.Count > 0 Then
     @<table style="width:100%">
     <tr>
         <td>PO No / เลขที่เอกสาร :</td>
