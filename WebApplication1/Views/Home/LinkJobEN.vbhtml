@@ -1,6 +1,6 @@
 ﻿@Code
-    ViewData("Title") = "LinkJob"
-    Dim dbName = "job_demo"
+    ViewData("Title") = "Current State of Data"
+    Dim dbName = "job_ace"
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -374,7 +374,7 @@ round(@@netadv,2) as CreditCashOut
 
     Dim bComplete = obj.IsConnect()
 End Code
-<h2>ตรวจสอบข้อมูลก่อนลงบัญชี</h2>
+<h2>@ViewBag.Title</h2>
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -405,26 +405,26 @@ Else
         End If
     End Code
     @<div class="container">
-        <b><a href="#" onclick="GetDetailAdv()">รายการจ่ายใบเบิกทั้งหมด</a></b>
+        <b><a href="#" onclick="GetDetailAdv()">Advance Paid from Job System</a></b>
         @If dt.Rows.Count > 0 Then
             @<table>
                 <tr>
-                    <td>Dr. เงินทดรองจ่าย&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Advance Paymented&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. ภาษีหัก ณ ที่จ่าย&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. WH-Tax Receivables&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. ภาษีหัก ณ ที่จ่ายของลูกค้า&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. WH-Tax Customers&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. เงินสดย่อย&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Petty Cash&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
                 </tr>
@@ -479,21 +479,21 @@ select @@paynet+@@unduevatbuy as CreditDebtSum,@@unduevatbuy as DebitVatBuy,@@pa
         End If
     End Code
     @<div class="container">
-        <b>ตั้งเจ้าหนี้</b>
+        <b>Account Payables Setting</b>
         @If dt.Rows.Count > 0 Then
             @<table>
                 <tr>
-                    <td>Dr. ค่าใช้จ่าย&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Services Cost&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Dr. ภาษีซื้อยังไม่ถึงกำหนด&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. เจ้าหนี้การค้า&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
                 </tr>
@@ -546,31 +546,31 @@ and DocDate>=@@datefrom and DocDate<=@@dateto
         End If
     End Code
     @<div class="container">
-        <b>ตั้งลูกหนี้</b>
+        <b>Account Receivables Setting</b>
         @If dt.Rows.Count > 0 Then
             @<table>
                 <tr>
-                    <td>Dr. ลูกหนี้เงิน Advance&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Advance Receiables&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Dr. ลูกหนี้การค้า&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Account Receivables&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. ภาษีขายยังไม่ถึงกำหนด&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Undue Output Vat&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. รายได้&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Service Charges&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. เงินทดรองจ่าย&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Advance Payment&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(3)).ToString("#,##0.00")</td>
                 </tr>
@@ -640,31 +640,31 @@ and not isnull(rh.CancelProve,'')<>''
 
     End Code
     @<div class="container">
-        <b>เงินรับชำระหนี้</b>
+        <b>Customer Paymented</b>
         @If dt.Rows.Count > 0 Then
             @<table>
                 <tr>
-                    <td>Dr. เงินสด/เงินฝากธนาคาร&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Cash Received&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Dr. ภาษีเงินได้ถูกหัก ณ ที่จ่าย&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. WH-Tax&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. ลูกหนี้การค้า&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Receivables&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(4)).ToString("#,##0.00")</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. ลูกหนี้เงิน Advance&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Advance Receiables&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. เจ้าหนี้การค้า&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Service Costs&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(obj.GetDouble(dt.Rows(0)(6)) + obj.GetDouble(dt.Rows(0)(7))).ToString("#,##0.00")</td>
                 </tr>
@@ -726,32 +726,32 @@ and isnull(cd.VenderbillingNo,'')=''
         End If
     End Code
     @<div class="container">
-        <b>ต้นทุนขาย</b>
+        <b>Costs</b>
         @If dt.Rows.Count > 0 Then
             @<table>
                 <tr>
-                    <td>Dr. ต้นทุนขาย&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Service Costs&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(0)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Dr. ภาษีซื้อ&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Input Vat&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(1)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Dr. ภาษีซื้อไม่ถึงกำหนด&nbsp;&nbsp;&nbsp;</td>
+                    <td>Dr. Undue Input Vat&nbsp;&nbsp;&nbsp;</td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(2)).ToString("#,##0.00")</td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. เงินทดรองจ่าย&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Petty Cash&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(obj.GetDouble(dt.Rows(0)(3)) + obj.GetDouble(dt.Rows(0)(4))).ToString("#,##0.00")</td>
                 </tr>
 
                 <tr>
-                    <td>&nbsp;&nbsp;&nbsp;Cr. เจ้าหนี้&nbsp;&nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;Cr. Account Payables&nbsp;&nbsp;&nbsp;</td>
                     <td></td>
                     <td style="text-align:right;">@obj.GetDouble(dt.Rows(0)(5)).ToString("#,##0.00")</td>
                 </tr>
@@ -796,7 +796,7 @@ End If
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href="?Form=LinkJob&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href="?Form=LinkJobEN&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
     function ProcessData() {
         var br = document.getElementById('txtBranch').value;

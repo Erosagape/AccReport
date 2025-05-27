@@ -22,6 +22,17 @@ Public Class CUtil
             msg = ex.Message
         End Try
     End Sub
+    Public Sub New(serverIp As String, dbName As String)
+        conn = String.Format("Data Source=" + serverIp + ";Initial Catalog={0};User id={1};Password='{2}';Persist Security Info=False", dbName, My.Settings.WebUser, My.Settings.WebPassword)
+        cn = New SqlConnection(conn)
+        Try
+            cn.Open()
+            cn.Close()
+            isConn = True
+        Catch ex As Exception
+            msg = ex.Message
+        End Try
+    End Sub
     Public Function IsConnect() As Boolean
         Return isConn
     End Function

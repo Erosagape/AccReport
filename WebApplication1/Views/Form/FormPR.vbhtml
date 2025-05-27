@@ -12,8 +12,7 @@
 select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
 "
 
-    Dim cnnStr = "Data Source=203.154.140.51;Initial Catalog=AccTest2;User id=sa;Password='9t;yogm851';Persist Security Info=False"
-    Dim obj = New AccReport.CUtil(cnnStr)
+    Dim obj = New AccReport.CUtil(".", dbName)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
 End Code
 <h2>Purchase Requisition / ใบขออนุมัติซื้อ</h2>

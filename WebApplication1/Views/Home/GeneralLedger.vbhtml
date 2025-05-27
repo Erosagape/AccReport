@@ -4,6 +4,10 @@
     If Not Request.QueryString("Code") Is Nothing Then
         accCode = Request.QueryString("Code")
     End If
+    Dim lang = "TH"
+    If Not Request.QueryString("LANG") Is Nothing Then
+        lang = Request.QueryString("LANG")
+    End If
     Dim dbname = "job_demo"
     If Not Request.QueryString("DB") Is Nothing Then
         dbname = Request.QueryString("DB").ToString()
@@ -19,7 +23,11 @@
     Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}'", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"))
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
-    Dim obj = New AccReport.CUtil()
+    Dim dbSource = "AccConcept"
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim dt = obj.GetDataFromSQL(sql)
     Dim msg As String = "Ready"
     If obj.Message = "" Then
@@ -31,9 +39,16 @@
     Dim prevBal As Double = 0
     Dim nextBal As Double = 0
     Dim moveBal As Double = 0
+    Dim sumDebit As Double = 0
+    Dim sumCredit As Double = 0
 End Code
-<h3>แยกประเภททั่วไป</h3>
-<h4>รหัสบัญชี @accCode ระหว่างวันที่ @DateAdd("yyyy", 543, dateFrom).ToString("dd/MM/yyyy") ถึงวันที่ @DateAdd("yyyy", 543, dateTo).ToString("dd/MM/yyyy") </h4>
+@If lang = "EN" Then
+    @<h3>General Ledger</h3>
+    @<h4>Account Code @accCode From @DateAdd("yyyy", 0, dateFrom).ToString("dd/MM/yyyy") To @DateAdd("yyyy", 0, dateTo).ToString("dd/MM/yyyy") </h4>
+Else
+    @<h3>แยกประเภททั่วไป</h3>
+    @<h4>รหัสบัญชี @accCode ระหว่างวันที่ @DateAdd("yyyy", 543, dateFrom).ToString("dd/MM/yyyy") ถึงวันที่ @DateAdd("yyyy", 543, dateTo).ToString("dd/MM/yyyy") </h4>
+End If
 <div>
     <table border="1" style="border-collapse:collapse;border-style:solid;">
         <thead>
@@ -61,15 +76,28 @@ End Code
                     nextBal = obj.GetDouble(dr("Balance"))
                     moveBal = nextBal - prevBal
                     @<tr style="font-weight:bold">
-                        <td>@dr("ItemNo").ToString()</td>
-                        <td>@Convert.ToDateTime(dr("EffectiveDate")).ToString("dd/MM/yyyy")</td>
-                        <td>@dr("JournalNo").ToString()</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>TOTAL</td>
+                        <td style="text-align:right;">@sumDebit.ToString("#,##0.00")</td>
+                        <td style="text-align:right;">@sumCredit.ToString("#,##0.00")</td>
+                        <td style="text-align:right;">@moveBal.ToString("#,##0.00")</td>
+                    </tr>
+                    @<tr style="font-weight:bold">
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>@dr("AccDesc").ToString()</td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Debit")).ToString("#,##0.00")</td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Credit")).ToString("#,##0.00")</td>
-                        <td style="text-align:right;">@moveBal.ToString("#,##0.00")</td>
+                        <td style="text-align:right;"></td>
                     </tr>
                 Else
+                    If i > 1 Then
+                        sumDebit += obj.GetDouble(dr("Debit"))
+                        sumCredit += obj.GetDouble(dr("Credit"))
+                    End If
                     @<tr>
                         <td>@dr("ItemNo").ToString()</td>
                         <td>@Convert.ToDateTime(dr("EffectiveDate")).ToString("dd/MM/yyyy")</td>

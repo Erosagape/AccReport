@@ -4,10 +4,16 @@
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
-    Dim yy As String = ""
+    Dim lang = "TH"
+    If Not Request.QueryString("LANG") Is Nothing Then
+        lang = Request.QueryString("LANG")
+    End If
+    Dim yy As String = DateTime.Now.Year().ToString()
     If Not Request.QueryString("Period") Is Nothing Then
         yy = Request.QueryString("Period")
     End If
+    Dim dateFrom = New Date(yy, 1, 1).ToString("yyyy-MM-dd")
+    Dim dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
     Dim sql = "
 select AccCode,AccName,
 (case when sum(Debit)>=sum(credit) then sum(Debit)-sum(Credit) else 0 end) as Dr,
@@ -17,11 +23,15 @@ group by AccCode,AccName order by AccCode
 "
     Dim sqlw = ""
     If yy <> "" Then
-        sqlw += " WHERE Period='{0}'"
+        sqlw += String.Format(" WHERE Period='{0}'", yy)
     End If
     Dim sumDebit = 0
     Dim sumCredit = 0
-    Dim obj = New AccReport.CUtil()
+    Dim dbSource = "AccConcept"
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, sqlw))
     Dim msg As String = "Ready"
     If obj.Message = "" Then
@@ -30,9 +40,16 @@ group by AccCode,AccName order by AccCode
         msg = obj.Message
     End If
 End Code
-<h2>งบกำไรขาดทุน</h2>
-@If yy<>"" Then
-    @<b>ประจำปี @(Convert.ToInt32(yy) + 543)</b>
+@If lang = "EN" Then
+    @<h2>Profit and Loss</h2>
+    @If yy <> "" Then
+        @<b>Fiscal Year @(Convert.ToInt32(yy))</b>
+    End If
+Else
+    @<h2>งบกำไรขาดทุน</h2>
+    @If yy <> "" Then
+        @<b>ประจำปี @(Convert.ToInt32(yy) + 543)</b>
+    End If
 End If
 <table border="1" style="border-collapse:collapse;border-style:solid;">
     <thead>
@@ -48,11 +65,13 @@ End If
             sumDebit += obj.GetDouble(dr("Dr"))
             sumCredit += obj.GetDouble(dr("Cr"))
             @<tr>
-                <td>@dr("AccCode").ToString()</td>
-                <td>@dr("AccName").ToString()</td>
-                <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
-                <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
-            </tr>
+    <td>
+        <a href="#" onclick="PrintGL('@dr("AccCode").ToString()')">@dr("AccCode").ToString()</a>
+    </td>
+    <td>@dr("AccName").ToString()</td>
+    <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
+    <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
+</tr>
         Next
     </tbody>
     <tfoot>
@@ -63,3 +82,9 @@ End If
         </tr>
     </tfoot>
 </table>
+@msg
+<script type="text/javascript">
+    function PrintGL(accCode) {
+        window.location.href = "?Form=GeneralLedger&DB=@dbName&Code=" + accCode + "&DateFrom=@dateFrom&DateTo=@dateTo";
+    }
+</script>

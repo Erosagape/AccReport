@@ -12,8 +12,7 @@
 select * from vJournal_All where JournalNo='{0}' order by ItemNo
 "
 
-    Dim cnnStr = "Data Source=203.154.140.51;Initial Catalog=AccTest2;User id=sa;Password='9t;yogm851';Persist Security Info=False"
-    Dim obj = New AccReport.CUtil(cnnStr)
+    Dim obj = New AccReport.CUtil(".", dbName)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
     Dim voucherNo As String = ""
     Dim effectiveDate As String = ""

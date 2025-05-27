@@ -1,6 +1,6 @@
 ﻿@Code
-    ViewData("Title") = "Transfer Job"
-    Dim dbName = "job_ace"
+    ViewData("Title") = "Post data to GL Accounts"
+    Dim dbName = "job_demo"
     Dim debugMode = False
     If Not Request.QueryString("DEBUG") Is Nothing Then
         debugMode = IIf(Request.QueryString("DEBUG") = "Y", True, False)
@@ -50,7 +50,11 @@
     End If
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
-    Dim obj = New AccReport.CUtil()
+    Dim dbSource = "AccConcept"
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim msg As String = ""
     Dim bConn = obj.IsConnect()
     Dim setIdentityON As String = "SET IDENTITY_INSERT Acc_JournalHD ON"
@@ -60,7 +64,7 @@
         setIdentityOFF = ""
     End If
 End Code
-<h2>Transfer Job</h2>
+<h2>@ViewBag.Title</h2>
 @If Not bConn Then
     @<div class="container">
         Cannot connect database
@@ -401,6 +405,12 @@ from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_JournalHD b
 on a.AdvNo=b.JournalNo
 where a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
+
+delete b
+from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_AdditionData b
+on a.AdvNo=b.DocNo
+where a.BranchCode=@@branchcode
+and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 "
                     sql = String.Format(sql, branch, datefrom, dateto)
                     If debugMode = False Then
@@ -412,7 +422,7 @@ and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
                         <li>Delete Old Advance Imported: @msg</li>
                     </ul>
 
-                    sql = sqlHead & "
+        sql = sqlHead & "
 set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 
 " & setIdentityON & "
@@ -432,6 +442,14 @@ order by a.AdvNo
 
 " & setIdentityOFF & "
 
+insert into Acc_AdditionData
+(DocNo,Seq,Text1,Text2,Text3,Text4)
+select a.AdvNo,0,'PV',a.EmpCode,a.PayChqTo,a.TRemark
+from [" + dbName + "].dbo.Job_AdvHeader a
+where a.DocStatus<>99 and  a.BranchCode=@@branchcode
+and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
+and not exists(select 1 FROM Acc_AdditionData WHERE DocNo=a.AdvNo AND Seq=0)
+
 insert into Acc_JournalDT
 select
 DENSE_RANK() OVER(ORDER BY AdvNo)+@@maxid as EntryID,
@@ -445,7 +463,7 @@ where b.BranchCode=@@branchcode and b.DocStatus<>99
 and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','Cashin')
 union all
 --Cr.เงินสดย่อย (ยอด net)
-select b.AdvNo,b.PaymentDate,a.AccCode,c.SDescription,c.ForJNo as AccDesc,0 as Debit,c.AdvNet as Credit
+select b.AdvNo,b.PaymentDate,a.AccCode,c.SDescription,concat(c.AdvNo,'#',c.ItemNo) as AccDesc,0 as Debit,c.AdvNet as Credit
 from [" + dbName + "].dbo.Job_AdvHeader b inner join [" + dbName + "].dbo.Job_AdvDetail c
 on b.BranchCode=c.BranchCode and b.AdvNo=c.AdvNo
 ,Mas_AccCode a
@@ -476,13 +494,22 @@ and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxCompany')
 ) t
 where t.PaymentDate>=@@datefrom and t.PaymentDate<=@@dateto
 order by AdvNo,AccCode
+
+insert into Acc_AdditionData
+(DocNo,Seq,Text1,Text2,Num1,Text3,Text4)
+select c.AdvNo,a.Seq,c.SICode,c.ForJNo,c.AdvAmount,c.PayChqTo,c.VenCode
+from Acc_JournalDT a inner join [" + dbName + "].dbo.Job_AdvDetail c
+on a.AccDesc=concat(c.AdvNo,'#',c.ItemNo)
+inner join [" + dbName + "].dbo.Job_AdvHeader b 
+on c.BranchCode=b.BranchCode and c.AdvNo=b.AdvNo
+where not exists(select 1 from Acc_AdditionData where DocNo=c.AdvNo and Seq=a.Seq)
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
                     @<ul>
                         <li>Process Advance Data: @msg</li>
                     </ul>
@@ -516,6 +543,12 @@ from Acc_JournalDT h
 left join Acc_JournalHD d
 on h.EntryID=d.EntryId
 where d.EntryID is null
+
+delete b
+from [" + dbName + "].dbo.Job_PaymentHeader a inner join Acc_AdditionData b
+on a.DocNo=b.DocNo
+where a.BranchCode=@@branchcode
+and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
 "
                     sql = String.Format(sql, branch, datefrom, dateto)
                     If debugMode = False Then
@@ -527,7 +560,7 @@ where d.EntryID is null
                         <li>Delete Old Pay-in Data: @msg</li>
                     </ul>
 
-                    sql = sqlHead & "
+        sql = sqlHead & "
 insert into Acc_TransactionHD
 select h.DocNo,h.DocDate,h.DocDate,
 isnull(c.VenCode,'-'),isnull(c.TaxNumber,'-'),isnull(c.TName,'-'),CONCAT(isnull(c.TAddress1,''),' ',isnull(c.TAddress2,'')),@@userid,
@@ -547,34 +580,57 @@ and d.BranchCode=h.BranchCode and d.DocNo=h.DocNo
 )
 and h.DocNo not in (select AccDocNo from Acc_TransactionHD)
 
+insert into Acc_AdditionData
+(DocNo,Seq,Text1,Text2,Text3,Text4)
+select a.DocNo,0,'PO',a.VenCode,a.PoNo,a.RefNo
+from [" + dbName + "].dbo.Job_PaymentHeader a
+where a.BranchCode=@@branchcode
+and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
+and not isnull(a.CancelProve,'')<>'' 
+and not exists(select 1 FROM Acc_AdditionData WHERE DocNo=a.DocNo AND Seq=0)
+
 insert into Acc_TransactionDT
 select d.DocNo,
 ROW_NUMBER() OVER(PARTITION BY d.DocNo ORDER BY d.ItemNo),'',0,0,d.Qty,
 ((d.Amt-d.AmtDisc)/h.ExchangeRate)/d.Qty
 ,d.QtyUnit,h.CurrencyCode,h.ExchangeRate,
 (d.Amt-d.AmtDisc)
-,d.SICode,concat(d.SDescription,' #',d.ForJNo),
+,d.SICode,d.SDescription,
 (case when d.AmtVAT>0 then h.VATRate else 0 end) as VatRate,
 (case when d.AmtWHT>0 then h.TaxRate else 0 end) as TaxRate,
 1 as VatRate
 from [" + dbName + "].dbo.Job_PaymentHeader h
 inner join [" + dbName + "].dbo.Job_PaymentDetail d
-on h.DocNo=d.DocNo and h.BranchCode=d.BranchCode
+on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
 inner join [" + dbName + "].dbo.Job_SrvSingle s
 on d.SICode=s.SICode
 where h.BranchCode=@@branchcode and not h.CancelProve<>'' and
 h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 and s.IsExpense=1
 
+insert into Acc_AdditionData
+(DocNo,Seq,Text1,Text2,Text3)
+select h.DocNo,ROW_NUMBER() OVER(PARTITION BY d.DocNo ORDER BY d.ItemNo),
+d.ForJNo,d.BookingRefNo,d.SRemark
+from [" + dbName + "].dbo.Job_PaymentHeader h
+inner join [" + dbName + "].dbo.Job_PaymentDetail d
+on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
+inner join [" + dbName + "].dbo.Job_SrvSingle s
+on d.SICode=s.SICode
+where h.BranchCode=@@branchcode and not h.CancelProve<>'' and
+h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+and s.IsExpense=1
+
+
 EXEC dbo.Insert_PITojournal_ByDate @@datefrom,@@dateto,@@userid
 "
 
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
                     @<ul>
                         <li>Process Pay-In Data: @msg</li>
                     </ul>

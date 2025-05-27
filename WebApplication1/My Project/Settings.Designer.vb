@@ -63,6 +63,33 @@ Namespace My
                 Return CType(Me("WebConnect"),String)
             End Get
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("sa")>  _
+        Public ReadOnly Property WebUser() As String
+            Get
+                Return CType(Me("WebUser"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("9t;yogm8")>  _
+        Public ReadOnly Property WebPassword() As String
+            Get
+                Return CType(Me("WebPassword"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("N")>  _
+        Public ReadOnly Property SetIdentityInsert() As String
+            Get
+                Return CType(Me("SetIdentityInsert"),String)
+            End Get
+        End Property
     End Class
 End Namespace
 

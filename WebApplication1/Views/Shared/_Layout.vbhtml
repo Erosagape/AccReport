@@ -3,6 +3,10 @@
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
+    Dim dbSource = "AccConcept"
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
 End Code
 <!DOCTYPE html>
 <html>
@@ -26,6 +30,7 @@ End Code
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/AccReport?DB=@dbName">Home</a></li>
+                    <li><a href="/AccReport?Form=IndexEN&DB=@dbName">English</a></li>
                 </ul>
             </div>
         </div>
@@ -34,7 +39,7 @@ End Code
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Tawan Technology Co.,ltd</p>
+            <p>&copy; @DateTime.Now.Year - Database = @dbSource</p>
         </footer>
     </div>
 

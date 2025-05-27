@@ -12,6 +12,10 @@
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
+    Dim lang = "TH"
+    If Not Request.QueryString("LANG") Is Nothing Then
+        lang = Request.QueryString("LANG")
+    End If
     Dim sql = ""
     Dim pm As String = ""
     If mm = "" Then
@@ -49,7 +53,11 @@
     End If
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
-    Dim obj = New AccReport.CUtil()
+    Dim dbSource = "AccConcept"
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim dt = obj.GetDataFromSQL(sql)
     Dim msg As String = "Ready"
     If obj.Message = "" Then
@@ -66,25 +74,50 @@
     Dim sumNDebit = 0
     Dim sumNCredit = 0
 End Code
-<h3>งบทดลอง</h3>
+@If lang = "EN" Then
+    @<h3>Trial Balance</h3>
+Else
+    @<h3>งบทดลอง</h3>
+End If
 <div style="display:flex;">
-    <h4>ประจำปีภาษี @(Convert.ToInt32(yy) + 543) </h4> &nbsp;&nbsp;
-    <h4>ประจำงวด </h4> &nbsp;&nbsp;
-    <select id="cboMonth" onchange="RefreshPage(this.value)">
-        <option value="">ต้นงวด</option>
-        <option value="1">มกราคม</option>
-        <option value="2">กุมภาพันธ์</option>
-        <option value="3">มีนาคม</option>
-        <option value="4">เมษายน</option>
-        <option value="5">พฤษภาคม</option>
-        <option value="6">มิถุนายน</option>
-        <option value="7">กรกฏาคม</option>
-        <option value="8">สิงหาคม</option>
-        <option value="9">กันยายน</option>
-        <option value="10">ตุลาคม</option>
-        <option value="11">พฤษจิกายน</option>
-        <option value="12">ธันวาคม</option>
-    </select>
+    @If lang = "EN" Then
+        @<h4>Fiscal Year @(Convert.ToInt32(yy)) &nbsp;&nbsp;</h4> 
+        @<h4>Period &nbsp;&nbsp;</h4> 
+        @<select id="cboMonth" onchange="RefreshPage(this.value)">
+            <option value=""> Beginning</option>
+            <option value="1"> Jan</option>
+            <option value="2"> Feb</option>
+            <option value="3"> Mar</option>
+            <option value="4"> Apr</option>
+            <option value="5"> May</option>
+            <option value="6"> Jun</option>
+            <option value="7"> Jul</option>
+            <option value="8"> Aug</option>
+            <option value="9"> Sep</option>
+            <option value="10"> Oct</option>
+            <option value="11"> Nov</option>
+            <option value="12"> Dec</option>
+        </select>
+    Else
+            @<h4>ประจำปีภาษี@(Convert.ToInt32(yy) + 543)&nbsp;&nbsp; </h4> 
+            @<h4>ประจำงวด  &nbsp;&nbsp;</h4>
+            @<select id="cboMonth" onchange="RefreshPage(this.value)">
+                <option value=""> ต้นงวด</option>
+                <option value="1"> มกราคม</option>
+                <option value="2"> กุมภาพันธ์</option>
+                <option value="3"> มีนาคม</option>
+                <option value="4"> เมษายน</option>
+                <option value="5"> พฤษภาคม</option>
+                <option value="6"> มิถุนายน</option>
+                <option value="7"> กรกฏาคม</option>
+                <option value="8"> สิงหาคม</option>
+                <option value="9"> กันยายน</option>
+                <option value="10"> ตุลาคม</option>
+                <option value="11"> พฤษจิกายน</option>
+                <option value="12"> ธันวาคม</option>
+            </select>
+    End If
+
 </div>
 <div>
     <table border="1" style="border-collapse:collapse;border-style:solid;">
@@ -114,15 +147,15 @@ End Code
                 sumNDebit += obj.GetDouble(dr("NextDr"))
                 sumNCredit += obj.GetDouble(dr("NextCr"))
                 @<tr>
-    <td><a href="?Form=GeneralLedger&DB=@dbName&Code=@dr("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@dr("AccCode").ToString()</a></td>
-    <td>@dr("AccName").ToString()</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("PrevDr")).ToString("#,##0.00")</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("PrevCr")).ToString("#,##0.00")</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("NextDr")).ToString("#,##0.00")</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("NextCr")).ToString("#,##0.00")</td>
-</tr>
+                    <td><a href="?Form=GeneralLedger&DB=@dbName&Code=@dr("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@dr("AccCode").ToString()</a></td>
+                    <td>@dr("AccName").ToString()</td>
+                    <td style="text-align:right;">@Convert.ToDouble(dr("PrevDr")).ToString("#,##0.00")</td>
+                    <td style="text-align:right;">@Convert.ToDouble(dr("PrevCr")).ToString("#,##0.00")</td>
+                    <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
+                    <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
+                    <td style="text-align:right;">@Convert.ToDouble(dr("NextDr")).ToString("#,##0.00")</td>
+                    <td style="text-align:right;">@Convert.ToDouble(dr("NextCr")).ToString("#,##0.00")</td>
+                </tr>
             Next
         </tbody>
         <tfoot>

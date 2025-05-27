@@ -1,7 +1,7 @@
 ﻿@Code
 
     ViewData("Title") = "LinkJob"
-    Dim dbName = "job_ace"
+    Dim dbName = "job_demo"
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -74,7 +74,11 @@ where t.PaymentDate>=@@datefrom and t.PaymentDate<=@@dateto
 group by t.GroupField,t.AccCode,t.DocNo,t.PaymentDate,t.AccCode,m.AccName,t.AccDesc
 order by t.GroupField,t.AccCode
 "
-    Dim obj = New AccReport.CUtil()
+    Dim dbSource = "AccConcept"
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
     sql = String.Format(sql, branch, datefrom, dateto)
     Dim dt = obj.GetDataFromSQL(sql)
 End Code

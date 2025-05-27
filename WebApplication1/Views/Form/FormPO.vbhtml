@@ -12,8 +12,7 @@
 select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
 "
 
-    Dim cnnStr = "Data Source=203.154.140.51;Initial Catalog=AccTest2;User id=sa;Password='9t;yogm851';Persist Security Info=False"
-    Dim obj = New AccReport.CUtil(cnnStr)
+    Dim obj = New AccReport.CUtil(".", dbName)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
 End Code
 <h2>Purchase Order / ใบสั่งซื้อ</h2>
@@ -51,26 +50,28 @@ End Code
         </tr>
     </table>
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
-        <tr>
-            <td>No</td>
-            <td>Description</td>
-            <td>Qty</td>
-            <td>Price</td>
-            <td>Currency</td>
-            <td>Amount</td>
-        </tr>
+         <tr>
+             <td>No</td>
+             <td>Ref#</td>
+             <td>Description</td>
+             <td>Qty</td>
+             <td>Price</td>
+             <td>Currency</td>
+             <td>Amount</td>
+         </tr>
         @For Each dr As Data.DataRow In dt.Rows
             @<tr>
-                <td>@dr("AccItemNo")</td>
-                <td>@dr("SalesDescription").ToString</td>
-                <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
-                <td class="text-right">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
-                <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
-                <td class="text-right">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
-            </tr>
+    <td>@dr("AccItemNo")</td>
+    <td>@dr("AccSourceDocNo").ToString</td>
+    <td>@dr("SalesDescription").ToString</td>
+    <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
+    <td class="text-right">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
+    <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
+    <td class="text-right">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+</tr>
         Next
         <tr>
-            <td colspan="3" rowspan="4">
+            <td colspan="4" rowspan="4">
             REMARKS:
             </td>
             <td colspan="2"> Total Amount</td>

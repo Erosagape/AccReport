@@ -229,6 +229,11 @@
     <Content Include="Views\Form\FormPO.vbhtml" />
     <Content Include="Views\Form\FormPR.vbhtml" />
     <Content Include="Views\Form\FormDI.vbhtml" />
+    <Content Include="Views\Form\Index.vbhtml" />
+    <Content Include="Views\Home\IndexEN.vbhtml" />
+    <Content Include="Views\Home\LinkJobEN.vbhtml" />
+    <Content Include="Views\Home\CheckJobEN.vbhtml" />
+    <Content Include="Views\Home\ReportGL.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

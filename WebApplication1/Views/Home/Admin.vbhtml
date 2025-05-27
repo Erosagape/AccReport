@@ -1,6 +1,10 @@
 ﻿@Code
     ViewData("Title") = "Admin"
-    Dim obj = New AccReport.CUtil()
+    Dim dbSource = "AccConcept"
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim msg As String = "Ready"
     Dim bConn = obj.IsConnect()
     Dim action As String = "None"
@@ -25,6 +29,7 @@ DELETE FROM Acc_JournalHD
 DELETE FROM Acc_JournalDT
 DELETE FROM Acc_TransactionHD
 DELETE FROM Acc_TransactionDT
+DELETE FROM Acc_AdditionData
 "
             msg = obj.ExecuteSQL(sql)
     End Select

@@ -6,6 +6,7 @@
         If formName Is Nothing Then
             formName = ""
         End If
+        ViewBag.SetIdentityInsert = My.Settings.SetIdentityInsert
         Return View(formName)
     End Function
 
