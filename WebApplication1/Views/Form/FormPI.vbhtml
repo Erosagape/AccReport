@@ -4,7 +4,7 @@
     }
 </style>
 @Code
-    ViewData("Title") = "FormPO"
+    ViewData("Title") = "FormPI"
     Dim docno As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
         docno = Request.QueryString("Code")
@@ -20,19 +20,19 @@ select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
     Dim obj = New AccReport.CUtil(".", dbName)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
 End Code
-<h2>Purchase Order / ใบสั่งซื้อ</h2>
+<h2>Payment Input Note / ใบบันทึกค่าใช้จ่าย</h2>
 @If dt.Rows.Count > 0 Then
     @<table style="width:100%">
     <tr>
-        <td>PO No / เลขที่เอกสาร :</td>
+        <td>PI No / เลขที่เอกสาร :</td>
         <td>@dt.Rows(0)("AccDocNo")</td>
     </tr>
     <tr>
-        <td>PO Date / วันที่สั่งซื้อ :</td>
+        <td>Invoice Date / วันที่รับวางบิล :</td>
         <td>@Convert.ToDateTime(dt.Rows(0)("AccBatchDate")).ToString("dd/MM/yyyy")</td>
     </tr>
     <tr>
-        <td>Delivery Date / วันที่ต้องการ :</td>
+        <td>Due Date / กำหนดชำระ :</td>
         <td>@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
     </tr>
     <tr>
@@ -42,7 +42,7 @@ End Code
 </table>
     @<table style="width:100%;vertical-align:top;">
         <tr>
-            <td>To / ถึงบริษัท :</td>
+            <td>From / บริษัท :</td>
             <td>@dt.Rows(0)("PartyName")</td>
         </tr>
         <tr>
@@ -96,16 +96,15 @@ End Code
         </tr>
     </table>
     @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
-        <tr>
-            <td>FOR THE COMPANY</td>
-            <td>FOR THE VENDERS</td>
-        </tr>
-        <tr>
-            <td> <br /><br /><br /></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>AUTHORIZE SIGNATURE</td>
-            <td>AUTHORIZE SIGNATURE</td>
-        </tr>
-    </table>End If
+         <tr>
+             <td>Entry By</td>
+             <td>Check By</td>
+             <td>Approve By</td>
+         </tr>
+         <tr>
+             <td> <br /><br /><br /></td>
+             <td></td>
+             <td></td>
+         </tr>
+    </table>
+End If

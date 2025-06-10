@@ -1,4 +1,9 @@
-﻿@Code
+﻿<style>
+    #topMenu {
+        display: none;
+    }
+</style>
+@Code
     ViewData("Title") = "General Ledger"
     Dim accCode As String = ""
     If Not Request.QueryString("Code") Is Nothing Then

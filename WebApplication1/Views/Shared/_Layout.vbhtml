@@ -18,7 +18,7 @@ End Code
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div id="topMenu" class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -29,8 +29,8 @@ End Code
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/AccReport?DB=@dbName">Home</a></li>
-                    <li><a href="/AccReport?Form=IndexEN&DB=@dbName">English</a></li>
+                    <li><a href="/AccReport?DB=@dbName&SRC=@dbSource">Home</a></li>
+                    <li><a href="/AccReport?Form=IndexEN&DB=@dbName&SRC=@dbSource">English</a></li>
                 </ul>
             </div>
         </div>

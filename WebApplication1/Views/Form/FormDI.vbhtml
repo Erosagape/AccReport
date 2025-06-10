@@ -1,4 +1,9 @@
-﻿@Code
+﻿<style>
+    #topMenu {
+        display:none;
+    }
+</style>
+@Code
     ViewData("Title") = "FormDI"
     Dim docno As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
@@ -9,13 +14,16 @@
         dbName = Request.QueryString("DB")
     End If
     Dim sql = "
-select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
+select a.*,b.WarehouseCode as ReceiveWarehouseCode,b.WarehouseName as ReceiveWarehouseName
+from vTransaction_All a
+left join vStock_Card b on a.StockTransNo=b.TransID
+where a.AccDocNo='{0}'
 "
 
     Dim obj = New AccReport.CUtil(".", dbName)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
 End Code
-<h2>Inventory Receive Note / ใบตรวจรับสินค้า</h2>
+<h2>Stock Receive Note / ใบตรวจรับสินค้า</h2>
 @If dt.Rows.Count > 0 Then
     @<table style="width:100%">
         <tr>
@@ -68,7 +76,9 @@ End Code
         Next
         <tr>
             <td colspan="4" rowspan="4">
-                REMARKS:
+                Warehouse Code : @dt.Rows(0)("WarehouseReceiveCode")
+                <br />
+                Warehouse Name : @dt.Rows(0)("WarehouseReceiveName")
             </td>
             <td colspan="2"> Total Amount</td>
             <td Class="text-right">@Convert.ToDouble(dt.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>

@@ -13,54 +13,65 @@ End Code
     <b>เชื่อมต่อข้อมูลกับระบบ Job</b>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=LinkJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert">เช็คยอดที่จะลงบันทึกบัญชีคร่าวๆ</a>
+            <a href="?Form=LinkJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">เช็คยอดที่จะลงบันทึกบัญชีคร่าวๆ</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=TransferJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert">ดึงรายการไประบบบัญชีแยกประเภท</a>
+            <a href="?Form=TransferJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">ดึงรายการไประบบบัญชีแยกประเภท</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=CheckJob&DB=@dbname">เช็คยอดหลังจากดึงรายการไประบบบัญชี</a>
+            <a href="?Form=CheckJob&DB=@dbname&SRC=@dbSource">เช็คยอดหลังจากดึงรายการไประบบบัญชี</a>
+        </div>
+    </div>
+    <b>เอกสารทางบัญชี</b>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="AccReport/Form?Form=Lists&DB=@dbSource">รายการเอกสาร</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="AccReport/Form?DB=@dbSource">สมุดรายวันทั่วไป</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="AccReport?Form=StockCard&SRC=@dbSource">สต๊อกการ์ด</a>
         </div>
     </div>
     <b>รายงานสรุปทางบัญชี</b>
     <div class="row">
         <div class="col-md-4">
-            <a href="AccReport/Form">สมุดรายวันทั่วไป</a>
+            <a href="?Form=ReportGL&DB=@dbname&SRC=@dbSource">รายงานแยกประเภททั่วไป</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=ReportGL&DB=@dbname">รายงานแยกประเภททั่วไป</a>
+            <a href="?Form=MonthlyBalance&DB=@dbname&SRC=@dbSource">งบทดลองแบบแสดงยอดเคลื่อนไหวรายเดือน</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=MonthlyBalance&DB=@dbname">งบทดลองแบบแสดงยอดเคลื่อนไหวรายเดือน</a>
+            <a href="?Form=MonthlyBalance&DB=@dbname&Type=1&SRC=@dbSource">งบทดลองแบบสรุปยอดคงเหลือรายเดือน</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=MonthlyBalance&DB=@dbname&Type=1">งบทดลองแบบสรุปยอดคงเหลือรายเดือน</a>
+            <a href="?Form=MonthlyBalance&DB=@dbname&Type=2&SRC=@dbSource">งบทดลองแบบสรุปยอดยกไป ณ วันสิ้นเดือน</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=MonthlyBalance&DB=@dbname&Type=2">งบทดลองแบบสรุปยอดยกไป ณ วันสิ้นเดือน</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <a href="?Form=ProfitLoss&DB=@dbname">งบกำไรขาดทุน</a>
+            <a href="?Form=ProfitLoss&DB=@dbname&SRC=@dbSource">งบกำไรขาดทุน</a>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=BalanceSheet&DB=@dbname">งบแสดงสถานะทางการเงิน</a>
+            <a href="?Form=BalanceSheet&DB=@dbname&SRC=@dbSource">งบแสดงสถานะทางการเงิน</a>
         </div>
     </div>
 </div>

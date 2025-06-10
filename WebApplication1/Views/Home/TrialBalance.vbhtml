@@ -1,4 +1,9 @@
-﻿@Code
+﻿<style>
+    #topMenu {
+        display: none;
+    }
+</style>
+@Code
     ViewData("Title") = "Trial Balance"
     Dim yy = DateTime.Now.Year
     If Not Request.QueryString("Period") Is Nothing Then

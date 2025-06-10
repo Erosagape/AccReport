@@ -1,4 +1,7 @@
 ﻿<style>
+    #topMenu {
+        display: none;
+    }
     table {
         font-size: 10px;
     }

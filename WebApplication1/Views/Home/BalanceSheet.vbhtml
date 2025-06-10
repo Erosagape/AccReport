@@ -1,4 +1,9 @@
-﻿@Code
+﻿<style>
+    #topMenu {
+        display: none;
+    }
+</style>
+@Code
     ViewData("Title") = "Balance Sheet"
     Dim dbName = "job_demo"
     If Not Request.QueryString("DB") Is Nothing Then

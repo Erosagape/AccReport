@@ -4,7 +4,7 @@
     }
 </style>
 @Code
-    ViewData("Title") = "FormPO"
+    ViewData("Title") = "FormDO"
     Dim docno As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
         docno = Request.QueryString("Code")
@@ -14,35 +14,34 @@
         dbName = Request.QueryString("DB")
     End If
     Dim sql = "
-select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
+select a.*,b.WarehouseCode as IssueWarehouseCode,b.WarehouseName as IssueWarehouseName
+from vTransaction_All a
+left join vStock_Card b on a.StockTransNo=b.TransID
+where a.AccDocNo='{0}'
 "
 
     Dim obj = New AccReport.CUtil(".", dbName)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
 End Code
-<h2>Purchase Order / ใบสั่งซื้อ</h2>
+<h2>Delivery Order / ใบส่งสินค้า</h2>
 @If dt.Rows.Count > 0 Then
     @<table style="width:100%">
-    <tr>
-        <td>PO No / เลขที่เอกสาร :</td>
-        <td>@dt.Rows(0)("AccDocNo")</td>
-    </tr>
-    <tr>
-        <td>PO Date / วันที่สั่งซื้อ :</td>
-        <td>@Convert.ToDateTime(dt.Rows(0)("AccBatchDate")).ToString("dd/MM/yyyy")</td>
-    </tr>
-    <tr>
-        <td>Delivery Date / วันที่ต้องการ :</td>
-        <td>@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
-    </tr>
-    <tr>
-        <td>Reference No / อ้างถึง :</td>
-        <td>@dt.Rows(0)("DocRefNo")</td>
-    </tr>
-</table>
+        <tr>
+            <td>Document No / เลขที่เอกสาร :</td>
+            <td>@dt.Rows(0)("AccDocNo")</td>
+        </tr>
+        <tr>
+            <td>Delivery Date / วันที่ส่งสินค้า :</td>
+            <td>@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <td>Reference No / อ้างถึง :</td>
+            <td>@dt.Rows(0)("DocRefNo")</td>
+        </tr>
+    </table>
     @<table style="width:100%;vertical-align:top;">
         <tr>
-            <td>To / ถึงบริษัท :</td>
+            <td>To / บริษัท :</td>
             <td>@dt.Rows(0)("PartyName")</td>
         </tr>
         <tr>
@@ -57,7 +56,7 @@ End Code
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
          <tr>
              <td>No</td>
-             <td>Ref#</td>
+             <td>Reference PO#</td>
              <td>Description</td>
              <td>Qty</td>
              <td>Price</td>
@@ -67,8 +66,8 @@ End Code
         @For Each dr As Data.DataRow In dt.Rows
             @<tr>
     <td>@dr("AccItemNo")</td>
-    <td>@dr("AccSourceDocNo").ToString</td>
-    <td>@dr("SalesDescription").ToString</td>
+    <td>@dr("AccSourceDocNo")#@dr("AccSourceDocItem")</td>
+    <td>@dr("SaleProductCode") @dr("SalesDescription")</td>
     <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
     <td class="text-right">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
     <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
@@ -77,7 +76,7 @@ End Code
         Next
         <tr>
             <td colspan="4" rowspan="4">
-            REMARKS:
+                Pick-up Place : @dt.Rows(0)("IssueWarehouseName")
             </td>
             <td colspan="2"> Total Amount</td>
             <td Class="text-right">@Convert.ToDouble(dt.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
@@ -96,16 +95,17 @@ End Code
         </tr>
     </table>
     @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
-        <tr>
-            <td>FOR THE COMPANY</td>
-            <td>FOR THE VENDERS</td>
-        </tr>
-        <tr>
-            <td> <br /><br /><br /></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>AUTHORIZE SIGNATURE</td>
-            <td>AUTHORIZE SIGNATURE</td>
-        </tr>
-    </table>End If
+         <tr>
+             <td>ผู้ส่งสินค้า / Delivery By</td>
+             <td>ผู้รับสินค้า / Receive By</td>             
+         </tr>
+         <tr>
+             <td> <br /><br /><br /></td>
+             <td></td>
+         </tr>
+         <tr>
+             <td></td>
+             <td></td>
+         </tr>
+    </table>
+End If
