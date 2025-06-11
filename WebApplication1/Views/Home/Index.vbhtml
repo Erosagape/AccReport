@@ -45,6 +45,11 @@ End Code
     <b>รายงานสรุปทางบัญชี</b>
     <div class="row">
         <div class="col-md-4">
+            <a href="?Form=StockOnhand&DB=@dbname&SRC=@dbSource">สินค้าคงเหลือ</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
             <a href="?Form=ReportGL&DB=@dbname&SRC=@dbSource">รายงานแยกประเภททั่วไป</a>
         </div>
     </div>

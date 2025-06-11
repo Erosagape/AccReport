@@ -249,6 +249,7 @@
     <Content Include="Views\Form\FormSI.vbhtml" />
     <Content Include="Views\Home\TransferJob_v2.vbhtml" />
     <Content Include="Views\Home\StockCard.vbhtml" />
+    <Content Include="Views\Home\StockOnhand.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

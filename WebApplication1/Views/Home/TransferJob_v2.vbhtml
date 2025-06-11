@@ -448,7 +448,7 @@ a.PaymentDate as EffectiveDate,
 from [" + dbName + "].dbo.Job_AdvHeader a
 where a.DocStatus<>99 and a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
-and concat(a.AdvNo,'-',a.BranchCode) not in(select JournalNo FROM Acc_JournalHD)
+and not exists(select JournalNo FROM Acc_JournalHD WHERE JournalNo=concat('PV-',a.AdvNo,'-',a.BranchCode))
 order by a.AdvNo
 
 " & setIdentityOFF & "
@@ -469,19 +469,20 @@ AccCode,AccName,AccDesc,Debit,Credit
 from (
 --Cr.เงินสดย่อย (ยอด net)
 select concat('PV-',b.AdvNo,'-',b.BranchCode) as AdvNo,b.PaymentDate,a.AccCode,b.PayChqTo as AccName,concat(b.AdvNo,'-',b.BranchCode) as AccDesc,0 as Debit,b.TotalAdvance as Credit
-from [job_evb].dbo.Job_AdvHeader b,Mas_AccCode a
+from [" + dbName + "].dbo.Job_AdvHeader b,Mas_AccCode a
 where b.BranchCode=@@branchcode and b.DocStatus<>99
 and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','CashOut')
 union all
 --Dr. เงินทดรองจ่ายพนักงาน (ยอด Net+Wht)
 select concat('PV-',b.AdvNo,'-',b.BranchCode),b.PaymentDate,a.AccCode,c.SDescription,concat(c.AdvNo,'#',c.ItemNo) as AccDesc,c.AdvNet as Debit,0 as Credit
-from [job_evb].dbo.Job_AdvHeader b inner join [job_evb].dbo.Job_AdvDetail c
+from [" + dbName + "].dbo.Job_AdvHeader b inner join [" + dbName + "].dbo.Job_AdvDetail c
 on b.BranchCode=c.BranchCode and b.AdvNo=c.AdvNo
 ,Mas_AccCode a
 where b.BranchCode=@@branchcode and b.DocStatus<>99
 and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','CashIn')
 ) t inner join Acc_JournalHD s on t.AdvNo=s.JournalNo
 where t.PaymentDate>=@@datefrom and t.PaymentDate<=@@dateto
+and not exists(select 1 from Acc_JournalDT where EntryID=t.EntryID AND Seq=t.Seq)
 order by AdvNo,AccCode
 
 insert into Acc_AdditionData
@@ -509,4 +510,254 @@ where not exists(select 1 from Acc_AdditionData where DocNo=concat('PV-',c.AdvNo
             </ul>
         End If
     End If
+    If postap Then
+        'Process A/P Data
+        sql = sqlHead & "
+delete d
+from [" + dbName + "].dbo.Job_PaymentHeader h
+inner join Acc_TransactionDT d
+on concat(h.DocNo,'-',h.BranchCode)=d.AccDocNo
+where h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+delete d
+from [" + dbName + "].dbo.Job_PaymentHeader h
+inner join Acc_TransactionHD d
+on concat(h.DocNo,'-',h.BranchCode)=d.AccDocNo
+where h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+delete d
+from [" + dbName + "].dbo.Job_PaymentHeader h
+inner join Acc_JournalHD d
+on concat(h.DocNo,'-',h.BranchCode)=d.JournalNo
+where  h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+delete h
+from Acc_JournalDT h
+left join Acc_JournalHD d
+on h.EntryID=d.EntryId
+where d.EntryID is null
+
+delete b
+from [" + dbName + "].dbo.Job_PaymentHeader a inner join Acc_AdditionData b
+on concat(a.DocNo,'-',a.BranchCode)=b.DocNo
+where a.BranchCode=@@branchcode
+and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
+"
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Delete Old Pay-in Data: @msg</li>
+        </ul>
+
+        sql = sqlHead & "
+insert into Acc_TransactionHD
+select concat(h.DocNo,'-',h.BranchCode),h.DocDate,h.DocDate,
+isnull(c.VenCode,'-'),isnull(c.TaxNumber,'-'),isnull(c.TName,'-'),CONCAT(isnull(c.TAddress1,''),' ',isnull(c.TAddress2,'')),@@userid,
+'PI',h.DocDate,h.DocDate,1,h.RefNo
+from [" + dbName + "].dbo.Job_PaymentHeader h
+left join [" + dbName + "].dbo.Mas_Vender c
+on h.VenCode=c.VenCode
+where h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+and not h.CancelProve<>''
+and exists(
+    select d.DocNo from [" + dbName + "].dbo.Job_PaymentDetail d
+    inner join [" + dbName + "].dbo.Job_SrvSingle s
+    on d.SICode=s.SICode
+    and d.BranchCode=h.BranchCode and d.DocNo=h.DocNo
+)
+and not Exists(select AccDocNo from Acc_TransactionHD where AccDocNo=concat(h.DocNo,'-',h.BranchCode))
+
+insert into Acc_AdditionData
+(DocNo,Seq,Text1,Text2,Text3,Text4)
+select concat(a.DocNo,'-',a.BranchCode),0,'PO',a.VenCode,a.PoNo,a.RefNo
+from [" + dbName + "].dbo.Job_PaymentHeader a
+where a.BranchCode=@@branchcode
+and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
+and not isnull(a.CancelProve,'')<>''
+and not exists(select 1 FROM Acc_AdditionData WHERE DocNo=concat(a.DocNo,'-',a.BranchCode) AND Seq=0)
+
+insert into Acc_TransactionDT
+select concat(d.DocNo,'-',d.BranchCode) as DocNo,
+d.ItemNo,'',0,0,d.Qty,
+((d.Amt-d.AmtDisc)/h.ExchangeRate)/d.Qty
+,d.QtyUnit,h.CurrencyCode,h.ExchangeRate,
+(d.Amt-d.AmtDisc)
+,d.SICode,d.SDescription,
+(case when d.AmtVAT>0 then h.VATRate else 0 end) as VatRate,
+(case when d.AmtWHT>0 then h.TaxRate else 0 end) as TaxRate,
+1 as VatRate
+from [" + dbName + "].dbo.Job_PaymentHeader h
+inner join [" + dbName + "].dbo.Job_PaymentDetail d
+on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo
+inner join [" + dbName + "].dbo.Job_SrvSingle s
+on d.SICode=s.SICode
+where h.BranchCode=@@branchcode and not h.CancelProve<>'' and
+h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+and not exists(select 1 from Acc_TransactionDT where AccDocNo=concat(d.DocNo,'-',d.BranchCode) and AccItemNo=d.ItemNo)
+
+insert into Acc_AdditionData
+(DocNo,Seq,Text1,Text2,Text3)
+select concat(h.DocNo,'-',h.BranchCode),d.ItemNo,
+d.ForJNo,d.BookingRefNo,d.SRemark
+from [" + dbName + "].dbo.Job_PaymentHeader h
+inner join [" + dbName + "].dbo.Job_PaymentDetail d
+on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo
+inner join [" + dbName + "].dbo.Job_SrvSingle s
+on d.SICode=s.SICode
+where h.BranchCode=@@branchcode and not h.CancelProve<>'' and
+h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+and not exists(select 1 from Acc_AdditionData where DocNo=concat(d.DocNo,'-',d.BranchCode) and Seq=d.ItemNo)
+
+EXEC dbo.Insert_PITojournal_ByDate @@datefrom,@@dateto,@@userid
+"
+
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Process Pay-In Data: @msg</li>
+        </ul>
+    End If
+    If postar Then
+        sql = sqlHead & "
+delete d
+from [" + dbName + "].dbo.Job_InvoiceHeader h
+inner join Acc_TransactionDT d
+on concat(h.DocNo,'-',h.BranchCode)=d.AccDocNo
+where h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+delete d
+from [" + dbName + "].dbo.Job_InvoiceHeader h
+inner join Acc_TransactionHD d
+on concat(h.DocNo,'-',h.BranchCode)=d.AccDocNo
+where h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+delete d
+from [" + dbName + "].dbo.Job_InvoiceHeader h
+inner join Acc_JournalHD d
+on concat(h.DocNo,'-',h.BranchCode)=d.JournalNo
+where h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+delete d
+from [" + dbName + "].dbo.Job_InvoiceHeader h
+inner join Acc_AdditionData d
+on concat(h.DocNo,'-',h.BranchCode)=d.DocNo
+where h.BranchCode=@@branchcode
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+
+delete h
+from Acc_JournalDT h
+left join Acc_JournalHD d
+on h.EntryID=d.EntryId
+where d.EntryID is null
+"
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Delete Old Invoices Data: @msg</li>
+        </ul>
+
+        sql = sqlHead & "
+insert into Acc_TransactionHD
+select concat(h.DocNo,'-',h.BranchCode),h.DocDate,isnull(h.DueDate,h.DocDate) as DueDate,
+isnull(c.CustCode,'-'),isnull(c.TaxNumber,'-'),
+isnull(c.NameThai,'-'),CONCAT(isnull(c.TAddress1,''),' ',isnull(c.TAddress2,'')),@@userid,
+'SI',h.DocDate,h.DocDate,1,h.BillAcceptNo
+from [" + dbName + "].dbo.Job_InvoiceHeader h
+left join [" + dbName + "].dbo.Mas_Company c
+on h.BillToCustCode=c.CustCode and h.BillToCustBranch=c.Branch
+where h.BranchCode=@@branchcode
+and not isnull(h.CancelProve,'')<>''
+and not exists(select AccDocNo from Acc_TransactionHD where AccDocNo=concat(h.DocNo,'-',h.BranchCode))
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+
+insert into Acc_TransactionDT
+select concat(d.DocNo,'-',d.BranchCode) as DocNo,
+d.ItemNo as Seq,'' as SourceDocNo,0 as SourceDocItem,0 as StockTransNo,
+(case when d.AmtAdvance>0 then 1 else d.Qty end),
+(case when d.AmtAdvance>0 then d.AmtAdvance else d.UnitPrice end)
+,d.QtyUnit,d.CurrencyCode,d.ExchangeRate,
+(case when d.AmtAdvance>0 then d.AmtAdvance*d.ExchangeRate else d.Amt end)
+,p.ProductCode,concat(d.SDescription,' #',h.RefNo),
+(case when d.AmtCharge>0 AND d.AmtVat>0 then d.VATRate else 0 end),
+(case when d.AmtCharge>0 AND d.Amt50Tavi>0 then d.Rate50Tavi else 0 end),
+1 as VatType
+from [" + dbName + "].dbo.Job_InvoiceHeader h
+inner join [" + dbName + "].dbo.Job_InvoiceDetail d
+on h.DocNo=d.DocNo and h.BranchCode=d.BranchCode
+inner join vMas_Product p on d.SICode=p.ProductCode
+where h.BranchCode=@@branchcode
+and not isnull(h.CancelProve,'')<>''
+and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
+and not exists(select AccDocNo from Acc_TransactionDT where AccDocNo=concat(d.DocNo,'-',d.BranchCode AND AccItemNo=d.ItemNo))
+
+EXEC dbo.Insert_SIToJournal_ByDate @@datefrom,@@dateto,@@userid
+"
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Process Invoice Data: @msg</li>
+        </ul>
+    End If
 End If
+<script type="text/javascript">
+    var setIden = '@(IIf(setIden = True, "Y", "N"))';
+    function PostAdvance() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href = "?Form=TransferJob_V2&IDEN="+setIden+"&Adv=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
+    function PostPayIn() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href = "?Form=TransferJob_V2&IDEN=" + setIden +"&AP=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
+    function PostInvoice() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href = "?Form=TransferJob_V2&IDEN=" + setIden +"&AR=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
+    function PostReceipt() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href = "?Form=TransferJob_V2&IDEN=" + setIden +"&RCV=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
+    function PostCost() {
+        var br = document.getElementById('txtBranch').value;
+        var db = document.getElementById('txtDatabase').value;
+        var df = document.getElementById('txtDateFrom').value;
+        var dt = document.getElementById('txtDateTo').value;
+        window.location.href = "?Form=TransferJob_V2&IDEN=" + setIden +"&CST=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+    }
+</script>
