@@ -7,6 +7,8 @@
             formName = ""
         End If
         ViewBag.SetIdentityInsert = My.Settings.SetIdentityInsert
+        ViewBag.JobDatabase = My.Settings.JobDB
+        ViewBag.AccDatabase = My.Settings.AccDB
         Return View(formName)
     End Function
 

@@ -1,6 +1,6 @@
 ﻿@Code
     ViewData("Title") = "Current State of Data"
-    Dim dbName = "job_ace"
+    Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -28,7 +28,7 @@
     End If
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
-    Dim dbSource = "AccConcept"
+    Dim dbSource = ViewBag.AccDatabase
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
@@ -54,7 +54,7 @@ h.AccDocNo,h.AccBatchDate  as EntryDate,
 h.AccEffectiveDate,@@userid as UserID,
 h.DocRefNo,0,0
 from vAR_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
 and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
 
 " & setIdentityOFF & "
@@ -70,14 +70,14 @@ dbo.GetAccConfig('AR_CONFIG','Sales') as AccCode,
 h.AccDocNo,h.TotalAmount+h.TotalVat as Debit,0 as Credit,
 h.PartyName as AccDesc,h.DocRefNo as RefNo
 from vAR_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
 union all
 select
 dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') as AccCode,
 h.AccDocNo,0 as Debit,h.TotalVat as Credit,
 h.PartyName as AccDesc,h.DocRefNo as RefNo
 from vAR_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
 and h.TotalVat>0
 union all
 select
@@ -85,7 +85,7 @@ d.IncomeAccCode as AccCode,
 d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
 d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
 from vAR_D d
-where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
+where d.AccBatchDate>=@@datefrom and d.AccBatchDate<=@@dateto
 ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
 ) tb
 where tb.EntryId not in(select EntryID from Acc_JournalDT)
@@ -126,7 +126,7 @@ h.AccDocNo,h.AccBatchDate  as EntryDate,
 h.AccEffectiveDate,@@userid as UserID,
 h.DocRefNo,0,0
 from vAP_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
 and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
 
 " & setIdentityOFF & "
@@ -142,14 +142,14 @@ b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
     h.AccDocNo,0 as Debit,h.TotalAmount+h.TotalVat as Credit,
     h.PartyName as AccDesc,h.DocRefNo as RefNo
     from vAP_H h
-    where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+    where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
         union all
         select
         dbo.GetAccConfig('VAT_CONFIG','UndueInputVat') as AccCode,
         h.AccDocNo,h.TotalVat as Debit,0 as Credit,
         h.PartyName as AccDesc,h.DocRefNo as RefNo
         from vAP_H h
-        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+        where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
             and h.TotalVat>0
             union all
             select
@@ -157,7 +157,7 @@ b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
             d.AccDocNo,d.TotalAmount as Debit,0 as Credit,
             d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
             from vAP_D d
-            where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
+            where d.AccBatchDate>=@@datefrom and d.AccBatchDate<=@@dateto
 ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
 ) tb
 where tb.EntryId not in(select EntryID from Acc_JournalDT)
@@ -464,7 +464,7 @@ from [" + dbName + "].dbo.Job_PaymentDetail d
 inner join [" + dbName + "].dbo.Job_PaymentHeader h on
 d.BranchCode=h.BranchCode and d.DocNo=h.DocNo
 inner join [" + dbName + "].dbo.Job_SrvSingle s on d.SICode=s.SICode
-where h.BranchCode=@@branchcode and not h.CancelProve<>'' and s.IsExpense=1
+where h.BranchCode=@@branchcode and not h.CancelProve<>''
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 select @@paynet+@@unduevatbuy as CreditDebtSum,@@unduevatbuy as DebitVatBuy,@@paynet as DebitNet

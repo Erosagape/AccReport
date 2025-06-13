@@ -13,7 +13,7 @@
     If Not Request.QueryString("LANG") Is Nothing Then
         lang = Request.QueryString("LANG")
     End If
-    Dim dbname = "job_demo"
+    Dim dbname = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbname = Request.QueryString("DB").ToString()
     End If
@@ -28,7 +28,7 @@
     Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}'", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"))
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
-    Dim dbSource = "AccConcept"
+    Dim dbSource = ViewBag.AccDatabase
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If

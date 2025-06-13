@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
   <Profiles />
   <Settings>
-    <Setting Name="WebConnect" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False;</Value>
-    </Setting>
     <Setting Name="WebUser" Type="System.String" Scope="Application">
       <Value Profile="(Default)">sa</Value>
     </Setting>
@@ -13,6 +10,15 @@
     </Setting>
     <Setting Name="SetIdentityInsert" Type="System.String" Scope="Application">
       <Value Profile="(Default)">N</Value>
+    </Setting>
+    <Setting Name="WebConnect" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Data Source=.;Initial Catalog=acc_mnl;User id=sa;Password='9t;yogm8';Persist Security Info=False;</Value>
+    </Setting>
+    <Setting Name="JobDB" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">job_mnl</Value>
+    </Setting>
+    <Setting Name="AccDB" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">acc_mnl</Value>
     </Setting>
   </Settings>
 </SettingsFile>

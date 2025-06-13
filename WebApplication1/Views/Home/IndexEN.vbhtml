@@ -1,10 +1,10 @@
 ﻿@Code
     ViewData("Title") = "Home Page"
-    Dim dbname = "job_demo"
+    Dim dbname = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbname = Request.QueryString("DB").ToString()
     End If
-    Dim dbSource = "AccConcept"
+    Dim dbSource = ViewBag.AccDatabase
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If

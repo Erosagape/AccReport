@@ -1,6 +1,6 @@
 ﻿@Code
     ViewData("Title") = "Index"
-    Dim dbName = "AccConcept"
+    Dim dbName = ViewBag.AccDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -13,7 +13,7 @@
         dateto = Request.QueryString("DateTo")
     End If
     Dim obj = New AccReport.CUtil(".", dbName)
-    Dim sqlw = String.Format(" where EffectiveDate>='{0}' and EffectiveDate<='{1}'", datefrom, dateto)
+    Dim sqlw = String.Format(" where EntryDate>='{0}' and EntryDate<='{1}'", datefrom, dateto)
     Dim sql = String.Format("select * from Acc_JournalHD {0} order by JournalNo", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
 End Code

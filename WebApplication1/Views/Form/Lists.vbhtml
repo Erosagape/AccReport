@@ -1,6 +1,6 @@
 ﻿@Code
     ViewData("Title") = "Trans"
-    Dim dbName = "AccConcept"
+    Dim dbName = ViewBag.AccDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -17,7 +17,7 @@
         docType = Request.QueryString("Type")
     End If
     Dim obj = New AccReport.CUtil(".", dbName)
-    Dim sqlw = String.Format(" where AccEffectiveDate>='{0}' and AccEffectiveDate<='{1}'", datefrom, dateto)
+    Dim sqlw = String.Format(" where AccBatchDate>='{0}' and AccBatchDate<='{1}'", datefrom, dateto)
     If docType <> "" Then
         sqlw &= String.Format(" and AccDocType='{0}'", docType)
     End If

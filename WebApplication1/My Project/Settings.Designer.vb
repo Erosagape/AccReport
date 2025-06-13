@@ -56,16 +56,6 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist"& _ 
-            " Security Info=False;")>  _
-        Public ReadOnly Property WebConnect() As String
-            Get
-                Return CType(Me("WebConnect"),String)
-            End Get
-        End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("sa")>  _
         Public ReadOnly Property WebUser() As String
             Get
@@ -88,6 +78,34 @@ Namespace My
         Public ReadOnly Property SetIdentityInsert() As String
             Get
                 Return CType(Me("SetIdentityInsert"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=.;Initial Catalog=acc_mnl;User id=sa;Password='9t;yogm8';Persist Secu"& _ 
+            "rity Info=False;")>  _
+        Public ReadOnly Property WebConnect() As String
+            Get
+                Return CType(Me("WebConnect"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("job_mnl")>  _
+        Public ReadOnly Property JobDB() As String
+            Get
+                Return CType(Me("JobDB"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("acc_mnl")>  _
+        Public ReadOnly Property AccDB() As String
+            Get
+                Return CType(Me("AccDB"),String)
             End Get
         End Property
     End Class

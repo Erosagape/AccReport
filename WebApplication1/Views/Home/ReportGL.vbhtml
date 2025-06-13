@@ -1,6 +1,6 @@
 ﻿@Code
     ViewData("Title") = "ReportGL"
-    Dim dbname = "job_demo"
+    Dim dbname = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbname = Request.QueryString("DB").ToString()
     End If
@@ -12,7 +12,7 @@
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateTo = Request.QueryString("DateTo")
     End If
-    Dim dbSource = "AccConcept"
+    Dim dbSource = ViewBag.AccDatabase
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
@@ -48,7 +48,7 @@ End Code
             Select Account Code
         </div>
         <div class="modal-body">
-            <table id="tbAcc" border="1" class="table table-bordered table-responsive">
+            <table id="tbAcc" border="1" class="table table-responsive">
                 <thead>
                     <tr>
                         <th>#</th>

@@ -1,7 +1,7 @@
 ﻿@Code
 
     ViewData("Title") = "LinkJob"
-    Dim dbName = "job_demo"
+    Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -74,7 +74,7 @@ where t.PaymentDate>=@@datefrom and t.PaymentDate<=@@dateto
 group by t.GroupField,t.AccCode,t.DocNo,t.PaymentDate,t.AccCode,m.AccName,t.AccDesc
 order by t.GroupField,t.AccCode
 "
-    Dim dbSource = "AccConcept"
+    Dim dbSource = ViewBag.AccDatabase
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If

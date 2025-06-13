@@ -9,7 +9,7 @@
     If Not Request.QueryString("Code") Is Nothing Then
         docno = Request.QueryString("Code")
     End If
-    Dim dbName = "AccConcept"
+    Dim dbName = ViewBag.AccDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If

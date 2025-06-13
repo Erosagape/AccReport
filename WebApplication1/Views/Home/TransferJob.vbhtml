@@ -1,6 +1,6 @@
 ﻿@Code
     ViewData("Title") = "Post data to GL Accounts"
-    Dim dbName = "job_demo"
+    Dim dbName = ViewBag.JobDatabase
     Dim debugMode = False
     If Not Request.QueryString("DEBUG") Is Nothing Then
         debugMode = IIf(Request.QueryString("DEBUG") = "Y", True, False)
@@ -50,7 +50,7 @@
     End If
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
-    Dim dbSource = "AccConcept"
+    Dim dbSource = ViewBag.AccDatabase
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
@@ -124,39 +124,39 @@ h.AccDocNo,h.AccBatchDate  as EntryDate,
 h.AccEffectiveDate,@@userid as UserID,
 h.DocRefNo,0,0
 from vAR_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
 and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
 
 " & setIdentityOFF & "
 
 insert into Acc_JournalDT
 select * from (
-    select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
-    ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
-    b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
-    (
-        select
-        d.AssetAccCode as AccCode,
-        d.AccDocNo,d.TotalAmount+d.VatAmount as Debit,0 as Credit,
-        d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
-        from vAR_D d
-        where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
-        union all
-        select
-        dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') as AccCode,
-        h.AccDocNo,0 as Debit,h.TotalVat as Credit,
-        h.PartyName as AccDesc,h.DocRefNo as RefNo
-        from vAR_H h
-        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
-        and h.TotalVat>0
-        union all
-        select
-        d.IncomeAccCode as AccCode,
-        d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
-        d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
-        from vAR_D d
-        where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
-    ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
+select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
+ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
+b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
+(
+select
+d.AssetAccCode as AccCode,
+d.AccDocNo,d.TotalAmount+d.VatAmount as Debit,0 as Credit,
+d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+from vAR_D d
+where d.AccBatchDate>=@@datefrom and d.AccBatchDate<=@@dateto
+union all
+select
+dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') as AccCode,
+h.AccDocNo,0 as Debit,h.TotalVat as Credit,
+h.PartyName as AccDesc,h.DocRefNo as RefNo
+from vAR_H h
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
+and h.TotalVat>0
+union all
+select
+d.IncomeAccCode as AccCode,
+d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
+d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+from vAR_D d
+where d.AccBatchDate>=@@datefrom and d.AccBatchDate<=@@dateto
+) a inner join vMas_AccCode b on a.AccCode=b.AccCode
 ) tb
 where tb.EntryId not in(select EntryID from Acc_JournalDT)
 
@@ -165,7 +165,7 @@ set a.TotalDebit=b.sumA,a.TotalCredit=b.sumb
 from Acc_JournalHD a inner join
 (select EntryId,sum(Debit) sumA,sum(Credit) sumb from Acc_JournalDT  group by EntryID) b
 on a.EntryID=b.EntryID
-where a.EffectiveDate>=@@datefrom and a.EffectiveDate<=@@dateto
+where a.EntryDate>=@@datefrom and a.EntryDate<=@@dateto
 
 update a set a.AccPostDate=b.EntryDate,a.DocStatus=2
 from Acc_TransactionHD a
@@ -176,7 +176,7 @@ end
 "
     msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
 
-                sqlAlterView = "
+    sqlAlterView = "
 ALTER procedure [dbo].[Insert_PIToJournal_ByDate]
 (
 @@datefrom date,
@@ -196,39 +196,39 @@ h.AccDocNo,h.AccBatchDate  as EntryDate,
 h.AccEffectiveDate,@@userid as UserID,
 h.DocRefNo,0,0
 from vAP_H h
-where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
 and h.AccDocNo not in(select JournalNo from Acc_JournalHD)
 
 " & setIdentityOFF & "
 
 insert into Acc_JournalDT
 select * from (
-    select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
-    ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
-    b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
-    (
-        select
-        dbo.GetAccConfig('AP_CONFIG','Purchase') as AccCode,
-        h.AccDocNo,0 as Debit,h.TotalAmount+h.TotalVat as Credit,
-        h.PartyName as AccDesc,h.DocRefNo as RefNo
-        from vAP_H h
-        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
-        union all
-        select
-        dbo.GetAccConfig('VAT_CONFIG','UndueInputVat') as AccCode,
-        h.AccDocNo,h.TotalVat as Debit,0 as Credit,
-        h.PartyName as AccDesc,h.DocRefNo as RefNo
-        from vAP_H h
-        where h.AccEffectiveDate>=@@datefrom and h.AccEffectiveDate<=@@dateto
-        and h.TotalVat>0
-        union all
-        select
-        d.AssetAccCode as AccCode,
-        d.AccDocNo,d.TotalAmount as Debit,0 as Credit,
-        d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
-        from vAP_D d
-        where d.AccEffectiveDate>=@@datefrom and d.AccEffectiveDate<=@@dateto
-    ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
+select @@maxid+DENSE_RANK() OVER(ORDER BY AccDocNo)  as EntryId,
+ROW_NUMBER() OVER(PARTITION BY AccDocNo ORDER BY RefNo) as Seq,
+b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
+(
+select
+dbo.GetAccConfig('AP_CONFIG','Purchase') as AccCode,
+h.AccDocNo,0 as Debit,h.TotalAmount+h.TotalVat as Credit,
+h.PartyName as AccDesc,h.DocRefNo as RefNo
+from vAP_H h
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
+union all
+select
+dbo.GetAccConfig('VAT_CONFIG','UndueInputVat') as AccCode,
+h.AccDocNo,h.TotalVat as Debit,0 as Credit,
+h.PartyName as AccDesc,h.DocRefNo as RefNo
+from vAP_H h
+where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
+and h.TotalVat>0
+union all
+select
+d.AssetAccCode as AccCode,
+d.AccDocNo,d.TotalAmount as Debit,0 as Credit,
+d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+from vAP_D d
+where d.AccBatchDate>=@@datefrom and d.AccBatchDate<=@@dateto
+) a inner join vMas_AccCode b on a.AccCode=b.AccCode
 ) tb
 where tb.EntryId not in(select EntryID from Acc_JournalDT)
 
@@ -237,7 +237,7 @@ set a.TotalDebit=b.sumA,a.TotalCredit=b.sumb
 from Acc_JournalHD a inner join
 (select EntryId,sum(Debit) sumA,sum(Credit) sumb from Acc_JournalDT  group by EntryID) b
 on a.EntryID=b.EntryID
-where a.EffectiveDate>=@@datefrom and a.EffectiveDate<=@@dateto
+where a.EntryDate>=@@datefrom and a.EntryDate<=@@dateto
 
 update a set a.AccPostDate=b.EntryDate,a.DocStatus=2
 from Acc_TransactionHD a
@@ -247,9 +247,9 @@ where a.DocStatus=1
 
 end
 "
-                msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
+    msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
 
-                sqlAlterView = "
+    sqlAlterView = "
 ALTER procedure [dbo].[Insert_ProductsCodeFromJob]
 as
 begin
@@ -369,30 +369,30 @@ on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsCredit=1 and s.IsExpense=0
 end
 "
-                msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
-                @<ul>
-                    <li>Prepare Views: @msg</li>
-                </ul>
-                Dim sqlHead = "
+    msg &= IIf(obj.ExecuteSQL(sqlAlterView) = "OK", "", vbCrLf & obj.Message)
+    @<ul>
+        <li>Prepare Views: @msg</li>
+    </ul>
+    Dim sqlHead = "
 declare @@datefrom date='{1}';
 declare @@dateto date='{2}';
 declare @@branchcode varchar(3)='{0}';
 declare @@userid varchar(10)='" + userid + "';
 declare @@maxid int;
 "
-                'Sync Master File
-                Dim sql = "EXEC dbo.Insert_ProductsCodeFromJob"
-                If debugMode = False Then
-                    msg = obj.ExecuteSQL(sql)
-                Else
-                    msg = sql
-                End If
-                @<ul>
-                    <li>Sync Master File: @msg</li>
-                </ul>
-                If postadv Then
-                    'process advance
-                    sql = sqlHead & "
+    'Sync Master File
+    Dim sql = "EXEC dbo.Insert_ProductsCodeFromJob"
+    If debugMode = False Then
+        msg = obj.ExecuteSQL(sql)
+    Else
+        msg = sql
+    End If
+    @<ul>
+        <li>Sync Master File: @msg</li>
+    </ul>
+    If postadv Then
+        'process advance
+        sql = sqlHead & "
 delete c
 from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_JournalHD b
 on a.AdvNo=b.JournalNo
@@ -412,15 +412,15 @@ on a.AdvNo=b.DocNo
 where a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Delete Old Advance Imported: @msg</li>
-                    </ul>
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Delete Old Advance Imported: @msg</li>
+        </ul>
 
         sql = sqlHead & "
 set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
@@ -431,7 +431,7 @@ insert into Acc_JournalHD (EntryID,JournalNo,EntryDate,EffectiveDate,EntryBy,Des
 select
 ROW_NUMBER() OVER(ORDER BY a.AdvNo)+@@maxid as EntryID,
 a.AdvNO as JournalNo,
-a.AdvDate as EntryDate,
+a.PaymentDate as EntryDate,
 a.PaymentDate as EffectiveDate,
 @@userid,a.PaymentRef,(a.TotalAdvance+a.Total50Tavi),(a.TotalAdvance+a.Total50Tavi)
 from [" + dbName + "].dbo.Job_AdvHeader a
@@ -500,7 +500,7 @@ insert into Acc_AdditionData
 select c.AdvNo,a.Seq,c.SICode,c.ForJNo,c.AdvAmount,c.PayChqTo,c.VenCode
 from Acc_JournalDT a inner join [" + dbName + "].dbo.Job_AdvDetail c
 on a.AccDesc=concat(c.AdvNo,'#',c.ItemNo)
-inner join [" + dbName + "].dbo.Job_AdvHeader b 
+inner join [" + dbName + "].dbo.Job_AdvHeader b
 on c.BranchCode=b.BranchCode and c.AdvNo=b.AdvNo
 where not exists(select 1 from Acc_AdditionData where DocNo=c.AdvNo and Seq=a.Seq)
 "
@@ -510,13 +510,13 @@ where not exists(select 1 from Acc_AdditionData where DocNo=c.AdvNo and Seq=a.Se
         Else
             msg = sql
         End If
-                    @<ul>
-                        <li>Process Advance Data: @msg</li>
-                    </ul>
-                End If
-                If postap Then
-                    'Process A/P Data
-                    sql = sqlHead & "
+        @<ul>
+            <li>Process Advance Data: @msg</li>
+        </ul>
+    End If
+    If postap Then
+        'Process A/P Data
+        sql = sqlHead & "
 delete d
 from [" + dbName + "].dbo.Job_PaymentHeader h
 inner join Acc_TransactionDT d
@@ -550,15 +550,15 @@ on a.DocNo=b.DocNo
 where a.BranchCode=@@branchcode
 and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Delete Old Pay-in Data: @msg</li>
-                    </ul>
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Delete Old Pay-in Data: @msg</li>
+        </ul>
 
         sql = sqlHead & "
 insert into Acc_TransactionHD
@@ -575,7 +575,6 @@ and exists(
 select d.DocNo from [" + dbName + "].dbo.Job_PaymentDetail d
 inner join [" + dbName + "].dbo.Job_SrvSingle s
 on d.SICode=s.SICode
-and s.IsExpense=1
 and d.BranchCode=h.BranchCode and d.DocNo=h.DocNo
 )
 and h.DocNo not in (select AccDocNo from Acc_TransactionHD)
@@ -586,12 +585,12 @@ select a.DocNo,0,'PO',a.VenCode,a.PoNo,a.RefNo
 from [" + dbName + "].dbo.Job_PaymentHeader a
 where a.BranchCode=@@branchcode
 and a.DocDate>=@@datefrom and a.DocDate<=@@dateto
-and not isnull(a.CancelProve,'')<>'' 
+and not isnull(a.CancelProve,'')<>''
 and not exists(select 1 FROM Acc_AdditionData WHERE DocNo=a.DocNo AND Seq=0)
 
 insert into Acc_TransactionDT
 select d.DocNo,
-ROW_NUMBER() OVER(PARTITION BY d.DocNo ORDER BY d.ItemNo),'',0,0,d.Qty,
+d.ItemNo,'',0,0,d.Qty,
 ((d.Amt-d.AmtDisc)/h.ExchangeRate)/d.Qty
 ,d.QtyUnit,h.CurrencyCode,h.ExchangeRate,
 (d.Amt-d.AmtDisc)
@@ -601,26 +600,24 @@ ROW_NUMBER() OVER(PARTITION BY d.DocNo ORDER BY d.ItemNo),'',0,0,d.Qty,
 1 as VatRate
 from [" + dbName + "].dbo.Job_PaymentHeader h
 inner join [" + dbName + "].dbo.Job_PaymentDetail d
-on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
+on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo
 inner join [" + dbName + "].dbo.Job_SrvSingle s
 on d.SICode=s.SICode
 where h.BranchCode=@@branchcode and not h.CancelProve<>'' and
 h.DocDate>=@@datefrom and h.DocDate<=@@dateto
-and s.IsExpense=1
+
 
 insert into Acc_AdditionData
 (DocNo,Seq,Text1,Text2,Text3)
-select h.DocNo,ROW_NUMBER() OVER(PARTITION BY d.DocNo ORDER BY d.ItemNo),
+select h.DocNo,d.ItemNo,
 d.ForJNo,d.BookingRefNo,d.SRemark
 from [" + dbName + "].dbo.Job_PaymentHeader h
 inner join [" + dbName + "].dbo.Job_PaymentDetail d
-on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
+on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo
 inner join [" + dbName + "].dbo.Job_SrvSingle s
 on d.SICode=s.SICode
 where h.BranchCode=@@branchcode and not h.CancelProve<>'' and
 h.DocDate>=@@datefrom and h.DocDate<=@@dateto
-and s.IsExpense=1
-
 
 EXEC dbo.Insert_PITojournal_ByDate @@datefrom,@@dateto,@@userid
 "
@@ -631,12 +628,12 @@ EXEC dbo.Insert_PITojournal_ByDate @@datefrom,@@dateto,@@userid
         Else
             msg = sql
         End If
-                    @<ul>
-                        <li>Process Pay-In Data: @msg</li>
-                    </ul>
-                End If
-                If postar Then
-                    sql = sqlHead & "
+        @<ul>
+            <li>Process Pay-In Data: @msg</li>
+        </ul>
+    End If
+    If postar Then
+        sql = sqlHead & "
 delete d
 from [" + dbName + "].dbo.Job_InvoiceHeader h
 inner join Acc_TransactionDT d
@@ -664,17 +661,17 @@ left join Acc_JournalHD d
 on h.EntryID=d.EntryId
 where d.EntryID is null
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Delete Old Invoices Data: @msg</li>
-                    </ul>
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Delete Old Invoices Data: @msg</li>
+        </ul>
 
-                    sql = sqlHead & "
+        sql = sqlHead & "
 insert into Acc_TransactionHD
 select h.DocNo,h.DocDate,isnull(h.DueDate,h.DocDate) as DueDate,
 isnull(c.CustCode,'-'),isnull(c.TaxNumber,'-'),
@@ -709,20 +706,20 @@ and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
 
 EXEC dbo.Insert_SIToJournal_ByDate @@datefrom,@@dateto,@@userid
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Process Invoice Data: @msg</li>
-                    </ul>
-                End If
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Process Invoice Data: @msg</li>
+        </ul>
+    End If
 
-                If postrc Then
+    If postrc Then
 
-                    sql = "
+        sql = "
 alter view vRV_LinkJob
 as
 select BranchCode,DocNo,ItemNo,CustTaxID,CustBranch,custName,SICode,AmtCharge,AmtAdvance,ReceiptNet,ReceiptWht,ReceiptNo,ReceiptDAte,ReceiptItemNo,
@@ -763,17 +760,17 @@ not rh.CancelProve<>''
 group by BranchCode,CustTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net ,Amt50Tavi
 ) t
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Prepare View: @msg</li>
-                    </ul>
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Prepare View: @msg</li>
+        </ul>
 
-                    sql = sqlHead & "
+        sql = sqlHead & "
 delete d
 from [" + dbName + "].dbo.Job_ReceiptHeader h
 inner join Acc_TransactionDT d
@@ -800,16 +797,16 @@ left join Acc_JournalHD d
 on h.EntryID=d.EntryId
 where d.EntryID is null
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Delete Old Receipt Data: @msg</li>
-                    </ul>
-                    sql = sqlHead & "
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Delete Old Receipt Data: @msg</li>
+        </ul>
+        sql = sqlHead & "
 insert into Acc_TransactionHD
 select h.ReceiptNo,h.ReceiptDate,h.ReceiptDate,
 isnull(c.CustCode,'-'),isnull(c.TaxNumber,'-'),
@@ -843,24 +840,24 @@ where h.BranchCode=@@branchcode
 and not isnull(h.CancelProve,'')<>''
 and h.ReceiptDate>=@@datefrom and h.ReceiptDate<=@@dateto
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Process Receipt Data: @msg</li>
-                    </ul>
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Process Receipt Data: @msg</li>
+        </ul>
 
-                    sql = sqlHead & "
+        sql = sqlHead & "
 set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 
 " & setIdentityON & "
 
 insert into Acc_JournalHD (EntryID,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @@maxid+ROW_NUMBER() OVER(ORDER BY r.ReceiptNo) as EntryID,
-r.ReceiptNo,GETDATE(),r.ReceiptDAte,@@userid,concat(r.CustTaxID,' / ',r.custName),sum(r.ReceiptNet+r.ReceiptWht),sum(r.ReceiptNet+r.ReceiptWht)
+r.ReceiptNo,r.ReceiptDAte,r.ReceiptDAte,@@userid,concat(r.CustTaxID,' / ',r.custName),sum(r.ReceiptNet+r.ReceiptWht),sum(r.ReceiptNet+r.ReceiptWht)
 from vRV_LinkJob r
 inner join vMas_Product p
 on r.SICode=p.ProductCode
@@ -898,13 +895,12 @@ on r.SICode=p.ProductCode
 where r.AmtCharge>0
 union all
 select r.ReceiptNo,
-a.AccCode,a.AccName,p.ProductName,0,r.ReceiptNet
+p.AssetAccCode,p.AssetAccName,p.ProductName,0,r.ReceiptNet
 from vRV_LinkJob r
 inner join vMas_Product p
-on r.SICode=p.ProductCode,
-vMas_AccCode a
+on r.SICode=p.ProductCode
 where r.AmtAdvance>0
-and r.IsFromAdv=0 and a.AccCode=dbo.GetAccConfig('AP_CONFIG','Purchase')
+and r.IsFromAdv=0
 union all
 select r.ReceiptNo,
 a.AccCode,a.AccName,'ถูกหัก ณ ที่จ่าย' as AccDesc,sum(r.ReceiptWht) as Debit,0 as Credit
@@ -923,18 +919,18 @@ and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxCustomer')
 group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
 ) t
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Posting Receipt Data: @msg</li>
-                    </ul>
-                End If
-                If postcost Then
-                    sql = sqlHead & "
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Posting Receipt Data: @msg</li>
+        </ul>
+    End If
+    If postcost Then
+        sql = sqlHead & "
 delete b
 from (
 select ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
@@ -959,24 +955,24 @@ left join Acc_JournalHD d
 on h.EntryID=d.EntryId
 where d.EntryID is null
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Deleting Old Cost Data: @msg</li>
-                    </ul>
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Deleting Old Cost Data: @msg</li>
+        </ul>
 
-                    sql = sqlHead & "
+        sql = sqlHead & "
 set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 
 " & setIdentityON & "
 
 insert into Acc_JournalHD (EntryId,JournalNo,Entrydate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @@maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
-ClrNo,GETDATE(),ClrDate,@@userid,'-',TotalClr,TotalClr
+ClrNo,ClrDate,ClrDate,@@userid,'-',TotalClr,TotalClr
 from (
 select ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
 from [" + dbName + "].dbo.Job_ClearDetail cd
@@ -1121,17 +1117,17 @@ and c.AccCode=dbo.GetAccConfig('AP_CONFIG','Purchase')
 and ch.DocStatus<>99 and s.IsExpense=1
 ) t
 "
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Cost Data Posted: @msg</li>
-                    </ul>
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Cost Data Posted: @msg</li>
+        </ul>
 
-                    sql = sqlHead & "
+        sql = sqlHead & "
 set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 
 insert into Acc_JournalDT
@@ -1172,7 +1168,7 @@ where ClrDate>=@@datefrom and ClrDate<=@@dateto
 
 insert into Acc_JournalHD (EntryId,JournalNo,Entrydate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @@maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
-ClrNo,GETDATE(),ClrDate,@@userid,'-',sum(Dr),sum(Cr)
+ClrNo,ClrDate,ClrDate,@@userid,'-',sum(Dr),sum(Cr)
 from (
 select h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription as AccDesc,sum(d.UsedAmount+d.ChargeVAT) as Dr,0 as Cr
 from [" + dbName + "].dbo.Job_ClearDetail d
@@ -1204,17 +1200,17 @@ where ClrDate>=@@datefrom and ClrDate<=@@dateto
 group by ClrNo,ClrDAte
 
 " & setIdentityOFF
-                    sql = String.Format(sql, branch, datefrom, dateto)
-                    If debugMode = False Then
-                        msg = obj.ExecuteSQL(sql)
-                    Else
-                        msg = sql
-                    End If
-                    @<ul>
-                        <li>Cost Payment received Posted: @msg</li>
-                    </ul>
-                End If
-            End If
+        sql = String.Format(sql, branch, datefrom, dateto)
+        If debugMode = False Then
+            msg = obj.ExecuteSQL(sql)
+        Else
+            msg = sql
+        End If
+        @<ul>
+            <li>Cost Payment received Posted: @msg</li>
+        </ul>
+    End If
+End If
 
 <script type="text/javascript">
     var setIden = '@(IIf(setIden = True, "Y", "N"))';

@@ -5,7 +5,7 @@
 </style>
 @Code
     ViewData("Title") = "Profit and Loss"
-    Dim dbName = "job_demo"
+    Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -32,7 +32,7 @@ group by AccCode,AccName order by AccCode
     End If
     Dim sumDebit = 0
     Dim sumCredit = 0
-    Dim dbSource = "AccConcept"
+    Dim dbSource = ViewBag.AccDatabase
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
