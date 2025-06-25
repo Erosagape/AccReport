@@ -4,6 +4,7 @@
     }
 </style>
 @Code
+    Layout = "~/Views/Shared/A4.vbhtml"
     ViewData("Title") = "FormPO"
     Dim docno As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
