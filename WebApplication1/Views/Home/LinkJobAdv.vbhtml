@@ -13,7 +13,7 @@
     If Not Request.QueryString("DateFrom") Is Nothing Then
         datefrom = Request.QueryString("DateFrom")
     End If
-    Dim dateto = "2025-02-28"
+    Dim dateto = DateAdd("d", -1, New Date(DateTime.Now.Year + 1, 1, 1)).ToString("yyyy-MM-dd")
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateto = Request.QueryString("DateTo")
     End If

@@ -1,0 +1,422 @@
+﻿@Code
+    ViewData("Title") = "Config Account Standard Entry"
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim tsql As String = ""
+    Dim dt As New System.Data.DataTable
+    Dim configCode As String = ""
+    If Not Request.Form("Code") Is Nothing Then
+        configCode = Request.Form("Code")
+    End If
+    Dim configKey As String = ""
+    If Not Request.Form("Key") Is Nothing Then
+        configKey = Request.Form("Key")
+    End If
+    Dim configValue As String = ""
+    If Not Request.Form("Val") Is Nothing Then
+        configValue = Request.Form("Val")
+    End If
+    Dim postMessage As String = ""
+    If configKey <> "" And configCode <> "" Then
+        If obj.ExecuteSQL(String.Format("UPDATE Mas_AccConfig SET ConfigValue='{2}' WHERE ConfigCode='{0}' AND ConfigKey='{1}' ", configCode, configKey, configValue)) = "OK" Then
+            postMessage = "Save Complete!"
+        Else
+            postMessage = obj.Message
+        End If
+    End If
+    Dim msg As String = "Ready"
+    Dim accName As String = ""
+    Dim idVal As String = ""
+    Dim idName As String = ""
+    Dim idRow As Integer = 0
+End Code
+<h2>@ViewBag.Title</h2>
+@msg
+<div class="modal fade" id="mdlSelect">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Select Account Code
+                <input type="hidden" id="txtRow" value="@idRow" />
+            </div>
+            <div class="modal-body">
+                <table class="table table-responsive" border="1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Code
+                            dt = obj.GetDataFromSQL("SELECT * FROM Mas_AccCode")
+                            If dt.Rows.Count > 1 Then
+                                For Each dr As Data.DataRow In dt.Rows
+                                    @<tr>
+                                        <td>
+                                            <input type="button" class="btn btn-warning" onclick="SetData('@dr("AccCode").ToString()','@dr("AccName").ToString()')" value="Select" data-dismiss="modal" />
+                                        </td>
+                                        <td>
+                                            @dr("AccCode").ToString()
+                                        </td>
+                                        <td>
+                                            @dr("AccName").ToString()
+                                        </td>
+                                    </tr>
+                                Next
+                            End If
+                        End Code
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-danger" value="X" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+<h4>Setting for Advance Reimbursement</h4>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "ADV_CONFIG"
+    configKey = "CashIn"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Default Debit (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "ADV_CONFIG"
+    configKey = "CashOut"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Default Credit (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "ADV_CONFIG"
+    configKey = "TaxCompany"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Default Credit (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "ADV_CONFIG"
+    configKey = "TaxPerson"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Default Credit (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "ADV_CONFIG"
+    configKey = "TaxEmployee"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Default Credit (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "ADV_CONFIG"
+    configKey = "TaxCustomer"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Default Credit (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+<h4>Setting for A/P</h4>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "AP_CONFIG"
+    configKey = "Purchase"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Credit A/P (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "AP_CONFIG"
+    configKey = "CashOut"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Cash/Transfer Payment (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "AP_CONFIG"
+    configKey = "ChequeOut"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Cheque Payment (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var msg = '@postMessage';
+    if (msg !== '') {
+        alert(msg);
+        window.location = window.location.href;
+    }
+    function SetRowReturn(id) {
+        document.getElementById('txtRow').value = id;
+    }
+    function SetData(code, name) {
+        let rowid = document.getElementById('txtRow').value;
+        document.getElementById("txtVal" + rowid).value = code;
+        document.getElementById("txtName" + rowid).value = name;
+    }
+</script>

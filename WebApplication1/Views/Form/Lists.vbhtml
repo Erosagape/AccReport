@@ -8,7 +8,7 @@
     If Not Request.QueryString("DateFrom") Is Nothing Then
         datefrom = Request.QueryString("DateFrom")
     End If
-    Dim dateto = New Date(Today.Year, Today.Month, Today.Day).ToString("yyyy-MM-dd")
+    Dim dateto = New Date(Today.Year, 12, 31).ToString("yyyy-MM-dd")
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateto = Request.QueryString("DateTo")
     End If

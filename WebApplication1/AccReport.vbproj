@@ -175,7 +175,7 @@
     </Compile>
     <Compile Include="Controllers\HomeController.vb" />
     <Compile Include="Settings.vb" />
-    <Compile Include="Views\FormController.vb" />
+    <Compile Include="Controllers\FormController.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -256,6 +256,8 @@
     <Content Include="Views\Shared\A4.vbhtml" />
     <Content Include="Views\Form\LetterHead.vbhtml" />
     <Content Include="Views\Shared\ReportHeader.vbhtml" />
+    <Content Include="Views\Home\ProductMas.vbhtml" />
+    <Content Include="Views\Home\ConfigAcc.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
