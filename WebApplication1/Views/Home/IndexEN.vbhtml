@@ -10,6 +10,17 @@
     End If
 End Code
 <div class="container">
+    <b>Master Files</b>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="?Form=ConfigAcc&SRC=@dbSource">Standard Entry</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="?Form=ProductMas&SRC=@dbSource">Products</a>
+        </div>
+    </div>
     <b>Job System Integrated</b>
     <div class="row">
         <div class="col-md-4">

@@ -10,6 +10,17 @@
     End If
 End Code
 <div class="container">
+    <b>ข้อมูลมาตรฐาน</b>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="?Form=ConfigAcc&SRC=@dbSource">กำหนดมาตรฐานการลงบัญชี</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="?Form=ProductMas&SRC=@dbSource">ข้อมูลสินค้าและยริการ</a>
+        </div>
+    </div>
     <b>เชื่อมต่อข้อมูลกับระบบ Job</b>
     <div class="row">
         <div class="col-md-4">
