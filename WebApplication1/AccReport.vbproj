@@ -191,6 +191,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\paper_origin.css" />
     <Content Include="Content\paper.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -258,6 +259,11 @@
     <Content Include="Views\Shared\ReportHeader.vbhtml" />
     <Content Include="Views\Home\ProductMas.vbhtml" />
     <Content Include="Views\Home\ConfigAcc.vbhtml" />
+    <Content Include="Views\Home\ReportPurchase.vbhtml" />
+    <Content Include="Views\Shared\A4_Landscape.vbhtml" />
+    <Content Include="Views\Shared\Report.vbhtml" />
+    <Content Include="Views\Home\ReportSale.vbhtml" />
+    <Content Include="Views\Home\Report.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

@@ -56,6 +56,11 @@ End Code
     <b>Account Reports</b>
     <div class="row">
         <div class="col-md-4">
+            <a href="?Form=Report&DB=@dbname&SRC=@dbSource">Transaction Report</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
             <a href="?Form=StockOnhand&DB=@dbname&SRC=@dbSource">Stock Onhand</a>
         </div>
     </div>
