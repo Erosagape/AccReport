@@ -41,6 +41,8 @@ End Code
         <select id="cboReport" class="form-control dropdown">
             <option value="Purchase">Purchase Report</option>
             <option value="Sale">Sale Report</option>
+            <option value="Payment">Payment Report</option>
+            <option value="Receive">Receive Report</option>
         </select>
     </div>
 </div>

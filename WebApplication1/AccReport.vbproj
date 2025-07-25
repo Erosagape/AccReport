@@ -264,6 +264,8 @@
     <Content Include="Views\Shared\Report.vbhtml" />
     <Content Include="Views\Home\ReportSale.vbhtml" />
     <Content Include="Views\Home\Report.vbhtml" />
+    <Content Include="Views\Home\ReportPayment.vbhtml" />
+    <Content Include="Views\Home\ReportReceive.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
