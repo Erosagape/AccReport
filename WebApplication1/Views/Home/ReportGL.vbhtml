@@ -88,7 +88,7 @@ End Code
         let dateFrom = document.getElementById("txtDateFrom").value;
         let dateTo = document.getElementById("txtDateTo").value;
         let accCode = document.getElementById("txtAccCode").value;
-        window.location.href = "?Form=GeneralLedger&DB=@dbName&Code="+ accCode +"&DateFrom="+ dateFrom + "&DateTo=" + dateTo;
+	window.location.href = "?Form=GeneralLedger&DB=@dbName&SRC=@dbSource&Code="+ accCode +"&DateFrom="+ dateFrom + "&DateTo=" + dateTo;
     }
 </script>
 

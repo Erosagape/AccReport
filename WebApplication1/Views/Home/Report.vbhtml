@@ -39,10 +39,12 @@ End Code
         Report:
         <br />
         <select id="cboReport" class="form-control dropdown">
-            <option value="Purchase">Purchase Report</option>
-            <option value="Sale">Sale Report</option>
-            <option value="Payment">Payment Report</option>
-            <option value="Receive">Receive Report</option>
+            <option value="Purchase">Purchase Order Report</option>
+            <option value="PI">Purchase Invoice Report</option>
+            <option value="Sale">Sale Order Report</option>
+            <option value="SI">Sale Invoice Report</option>
+            <option value="Payment">Payment Voucher Report</option>
+            <option value="Receive">Receive Voucher Report</option>
         </select>
     </div>
 </div>
@@ -54,6 +56,6 @@ End Code
         let dateTo = document.getElementById('txtDateTo').value;
         let status = document.getElementById('txtStatus').value;
         let partyName = document.getElementById('txtPartyName').value;
-        window.open('?DB=@dbname&SRC=@dbSource&Form=Report' + reportName + (dateFrom == '' ? '' : '&DateFrom=' + dateFrom) + (dateTo == '' ? '' : '&DateTo=' + dateTo) + (status == '' ? '' : '&Status=' + status) + (partyName == '' ? '' :'&PartyName='+partyName), '');
+        window.open('?DB=@dbname&SRC=@dbSource&Form=Report' + reportName + (dateFrom == '' ? '' : '&DateFrom=' + dateFrom) + (dateTo == '' ? '' : '&DateTo=' + dateTo) + (status == '' ? '' : '&Status=' + status) + (partyName == '' ? '' :'&Query='+partyName), '');
     }
 </script>

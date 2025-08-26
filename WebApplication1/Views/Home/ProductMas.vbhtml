@@ -462,6 +462,6 @@ End Code
         window.location = window.location.href;
     }
     function ShowProduct(code) {
-        window.location = "?Form=ProductMas&SRC=@dbSource&Code=" + code;
+	window.location = "?Form=ProductMas&SRC=@dbSource&Code=" + code;
     }
 </script>

@@ -28,7 +28,7 @@ End Code
     <input type="button" onclick="RefreshPage()" value="Refresh" />
 </div>
 @If dt.Rows.Count > 0 Then
-    @<table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<table border="1" class="table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
                 <th>#</th>

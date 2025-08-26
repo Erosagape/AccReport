@@ -12,6 +12,10 @@
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
     Dim lang = "TH"
     If Not Request.QueryString("LANG") Is Nothing Then
         lang = Request.QueryString("LANG")
@@ -21,10 +25,6 @@
 select distinct Period from vSum_BalanceMonthly
 order by Period DESC
 "
-    Dim dbSource = ViewBag.AccDatabase
-    If Not Request.QueryString("SRC") Is Nothing Then
-        dbSource = Request.QueryString("SRC")
-    End If
     Dim obj = New AccReport.CUtil(".", dbSource)
     Dim dt = obj.GetDataFromSQL(sql)
     Dim period = ""
@@ -70,7 +70,7 @@ End Code
                 End If
             Next
         </select>
-        <a href="?Form=TrialBalance&LANG=@lang&DB=@dbName&Period=@period&month=@DateTime.Now.Month()"> Trial Balance</a>
+        <a href="?Form=TrialBalance&LANG=@lang&SRC=@dbSource&DB=@dbName&Period=@period&month=@DateTime.Now.Month()"> Trial Balance</a>
         @Code
             @<input type="button" value="Switch to @nextpage" onclick="SetAccu(@type,'@period')" />
             sql = String.Format("SELECT * FROM vSum_BalanceMonthly" & accu & " WHERE Period='{0}' and (balDr+Balcr+dr_jan+cr_jan+dr_feb+cr_feb+dr_mar+cr_mar+dr_jun+cr_jun+dr_jul+cr_jul+dr_aug+cr_aug+dr_sep+cr_sep+dr_oct+cr_oct+dr_nov+cr_nov+dr_dec+cr_dec)>0 ORDER BY AccCode", period)
@@ -280,10 +280,10 @@ End If
         var m = mm - 1;
         var dateFrom = new Date(@period, m, 1);
         var dateTo = new Date(@period, m + 1, 0);
-        window.location.href = "?Form=GeneralLedger&DB=@dbName&Code=" + accCode + "&DateFrom="+CDate(dateFrom)+"&DateTo="+CDate(dateTo);
+        window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom="+CDate(dateFrom)+"&DateTo="+CDate(dateTo);
     }
     function SetPeriod(period) {
-        window.location.href = "?Form=MonthlyBalance&DB=@dbName&Period=" + period + (accu==''?'':'&Type='+accu);
+        window.location.href = "?Form=MonthlyBalance&SRC=@dbSource&DB=@dbName&Period=" + period + (accu==''?'':'&Type='+accu);
     }
     function SetAccu(val, period) {
         switch (val) {

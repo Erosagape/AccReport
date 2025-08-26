@@ -151,16 +151,19 @@ End If
                 sumPCredit += obj.GetDouble(dr("PrevCr"))
                 sumNDebit += obj.GetDouble(dr("NextDr"))
                 sumNCredit += obj.GetDouble(dr("NextCr"))
-                @<tr>
-                    <td><a href="?Form=GeneralLedger&DB=@dbName&Code=@dr("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@dr("AccCode").ToString()</a></td>
-                    <td>@dr("AccName").ToString()</td>
-                    <td style="text-align:right;">@Convert.ToDouble(dr("PrevDr")).ToString("#,##0.00")</td>
-                    <td style="text-align:right;">@Convert.ToDouble(dr("PrevCr")).ToString("#,##0.00")</td>
-                    <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
-                    <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
-                    <td style="text-align:right;">@Convert.ToDouble(dr("NextDr")).ToString("#,##0.00")</td>
-                    <td style="text-align:right;">@Convert.ToDouble(dr("NextCr")).ToString("#,##0.00")</td>
-                </tr>
+                If obj.GetDouble(dr("NextDr")) > 0 Or obj.GetDouble(dr("NextCr")) > 0 Then
+                    @<tr>
+                        <td><a href="?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=@dr("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@dr("AccCode").ToString()</a></td>
+                        <td>@dr("AccName").ToString()</td>
+                        <td style="text-align:right;">@Convert.ToDouble(dr("PrevDr")).ToString("#,##0.00")</td>
+                        <td style="text-align:right;">@Convert.ToDouble(dr("PrevCr")).ToString("#,##0.00")</td>
+                        <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
+                        <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
+                        <td style="text-align:right;">@Convert.ToDouble(dr("NextDr")).ToString("#,##0.00")</td>
+                        <td style="text-align:right;">@Convert.ToDouble(dr("NextCr")).ToString("#,##0.00")</td>
+                    </tr>
+
+                End If
             Next
         </tbody>
         <tfoot>

@@ -15,7 +15,7 @@
         dbName = Request.QueryString("DB")
     End If
     Dim sql = "
-select * from vJournal_All where JournalNo='{0}' order by ItemNo
+select * from vJournal_All where JournalNo='{0}' order by AccCode,ItemNo
 "
 
     Dim obj = New AccReport.CUtil(".", dbName)
@@ -62,6 +62,8 @@ End Code
     </div>
 </div>
 @If voucherNo <> "" Then
+    Dim chk As String=""
+    Dim irow As Integer=0
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
         <thead>
             <tr>
@@ -75,9 +77,18 @@ End Code
         <tbody>
             @If dt.Rows.Count > 0 Then
                 For Each dr As Data.DataRow In dt.Rows
+                    irow+=1
+                    If chk<> dr("AccCode") Then
+                    @<tr>
+                        <td colspan="5" style="font-weight:bold;">
+                            @dr("AccCode").ToString() / @dr("AccName").ToString()
+                        </td>                         
+                    </tr>
+                    chk=dr("AccCode")
+                    End If
                     @<tr>
                         <td>
-                            @dr("AccCode").ToString()
+                            @irow
                         </td>
                         <td>
                             @dr("AccRemark").ToString()
@@ -91,7 +102,8 @@ End Code
                         <td class="text-right">
                             @Convert.ToDouble(dr("Credit")).ToString("#,###,##0.00")
                         </td>
-                    </tr>Next
+                    </tr>
+                    Next
             End If
             @For i As Integer = 1 To totalRows - dt.Rows.Count
                 @<tr>

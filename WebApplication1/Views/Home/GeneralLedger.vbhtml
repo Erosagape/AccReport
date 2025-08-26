@@ -2,6 +2,9 @@
     #topMenu {
         display: none;
     }
+    td {
+        padding:5px 5px 5px 5px;
+    }
 </style>
 @Code
     ViewData("Title") = "General Ledger"
@@ -46,6 +49,7 @@
     Dim moveBal As Double = 0
     Dim sumDebit As Double = 0
     Dim sumCredit As Double = 0
+    Dim groupVal As String = ""
 End Code
 @If lang = "EN" Then
     @<h3>General Ledger</h3>
@@ -77,6 +81,12 @@ End If
                     prevBal = obj.GetDouble(dr("Balance"))
                 End If
                 i += 1
+                If groupVal <> dr("AccRemark") Then
+                    @<tr style="font-style:italic;font-weight:bold;">
+                        <td colspan="7">@dr("AccRemark").ToString()</td>
+                    </tr>
+                    groupVal = dr("AccRemark")
+                End If
                 If i = dt.Rows.Count Then
                     nextBal = obj.GetDouble(dr("Balance"))
                     moveBal = nextBal - prevBal
@@ -99,12 +109,12 @@ End If
                         <td style="text-align:right;"></td>
                     </tr>
                 Else
-                    If i > 1 Then
+                    If i >= 1 Then
                         sumDebit += obj.GetDouble(dr("Debit"))
                         sumCredit += obj.GetDouble(dr("Credit"))
                     End If
                     @<tr>
-                        <td>@dr("ItemNo").ToString()</td>
+                        <td>@i</td>
                         <td>@Convert.ToDateTime(dr("EffectiveDate")).ToString("dd/MM/yyyy")</td>
                         <td>@dr("JournalNo").ToString()</td>
                         <td>@dr("AccDesc").ToString()</td>

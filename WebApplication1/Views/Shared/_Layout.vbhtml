@@ -1,9 +1,9 @@
 ﻿@Code
-    Dim dbName = ViewBag.JobDatabase
+    Dim dbName = "job_demo"
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
-    Dim dbSource = ViewBag.AccDatabase
+    Dim dbSource = "AccConcept"
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
@@ -35,8 +35,10 @@ End Code
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
+    <div class="body-content">
+        <div class="container">
+        @RenderBody()        
+        </div>
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Database = @dbSource</p>

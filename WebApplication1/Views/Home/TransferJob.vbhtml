@@ -114,7 +114,7 @@ ALTER procedure [dbo].[Insert_SIToJournal_ByDate]
 as
 begin
 declare @@maxid int;
-set @@maxid=(SELECT MAX(EntryId) as t from Acc_JournalHD)
+set @@maxid=(SELECT ISNULL(MAX(EntryId),0) as t from Acc_JournalHD)
 
 " & setIdentityON & "
 
@@ -138,14 +138,14 @@ b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
 select
 d.AssetAccCode as AccCode,
 d.AccDocNo,d.TotalAmount+d.VatAmount as Debit,0 as Credit,
-d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+d.PartyName as AccDesc,d.SalesDescription as RefNo
 from vAR_D d
 where d.AccBatchDate>=@@datefrom and d.AccBatchDate<=@@dateto
 union all
 select
 dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') as AccCode,
 h.AccDocNo,0 as Debit,h.TotalVat as Credit,
-h.PartyName as AccDesc,h.DocRefNo as RefNo
+h.PartyName,h.DocRefNo as AccDesc
 from vAR_H h
 where h.AccBatchDate>=@@datefrom and h.AccBatchDate<=@@dateto
 and h.TotalVat>0
@@ -153,7 +153,7 @@ union all
 select
 d.IncomeAccCode as AccCode,
 d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
-d.SalesDescription as AccDesc,CONCAT(d.AccSourceDocNo,'#',d.AccSourceDocItem) as RefNo
+d.PartyName as RefNo,d.SalesDescription as AccDesc
 from vAR_D d
 where d.AccBatchDate>=@@datefrom and d.AccBatchDate<=@@dateto
 ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
@@ -186,7 +186,7 @@ ALTER procedure [dbo].[Insert_PIToJournal_ByDate]
 as
 begin
 declare @@maxid int;
-set @@maxid=(SELECT MAX(EntryId) as t from Acc_JournalHD)
+set @@maxid=(SELECT ISNULL(MAX(EntryId),0) as t from Acc_JournalHD)
 
 " & setIdentityON & "
 
@@ -395,20 +395,20 @@ declare @@maxid int;
         sql = sqlHead & "
 delete c
 from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_JournalHD b
-on a.AdvNo=b.JournalNo
+on CONCAT('PV-',a.AdvNo)=b.JournalNo
 inner join Acc_JournalDT c on b.EntryID=c.EntryID
 where a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 
 delete b
 from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_JournalHD b
-on a.AdvNo=b.JournalNo
+on CONCAT('PV-',a.AdvNo)=b.JournalNo
 where a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 
 delete b
 from [" + dbName + "].dbo.Job_AdvHeader a inner join Acc_AdditionData b
-on a.AdvNo=b.DocNo
+on CONCAT('PV-',a.AdvNo)=b.DocNo
 where a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
 "
@@ -430,21 +430,21 @@ set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 insert into Acc_JournalHD (EntryID,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select
 ROW_NUMBER() OVER(ORDER BY a.AdvNo)+@@maxid as EntryID,
-a.AdvNO as JournalNo,
+CONCAT('PV-',a.AdvNO) as JournalNo,
 a.PaymentDate as EntryDate,
 a.PaymentDate as EffectiveDate,
 @@userid,a.PaymentRef,(a.TotalAdvance+a.Total50Tavi),(a.TotalAdvance+a.Total50Tavi)
 from [" + dbName + "].dbo.Job_AdvHeader a
 where a.DocStatus<>99 and  a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
-and a.AdvNo not in(select JournalNo FROM Acc_JournalHD)
+and CONCAT('PV-',a.AdvNO) not in(select JournalNo FROM Acc_JournalHD)
 order by a.AdvNo
 
 " & setIdentityOFF & "
 
 insert into Acc_AdditionData
 (DocNo,Seq,Text1,Text2,Text3,Text4)
-select a.AdvNo,0,'PV',a.EmpCode,a.PayChqTo,a.TRemark
+select CONCAT('PV-',a.AdvNo) as JournalNo,0,'PV',a.EmpCode,a.PayChqTo,a.TRemark
 from [" + dbName + "].dbo.Job_AdvHeader a
 where a.DocStatus<>99 and  a.BranchCode=@@branchcode
 and a.PaymentDate>=@@datefrom and a.PaymentDate<=@@dateto
@@ -497,12 +497,12 @@ order by AdvNo,AccCode
 
 insert into Acc_AdditionData
 (DocNo,Seq,Text1,Text2,Num1,Text3,Text4)
-select c.AdvNo,a.Seq,c.SICode,c.ForJNo,c.AdvAmount,c.PayChqTo,c.VenCode
+select CONCAT('PV-',c.AdvNo),a.Seq,c.SICode,c.ForJNo,c.AdvAmount,c.PayChqTo,c.VenCode
 from Acc_JournalDT a inner join [" + dbName + "].dbo.Job_AdvDetail c
 on a.AccDesc=concat(c.AdvNo,'#',c.ItemNo)
 inner join [" + dbName + "].dbo.Job_AdvHeader b
 on c.BranchCode=b.BranchCode and c.AdvNo=b.AdvNo
-where not exists(select 1 from Acc_AdditionData where DocNo=c.AdvNo and Seq=a.Seq)
+where not exists(select 1 from Acc_AdditionData where DocNo=CONCAT('PV-',c.AdvNo) and Seq=a.Seq)
 "
         sql = String.Format(sql, branch, datefrom, dateto)
         If debugMode = False Then
@@ -722,12 +722,12 @@ EXEC dbo.Insert_SIToJournal_ByDate @@datefrom,@@dateto,@@userid
         sql = "
 alter view vRV_LinkJob
 as
-select BranchCode,DocNo,ItemNo,CustTaxID,CustBranch,custName,SICode,AmtCharge,AmtAdvance,ReceiptNet,ReceiptWht,ReceiptNo,ReceiptDAte,ReceiptItemNo,
+select CONCAT('RV-',ReceiptNo) as JournalNo,BranchCode,DocNo,ItemNo,CustTaxID,CustBranch,custName,SICode,AmtCharge,AmtAdvance,ReceiptVat,ReceiptNet,ReceiptWht,ReceiptNo,ReceiptDAte,ReceiptItemNo,
 case when CountAdvPay>0 then 1 else 0 end as IsFromAdv,
 case when CountAdvPay=0 and CountBillPay>0 then 1 else 0 end as IsFromAP,
 case when CountAdvPay=0 and CountBillPay=0 then 1 else 0 end as IsAccrue
 from (
-select BranchCode,custTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net-Amt50Tavi as ReceiptNet,Amt50Tavi as ReceiptWht,
+select BranchCode,custTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net-Amt50Tavi as ReceiptNet,Amt50Tavi as ReceiptWht,AmtVat as ReceiptVat,
 count(*) as countRec,
 sum(case when isnull(AdvNO,'')<>'' then 1 else 0 end) as CountAdvPay,
 sum(case when not isnull(AdvNO,'')<>'' and isnull(VenderBillingNo,'')<>'' then 1 else 0 end) as CountBillPay,
@@ -735,7 +735,7 @@ sum(case when not isnull(AdvNO,'')<>'' and not isnull(VenderBillingNo,'')<>'' th
 from (
 select rh.BillToCustCode,rh.BillToCustBranch,isnull(cu.NameThai,'-') as CustName,
 isnull(cu.TaxNumber,'-') as CustTaxID,isnull(cu.Branch,'-') as CustBranch,
-rd.InvoiceNo as DocNo,rd.InvoiceItemNo as ItemNo,id.AmtCharge,id.AmtAdvance,rd.SICode,cd.AdvNO,cd.VenderBillingNo,rd.ReceiptNo,rh.ReceiptDate,rd.ItemNo as ReceiptItemNo,rd.Net,rd.Amt50Tavi,
+rd.InvoiceNo as DocNo,rd.InvoiceItemNo as ItemNo,id.AmtCharge,id.AmtAdvance,rd.SICode,cd.AdvNO,cd.VenderBillingNo,rd.ReceiptNo,rh.ReceiptDate,rd.ItemNo as ReceiptItemNo,rd.Net,rd.Amt50Tavi,rd.AmtVat,
 cd.ClrNo,cd.JobNo,rh.BranchCode
 from [" + dbName + "].dbo.Job_ReceiptDetail rd
 inner join [" + dbName + "].dbo.Job_ReceiptHeader rh
@@ -757,7 +757,7 @@ where rh.BranchCode={0} and
 rh.ReceiptDate>='{1}' and rh.ReceiptDate<='{2}' and
 not rh.CancelProve<>''
 ) r
-group by BranchCode,CustTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net ,Amt50Tavi
+group by BranchCode,CustTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net ,Amt50Tavi,AmtVat
 ) t
 "
         sql = String.Format(sql, branch, datefrom, dateto)
@@ -787,7 +787,7 @@ and h.ReceiptDate>=@@datefrom and h.ReceiptDate<=@@dateto
 
 delete b
 from [" + dbName + "].dbo.Job_ReceiptHeader a inner join Acc_JournalHD b
-on a.ReceiptNo=b.JournalNo
+on CONCAT('RV-',a.ReceiptNo)=b.JournalNo
 where  a.BranchCode=@@branchcode
 and a.ReceiptDate>=@@datefrom and a.ReceiptDate<=@@dateto
 
@@ -811,7 +811,7 @@ insert into Acc_TransactionHD
 select h.ReceiptNo,h.ReceiptDate,h.ReceiptDate,
 isnull(c.CustCode,'-'),isnull(c.TaxNumber,'-'),
 isnull(c.NameThai,'-'),CONCAT(isnull(c.TAddress1,''),' ',isnull(c.TAddress2,'')),@@userid,
-'DO',h.ReceiptDate,h.ReceiptDate,1,h.ReceiveRef
+'RC',h.ReceiptDate,h.ReceiptDate,1,h.ReceiveRef
 from [" + dbName + "].dbo.Job_ReceiptHeader h
 left join [" + dbName + "].dbo.Mas_Company c
 on h.BillToCustCode=c.CustCode and h.BillToCustBranch=c.Branch
@@ -856,13 +856,13 @@ set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 " & setIdentityON & "
 
 insert into Acc_JournalHD (EntryID,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
-select @@maxid+ROW_NUMBER() OVER(ORDER BY r.ReceiptNo) as EntryID,
-r.ReceiptNo,r.ReceiptDAte,r.ReceiptDAte,@@userid,concat(r.CustTaxID,' / ',r.custName),sum(r.ReceiptNet+r.ReceiptWht),sum(r.ReceiptNet+r.ReceiptWht)
+select @@maxid+ROW_NUMBER() OVER(ORDER BY r.JournalNo) as EntryID,
+r.JournalNo,r.ReceiptDAte,r.ReceiptDAte,@@userid,concat(r.CustTaxID,' / ',r.custName),sum(r.ReceiptNet+r.ReceiptWht),sum(r.ReceiptNet+r.ReceiptWht)
 from vRV_LinkJob r
 inner join vMas_Product p
 on r.SICode=p.ProductCode
-where r.ReceiptNo not in(select JournalNo from Acc_JournalHD)
-group by r.ReceiptNo,r.ReceiptDAte,r.CustTaxID,r.custName
+where r.JournalNo not in(select JournalNo from Acc_JournalHD)
+group by r.JournalNo,r.ReceiptDAte,r.CustTaxID,r.custName
 
 " & setIdentityOFF & "
 
@@ -872,51 +872,67 @@ select
 ROW_NUMBER() OVER(PARTITION BY ReceiptNo ORDER BY ReceiptNo) as Seq,
 AccCode,AccName,AccDesc,Debit,Credit
 from (
-select r.ReceiptNo,
-a.AccCode,a.AccName,r.DocNo as AccDesc,
-sum(case when r.AmtAdvance>0 then r.ReceiptNet+r.ReceiptWht else r.ReceiptNet end) as Debit,0 as Credit
-from vRV_LinkJob r,
-vMas_AccCode a
-where a.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
-group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
-union all
-select r.ReceiptNo,
-p.AssetAccCode,p.AssetAccName,p.ProductName,0,r.ReceiptNet
-from vRV_LinkJob r
-inner join vMas_Product p
-on r.SICode=p.ProductCode
-where r.IsFromAdv=1 and r.AmtAdvance>0
-union all
-select r.ReceiptNo,
-p.AssetAccCode,p.AssetAccName,p.ProductName,0,r.ReceiptNet+r.ReceiptWht
-from vRV_LinkJob r
-inner join vMas_Product p
-on r.SICode=p.ProductCode
-where r.AmtCharge>0
-union all
-select r.ReceiptNo,
-p.AssetAccCode,p.AssetAccName,p.ProductName,0,r.ReceiptNet
-from vRV_LinkJob r
-inner join vMas_Product p
-on r.SICode=p.ProductCode
-where r.AmtAdvance>0
-and r.IsFromAdv=0
-union all
-select r.ReceiptNo,
-a.AccCode,a.AccName,'ถูกหัก ณ ที่จ่าย' as AccDesc,sum(r.ReceiptWht) as Debit,0 as Credit
-from vRV_LinkJob r,
-vMas_AccCode a
-where r.Amtcharge>0
-and a.AccCode=dbo.GetAccConfig('WHT_CONFIG','IncomeTax')
-group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
-union all
-select r.ReceiptNo,
-a.AccCode,a.AccName,'หัก ณ ที่จ่าย' as AccDesc,0 as Debit,sum(r.ReceiptWht) as Credit
-from vRV_LinkJob r,
-vMas_AccCode a
-where r.AmtAdvance>0
-and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxCustomer')
-group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
+    select r.ReceiptNo,
+    a.AccCode,r.CustName as AccName,r.DocNo as AccDesc,
+    sum(case when r.AmtAdvance>0 then r.ReceiptNet+r.ReceiptWht else r.ReceiptNet end) as Debit,0 as Credit
+    from vRV_LinkJob r,
+    vMas_AccCode a
+    where a.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
+    group by r.ReceiptNo,a.AccCode,r.CustName,r.DocNo
+    union all
+    select r.ReceiptNo,
+    p.AssetAccCode,r.CustName,p.ProductName,0,r.ReceiptNet
+    from vRV_LinkJob r
+    inner join vMas_Product p
+    on r.SICode=p.ProductCode
+    where r.IsFromAdv=1 and r.AmtAdvance>0
+    union all
+    select r.ReceiptNo,
+    p.AssetAccCode,r.CustName,p.ProductName,0,r.ReceiptNet+r.ReceiptWht
+    from vRV_LinkJob r
+    inner join vMas_Product p
+    on r.SICode=p.ProductCode
+    where r.AmtCharge>0
+    union all
+    select r.ReceiptNo,
+    p.AssetAccCode,r.CustName,p.ProductName,0,r.ReceiptNet
+    from vRV_LinkJob r
+    inner join vMas_Product p
+    on r.SICode=p.ProductCode
+    where r.AmtAdvance>0
+    and r.IsFromAdv=0
+    union all
+    select r.ReceiptNo,
+    a.AccCode,r.CustName,r.DocNo as AccDesc,sum(r.ReceiptWht) as Debit,0 as Credit
+    from vRV_LinkJob r,
+    vMas_AccCode a
+    where r.Amtcharge>0
+    and a.AccCode=dbo.GetAccConfig('WHT_CONFIG','IncomeTax')
+    group by r.ReceiptNo,a.AccCode,r.DocNo,r.CustName
+    union all
+    select r.ReceiptNo,
+    a.AccCode,r.CustName,r.DocNo as AccDesc,0 as Debit,sum(r.ReceiptWht) as Credit
+    from vRV_LinkJob r,
+    vMas_AccCode a
+    where r.AmtAdvance>0
+    and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxCustomer')
+    group by r.ReceiptNo,a.AccCode,r.DocNo,r.CustName
+    union all
+    select r.ReceiptNo,
+    a.AccCode,r.CustName,r.DocNo,0,sum(r.ReceiptVat) as Vat
+    from vRV_LinkJob r,
+    vMas_AccCode a
+    where r.AmtCharge>0 AND r.ReceiptVat>0
+    AND a.AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat')
+    group by r.ReceiptNo,a.AccCode,r.DocNo,r.CustName
+    union all
+    select r.ReceiptNo,
+    a.AccCode,r.CustName,r.DocNo,sum(r.ReceiptVat) as Vat,0
+    from vRV_LinkJob r,
+    vMas_AccCode a
+    where r.AmtCharge>0 AND r.ReceiptVat>0
+    AND a.AccCode=dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat')
+    group by r.ReceiptNo,a.AccCode,r.DocNo,r.CustName
 ) t
 "
         sql = String.Format(sql, branch, datefrom, dateto)
@@ -933,7 +949,7 @@ group by r.ReceiptNo,a.AccCode,a.AccName,r.DocNo
         sql = sqlHead & "
 delete b
 from (
-select ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
+select CONCAT('PV-',ch.ClrNo) as JournalNo,ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
 from [" + dbName + "].dbo.Job_ClearDetail cd
 inner join [" + dbName + "].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo and cd.BranchCode=ch.BranchCode
@@ -947,7 +963,7 @@ and isnull(cd.VenderbillingNo,'')=''
 and ch.DocStatus<>99 and s.IsExpense=1
 group by ch.ClrNo,ch.ClrDate
 ) a inner join Acc_JournalHD b
-on a.ClrNo=b.JournalNo
+on a.JournalNo=b.JournalNo
 
 delete h
 from Acc_JournalDT h
@@ -971,10 +987,10 @@ set @@maxid=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 " & setIdentityON & "
 
 insert into Acc_JournalHD (EntryId,JournalNo,Entrydate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
-select @@maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
-ClrNo,ClrDate,ClrDate,@@userid,'-',TotalClr,TotalClr
+select @@maxid+ROW_NUMBER() OVER(ORDER BY JournalNo) as EntryID,
+JournalNo,ClrDate,ClrDate,@@userid,'-',TotalClr,TotalClr
 from (
-select ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
+select CONCAT('PV-',ch.ClrNo) as JournalNo,ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
 from [" + dbName + "].dbo.Job_ClearDetail cd
 inner join [" + dbName + "].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo and cd.BranchCode=ch.BranchCode
@@ -988,7 +1004,7 @@ and ch.ClrDate>=@@datefrom and ch.ClrDate<=@@dateto
 and ch.DocStatus<>99 and s.IsExpense=1
 group by ch.ClrNo,ch.ClrDate
 ) t
-where t.ClrNo not in(select JournalNo from Acc_JournalHD)
+where t.JournalNo not in(select JournalNo from Acc_JournalHD)
 
 " & setIdentityOFF & "
 
@@ -1167,10 +1183,10 @@ where ClrDate>=@@datefrom and ClrDate<=@@dateto
 " & setIdentityON & "
 
 insert into Acc_JournalHD (EntryId,JournalNo,Entrydate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
-select @@maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
-ClrNo,ClrDate,ClrDate,@@userid,'-',sum(Dr),sum(Cr)
+select @@maxid+ROW_NUMBER() OVER(ORDER BY JournalNo) as EntryID,
+JournalNo,ClrDate,ClrDate,@@userid,'-',sum(Dr),sum(Cr)
 from (
-select h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription as AccDesc,sum(d.UsedAmount+d.ChargeVAT) as Dr,0 as Cr
+select CONCAT('PV-',h.ClrNo) as JournalNo,h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription as AccDesc,sum(d.UsedAmount+d.ChargeVAT) as Dr,0 as Cr
 from [" + dbName + "].dbo.Job_ClearDetail d
 inner join [" + dbName + "].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo
 and d.BranchCode=h.BranchCode
@@ -1183,7 +1199,7 @@ and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','CashOut')
 and h.DocStatus<>99 and d.BNet=0
 group by h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription
 union all
-select h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription,0 as Dr,sum(d.UsedAmount+d.ChargeVAT) as Cr
+select CONCAT('PV-',h.ClrNo) as JournalNo,h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription,0 as Dr,sum(d.UsedAmount+d.ChargeVAT) as Cr
 from [" + dbName + "].dbo.Job_ClearDetail d
 inner join [" + dbName + "].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo
 and d.BranchCode=h.BranchCode
@@ -1197,7 +1213,7 @@ and h.DocStatus<>99 and d.BNet=0
 group by h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription
 ) t
 where ClrDate>=@@datefrom and ClrDate<=@@dateto
-group by ClrNo,ClrDAte
+group by JournalNo,ClrDAte
 
 " & setIdentityOFF
         sql = String.Format(sql, branch, datefrom, dateto)
@@ -1219,34 +1235,34 @@ End If
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?Form=TransferJob&IDEN="+setIden+"&Adv=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href = "?Form=TransferJob&SRC=@dbSource&IDEN="+setIden+"&Adv=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
     function PostPayIn() {
         var br = document.getElementById('txtBranch').value;
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?Form=TransferJob&IDEN=" + setIden +"&AP=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href = "?Form=TransferJob&SRC=@dbSource&IDEN=" + setIden +"&AP=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
     function PostInvoice() {
         var br = document.getElementById('txtBranch').value;
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?Form=TransferJob&IDEN=" + setIden +"&AR=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href = "?Form=TransferJob&SRC=@dbSource&IDEN=" + setIden +"&AR=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
     function PostReceipt() {
         var br = document.getElementById('txtBranch').value;
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?Form=TransferJob&IDEN=" + setIden +"&RCV=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href = "?Form=TransferJob&SRC=@dbSource&IDEN=" + setIden +"&RCV=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
     function PostCost() {
         var br = document.getElementById('txtBranch').value;
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?Form=TransferJob&IDEN=" + setIden +"&CST=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href = "?Form=TransferJob&SRC=@dbSource&IDEN=" + setIden +"&CST=Y&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
 </script>

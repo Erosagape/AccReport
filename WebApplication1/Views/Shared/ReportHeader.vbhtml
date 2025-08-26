@@ -52,7 +52,7 @@ End Code
 <div class="text-left">
     <div style="display:flex;">
         <div style="padding: 10px 10px 10px 10px;flex:10%">
-            <img src="~/@logoFileName" />
+            <img src="~/@logoFileName" style="width:150px;" />
         </div>
         <div style="padding :5px;flex:90%">
             <b style="font-size:14px">@companyName</b>

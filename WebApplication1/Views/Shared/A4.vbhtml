@@ -11,6 +11,10 @@
     <!-- Set page size here: A5, A4 or A3 -->
     <!-- Set also "landscape" if you need -->
     <style>
+	* {
+            font-size: 14px;
+            font-family: 'Prompt', sans-serif;
+        }
         @@page {
             size: A4
         }
