@@ -15,8 +15,9 @@
         dbName = Request.QueryString("DB")
     End If
     Dim sql = "
-select a.*,b.WarehouseCode as ReceiveWarehouseCode,b.WarehouseName as ReceiveWarehouseName
+select a.*,isnull(b.WarehouseCode,a.WarehouseCode) as WarehouseReceiveCode,isnull(b.WarehouseName,a.WarehouseCode) as WarehouseReceiveName
 from vTransaction_All a
+left join vStock_Card b on a.StockTransNo=b.TransID
 left join vStock_Card b on a.StockTransNo=b.TransID
 where a.AccDocNo='{0}'
 "

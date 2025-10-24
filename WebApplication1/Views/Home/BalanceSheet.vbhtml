@@ -13,13 +13,13 @@
     If Not Request.QueryString("LANG") Is Nothing Then
         lang = Request.QueryString("LANG")
     End If
-    Dim sql = "
-select AccCode,AccName,
-(case when sum(Debit)>=sum(credit) then sum(Debit)-sum(Credit) else 0 end) as Dr,
-(case when sum(Debit)<sum(Credit) then sum(Credit)-sum(Debit) else 0 end) as Cr
-from vBalanceSheet
-group by AccCode,AccName order by AccCode
-"
+    Dim yy As String = DateTime.Now.Year().ToString()
+    If Not Request.QueryString("Period") Is Nothing Then
+        yy = Request.QueryString("Period")
+    End If
+    Dim dateFrom = New Date(yy, 1, 1).ToString("yyyy-MM-dd")
+    Dim dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
+    Dim sql = "EXEC dbo.GetBalanceSheetCompare {0}"
     Dim sumDebit = 0
     Dim sumCredit = 0
     Dim dbSource = ViewBag.AccDatabase
@@ -27,20 +27,24 @@ group by AccCode,AccName order by AccCode
         dbSource = Request.QueryString("SRC")
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
-    Dim dt = obj.GetDataFromSQL(sql)
+    Dim dt = obj.GetDataFromSQL(String.Format(sql, yy))
     Dim msg As String = "Ready"
     If obj.Message = "" Then
         msg = dt.Rows.Count
     Else
         msg = obj.Message
     End If
-    Dim dateFrom = New Date(DateTime.Now.Year, 1, 1).ToString("yyyy-MM-dd")
-    Dim dateTo = DateAdd("d", -1, New Date(DateTime.Now.Year + 1, 1, 1)).ToString("yyyy-MM-dd")
 End Code
 @If lang = "EN" Then
     @<h2>Balance Sheet</h2>
+    @If yy <> "" Then
+        @<b>Fiscal Year @(Convert.ToInt32(yy))</b>
+    End If
 Else
     @<h2>งบแสดงสถานะทางการเงิน</h2>
+    @If yy <> "" Then
+        @<b>ประจำปี @(Convert.ToInt32(yy) + 543)</b>
+    End If
 End If
 <table border="1" style="border-collapse:collapse;border-style:solid;">
     <thead>
@@ -53,15 +57,15 @@ End If
     </thead>
     <tbody>
         @For Each dr In dt.Rows
-            sumDebit += obj.GetDouble(dr("Dr"))
-            sumCredit += obj.GetDouble(dr("Cr"))
+            sumDebit += obj.GetDouble(dr("CurrentDr"))
+            sumCredit += obj.GetDouble(dr("CurrentCr"))
             @<tr>
                 <td>
-                    <a href="#" onclick="PrintGL('@dr("AccCode").ToString()')">@dr("AccCode").ToString()</a>     
+                    <a href="#" onclick="PrintGL('@dr("AccCode").ToString()')">@dr("AccCode").ToString()</a>
                 </td>
                 <td>@dr("AccName").ToString()</td>
-                <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
-                <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
+                <td style="text-align:right;">@Convert.ToDouble(dr("CurrentDr")).ToString("#,##0.00")</td>
+                <td style="text-align:right;">@Convert.ToDouble(dr("CurrentCr")).ToString("#,##0.00")</td>
             </tr>
         Next
     </tbody>
@@ -75,6 +79,6 @@ End If
 </table>
 <script type="text/javascript">
     function PrintGL(accCode) {
-        window.location.href = "?Form=GeneralLedger&DB=@dbName&Code=" + accCode + "&DateFrom=@dateFrom&DateTo=@dateTo";
+        window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom=@dateFrom&DateTo=@dateTo";
     }
 </script>

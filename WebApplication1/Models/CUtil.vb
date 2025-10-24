@@ -5,6 +5,13 @@ Public Class CUtil
     Private ReadOnly isConn As Boolean = False
     Private ReadOnly conn As String
     Private msg As String
+    Private user As String
+    Public Sub SetUser(uname As String)
+        user = uname
+    End Sub
+    Public Function GetUser() As String
+        Return user
+    End Function
     Public Function Message() As String
         Return msg
     End Function

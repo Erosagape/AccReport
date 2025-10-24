@@ -84,15 +84,27 @@ End Code
             <a href="?Form=MonthlyBalance&DB=@dbname&Type=2&SRC=@dbSource">งบทดลองแบบสรุปยอดยกไป ณ วันสิ้นเดือน</a>
         </div>
     </div>
+    <b>งบการเงิน</b>
+    ประจำปี(ค.ศ) : <input type="text" id="txtPeriod" value="@DateTime.Now.Year" />
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=ProfitLoss&DB=@dbname&SRC=@dbSource">งบกำไรขาดทุน</a>
+            <a href="#" onclick="OpenForm('ProfitLoss')">งบกำไรขาดทุน</a>
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=BalanceSheet&DB=@dbname&SRC=@dbSource">งบแสดงสถานะทางการเงิน</a>
+            <a href="#" onclick="OpenForm('BalanceSheet')">งบแสดงสถานะทางการเงิน</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="#" onclick="OpenForm('CashFlow')">งบกระแสเงินสด</a>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function OpenForm(fname) {
+        let period = document.getElementById('txtPeriod').value;
+        window.open("?Form=" + fname + "&LANG=TH&DB=@dbSource&SRC=@dbname&Period=" + period,'_blank');
+    }
+</script>

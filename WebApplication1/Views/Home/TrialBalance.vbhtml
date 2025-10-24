@@ -184,6 +184,6 @@ End If
     var mm = '@mm';
     document.getElementById("cboMonth").value = mm;
     function RefreshPage(val) {
-        window.location.href = "?Form=TrialBalance&DB=@dbName&Period=@yy&Month="+val;
+        window.location.href = "?Form=TrialBalance&SRC=@dbSource&DB=@dbName&Period=@yy&Month="+val;
     }
 </script>

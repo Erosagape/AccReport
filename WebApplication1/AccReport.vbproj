@@ -156,6 +156,8 @@
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CController.vb" />
+    <Compile Include="Models\CLogin.vb" />
     <Compile Include="Models\CUtil.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -269,6 +271,15 @@
     <Content Include="Views\Form\FormRC.vbhtml" />
     <Content Include="Views\Form\FormPC.vbhtml" />
     <Content Include="Views\Home\ReportAR.vbhtml" />
+    <Content Include="Views\Home\TransferJob_Yifan.vbhtml" />
+    <Content Include="Views\Home\ConfigField.vbhtml" />
+    <Content Include="Views\Form\Transaction.vbhtml" />
+    <Content Include="Views\Home\SetBalance.vbhtml" />
+    <Content Include="Views\Form\Login.vbhtml" />
+    <Content Include="Views\Home\Login.vbhtml" />
+    <Content Include="Views\Home\Test.vbhtml" />
+    <Content Include="Views\Home\TestLogin.vbhtml" />
+    <Content Include="Views\Home\CashFlow.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

@@ -466,7 +466,6 @@ d.BranchCode=h.BranchCode and d.DocNo=h.DocNo
 inner join [" + dbName + "].dbo.Job_SrvSingle s on d.SICode=s.SICode
 where h.BranchCode=@@branchcode and not h.CancelProve<>''
 and h.DocDate>=@@datefrom and h.DocDate<=@@dateto
-
 select @@paynet+@@unduevatbuy as CreditDebtSum,@@unduevatbuy as DebitVatBuy,@@paynet as DebitNet
 "
         sql = String.Format(sql, branch, datefrom, dateto)
@@ -500,7 +499,6 @@ select @@paynet+@@unduevatbuy as CreditDebtSum,@@unduevatbuy as DebitVatBuy,@@pa
             </table>
         Else
             @msg
-
         End If
         <table border="1" style="border-style:solid;border-collapse:collapse;border-width:thin;">
             <thead>

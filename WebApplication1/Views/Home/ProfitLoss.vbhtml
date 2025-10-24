@@ -90,6 +90,6 @@ End If
 @msg
 <script type="text/javascript">
     function PrintGL(accCode) {
-        window.location.href = "?Form=GeneralLedger&DB=@dbName&Code=" + accCode + "&DateFrom=@dateFrom&DateTo=@dateTo";
+        window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom=@dateFrom&DateTo=@dateTo";
     }
 </script>

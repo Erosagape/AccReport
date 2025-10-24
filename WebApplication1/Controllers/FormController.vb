@@ -2,7 +2,7 @@
 
 Namespace Views
     Public Class FormController
-        Inherits Controller
+        Inherits CController
 
         ' GET: Form
         Function Index() As ActionResult
@@ -10,7 +10,7 @@ Namespace Views
             If formName Is Nothing Then
                 formName = ""
             End If
-            Return View(formName)
+            Return GetView(formName)
         End Function
     End Class
 End Namespace

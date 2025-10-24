@@ -84,14 +84,27 @@ End Code
             <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&Type=2&SRC=@dbSource">Trial Balance (Final)</a>
         </div>
     </div>
+    <b>Account Sheet</b>
+    Period : <input type="text" id="txtPeriod" value="@DateTime.Now.Year" />
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=ProfitLoss&LANG=EN&DB=@dbname&SRC=@dbSource">Profit and Loss</a>
+            <a href="#" onclick="OpenForm('ProfitLoss')">Profit and Loss</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <a href="?Form=BalanceSheet&LANG=EN&DB=@dbname&SRC=@dbSource">Balance Sheet</a>
+            <a href="#" onclick="OpenForm('BalanceSheet')">Balance Sheet</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a href="#" onclick="OpenForm('CashFlow')">Cash Flow</a>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function OpenForm(fname) {
+        let period = document.getElementById('txtPeriod').value;
+        window.open("?Form=" + fname + "&LANG=EN&DB=@dbSource&SRC=@dbname&Period=" + period,'_blank');
+    }
+</script>
