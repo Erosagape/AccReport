@@ -100,13 +100,15 @@ End Code
 </div>
 <div Class="container-fluid">
     @Code
-        Dim balSql As String = String.Format("select sum(TransQty) as Bal from vStock_Card where WarehouseCode='{0}' and  StockProductCode='{1}'", warehouse, pdcode)
+        Dim balSql As String = String.Format("select sum(TransQty) as BalQty,sum(TransAmount) as BalAmt from vStock_Card where WarehouseCode='{0}' and  StockProductCode='{1}'", warehouse, pdcode)
         balSql &= String.Format(" AND AccEffectiveDate<'{0}'", dateFrom)
         Dim dt As New Data.DataTable
         dt = obj.GetDataFromSQL(balSql)
         Dim balQty As Double = 0
+        Dim balAmount As Double = 0
         If dt.Rows.Count > 0 Then
-            balQty = obj.GetDouble(dt.Rows(0)("Bal"))
+            balQty = obj.GetDouble(dt.Rows(0)("BalQty"))
+            balAmount = obj.GetDouble(dt.Rows(0)("BalAmt"))
         End If
 
         dt = obj.GetDataFromSQL(sql)
@@ -120,6 +122,7 @@ End Code
                          <th>IN</th>
                          <th>OUT</th>
                          <th>BAL</th>
+                         <th>AMT</th>
                      </tr>
                  </thead>
                 <tbody>
@@ -130,30 +133,36 @@ End Code
                         <td></td>
                         <td></td>
                         <td class="text-right">@balQty</td>
+                        <td class="text-right">@balAmount</td>
                     </tr>
                     @For Each dr As Data.DataRow In dt.Rows
                         balQty += obj.GetDouble(dr("QtyIN"))
                         balQty -= obj.GetDouble(dr("QtyOUT"))
+                        balAmount += obj.GetDouble(dr("AmountIN"))
+                        balAmount -= obj.GetDouble(dr("AmountOUT"))
                             @<tr>
-                    <td>
-                        @Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
-                    </td>
-                    <td>
-                        @dr("AccDocNo").ToString()
-                    </td>
-                    <td>
-                        @dr("PartyName").ToString()
-                    </td>
-                    <td class="text-right">
-                        @dr("QtyIN")
-                    </td>
-                    <td class="text-right">
-                        @dr("QtyOUT")
-                    </td>
-                    <td class="text-right">
-                        @balQty
-                    </td>
-                    </tr>
+    <td>
+        @Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
+    </td>
+    <td>
+        @dr("AccDocNo").ToString()
+    </td>
+    <td>
+        @dr("PartyName").ToString()
+    </td>
+    <td class="text-right">
+        @dr("QtyIN")
+    </td>
+    <td class="text-right">
+        @dr("QtyOUT")
+    </td>
+    <td class="text-right">
+        @balQty
+    </td>
+    <td class="text-right">
+        @balAmount
+    </td>
+</tr>
                     Next
                 </tbody>
             </table>
