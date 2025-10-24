@@ -105,6 +105,6 @@ End Code
 <script type="text/javascript">
     function OpenForm(fname) {
         let period = document.getElementById('txtPeriod').value;
-        window.open("?Form=" + fname + "&LANG=TH&DB=@dbSource&SRC=@dbname&Period=" + period,'_blank');
+        window.open("?Form=" + fname + "&LANG=TH&DB=@dbSource&SRC=@dbName&Period=" + period,'_blank');
     }
 </script>
