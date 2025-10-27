@@ -50,20 +50,22 @@ End Code
     }
 </style>
 <div class="text-left">
-    <div style="display:flex;">
-        <div style="padding: 10px 10px 10px 10px;flex:10%">
-            <img src="~/@logoFileName" style="width:150px;" />
-        </div>
-        <div style="padding :5px;flex:90%">
-            <b style="font-size:14px">@companyName</b>
-            <br />
-            <b>@companyAddr1</b>
-            <br />
-            <b>@companyAddr2</b>
-            <br />
-            เลขประจำตัวผู้เสียภาษี @companyTaxNo สาขา @companyTaxBranch                           
-        </div>
-    </div>
+    <table>
+        <tr>
+            <td style="padding: 10px 10px 10px 10px;">
+                <img src="~/@logoFileName" style="width:150px;" />
+            </td>
+            <td style="padding :5px;">
+                <b style="font-size:14px">@companyName</b>
+                <br />
+                <b>@companyAddr1</b>
+                <br />
+                <b>@companyAddr2</b>
+                <br />
+                เลขประจำตัวผู้เสียภาษี @companyTaxNo สาขา @companyTaxBranch
+            </td>
+        </tr>
+    </table>
 </div>
 
 

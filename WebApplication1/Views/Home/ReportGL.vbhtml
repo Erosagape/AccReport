@@ -42,43 +42,46 @@ End Code
         </div>
     </div>
 </div>
-<div class="modal modal-dialog" id="mdlAccCode">
-    <div class="modal-content">
-        <div class="modal-header">
-            Select Account Code
-        </div>
-        <div class="modal-body">
-            <table id="tbAcc" border="1" class="table table-responsive">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Acc.Code</th>
-                        <th>Acc.Name</th>
-                    </tr>                    
-                </thead>
-                <tbody>
-                    @If dt.Rows.Count > 0 Then
-                        For Each dr As Data.DataRow In dt.Rows
-                            @<tr>
-                                <td>
-                                    <input type="button" class="btn btn-success" onclick="SetData('@dr("AccCode")')" value="Select" data-dismiss="modal" />
-                                </td>
-                    <td>
-                        @dr("AccCode").ToString()
-                    </td>
-                    <td>
-                        @dr("AccName").ToString()
-                    </td>
-                            </tr>
-                        Next
-                    End If
-                </tbody>
-            </table>
-        </div>
-        <div Class="modal-footer">
-            <input type = "button" Class="btn btn-danger" value="X" data-dismiss="modal" />
+<div class="modal fade" id="mdlAccCode">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Select Account Code
+            </div>
+            <div class="modal-body">
+                <table id="tbAcc" border="1" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Acc.Code</th>
+                            <th>Acc.Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @If dt.Rows.Count > 0 Then
+                            For Each dr As Data.DataRow In dt.Rows
+                                @<tr>
+                                    <td>
+                                        <input type="button" class="btn btn-success" onclick="SetData('@dr("AccCode")')" value="Select" data-dismiss="modal" />
+                                    </td>
+                                    <td>
+                                        @dr("AccCode").ToString()
+                                    </td>
+                                    <td>
+                                        @dr("AccName").ToString()
+                                    </td>
+                                </tr>
+                            Next
+                        End If
+                    </tbody>
+                </table>
+            </div>
+            <div Class="modal-footer">
+                <input type="button" Class="btn btn-danger" value="X" data-dismiss="modal" />
+            </div>
         </div>
     </div>
+    
 </div>
 <script type="text/javascript">
     function SetData(val) {
@@ -88,7 +91,7 @@ End Code
         let dateFrom = document.getElementById("txtDateFrom").value;
         let dateTo = document.getElementById("txtDateTo").value;
         let accCode = document.getElementById("txtAccCode").value;
-	window.location.href = "?Form=GeneralLedger&DB=@dbName&SRC=@dbSource&Code="+ accCode +"&DateFrom="+ dateFrom + "&DateTo=" + dateTo;
+	window.location.href = "?Form=GeneralLedger&DB=@dbname&SRC=@dbSource&Code="+ accCode +"&DateFrom="+ dateFrom + "&DateTo=" + dateTo;
     }
 </script>
 

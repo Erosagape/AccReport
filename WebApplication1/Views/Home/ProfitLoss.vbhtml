@@ -3,12 +3,19 @@
         display: none;
     }
 </style>
+@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
     ViewData("Title") = "Profit and Loss"
     Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
+
     Dim lang = "TH"
     If Not Request.QueryString("LANG") Is Nothing Then
         lang = Request.QueryString("LANG")
@@ -32,11 +39,7 @@ group by AccCode,AccName order by AccCode
     End If
     Dim sumDebit = 0
     Dim sumCredit = 0
-    Dim dbSource = ViewBag.AccDatabase
-    If Not Request.QueryString("SRC") Is Nothing Then
-        dbSource = Request.QueryString("SRC")
-    End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+
     Dim dt = obj.GetDataFromSQL(String.Format(sql, sqlw))
     Dim msg As String = "Ready"
     If obj.Message = "" Then
@@ -70,13 +73,13 @@ End If
             sumDebit += obj.GetDouble(dr("Dr"))
             sumCredit += obj.GetDouble(dr("Cr"))
             @<tr>
-    <td>
-        <a href="#" onclick="PrintGL('@dr("AccCode").ToString()')">@dr("AccCode").ToString()</a>
-    </td>
-    <td>@dr("AccName").ToString()</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
-    <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
-</tr>
+                <td>
+                    <a href="#" onclick="PrintGL('@dr("AccCode").ToString()')">@dr("AccCode").ToString()</a>
+                </td>
+                <td>@dr("AccName").ToString()</td>
+                <td style="text-align:right;">@Convert.ToDouble(dr("Dr")).ToString("#,##0.00")</td>
+                <td style="text-align:right;">@Convert.ToDouble(dr("Cr")).ToString("#,##0.00")</td>
+            </tr>
         Next
     </tbody>
     <tfoot>

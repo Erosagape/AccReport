@@ -1,6 +1,10 @@
 ﻿@Code
     ViewData("Title") = "Trans"
-    Dim dbName = ViewBag.AccDatabase
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -16,7 +20,7 @@
     If Not Request.QueryString("Type") Is Nothing Then
         docType = Request.QueryString("Type")
     End If
-    Dim obj = New AccReport.CUtil(".", dbName)
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim sqlw = String.Format(" where AccBatchDate>='{0}' and AccBatchDate<='{1}'", datefrom, dateto)
     If docType <> "" Then
         sqlw &= String.Format(" and AccDocType='{0}'", docType)
@@ -68,7 +72,7 @@ End Code
             @For Each dr As Data.DataRow In dt.Rows
                 Dim frmName = dr("AccDocType").ToString()
                 @<tr>
-    <td><a href="?Form=Form@(frmName)&SRC=@dbName&DB=@dbName&Code=@dr("AccDocNo")">Print</a></td>
+    <td><a href="?Form=Form@(frmName)&SRC=@dbSource&DB=@dbName&Code=@dr("AccDocNo")">Print</a></td>
     @For each dc As Data.DataColumn In dt.Columns
         @<td>@dr(dc.ColumnName)</td>
     Next
@@ -85,6 +89,6 @@ End If
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
         var typ= document.getElementById('txtDocType').value;
-        window.location.href = "?Form=Lists&DateFrom=" + df + "&DateTo=" + dt + "&SRC=@dbName&DB=@dbName&Type=" +typ;
+        window.location.href = "?Form=Lists&DateFrom=" + df + "&DateTo=" + dt + "&SRC=@dbSource&DB=@dbName&Type=" +typ;
     }
 </script> 

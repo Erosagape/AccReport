@@ -10,6 +10,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
 
     Dim sqlW = ""
 
@@ -26,7 +27,6 @@
         sqlW &= String.Format(" StockProductCode='{0}'", pdcode)
     End If
 
-    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim sql = "select * from vStock_Onhand "
     If sqlW <> "" Then
         sql &= " WHERE " & sqlW
@@ -114,7 +114,9 @@ End Code
                         sumAmount += dr("SumAmount")
                         @<tr>
     <td>
-        @dr("WarehouseCode")
+        <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource&Code=@dr("StockProductCode")&WH=@dr("WarehouseCode")">
+            @dr("WarehouseCode")
+        </a>        
     </td>
     <td>
         @dr("AssetAccCode") / @dr("AssetAccName")

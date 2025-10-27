@@ -2,10 +2,12 @@
     #topMenu {
         display: none;
     }
+
     td {
-        padding:5px 5px 5px 5px;
+        padding: 5px 5px 5px 5px;
     }
 </style>
+@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
     ViewData("Title") = "General Ledger"
     Dim accCode As String = ""

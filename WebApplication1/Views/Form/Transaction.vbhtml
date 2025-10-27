@@ -5,10 +5,16 @@
 </style>
 @Code
     ViewData("Title") = "Transaction"
-    Dim dbName = ViewBag.AccDatabase
+    Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
+
     Dim docno As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
         docno = Request.QueryString("Code")
@@ -23,7 +29,7 @@
     If Not Request.QueryString("Type") Is Nothing Then
         doctype = Request.QueryString("Type")
     End If
-    Dim obj = New AccReport.CUtil(".", dbName)
+
     Dim sql = "
 SELECT * from vTransaction_All where AccDocNo='{0}'
 "
@@ -391,6 +397,6 @@ End If
             alert('Data has changed,Please save document before!');
             return;
         }
-        window.location.href = window.location.pathname + '?DB=@dbName&Form=Transaction&Code=@AccDocNo&Item=' + itemno;
+        window.location.href = window.location.pathname + '?DB=@dbName&SRC=@dbSource&Form=Transaction&Code=@AccDocNo&Item=' + itemno;
     }
 </script>

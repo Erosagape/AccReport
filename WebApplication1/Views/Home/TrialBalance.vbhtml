@@ -3,6 +3,7 @@
         display: none;
     }
 </style>
+@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
     ViewData("Title") = "Trial Balance"
     Dim yy = DateTime.Now.Year
@@ -17,6 +18,12 @@
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
+
     Dim lang = "TH"
     If Not Request.QueryString("LANG") Is Nothing Then
         lang = Request.QueryString("LANG")
@@ -58,11 +65,7 @@
     End If
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
-    Dim dbSource = ViewBag.AccDatabase
-    If Not Request.QueryString("SRC") Is Nothing Then
-        dbSource = Request.QueryString("SRC")
-    End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+
     Dim dt = obj.GetDataFromSQL(sql)
     Dim msg As String = "Ready"
     If obj.Message = "" Then
@@ -86,10 +89,9 @@ Else
 End If
 <div style="display:flex;">
     @If lang = "EN" Then
-        @<h4>Fiscal Year @(Convert.ToInt32(yy)) &nbsp;&nbsp;</h4> 
-        @<h4>Period &nbsp;&nbsp;</h4> 
+        @<h4>Fiscal Year @(Convert.ToInt32(yy)) &nbsp;&nbsp;</h4>
+        @<h4>Period &nbsp;&nbsp;</h4>
         @<select id="cboMonth" onchange="RefreshPage(this.value)">
-            <option value=""> Beginning</option>
             <option value="1"> Jan</option>
             <option value="2"> Feb</option>
             <option value="3"> Mar</option>
@@ -104,23 +106,22 @@ End If
             <option value="12"> Dec</option>
         </select>
     Else
-            @<h4>ประจำปีภาษี@(Convert.ToInt32(yy) + 543)&nbsp;&nbsp; </h4> 
-            @<h4>ประจำงวด  &nbsp;&nbsp;</h4>
-            @<select id="cboMonth" onchange="RefreshPage(this.value)">
-                <option value=""> ต้นงวด</option>
-                <option value="1"> มกราคม</option>
-                <option value="2"> กุมภาพันธ์</option>
-                <option value="3"> มีนาคม</option>
-                <option value="4"> เมษายน</option>
-                <option value="5"> พฤษภาคม</option>
-                <option value="6"> มิถุนายน</option>
-                <option value="7"> กรกฏาคม</option>
-                <option value="8"> สิงหาคม</option>
-                <option value="9"> กันยายน</option>
-                <option value="10"> ตุลาคม</option>
-                <option value="11"> พฤษจิกายน</option>
-                <option value="12"> ธันวาคม</option>
-            </select>
+        @<h4>ประจำปีภาษี@(Convert.ToInt32(yy) + 543)&nbsp;&nbsp; </h4>
+        @<h4>ประจำงวด  &nbsp;&nbsp;</h4>
+        @<select id="cboMonth" onchange="RefreshPage(this.value)">
+            <option value="1"> มกราคม</option>
+            <option value="2"> กุมภาพันธ์</option>
+            <option value="3"> มีนาคม</option>
+            <option value="4"> เมษายน</option>
+            <option value="5"> พฤษภาคม</option>
+            <option value="6"> มิถุนายน</option>
+            <option value="7"> กรกฏาคม</option>
+            <option value="8"> สิงหาคม</option>
+            <option value="9"> กันยายน</option>
+            <option value="10"> ตุลาคม</option>
+            <option value="11"> พฤษจิกายน</option>
+            <option value="12"> ธันวาคม</option>
+        </select>
     End If
 
 </div>

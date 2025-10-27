@@ -2,10 +2,12 @@
     #topMenu {
         display: none;
     }
+
     table {
         font-size: 10px;
     }
 </style>
+@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
     ViewData("Title") = "Monthly Balance"
     Dim dbName = ViewBag.JobDatabase

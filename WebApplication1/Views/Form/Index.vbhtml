@@ -1,6 +1,10 @@
 ﻿@Code
     ViewData("Title") = "Index"
-    Dim dbName = ViewBag.AccDatabase
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
@@ -12,7 +16,7 @@
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateto = Request.QueryString("DateTo")
     End If
-    Dim obj = New AccReport.CUtil(".", dbName)
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim sqlw = String.Format(" where EntryDate>='{0}' and EntryDate<='{1}'", datefrom, dateto)
     Dim sql = String.Format("select * from Acc_JournalHD {0} order by JournalNo", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
@@ -41,8 +45,8 @@ End Code
         <tbody>
             @For Each dr As Data.DataRow In dt.Rows
                 @<tr>
-    <td><a href="?Form=FormGL&SRC=@dbName&DB=@dbName&Code=@dr("JournalNo")">Print</a></td>
-    @For each dc As Data.DataColumn In dt.Columns
+    <td><a href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a></td>
+    @For Each dc As Data.DataColumn In dt.Columns
         @<td>@dr(dc.ColumnName)</td>
     Next
 
@@ -57,6 +61,6 @@ End If
     function RefreshPage() {
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?DateFrom=" + df + "&DateTo=" + dt + "&DB=@dbName&SRC=@dbName";
+        window.location.href = "?DateFrom=" + df + "&DateTo=" + dt + "&DB=@dbName&SRC=@dbSource";
     }
 </script> 

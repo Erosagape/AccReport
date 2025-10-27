@@ -4,11 +4,17 @@
     If Not Request.QueryString("DB") Is Nothing Then
         dbname = Request.QueryString("DB").ToString()
     End If
-    Dim dateFrom = New Date(DateTime.Now.Year, Now.Month, 1)
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+
+    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim dateFrom = New Date(DateTime.Now.Year, Now.Month, 1).ToString("yyyy-MM-dd")
     If Not Request.QueryString("DateFrom") Is Nothing Then
         dateFrom = Request.QueryString("DateFrom")
     End If
-    Dim dateTo = DateAdd("d", -1, New Date(DateTime.Now.Year, Now.Month + 1, 1))
+    Dim dateTo = DateAdd("d", -1, New Date(DateTime.Now.Year, Now.Month + 1, 1)).ToString("yyyy-MM-dd")
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateTo = Request.QueryString("DateTo")
     End If
@@ -20,11 +26,7 @@
     If Not Request.QueryString("Code") Is Nothing Then
         pdcode = Request.QueryString("Code")
     End If
-    Dim dbSource = ViewBag.AccDatabase
-    If Not Request.QueryString("SRC") Is Nothing Then
-        dbSource = Request.QueryString("SRC")
-    End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+
     Dim sql = String.Format("select * from vStock_Card WHERE WarehouseCode='{0}' and StockProductCode='{1}' ", warehouse, pdcode)
     sql &= String.Format(" AND AccEffectiveDate>='{0}'", dateFrom)
     sql &= String.Format(" AND AccEffectiveDate<='{0}'", dateTo)
@@ -84,12 +86,12 @@ End Code
         <div Class="col-sm-3">
             <Label>Date From:</label>
             <br />
-            <input type = "date" id="txtDateFrom" value="@dateFrom.ToString("yyyy-MM-dd")" />
+            <input type = "date" id="txtDateFrom" value="@dateFrom" />
         </div>
         <div Class="col-sm-3">
             To
             <br />
-            <input type = "date" id="txtDateTo" value="@dateTo.ToString("yyyy-MM-dd")" />
+            <input type = "date" id="txtDateTo" value="@dateTo" />
         </div>
     </div>
     <div Class="row">
@@ -112,63 +114,62 @@ End Code
         End If
 
         dt = obj.GetDataFromSQL(sql)
-        If dt.Rows.Count > 0 Then
-            @<table border="1" class="table table-bordered">
-                 <thead>
-                     <tr>
-                         <th>Date</th>
-                         <th>#Ref</th>
-                         <th>Party</th>
-                         <th>IN</th>
-                         <th>OUT</th>
-                         <th>BAL</th>
-                         <th>AMT</th>
-                     </tr>
-                 </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td>Balance</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-right">@balQty</td>
-                        <td class="text-right">@balAmount</td>
-                    </tr>
-                    @For Each dr As Data.DataRow In dt.Rows
-                        balQty += obj.GetDouble(dr("QtyIN"))
-                        balQty -= obj.GetDouble(dr("QtyOUT"))
-                        balAmount += obj.GetDouble(dr("AmountIN"))
-                        balAmount -= obj.GetDouble(dr("AmountOUT"))
-                            @<tr>
-    <td>
-        @Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
-    </td>
-    <td>
-        @dr("AccDocNo").ToString()
-    </td>
-    <td>
-        @dr("PartyName").ToString()
-    </td>
-    <td class="text-right">
-        @dr("QtyIN")
-    </td>
-    <td class="text-right">
-        @dr("QtyOUT")
-    </td>
-    <td class="text-right">
-        @balQty
-    </td>
-    <td class="text-right">
-        @balAmount
-    </td>
+
+    @<table border="1" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>#Ref</th>
+                    <th>Party</th>
+                    <th>IN</th>
+                    <th>OUT</th>
+                    <th>BAL</th>
+                    <th>AMT</th>
+                </tr>
+            </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td>Balance</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-right">@balQty</td>
+                <td class="text-right">@balAmount</td>
+            </tr>
+            @For Each dr As Data.DataRow In dt.Rows
+                balQty += obj.GetDouble(dr("QtyIN"))
+                balQty -= obj.GetDouble(dr("QtyOUT"))
+                balAmount += obj.GetDouble(dr("AmountIN"))
+                balAmount -= obj.GetDouble(dr("AmountOUT"))
+                    @<tr>
+<td>
+@Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
+</td>
+<td>
+@dr("AccDocNo").ToString()
+</td>
+<td>
+@dr("PartyName").ToString()
+</td>
+<td class="text-right">
+@dr("QtyIN")
+</td>
+<td class="text-right">
+@dr("QtyOUT")
+</td>
+<td class="text-right">
+@balQty
+</td>
+<td class="text-right">
+@balAmount
+</td>
 </tr>
-                    Next
-                </tbody>
-            </table>
-        Else
-            @<span>No Data To Show</span>
-        End If
+            Next
+        </tbody>
+    </table>
+
+
         End Code
 </div>
 

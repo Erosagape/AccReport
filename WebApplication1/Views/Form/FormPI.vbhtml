@@ -10,15 +10,18 @@
     If Not Request.QueryString("Code") Is Nothing Then
         docno = Request.QueryString("Code")
     End If
-    Dim dbName = ViewBag.AccDatabase
+    Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
     End If
+    Dim dbSource = ViewBag.AccDatabase
+    If Not Request.QueryString("SRC") Is Nothing Then
+        dbSource = Request.QueryString("SRC")
+    End If
+    Dim obj = New AccReport.CUtil(".", dbSource)
     Dim sql = "
 select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
 "
-
-    Dim obj = New AccReport.CUtil(".", dbName)
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
 End Code
 <h2>Payment Input Note / ใบบันทึกค่าใช้จ่าย</h2>
