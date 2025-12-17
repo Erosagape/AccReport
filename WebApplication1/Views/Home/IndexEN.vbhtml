@@ -14,6 +14,11 @@ End Code
         <b>Master Files</b>
         <div class="row">
             <div class="col-sm-12">
+                <a href="?Form=Profile&SRC=@dbSource">Company Profile</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
                 <a href="?Form=ConfigAcc&SRC=@dbSource">Standard Entry</a>
             </div>
         </div>

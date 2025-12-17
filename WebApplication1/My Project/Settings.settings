@@ -5,20 +5,23 @@
     <Setting Name="WebUser" Type="System.String" Scope="Application">
       <Value Profile="(Default)">sa</Value>
     </Setting>
-    <Setting Name="WebPassword" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">9t;yogm8</Value>
-    </Setting>
     <Setting Name="SetIdentityInsert" Type="System.String" Scope="Application">
       <Value Profile="(Default)">N</Value>
     </Setting>
+    <Setting Name="WebPassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">9t;yogm872</Value>
+    </Setting>
     <Setting Name="WebConnect" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=acc_mnl;User id=sa;Password='9t;yogm8';Persist Security Info=False;</Value>
+      <Value Profile="(Default)">Data Source=203.151.150.72;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm872';Persist Security Info=False;</Value>
     </Setting>
     <Setting Name="JobDB" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">job_mnl</Value>
+      <Value Profile="(Default)">job_bop</Value>
     </Setting>
     <Setting Name="AccDB" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">acc_mnl</Value>
+      <Value Profile="(Default)">AccConcept</Value>
+    </Setting>
+    <Setting Name="WebIP" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">203.151.150.72</Value>
     </Setting>
   </Settings>
 </SettingsFile>

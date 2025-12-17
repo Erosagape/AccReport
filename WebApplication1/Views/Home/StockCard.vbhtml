@@ -27,7 +27,7 @@
         pdcode = Request.QueryString("Code")
     End If
 
-    Dim sql = String.Format("select * from vStock_Card WHERE WarehouseCode='{0}' and StockProductCode='{1}' ", warehouse, pdcode)
+    Dim sql = String.Format("select *,TransAmount/TransQty as Price from vStock_Card WHERE WarehouseCode='{0}' and StockProductCode='{1}' ", warehouse, pdcode)
     sql &= String.Format(" AND AccEffectiveDate>='{0}'", dateFrom)
     sql &= String.Format(" AND AccEffectiveDate<='{0}'", dateTo)
     sql &= " ORDER BY AccEffectiveDate,TransID"
@@ -108,9 +108,11 @@ End Code
         dt = obj.GetDataFromSQL(balSql)
         Dim balQty As Double = 0
         Dim balAmount As Double = 0
+        Dim avgPrice As Double = 0
         If dt.Rows.Count > 0 Then
             balQty = obj.GetDouble(dt.Rows(0)("BalQty"))
             balAmount = obj.GetDouble(dt.Rows(0)("BalAmt"))
+            If balQty > 0 Then avgPrice = balAmount / balQty
         End If
 
         dt = obj.GetDataFromSQL(sql)
@@ -123,6 +125,7 @@ End Code
                     <th>Party</th>
                     <th>IN</th>
                     <th>OUT</th>
+                    <th>Price</th>
                     <th>BAL</th>
                     <th>AMT</th>
                 </tr>
@@ -134,6 +137,7 @@ End Code
                 <td></td>
                 <td></td>
                 <td></td>
+                <td class="text-right">@avgPrice</td>
                 <td class="text-right">@balQty</td>
                 <td class="text-right">@balAmount</td>
             </tr>
@@ -143,27 +147,30 @@ End Code
                 balAmount += obj.GetDouble(dr("AmountIN"))
                 balAmount -= obj.GetDouble(dr("AmountOUT"))
                     @<tr>
-<td>
-@Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
-</td>
-<td>
-@dr("AccDocNo").ToString()
-</td>
-<td>
-@dr("PartyName").ToString()
-</td>
-<td class="text-right">
-@dr("QtyIN")
-</td>
-<td class="text-right">
-@dr("QtyOUT")
-</td>
-<td class="text-right">
-@balQty
-</td>
-<td class="text-right">
-@balAmount
-</td>
+    <td>
+        @Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
+    </td>
+    <td>
+        @dr("AccDocNo").ToString()
+    </td>
+    <td>
+        @dr("PartyName").ToString()
+    </td>
+    <td class="text-right">
+        @dr("QtyIN")
+    </td>
+    <td class="text-right">
+        @dr("QtyOUT")
+    </td>
+    <td class="text-right">
+        @dr("Price")
+    </td>
+    <td class="text-right">
+        @balQty
+    </td>
+    <td class="text-right">
+        @balAmount
+    </td>
 </tr>
             Next
         </tbody>

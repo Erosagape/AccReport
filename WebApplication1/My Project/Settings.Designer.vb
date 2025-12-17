@@ -65,15 +65,6 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("9t;yogm8")>  _
-        Public ReadOnly Property WebPassword() As String
-            Get
-                Return CType(Me("WebPassword"),String)
-            End Get
-        End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("N")>  _
         Public ReadOnly Property SetIdentityInsert() As String
             Get
@@ -83,8 +74,17 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=.;Initial Catalog=acc_mnl;User id=sa;Password='9t;yogm8';Persist Secu"& _ 
-            "rity Info=False;")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("9t;yogm872")>  _
+        Public ReadOnly Property WebPassword() As String
+            Get
+                Return CType(Me("WebPassword"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=203.151.150.72;Initial Catalog=AccConcept;User id=sa;Password='9t;yog"& _ 
+            "m872';Persist Security Info=False;")>  _
         Public ReadOnly Property WebConnect() As String
             Get
                 Return CType(Me("WebConnect"),String)
@@ -93,7 +93,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("job_mnl")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("job_bop")>  _
         Public ReadOnly Property JobDB() As String
             Get
                 Return CType(Me("JobDB"),String)
@@ -102,10 +102,19 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("acc_mnl")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("AccConcept")>  _
         Public ReadOnly Property AccDB() As String
             Get
                 Return CType(Me("AccDB"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("203.151.150.72")>  _
+        Public ReadOnly Property WebIP() As String
+            Get
+                Return CType(Me("WebIP"),String)
             End Get
         End Property
     End Class

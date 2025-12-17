@@ -9,7 +9,7 @@
         dbSource = Request.QueryString("SRC")
     End If
     Dim obj = New AccReport.CUtil("", dbSource)
-    Dim logoFileName = "logo-tawan.jpg"
+    Dim logoFileName = "mnl-logo.jpg"
     Dim companyName = "Tawan Technology Co.,ltd"
     Dim companyAddr1 = "507 SOI BANGNA-TRAD 56,BANGNA-TRAD ROAD"
     Dim companyAddr2 = "SOUTH BANGNA,BANGNA,BANGKOK THAILAND"
@@ -50,22 +50,20 @@ End Code
     }
 </style>
 <div class="text-left">
-    <table>
-        <tr>
-            <td style="padding: 10px 10px 10px 10px;">
-                <img src="~/@logoFileName" style="width:150px;" />
-            </td>
-            <td style="padding :5px;">
-                <b style="font-size:14px">@companyName</b>
-                <br />
-                <b>@companyAddr1</b>
-                <br />
-                <b>@companyAddr2</b>
-                <br />
-                เลขประจำตัวผู้เสียภาษี @companyTaxNo สาขา @companyTaxBranch
-            </td>
-        </tr>
-    </table>
+    <div style="display:flex;">
+        <div style="padding: 10px 10px 10px 10px;flex:10%">
+            <img src="~/@logoFileName" style="width:150px;" />
+        </div>
+        <div style="padding :5px;flex:90%">
+            <b style="font-size:14px">@companyName</b>
+            <br />
+            <b>@companyAddr1</b>
+            <br />
+            <b>@companyAddr2</b>
+            <br />
+            เลขประจำตัวผู้เสียภาษี @companyTaxNo สาขา @companyTaxBranch                           
+        </div>
+    </div>
 </div>
 
 

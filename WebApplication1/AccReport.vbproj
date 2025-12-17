@@ -193,6 +193,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\form.css" />
     <Content Include="Content\paper_origin.css" />
     <Content Include="Content\paper.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -219,6 +220,9 @@
     </None>
     <None Include="packages.config" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="logo-tawan.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -280,6 +284,22 @@
     <Content Include="Views\Home\Test.vbhtml" />
     <Content Include="Views\Home\TestLogin.vbhtml" />
     <Content Include="Views\Home\CashFlow.vbhtml" />
+    <Content Include="Views\Form\Test.vbhtml" />
+    <Content Include="Views\Shared\_A4.vbhtml" />
+    <Content Include="Views\Form\Default.vbhtml" />
+    <Content Include="Views\Home\ReportJob.vbhtml" />
+    <Content Include="Views\Home\TransferJob_V3.vbhtml" />
+    <Content Include="Views\Home\Query.vbhtml" />
+    <Content Include="Views\Home\ReportJobList.vbhtml" />
+    <Content Include="Views\Home\ReportPI.vbhtml" />
+    <Content Include="Views\Home\ReportSI.vbhtml" />
+    <Content Include="Views\Form\FormAV.vbhtml" />
+    <Content Include="Views\Form\FormBD.vbhtml" />
+    <Content Include="Views\Form\FormDP.vbhtml" />
+    <Content Include="Views\Form\FormJV.vbhtml" />
+    <Content Include="Views\Form\FormPS1.vbhtml" />
+    <Content Include="Views\Form\FormTF.vbhtml" />
+    <Content Include="Views\Form\ReportJob.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

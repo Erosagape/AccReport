@@ -17,7 +17,7 @@
         dateFrom = Request.QueryString("DateFrom")
         sqlW &= String.Format(" AND EntryDate>='{0}'", dateFrom)
     End If
-    Dim dateTo = DateAdd("d", -1, New Date(DateTime.Now.Year, Now.Month + 1, 1))
+    Dim dateTo = DateAdd("d",-1,DateAdd("m", 1, New Date(DateTime.Now.Year, Now.Month, 1)))
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateTo = Request.QueryString("DateTo")
         sqlW &= String.Format(" AND EntryDate<='{0}'", dateTo)

@@ -83,11 +83,11 @@ End If
                     prevBal = obj.GetDouble(dr("Balance"))
                 End If
                 i += 1
-                If groupVal <> dr("AccRemark") Then
+                If groupVal <> dr("JournalNo") Then
                     @<tr style="font-style:italic;font-weight:bold;">
-                        <td colspan="7">@dr("AccRemark").ToString()</td>
+                        <td colspan="7">@dr("JournalNo").ToString()</td>
                     </tr>
-                    groupVal = dr("AccRemark")
+                    groupVal = dr("JournalNo")
                 End If
                 If i = dt.Rows.Count Then
                     nextBal = obj.GetDouble(dr("Balance"))
@@ -118,8 +118,8 @@ End If
                     @<tr>
                         <td>@i</td>
                         <td>@Convert.ToDateTime(dr("EffectiveDate")).ToString("dd/MM/yyyy")</td>
-                        <td>@dr("JournalNo").ToString()</td>
                         <td>@dr("AccDesc").ToString()</td>
+                        <td>@dr("AccRemark").ToString()</td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Debit")).ToString("#,##0.00")</td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Credit")).ToString("#,##0.00")</td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Balance")).ToString("#,##0.00")</td>

@@ -14,6 +14,11 @@ End Code
         <b>ข้อมูลมาตรฐาน</b>
         <div class="row">
             <div class="col-sm-12">
+                <a href="?Form=Profile&SRC=@dbSource">ข้อมูลกิจการ</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
                 <a href="?Form=ConfigAcc&SRC=@dbSource">กำหนดมาตรฐานการลงบัญชี</a>
             </div>
         </div>

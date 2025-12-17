@@ -4,6 +4,7 @@
         ViewBag.User = ""
         ViewBag.Token = ""
         ViewBag.Target = ""
+        ViewBag.WebIP = My.Settings.WebIP
     End Sub
     Function SetLogin(userId As String, ipAddress As String, custID As String, sessionId As String, Optional minexpire As Integer = 60) As Boolean
         If SetSession(sessionId) <> sessionId Then
@@ -50,6 +51,9 @@ END
         ViewBag.SetIdentityInsert = My.Settings.SetIdentityInsert
         ViewBag.JobDatabase = My.Settings.JobDB
         ViewBag.AccDatabase = My.Settings.AccDB
+        If ViewBag.WebIP = "" Then
+            ViewBag.WebIP = "."
+        End If
         Return View(vName)
     End Function
 End Class
