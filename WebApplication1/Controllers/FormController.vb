@@ -12,5 +12,13 @@ Namespace Views
             End If
             Return GetView(formName)
         End Function
+        Function Transaction() As ActionResult
+            Dim formName = Request.QueryString("Form")
+            If formName Is Nothing Then
+                formName = ""
+            End If
+
+            Return GetView("Transaction" & formName, True)
+        End Function
     End Class
 End Namespace

@@ -300,6 +300,7 @@
     <Content Include="Views\Form\FormPS1.vbhtml" />
     <Content Include="Views\Form\FormTF.vbhtml" />
     <Content Include="Views\Form\ReportJob.vbhtml" />
+    <Content Include="Views\Home\Transaction.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
