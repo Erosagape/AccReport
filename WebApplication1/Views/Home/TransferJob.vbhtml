@@ -15,8 +15,9 @@
     Dim sql = "
 if '{2}'='ADV'
 begin
-EXEC dbo.Insert_AdvanceFromJob '{0}','{1}'
-EXEC dbo.Insert_DPToJournal '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_AdvanceFromJob '{0}','{1}'
+--EXEC dbo.Insert_DPToJournal '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}',''
 end
 
 if '{2}'='CLR'
@@ -27,9 +28,10 @@ end
 
 if '{2}'='PAY'
 begin
-EXEC dbo.Insert_BillPayFromJob '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_BillPayToJournal '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_PVFromBillPay '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_BillPayFromJob '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_BillPayToJournal '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_PVFromBillPay '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
 end
 
 if '{2}'='INV'

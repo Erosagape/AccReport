@@ -3,6 +3,3 @@
     Layout = Nothing
     Html.RenderAction("Login", "Home")
 End Code
-
-
-
