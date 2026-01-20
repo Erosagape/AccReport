@@ -1,6 +1,6 @@
 @Code
     Layout = "~/Views/Shared/Report.vbhtml"
-    ViewData("Title") = "Report A/P"
+    ViewData("Title") = "Report VAT Purchase"
     Dim dbname = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbname = Request.QueryString("DB").ToString()
@@ -31,11 +31,16 @@
     Dim qry As String = ""
     If Not Request.QueryString("Query") Is Nothing Then
         qry = Request.QueryString("Query")
-        sqlW &= String.Format(" AND EXISTS(select 1 from vTransaction_All where AccDocNo=a.AccDocNo and (SalesDescription like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
+        sqlW &= String.Format(" AND EXISTS(select 1 from vTransaction_D where DocNo=t.AccDocNo and (SalesDescription like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
-
-    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vTransaction_H a WHERE DocStatus<>99 and exists(select 1 from vJournal_D where AccDesc=a.AccDocNo And AccCode=dbo.GetAccConfig('AP_CONFIG','Purchase') And Credit>0) {0} ORDER BY AccDocNo", sqlW))
+    Dim sql As String="
+    select t.* from 
+vTransaction_H as t 
+where EXISTS(select 1 from vJournal_All WHERE Description=t.AccDocNo and AccCode=dbo.GetAccConfig('VAT_CONFIG','InputVat') and Debit>0)
+and TotalVat>0 {0}
+    "
+    Dim dh = obj.GetDataFromSQL(String.Format(sql, sqlW))
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code
@@ -49,11 +54,11 @@ End Code
     }
 </style>
 <div id="reportArea">
-    <h4>Purchase Invoice Report</h4>
+    <h4>Input VAT Report</h4>
     <h4>Date From : @Convert.ToDateTime(dateFrom).ToString("dd/MM/yyyy") To : @Convert.ToDateTime(dateTo).ToString("dd/MM/yyyy")</h4>
     @Code
         If custCode <> "" Then
-            @<h4>Supplier Code :@custCode</h4>
+            @<h4>Customer Code :@custCode</h4>
         End If
         If qry <> "" Then
             @<h4>Filter :*@qry*</h4>
@@ -65,11 +70,10 @@ End Code
         @<table>
             <thead>
                 <tr>
-                    <th>Bill No</th>
-                    <th>Bill Date</th>
-                    <th>Due Date</th>
-                    <th>Supplier Name</th>
-                    <th>Ref No</th>
+                    <th>Doc No</th>
+                    <th>Doc Date</th>
+                    <th>Tax Reference</th>
+                    <th>Customer Name</th>                    
                     <th>Amount</th>
                     <th>Vat</th>
                     <th>Wht</th>
@@ -83,15 +87,14 @@ End Code
                     totalNet+=obj.GetDouble(rh("TotalNet"))
                     totalAmt+=obj.GetDouble(rh("TotalAmount"))
                     @<tr style="font-weight:bold;">
-                        <td>@rh("AccDocNo")</td>
+                        <td>@rh("DocRefNo")</td>
                         <td>
                             @Convert.ToDateTime(rh("AccBatchDate")).ToString("dd/MM/yyyy")
                         </td>
                         <td>
-                            @Convert.ToDateTime(rh("AccEffectiveDate")).ToString("dd/MM/yyyy")
+                            @rh("PartyTaxCode")
                         </td>
                         <td>@rh("PartyName")</td>
-                        <td>@rh("DocRefNo")</td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalAmount")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalVat")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalWht")).ToString("#,##0.00") </td>
@@ -101,7 +104,7 @@ End Code
             </tbody>
             <tfoot>
                 <tr style="font-weight:bold;text-decoration:underline">
-                    <td colspan="5">TOTAL</td>
+                    <td colspan="4">TOTAL</td>
                     <td style="text-align:right">@totalAmt.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalVat.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalWht.ToString("#,##0.00")</td>

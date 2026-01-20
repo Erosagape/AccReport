@@ -301,6 +301,13 @@
     <Content Include="Views\Form\FormTF.vbhtml" />
     <Content Include="Views\Form\ReportJob.vbhtml" />
     <Content Include="Views\Home\Transaction.vbhtml" />
+    <Content Include="Views\Home\ReportVAT.vbhtml" />
+    <Content Include="Views\Home\WHTaxExp.vbhtml" />
+    <Content Include="Views\Form\FormWHTax.vbhtml" />
+    <Content Include="Views\Form\WHTax.vbhtml" />
+    <Content Include="Views\Home\ReportAP.vbhtml" />
+    <Content Include="Views\Home\ReportVATBuy.vbhtml" />
+    <Content Include="Views\Home\ReportVATSale.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

@@ -31,11 +31,11 @@
     Dim qry As String = ""
     If Not Request.QueryString("Query") Is Nothing Then
         qry = Request.QueryString("Query")
-        sqlW &= String.Format(" AND EXISTS(select 1 from vTransaction_All where AccDocNo=a.AccDocNo and (SalesDescription like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
+        sqlW &= String.Format(" AND EXISTS(select 1 from vAP_D where AccDocNo=a.AccDocNo and (SalesProductName like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
 
-    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vTransaction_H a WHERE DocStatus<>99 and exists(select 1 from vJournal_D where AccDesc=a.AccDocNo And AccCode=dbo.GetAccConfig('AP_CONFIG','Purchase') And Credit>0) {0} ORDER BY AccDocNo", sqlW))
+    Dim dh = obj.GetDataFromSQL(String.Format("SELECT *,Isnull(TotalPayment,0) as TotalPay FROM vAP_Payment a WHERE DocStatus<>99 {0} ORDER BY AccDocNo", sqlW))
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code
@@ -49,7 +49,7 @@ End Code
     }
 </style>
 <div id="reportArea">
-    <h4>Purchase Invoice Report</h4>
+    <h4>A/P Report</h4>
     <h4>Date From : @Convert.ToDateTime(dateFrom).ToString("dd/MM/yyyy") To : @Convert.ToDateTime(dateTo).ToString("dd/MM/yyyy")</h4>
     @Code
         If custCode <> "" Then
@@ -61,19 +61,19 @@ End Code
         Dim totalVat As Double=0
         Dim totalWht As Double=0
         Dim totalNet As Double=0
-        Dim totalAmt As Double=0
+        Dim totalPay As Double=0
         @<table>
             <thead>
                 <tr>
-                    <th>Bill No</th>
-                    <th>Bill Date</th>
+                    <th>Inv No</th>
+                    <th>Inv Date</th>
                     <th>Due Date</th>
-                    <th>Supplier Name</th>
+                    <th>Customer Name</th>
                     <th>Ref No</th>
-                    <th>Amount</th>
                     <th>Vat</th>
                     <th>Wht</th>
                     <th>Net</th>
+	            <th>Payment</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,7 +81,7 @@ End Code
                     totalVat+=obj.GetDouble(rh("TotalVat"))
                     totalWht+=obj.GetDouble(rh("TotalWht"))
                     totalNet+=obj.GetDouble(rh("TotalNet"))
-                    totalAmt+=obj.GetDouble(rh("TotalAmount"))
+                    totalPay+=obj.GetDouble(rh("TotalPay"))
                     @<tr style="font-weight:bold;">
                         <td>@rh("AccDocNo")</td>
                         <td>
@@ -92,20 +92,20 @@ End Code
                         </td>
                         <td>@rh("PartyName")</td>
                         <td>@rh("DocRefNo")</td>
-                        <td style="text-align:right">@Convert.ToDouble(rh("TotalAmount")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalVat")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalWht")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalNet")).ToString("#,##0.00") </td>
+                        <td style="text-align:right">@Convert.ToDouble(rh("TotalPay")).ToString("#,##0.00") </td>
                     </tr>                
                 Next                
             </tbody>
             <tfoot>
                 <tr style="font-weight:bold;text-decoration:underline">
                     <td colspan="5">TOTAL</td>
-                    <td style="text-align:right">@totalAmt.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalVat.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalWht.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalNet.ToString("#,##0.00")</td>
+                    <td style="text-align:right">@totalPay.ToString("#,##0.00")</td>
                 </tr>
             </tfoot>
         </table>

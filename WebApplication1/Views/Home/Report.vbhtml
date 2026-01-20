@@ -43,8 +43,12 @@ End Code
             <option value="PI">Purchase Invoice Report</option>
             <option value="Sale">Sale Order Report</option>
             <option value="SI">Sale Invoice Report</option>
+            <option value="AR">Account Receiveable Report</option>
+            <option value="AP">Account Payable Report</option>
             <option value="Payment">Payment Voucher Report</option>
             <option value="Receive">Receive Voucher Report</option>
+            <option value="VATSale">Output VAT Report</option>
+            <option value="VATBuy">Input VAT Report</option>
         </select>
     </div>
 </div>

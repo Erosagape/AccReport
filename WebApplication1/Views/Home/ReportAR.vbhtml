@@ -35,7 +35,7 @@
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
 
-    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vAR_H a WHERE DocStatus<>99 {0} ORDER BY AccDocNo", sqlW))
+    Dim dh = obj.GetDataFromSQL(String.Format("SELECT *,Isnull(TotalPayment,0) as TotalPay FROM vAR_Payment a WHERE DocStatus<>99 {0} ORDER BY AccDocNo", sqlW))
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code
@@ -49,7 +49,7 @@ End Code
     }
 </style>
 <div id="reportArea">
-    <h4>Sale Invoice Report</h4>
+    <h4>A/R Report</h4>
     <h4>Date From : @Convert.ToDateTime(dateFrom).ToString("dd/MM/yyyy") To : @Convert.ToDateTime(dateTo).ToString("dd/MM/yyyy")</h4>
     @Code
         If custCode <> "" Then
@@ -61,6 +61,7 @@ End Code
         Dim totalVat As Double=0
         Dim totalWht As Double=0
         Dim totalNet As Double=0
+        Dim totalPay As Double=0
         @<table>
             <thead>
                 <tr>
@@ -72,6 +73,7 @@ End Code
                     <th>Vat</th>
                     <th>Wht</th>
                     <th>Net</th>
+	            <th>Payment</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,6 +81,7 @@ End Code
                     totalVat+=obj.GetDouble(rh("TotalVat"))
                     totalWht+=obj.GetDouble(rh("TotalWht"))
                     totalNet+=obj.GetDouble(rh("TotalNet"))
+                    totalPay+=obj.GetDouble(rh("TotalPay"))
                     @<tr style="font-weight:bold;">
                         <td>@rh("AccDocNo")</td>
                         <td>
@@ -92,6 +95,7 @@ End Code
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalVat")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalWht")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalNet")).ToString("#,##0.00") </td>
+                        <td style="text-align:right">@Convert.ToDouble(rh("TotalPay")).ToString("#,##0.00") </td>
                     </tr>                
                 Next                
             </tbody>
@@ -101,6 +105,7 @@ End Code
                     <td style="text-align:right">@totalVat.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalWht.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalNet.ToString("#,##0.00")</td>
+                    <td style="text-align:right">@totalPay.ToString("#,##0.00")</td>
                 </tr>
             </tfoot>
         </table>

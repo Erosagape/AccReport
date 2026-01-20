@@ -31,7 +31,7 @@
     Dim qry As String = ""
     If Not Request.QueryString("Query") Is Nothing Then
         qry = Request.QueryString("Query")
-        sqlW &= String.Format(" AND EXISTS(select 1 from Acc_JournalDT where EntryID=a.EntryID and AccName like '%{0}%')", qry)
+        sqlW &= String.Format(" AND (EXISTS(select 1 from Acc_JournalDT where EntryID=a.EntryID and AccName like '%{0}%') or JournalNo like '%{0}%')", qry)
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
 
