@@ -15,9 +15,9 @@
     Dim sql = "
 if '{2}'='ADV'
 begin
---EXEC dbo.Insert_AdvanceFromJob '{0}','{1}'
---EXEC dbo.Insert_DPToJournal '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}',''
+EXEC dbo.Insert_AdvanceFromJob '{0}','{1}'
+EXEC dbo.Insert_DPToJournal '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}',''
 end
 
 if '{2}'='CLR'
@@ -28,10 +28,11 @@ end
 
 if '{2}'='PAY'
 begin
---EXEC dbo.Insert_BillPayFromJob '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_BillPayToJournal '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_PVFromBillPay '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
+EXEC dbo.Insert_BillPayFromJob '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_BillPayToJournal '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_PVFromBillPay '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
+--EXEC dbo.Insert_PVFromBillPay_V2 '{0}','{1}'
 end
 
 if '{2}'='INV'
@@ -47,19 +48,21 @@ EXEC dbo.Insert_ReceiptFromJob '{0}','{1}',''
 EXEC dbo.Insert_PostReceiptToJournal '{0}','{1}',''
 end
 "
+    Dim dateFrom  
+    Dim dateTo 
     If Not Request.Form("Submit") Is Nothing Then
         Dim postType As String = Request.Form("PostType")
         bPost = True
-        Dim dateFrom = Request.Form("DateFrom")
-        Dim dateTo = Request.Form("DateTo")
+        dateFrom = Request.Form("DateFrom")
+        dateTo = Request.Form("DateTo")
         msg = "Process " & postType & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo, postType))
     End If
 End Code
 <h2>Transfer Job</h2>
 <form method="post" action="">
-    From Date : <input type="date" name="DateFrom" id="txtDateFrom"  />
+    From Date : <input type="date" name="DateFrom" id="txtDateFrom" value="@dateFrom" />
     <br />
-    To Date : <input type="date" name="DateTo" id="txtDateTo"  />
+    To Date : <input type="date" name="DateTo" id="txtDateTo" value="@dateTo" />
     <br />
     <select name="PostType" id="cboPostType">
         <option value="ADV">Advance Expenses</option>

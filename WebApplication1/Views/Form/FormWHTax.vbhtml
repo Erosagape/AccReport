@@ -15,6 +15,7 @@
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
 End Code
+<script src="~/Scripts/util.js"></script>
 <style>
     #topMenu {
         display: none;
@@ -528,3 +529,8 @@ End Code
     <b>หมายเหตุ</b> ให้สามารถอ้างอิงหรือสอบยันกันได้ระหว่างลำดับที่ตามหนังสือรับรองฯ กับแบบยื่นรายการภาษีหัก ณ ที่จ่าย<br />
     <b>คำเตือน</b> ผู้มีหน้าที่ออกหนังสือรับรองหักภาษี ณ ที่จ่าย ฝ่าฝืนไม่ปฏิบัติตามมาตรา 50 ทวิ แห่งประมวลรัษฏากรต้องรับโทษทางอาญาตามมาตรา 35 แห่งประมวลรัษฏากร
 </div>
+<script type="text/javascript">
+    var tot = CNumThai(@TotalPayTax);
+    document.getElementById('txtPayTaxMoney').textContent = tot;
+    
+</script>

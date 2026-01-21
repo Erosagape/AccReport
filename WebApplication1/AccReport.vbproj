@@ -229,6 +229,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+    <Content Include="Scripts\util.js" />
     <Content Include="Views\Home\TrialBalance.vbhtml" />
     <Content Include="Views\Home\GeneralLedger.vbhtml" />
     <Content Include="Views\Home\LinkJob.vbhtml" />
