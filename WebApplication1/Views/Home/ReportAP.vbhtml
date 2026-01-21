@@ -35,7 +35,7 @@
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
 
-    Dim dh = obj.GetDataFromSQL(String.Format("SELECT *,Isnull(TotalPayment,0) as TotalPay FROM vAP_Payment a WHERE DocStatus<>99 {0} ORDER BY AccDocNo", sqlW))
+    Dim dh = obj.GetDataFromSQL(String.Format("SELECT *,Isnull(TotalPayment,0) as TotalPay,DATEDIFF(day,GETDATE(),AccEffectiveDate) as OverdueDays FROM vAP_Payment a WHERE DocStatus<>99 {0} ORDER BY AccDocNo", sqlW))
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code
@@ -73,7 +73,8 @@ End Code
                     <th>Vat</th>
                     <th>Wht</th>
                     <th>Net</th>
-	            <th>Payment</th>
+                    <th>Payment</th>
+                    <th>Overdue</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,8 +97,9 @@ End Code
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalWht")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalNet")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalPay")).ToString("#,##0.00") </td>
+                        <td>@rh("OverdueDays")</td>
                     </tr>                
-                Next                
+                Next
             </tbody>
             <tfoot>
                 <tr style="font-weight:bold;text-decoration:underline">
@@ -106,6 +108,7 @@ End Code
                     <td style="text-align:right">@totalWht.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalNet.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalPay.ToString("#,##0.00")</td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>
