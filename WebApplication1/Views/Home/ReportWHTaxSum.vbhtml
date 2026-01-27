@@ -1,4 +1,4 @@
-@Code
+ï»¿@Code
     Layout = "~/Views/Shared/Report.vbhtml"
     ViewData("Title") = "Report WH-Tax"
     Dim dbname = ViewBag.JobDatabase
@@ -17,7 +17,7 @@
         dateFrom = Request.QueryString("DateFrom")
         sqlW &= String.Format(" AND DocDate>='{0}'", dateFrom)
     End If
-    Dim dateTo = DateAdd("d",-1,DateAdd("m", 1, New Date(DateTime.Now.Year, Now.Month, 1)))
+    Dim dateTo = DateAdd("d", -1, DateAdd("m", 1, New Date(DateTime.Now.Year, Now.Month, 1)))
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateTo = Request.QueryString("DateTo")
         sqlW &= String.Format(" AND DocDate<='{0}'", dateTo)
@@ -39,25 +39,34 @@
         sqlW &= String.Format(" AND (EXISTS(select 1 from Acc_WHTaxDetail where DocNo=a.DocNo and PayTaxDesc like '%{0}%')  OR TName3 like '%{0}%' OR DocNo like '%{0}%' OR FormTypeName like '%{0}%' OR TaxLawName like '%{0}%')", qry)
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
-    Dim sql = "SELECT a.* FROM (
+    Dim sql = "SELECT TaxNumber1,Branch1,TName1, 
+TaxNumber2,Branch2,TName2, 
+TaxNumber3,Branch3,TName3, 
+sum(TotalPayAmount) as TotalPayAmount,
+sum(TotalPayTax) as TotalPayTax,
+FormTypeName,TaxLawName
+FROM (
   select *, 
-  (case when FormType=4 then 'À§´3' else
-  (case when FormType=7 then 'À§´53' else 
-  (case when FormType=1 then 'À§´1¡' else
-  (case when FormType=2 then 'À§´1¡¾ÔàÈÉ' else
-  (case when FormType=3 then 'À§´2' else
-  (case when FormType=5 then 'À§´2¡' else
-  (case when FormType=6 then 'À§´3¡' else 'ÃËÑÊ¼Ô´¾ÅÒ´'
+  (case when FormType=4 then 'à¸ à¸‡à¸”3' else
+  (case when FormType=7 then 'à¸ à¸‡à¸”53' else 
+  (case when FormType=1 then 'à¸ à¸‡à¸”1à¸' else
+  (case when FormType=2 then 'à¸ à¸‡à¸”1à¸à¸žà¸´à¹€à¸¨à¸©' else
+  (case when FormType=3 then 'à¸ à¸‡à¸”2' else
+  (case when FormType=5 then 'à¸ à¸‡à¸”2à¸' else
+  (case when FormType=6 then 'à¸ à¸‡à¸”3à¸' else 'à¸£à¸«à¸±à¸ªà¸œà¸´à¸”à¸žà¸¥à¸²à¸”'
   end)  end)  end)  end)  end)  end)  end) as FormTypeName,
-  (case when TaxLawNo=1 then '3àµÃÊ' else 
-  (case when TaxLawNo=2 then '65¨Ñ´ÇÒ' else 
-  (case when TaxLawNo=3 then '69·ÇÔ' else 
-  (case when TaxLawNo=4 then '48·ÇÔ' else 
-  (case when TaxLawNo=5 then '50·ÇÔ' else 'ÃËÑÊ¼Ô´¾ÅÒ´' 
+  (case when TaxLawNo=1 then '3à¹€à¸•à¸£à¸ª' else 
+  (case when TaxLawNo=2 then '65à¸ˆà¸±à¸”à¸§à¸²' else 
+  (case when TaxLawNo=3 then '69à¸—à¸§à¸´' else 
+  (case when TaxLawNo=4 then '48à¸—à¸§à¸´' else 
+  (case when TaxLawNo=5 then '50à¸—à¸§à¸´' else 'à¸£à¸«à¸±à¸ªà¸œà¸´à¸”à¸žà¸¥à¸²à¸”' 
   end)  end)  end)  end)  end) as TaxLawName
   from Acc_WHTax
 ) a"
-    Dim dh = obj.GetDataFromSQL(String.Format(sql & " WHERE CancelProve='' {0} ORDER BY DocNo", sqlW))
+    Dim dh = obj.GetDataFromSQL(String.Format(sql & " WHERE CancelProve='' {0}", sqlW) & " group by TaxNumber1,Branch1,TName1, 
+TaxNumber2,Branch2,TName2, 
+TaxNumber3,Branch3,TName3, 
+FormTypeName,TaxLawName")
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code
@@ -83,8 +92,6 @@ End Code
         @<table>
             <thead>
                 <tr>
-                    <th>Doc No</th>
-                    <th>Doc Date</th>
                     <th>Tax Author</th>
                     <th>Tax Agent</th>
                     <th>Tax Payer</th>
@@ -97,22 +104,17 @@ End Code
             <tbody>
                 @For each rh As Data.DataRow In dh.Rows
                     @<tr style="font-weight:bold;">
-                        <td>@rh("DocNo")</td>
-                        <td>
-                            @Convert.ToDateTime(rh("DocDate")).ToString("dd/MM/yyyy")
-                        </td>
-                        <td>@rh("TaxNumber1")/@rh("Branch1") @rh("TName1")</td>
-                        <td>@rh("TaxNumber2")/@rh("Branch2") @rh("TName2")</td>
-                        <td>@rh("TaxNumber3")/@rh("Branch3") @rh("TName3")</td>
+                         <td>@rh("TaxNumber1")/@rh("Branch1") @rh("TName1")</td>
+                         <td>@rh("TaxNumber2")/@rh("Branch2") @rh("TName2")</td>
+                         <td>@rh("TaxNumber3")/@rh("Branch3") @rh("TName3")</td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalPayAmount")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalPayTax")).ToString("#,##0.00") </td>
                         <td>@rh("FormTypeName")</td>
                         <td>@rh("TaxLawName")</td>
-                    </tr>                
+                    </tr>
                 Next
             </tbody>
-            
+
         </table>
     End Code
 </div>
-

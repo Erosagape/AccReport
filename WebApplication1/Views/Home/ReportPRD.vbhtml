@@ -14,34 +14,35 @@ End Code
 <h2>Report PRD Witholding-Tax</h2>
 <div class="container">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-2">
             <b>Year</b>
             <br />
-            <input type="number" id="txtYear" value="@yy" />
+            <input type="number" id="txtYear" class="form-control" value="@yy" />
         </div>
-<div class="col-sm-6">
-    <b>Month</b>
-    <select id="txtMonth">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-    </select>
-</div>
+        <div class="col-sm-2">
+            <b>Month</b>
+            <br />
+            <select id="txtMonth" class="form-control dropdown">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+        </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-2">
             <b>Law Code No#</b>
             <br />
-            <select id="txtLawNo">
+            <select id="txtLawNo" class="form-control dropdown">
                 <option value="1">3 เตรส</option>
                 <option value="2">65 จัดวา</option>
                 <option value="3">69 ทวิ</option>
@@ -49,16 +50,16 @@ End Code
                 <option value="5">50 ทวิ</option>
             </select>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-2">
             <b>Tax Number</b>
             <br />
-            <input type="text" id="txtTaxNo" />
+            <input type="text" class="form-control" id="txtTaxNo" />
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <b>Select Report</b>
-            <select id="cboReport">
+            <b>Select Report</b><br />
+            <select id="cboReport" class="form-control dropdown">
                 <option value="WHTax3">PRD 3 - Cover</option>
                 <option value="WHTax3D">PRD 3 - Detail</option>
                 <option value="WHTax53">PRD 53 - Cover</option>
@@ -76,7 +77,7 @@ End Code
         let mm = document.getElementById('txtMonth').value;
         let lno = document.getElementById('txtLawNo').value;
         let tno = document.getElementById('txtTaxNo').value;
-        window.open('~/Form?DB=@dbname&SRC=@dbSource&Form=Report' + reportName + '&Year=' + yy +'&Month='+mm +'&LawNo=' + lno + '&TaxNo=' + tno, '');
+        window.open(window.location.pathname+'/Form?DB=@dbname&SRC=@dbSource&Form=Form' + reportName + '&Year=' + yy +'&Month='+mm +'&LawNo=' + lno + '&TaxNo=' + tno, '');
     }
     function ExportData() {
         window.open('?Form=WHTaxExp&DB=@dbname&SRC=@dbSource', '');

@@ -313,6 +313,7 @@
     <Content Include="Views\Home\ReportWHTax.vbhtml" />
     <Content Include="Views\Home\ReportPRD.vbhtml" />
     <Content Include="Views\Form\FormWHTax3.vbhtml" />
+    <Content Include="Views\Home\ReportWHTaxSum.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

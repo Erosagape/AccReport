@@ -36,7 +36,7 @@ d.JNo,d.DocRefType,d.DocRefNo,d.PayRate,
 FROM dbo.Acc_WHTax h LEFT JOIN dbo.Acc_WHTaxDetail d
 ON h.DocNo=d.DocNo
 WHERE h.FormType=7 {0}
-AND NOT ISNULL(h.CancelProve,'')<>''  AND isnull(h.TaxNumber2,'')='' ) a
+AND NOT ISNULL(h.CancelProve,'')<>'') a
 GROUP BY a.TaxNumber1,a.TName1,a.TAddress1,Branch1,FormType,TaxLawNo,Year(DocDate),Month(DocDate)
 ORDER BY a.TName1
 "
@@ -101,7 +101,7 @@ ORDER BY a.TName1
             If TName1.IndexOf("จำกัด") > 0 Or TName1.IndexOf("LTD") > 0 Then
                 TaxNumber1 = dr("TaxNumber1")
             Else
-                IDCard1 = dr("IDCard1")
+                IDCard1 = dr("TaxNumber1")
             End If
         Next
     End If
