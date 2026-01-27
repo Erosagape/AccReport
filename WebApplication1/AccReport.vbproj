@@ -310,6 +310,9 @@
     <Content Include="Views\Home\ReportVATBuy.vbhtml" />
     <Content Include="Views\Home\ReportVATSale.vbhtml" />
     <Content Include="Views\Form\FormWHTax53.vbhtml" />
+    <Content Include="Views\Home\ReportWHTax.vbhtml" />
+    <Content Include="Views\Home\ReportPRD.vbhtml" />
+    <Content Include="Views\Form\FormWHTax3.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

@@ -48,7 +48,9 @@ End Code
             <option value="Payment">Payment Voucher Report</option>
             <option value="Receive">Receive Voucher Report</option>
             <option value="VATSale">Output VAT Report</option>
-            <option value="VATBuy">Input VAT Report</option>
+            <option value="VATBuy">Input VAT Report</option>	 
+            <option value="WHTax">Withholding Report</option>	    
+            <option value="PRD">PRD Tax Report</option>
         </select>
     </div>
 </div>
