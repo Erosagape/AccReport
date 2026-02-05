@@ -40,7 +40,7 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=CheckJobEN&DB=@dbname&SRC=@dbSource">Check Data after posted</a>
+                <a href="?Form=ReportJobEN&DB=@dbname&SRC=@dbSource">Check Data after posted</a>
             </div>
         </div>
         <b>Account Documents</b>
@@ -75,23 +75,29 @@ End Code
                 <a href="?Form=ReportGL&LANG=EN&DB=@dbname&SRC=@dbSource">General Ledger</a>
             </div>
         </div>
+        <b>Working Sheet</b>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&SRC=@dbSource">Trial Balance (Draft)</a>
+                <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&SRC=@dbSource">Draft Monthly Balance</a>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&Type=1&SRC=@dbSource">Trial Balance (Calculated)</a>
+                <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&Type=1&SRC=@dbSource">Calculate Monthly Balance</a>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&Type=2&SRC=@dbSource">Trial Balance (Final)</a>
+                <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&Type=2&SRC=@dbSource">Accumulate Monthly Balance</a>
             </div>
         </div>
         <b>Account Sheet</b>
         Period : <input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="#" onclick="OpenForm('TrialBalance')">Trial Balance</a>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <a href="#" onclick="OpenForm('ProfitLoss')">Profit and Loss</a>

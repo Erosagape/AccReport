@@ -35,7 +35,7 @@
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
 
-    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vPV_All a WHERE AccCode<>'' {0} ORDER BY EntryID,Debit", sqlW))
+    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vJournal_All a WHERE JournalNo like 'PV%' and AccCode<>'' {0} ORDER BY EntryID,Debit", sqlW))
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code

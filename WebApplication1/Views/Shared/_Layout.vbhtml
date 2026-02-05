@@ -42,7 +42,7 @@ End Code
             @RenderBody()
             <hr />
             <p>
-                &copy; @DateTime.Now.Year - Database = @dbSource <b>@ViewBag.User</b>
+                &copy; @DateTime.Now.Year - Database = @dbSource
             </p>
         </div>        
     </div>

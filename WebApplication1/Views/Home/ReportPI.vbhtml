@@ -35,7 +35,7 @@
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
 
-    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vTransaction_H a WHERE DocStatus<>99 and exists(select 1 from vJournal_D where AccDesc=a.AccDocNo And AccCode=dbo.GetAccConfig('AP_CONFIG','Purchase') And Credit>0) {0} ORDER BY AccDocNo", sqlW))
+    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vTransaction_H a WHERE DocStatus<>99 and AccDocType='PI' {0} ORDER BY AccDocNo", sqlW))
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code

@@ -21,18 +21,21 @@
     Dim sql = String.Format("select * from Acc_JournalHD {0} order by JournalNo", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
 End Code
-<h2>Journal List</h2>
 <div class="row">
     <div class="col-md-3">
-        Date From : <input type="date" id="txtDateFrom" value="@datefrom" />
+	<h2>Journal List</h2>
     </div>
     <div class="col-md-3">
-        To : <input type="date" id="txtDateTo" value="@dateto" />
+        Date From : <input type="date" id="txtDateFrom" value="@datefrom" class="form-control" />
     </div>
-    <input type="button" onclick="RefreshPage()" value="Refresh" />
+    <div class="col-md-3">
+        To : <input type="date" id="txtDateTo" value="@dateto" class="form-control" />
+    </div>
 </div>
+<input type="button" onclick="RefreshPage()" value="Refresh" class="btn btn-primary" />
+<br>
 @If dt.Rows.Count > 0 Then
-    @<table border="1" class="table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<table border="1" class="DataTable table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
                 <th>#</th>
@@ -45,7 +48,7 @@ End Code
         <tbody>
             @For Each dr As Data.DataRow In dt.Rows
                 @<tr>
-    <td><a href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a></td>
+    <td><a class="btn btn-success" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a></td>
     @For Each dc As Data.DataColumn In dt.Columns
         @<td>@dr(dc.ColumnName)</td>
     Next

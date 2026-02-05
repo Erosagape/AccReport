@@ -10,7 +10,7 @@
     If Not Request.QueryString("Period") Is Nothing Then
         yy = Request.QueryString("Period")
     End If
-    Dim mm As String = ""
+    Dim mm As String = "12"
     If Not Request.QueryString("Month") Is Nothing Then
         mm = Request.QueryString("Month")
     End If

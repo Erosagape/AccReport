@@ -40,7 +40,7 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=CheckJob&DB=@dbname&SRC=@dbSource">เช็คยอดหลังจากดึงรายการไประบบบัญชี</a>
+                <a href="?Form=ReportJob&DB=@dbname&SRC=@dbSource">เช็คยอดหลังจากดึงรายการไประบบบัญชี</a>
             </div>
         </div>
         <b>เอกสารทางบัญชี</b>
@@ -75,23 +75,29 @@ End Code
                 <a href="?Form=ReportGL&DB=@dbname&SRC=@dbSource">รายงานแยกประเภททั่วไป</a>
             </div>
         </div>
+        <b>กระดาษทำการ</b>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=MonthlyBalance&DB=@dbname&SRC=@dbSource">งบทดลองแบบแสดงยอดเคลื่อนไหวรายเดือน</a>
+                <a href="?Form=MonthlyBalance&DB=@dbname&SRC=@dbSource">ยอดเคลื่อนไหวสิ้นเดือน</a>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=MonthlyBalance&DB=@dbname&Type=1&SRC=@dbSource">งบทดลองแบบสรุปยอดคงเหลือรายเดือน</a>
+                <a href="?Form=MonthlyBalance&DB=@dbname&Type=1&SRC=@dbSource">สรุปยอดคงเหลือสิ้นเดือน</a>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=MonthlyBalance&DB=@dbname&Type=2&SRC=@dbSource">งบทดลองแบบสรุปยอดยกไป ณ วันสิ้นเดือน</a>
+                <a href="?Form=MonthlyBalance&DB=@dbname&Type=2&SRC=@dbSource">สรุปยอดยกไปสิ้นเดือน</a>
             </div>
         </div>
         <b>งบการเงิน</b>
         ประจำปี(ค.ศ) : <input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="#" onclick="OpenForm('TrialBalance')">งบทดลอง</a>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <a href="#" onclick="OpenForm('ProfitLoss')">งบกำไรขาดทุน</a>

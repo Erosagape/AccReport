@@ -25,21 +25,23 @@
     If docType <> "" Then
         sqlw &= String.Format(" and AccDocType='{0}'", docType)
     End If
-    Dim sql = String.Format("select * from Acc_TransactionHD {0} order by AccDocNo", sqlw)
+    Dim sql = String.Format("select AccDocType, AccDocNo,PartyName,DocRefNo,AccBatchDate,AccEffectiveDate,IssueBy from Acc_TransactionHD {0} order by AccDocNo", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
     Dim docTypes = obj.GetDataFromSQL("select distinct AccDocType from Acc_TransactionHD")
 End Code
-<h2>Transaction List</h2>
 <div class="row">
     <div class="col-md-3">
-        Date From : <input type="date" id="txtDateFrom" value="@datefrom" />
+	<h2>Transaction List</h2>
     </div>
     <div class="col-md-3">
-        To : <input type="date" id="txtDateTo" value="@dateto" />
+        Date From : <input type="date" id="txtDateFrom" value="@datefrom" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        To : <input type="date" id="txtDateTo" value="@dateto" class="form-control" />
     </div>
     <div class="col-sm-3">
         Type : 
-        <select id="txtDocType">
+        <select id="txtDocType" class="form-control dropdown">
             @If docTypes.Rows.Count > 0 Then
                 For Each dr As Data.DataRow In docTypes.Rows
                     If docType.Equals(dr("AccDocType")) Then
@@ -55,10 +57,11 @@ End Code
             End If
         </select>
     </div>
-    <input type = "button" onclick="RefreshPage()" value="Refresh" />
 </div>
+<input type = "button" onclick="RefreshPage()" class="btn btn-primary" value="Refresh" />
+<br>
 @If dt.Rows.Count > 0 Then
-    @<table border="1"class="table table-border table-responsive" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<table border="1"class="DataTable table table-border table-responsive" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
                 <th>#</th>
@@ -72,7 +75,7 @@ End Code
             @For Each dr As Data.DataRow In dt.Rows
                 Dim frmName = dr("AccDocType").ToString()
                 @<tr>
-    <td><a href="?Form=Form@(frmName)&SRC=@dbSource&DB=@dbName&Code=@dr("AccDocNo")">Print</a></td>
+    <td><a class="btn btn-success" href="?Form=Form@(frmName)&SRC=@dbSource&DB=@dbName&Code=@dr("AccDocNo")">Print</a></td>
     @For each dc As Data.DataColumn In dt.Columns
         @<td>@dr(dc.ColumnName)</td>
     Next

@@ -37,8 +37,8 @@
     Dim sql As String="
     select t.* from 
 vTransaction_H as t 
-where (AccDocType='PC' OR EXISTS(select 1 from vJournal_All WHERE Description=t.AccDocNo and AccCode=dbo.GetAccConfig('VAT_CONFIG','InputVat') and Debit>0))
-and TotalVat>0 and exists(select 1 from vTransaction_All where AccDocNo=t.AccDocNo and ProductCode like 'C%') {0}
+where (AccDocType='PC' OR EXISTS(select 1 from vJournal_All WHERE AccDesc=t.AccDocNo and AccCode=dbo.GetAccConfig('VAT_CONFIG','InputVat') and Debit>0))
+and TotalVat>0 and exists(select 1 from vTransaction_All where AccDocNo=t.AccDocNo) {0}
     "
     Dim dh = obj.GetDataFromSQL(String.Format(sql, sqlW))
     Dim tb As New Data.DataTable
