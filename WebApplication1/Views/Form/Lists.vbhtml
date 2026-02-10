@@ -75,12 +75,15 @@ End Code
             @For Each dr As Data.DataRow In dt.Rows
                 Dim frmName = dr("AccDocType").ToString()
                 @<tr>
-    <td><a class="btn btn-success" href="?Form=Form@(frmName)&SRC=@dbSource&DB=@dbName&Code=@dr("AccDocNo")">Print</a></td>
-    @For each dc As Data.DataColumn In dt.Columns
-        @<td>@dr(dc.ColumnName)</td>
-    Next
-
-</tr>
+                    <td><a class="btn btn-success" href="?Form=Form@(frmName)&SRC=@dbSource&DB=@dbName&Code=@dr("AccDocNo")">Print</a></td>
+                    @For Each dc As Data.DataColumn In dt.Columns
+                        If dc.ColumnName = "AccDocNo" Then
+                            @<td><a href="?Form=Transaction&SRC=@dbSource&DB=@dbName&Code=@dr("AccDocNo")">@dr(dc.ColumnName)</a></td>
+                        Else
+                            @<td>@dr(dc.ColumnName)</td>
+                        End If
+                    Next
+                </tr>
             Next
         </tbody>
     </table>

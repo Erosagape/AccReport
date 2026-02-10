@@ -27,6 +27,16 @@ End Code
                 <a href="?Form=ProductMas&SRC=@dbSource">Products</a>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">Suppliers/Venders</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">Customer</a>
+            </div>
+        </div>
         <b>Job System Integrated</b>
         <div class="row">
             <div class="col-sm-12">

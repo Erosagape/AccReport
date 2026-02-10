@@ -27,6 +27,16 @@ End Code
                 <a href="?Form=ProductMas&SRC=@dbSource">ข้อมูลสินค้าและยริการ</a>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">ข้อมูลผู้จำหน่าย/ผู้ให้บริการ</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">ข้อมูลลูกค้า</a>
+            </div>
+        </div>
         <b>เชื่อมต่อข้อมูลกับระบบ Job</b>
         <div class="row">
             <div class="col-sm-12">
