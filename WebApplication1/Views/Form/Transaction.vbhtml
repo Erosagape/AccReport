@@ -61,8 +61,8 @@
     Dim Qty As Double = 0
     Dim Price As Double = 0
     Dim UnitMea As String = ""
-    Dim Currency As String = ""
-    Dim ExchangeRate As Double = 0
+    Dim Currency As String = "THB"
+    Dim ExchangeRate As Double = 1
     Dim Amount As Double = 0
     Dim SaleProductCode As String = ""
     Dim SalesDescription As String = ""
@@ -150,22 +150,21 @@ EXECUTE @@RC = [dbo].[SetTransactionHeader]
 ,@@fiscalyear
 ,@@docstatus
 ,@@docrefno
-GO
 "
         sqlh = String.Format(sqlh,
             Request.UserHostAddress,
             dbSource,
             AccDocNo,
-            AccBatchDate,
-            AccEffectiveDate,
+            AccBatchDate.ToString("yyyy-MM-dd"),
+            AccEffectiveDate.ToString("yyyy-MM-dd"),
             PartyCode,
             PartyTaxCode,
             PartyName,
             PartyAddress,
             ViewBag.User,
             AccDocType,
-            AccPostDate,
-            FiscalYear,
+            AccPostDate.ToString("yyyy-MM-dd"),
+            FiscalYear.ToString("yyyy-MM-dd"),
             DocStatus,
             DocRefNo
         )
@@ -173,6 +172,8 @@ GO
         If dtHeader.Rows.Count > 0 Then
             AccDocNo = dtHeader.Rows(0)("AccDocNo").ToString()
             msg = String.Format(msg, AccDocNo)
+        Else
+            msg = obj.Message
         End If
         showmodal = 0
     End If
@@ -197,7 +198,87 @@ GO
         RateWht = Request.Form("RateWht")
         VatType = Request.Form("VatType")
 
-        msg = String.Format(msg, AccItemNo)
+        If AccDocNo = "" Then
+            msg = "Please Save Document Header first"
+        Else
+            Dim sqlD As String = "
+DECLARE @@RC int
+DECLARE @@ip varchar(50)='{0}'
+DECLARE @@dbname varchar(50)='{1}'
+DECLARE @@doctype varchar(3)='{2}'
+DECLARE @@accdocno varchar(50)='{3}'
+DECLARE @@itemno int={4}
+DECLARE @@sourceno varchar(50)='{5}'
+DECLARE @@sourceitem int={6}
+DECLARE @@transno int={7}
+DECLARE @@qty numeric(10,4)={8}
+DECLARE @@price numeric(10,4)={9}
+DECLARE @@unit varchar(50)='{10}'
+DECLARE @@curr varchar(50)='{11}'
+DECLARE @@rate float={12}
+DECLARE @@amt float={13}
+DECLARE @@product varchar(50)='{14}'
+DECLARE @@desc varchar(2000)='{15}'
+DECLARE @@vatrate float={16}
+DECLARE @@whtrate float={17}
+DECLARE @@vattype float={18}
+DECLARE @@userid varchar(50)='{19}'
+
+-- TODO: Set parameter values here.
+
+EXECUTE @@RC = [dbo].[SetTransactionDetail]
+@@ip
+,@@dbname
+,@@doctype
+,@@accdocno
+,@@itemno
+,@@sourceno
+,@@sourceitem
+,@@transno
+,@@qty
+,@@price
+,@@unit
+,@@curr
+,@@rate
+,@@amt
+,@@product
+,@@desc
+,@@vatrate
+,@@whtrate
+,@@vattype
+,@@userid"
+            sqlD = String.Format(sqlD,
+                 Request.UserHostAddress,
+                 dbSource,
+                 AccDocType,
+                 AccDocNo,
+                 AccItemNo,
+                 AccSourceDocNo,
+                 AccSourceDocItem,
+                 StockTransNo,
+                 Qty,
+                 Price,
+                 UnitMea,
+                 Currency,
+                 ExchangeRate,
+                 Amount,
+                 SaleProductCode,
+                 SalesDescription,
+                 RateVat,
+                 RateWht,
+                 VatType,
+                 ViewBag.User
+            )
+
+            Dim dtDetail = obj.GetDataFromSQL(sqlD)
+            If dtDetail.Rows.Count > 0 Then
+                AccDocNo = dtDetail.Rows(0)("DocNo").ToString()
+                AccItemNo = dtDetail.Rows(0)("AccItemNo")
+                msg = String.Format(msg, AccItemNo)
+            Else
+                msg = obj.Message
+            End If
+        End If
 
         showmodal = 0
     End If
@@ -227,10 +308,10 @@ SELECT * from vTransaction_All where AccDocNo='{0}'
             DocStatus = dt.Rows(0)("DocStatus")
             DocRefNo = dt.Rows(0)("DocRefNo").ToString()
 
-            TotalAmount = dt.Rows(0)("TotalAmount")
-            TotalVat = dt.Rows(0)("TotalVat")
-            TotalWht = dt.Rows(0)("TotalWht")
-            TotalNet = dt.Rows(0)("TotalNet")
+            TotalAmount = obj.GetDouble(dt.Rows(0)("TotalAmount"))
+            TotalVat = obj.GetDouble(dt.Rows(0)("TotalVat"))
+            TotalWht = obj.GetDouble(dt.Rows(0)("TotalWht"))
+            TotalNet = obj.GetDouble(dt.Rows(0)("TotalNet"))
 
             If AccItemNo > 0 Then
                 AccSourceDocNo = dt.Rows(AccItemNo - 1)("AccSourceDocNo").ToString()
@@ -389,119 +470,191 @@ SELECT * from vTransaction_All where AccDocNo='{0}'
                 </thead>
                 <tbody>
                     @For each dr As Data.DataRow In dt.Rows
-                        iRow += 1
-                        @<tr>
-                            <td>
-                                <input type="button" class="btn btn-primary" value="Edit" onclick="ShowDetail(@dr("AccItemNo"))" />
-                            </td>
-                            <td>@iRow</td>
-                            <td>@dr("SalesDescription")</td>
-                            <td>@dr("Qty") @dr("UnitMea")</td>
-                            <td>@dr("Price")</td>
-                            <td class="text-right">@dr("Amount") @dr("Currency")</td>
-                        </tr>
+                        If Not DBNull.Value.Equals(dr("AccItemNo")) Then
+                            iRow += 1
+                            @<tr>
+                                <td>
+                                    <input type="button" class="btn btn-primary" value="Edit" onclick="ShowDetail(@dr("AccItemNo"))" />
+                                </td>
+                                <td>@iRow</td>
+                                <td>@dr("SalesDescription")</td>
+                                <td>@dr("Qty") @dr("UnitMea")</td>
+                                <td>@dr("Price")</td>
+                                <td class="text-right">@dr("Amount") @dr("Currency")</td>
+                            </tr>
+                        End If
                     Next
                 </tbody>
             </table>
         End If
-        <div class="modal fade" id="frmDetail">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="row">
-                            <div class="col-sm-2">
+
+        <div Class="modal fade" id="frmDetail">
+            <div Class="modal-dialog modal-lg" role="document">
+                <div Class="modal-content">
+                    <div Class="modal-header">
+                        <div Class="row">
+                            <div Class="col-sm-3">
                                 #No
+                            <br />
+                                <input type="number" name="AccItemNo" id="txtAccItemNo" Class="form-control" value="@AccItemNo" />
                             </div>
-                            <div class="col-sm-3">
-                                <input type="number" name="AccItemNo" id="txtAccItemNo" class="form-control" value="@AccItemNo" />
-                            </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-9">
                                 From
+                                <br />
+                                <div style="display:flex;flex-direction:row;">
+                                    <input type="text" name="AccSourceDocNo" id="txtAccSourceDocNo" class="form-control" value="@AccSourceDocNo" />
+                                    <input type="number" name="AccSourceDocItem" id="txtAccSourceDocItem" class="form-control" value="@AccSourceDocItem" />
+                                </div>
                             </div>
-                            <div class="col-sm-3">
-                                <input type="text" name="AccSourceDocNo" id="txtAccSourceDocNo" class="form-control" value="@AccSourceDocNo" />
-                                <input type="number" name="AccSourceDocItem" id="txtAccSourceDocItem" class="form-control" value="@AccSourceDocItem" />
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="StockTransNo" id="txtStockTransNo" value="@StockTransNo" />
-                        <div class="row">
-                            <div class="col-sm-2">
-                                Code
+                        <div class="row" id="dvService" style="display:none;">
+                            <div class="col-sm-12">
+                                <table class="dataTable table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @If obj.IsConnect Then
+                                            Dim tbProduct = obj.GetDataFromSQL("Select * from vMas_Product where IsService=1 order by ProductName")
+                                            If tbProduct.Rows.Count > 0 Then
+                                                For Each dr As Data.DataRow In tbProduct.Rows
+                                                    @<tr>
+                                                        <td>
+                                                            <a href="#txtQty" class="btn btn-success" onclick="SetService('@dr("ProductCode")','@dr("ProductName")','@dr("VatType")',@dr("RateVat"),@dr("RateWht"))">Select</a>
+                                                        </td>
+                                                        <td>@dr("ProductName") - @dr("ProductCode")</td>
+                                                        @If dr("VatType") = "0" Then
+                                                            @<td>N-@Convert.ToInt32(dr("RateVat"))@Convert.ToInt32(dr("RateWht"))</td>
+                                                        End If
+                                                        @If dr("VatType") = "1" Then
+                                                            @<td>E-@Convert.ToInt32(dr("RateVat"))@Convert.ToInt32(dr("RateWht"))</td>
+                                                        End If
+                                                        @If dr("VatType") = "2" Then
+                                                            @<td>I-@Convert.ToInt32(dr("RateVat"))@Convert.ToInt32(dr("RateWht"))</td>
+                                                        End If
+                                                    </tr>
+                                                Next
+                                            End If
+                                        End If
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" name="SaleProductCode" id="txtSaleProductCode" value="@SaleProductCode" />
-                            </div>
-                            <div class="col-sm-2">
-                                Description
-                            </div>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" name="SalesDescription" id="txtSalesDescription" value="@SalesDescription" />
+                        </div>
+                        <div class="row" id="dvProduct" style="display:none;">
+                            <div class="col-sm-12">
+                                <table class="dataTable table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @If obj.IsConnect Then
+                                            Dim tbProduct = obj.GetDataFromSQL("Select * from vMas_Product where IsService=0 order by ProductName")
+                                            If tbProduct.Rows.Count > 0 Then
+                                                For Each dr As Data.DataRow In tbProduct.Rows
+                                                    @<tr>
+                                                        <td>
+                                                            <a href="#txtQty" class="btn btn-success" onclick="SetProduct('@dr("ProductCode")','@dr("ProductName")','@dr("VatType")',@dr("RateVat"),@dr("RateWht"))">Select</a>
+                                                        </td>
+                                                        <td>@dr("ProductName") - @dr("ProductCode")</td>
+                                                        @If dr("VatType") = "0" Then
+                                                            @<td>N-@Convert.ToInt32(dr("RateVat"))@Convert.ToInt32(dr("RateWht"))</td>
+                                                        End If
+                                                        @If dr("VatType") = "1" Then
+                                                            @<td>E-@Convert.ToInt32(dr("RateVat"))@Convert.ToInt32(dr("RateWht"))</td>
+                                                        End If
+                                                        @If dr("VatType") = "2" Then
+                                                            @<td>I-@Convert.ToInt32(dr("RateVat"))@Convert.ToInt32(dr("RateWht"))</td>
+                                                        End If
+                                                    </tr>
+                                                Next
+                                            End If
+                                        End If
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
+                                <a href="#frmProduct" onclick="ShowProduct()">Products</a> / <a href="#frmService" onclick="ShowService()">Services</a>
+                            <br />
+                                <input type="text" class="form-control" name="SaleProductCode" id="txtSaleProductCode" value="@SaleProductCode" />
+                            </div>
+                            <div class="col-sm-9">
+                                Description
+                            <br />
+                                <input type="text" class="form-control w-auto" name="SalesDescription" id="txtSalesDescription" value="@SalesDescription" />
+                            </div>
+                            <div class="col-sm-3">
                                 Qty
+                            <br />
+                                <input type="number" id="txtQty" name="Qty" step="any" inputmode="decimal" class="form-control" onchange="CalAmount()" value="@Qty" />
                             </div>
-                            <div class="col-sm-3">
-                                <input type="number" id="txtQty" name="Qty" class="form-control" value="@Qty" />
-                            </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-9">
                                 Unit
-                            </div>
-                            <div class="col-sm-3">
+                            <br />
                                 <input type="text" id="txtUnitMea" name="UnitMea" class="form-control" value="@UnitMea" />
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-2">
-                                Price
-                            </div>
                             <div class="col-sm-3">
-                                <input type="number" id="txtPrice" name="Price" class="form-control" value="@Price" />
+                                Price
+                            <br />
+                                <input type="number" id="txtPrice" name="Price" step="any" inputmode="decimal" onchange="CalAmount()" class="form-control" value="@Price" />
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-9">
                                 Currency/Rate
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" id="txtCurrency" name="Currency" class="form-control" value="@Currency" />
-                                <input type="number" id="txtExchangeRate" name="ExchangeRate" class="form-control" value="@ExchangeRate" />
+                                <br />
+                                <div style="display:flex;flex-direction: row;">
+                                    <input type="text" id="txtCurrency" name="Currency" class="form-control" value="@Currency" />
+                                    <input type="number" id="txtExchangeRate" name="ExchangeRate" step="any" inputmode="decimal" class="form-control" value="@ExchangeRate" onchange="CalAmount()" />
+                                </div>
+
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-2">
-                                Amount
-                            </div>
                             <div class="col-sm-3">
-                                <input type="number" id="txtAmount" name="Amount" class="form-control" value="@Amount" />
+                                Amount <br />
+                                <input type="number" id="txtAmount" name="Amount" step="any" inputmode="decimal" class="form-control" value="@Amount" readonly />
                             </div>
-                            <div class="col-sm-2">
-                                Vat/Tax Type
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="number" id="txtRateVat" name="RateVat" class="form-control" value="@RateVat" />
-                                <input type="number" id="txtRateWht" name="RateWht" class="form-control" value="@RateWht" />
+                            <div class="col-sm-9">
+                                Vat/Tax Rate
+                            <br />
+                            <div style="display:flex;flex-direction:row">
+                                <input type="number" id="txtRateVat" name="RateVat" step="any" inputmode="decimal" class="form-control" value="@RateVat" />
+                                <input type="number" id="txtRateWht" name="RateWht" step="any" inputmode="decimal" class="form-control" value="@RateWht" />
                                 @Select Case VatType
                                     Case 0
-                @<select id="txtVatType" class="form-control dropdown" name="VatType">
-                    <option value="0" selected> N</option>
-                    <option value="1"> E</option>
-                    <option value="2">I</option>
-                </select>
+                            @<select id="txtVatType" class="form-control dropdown" name="VatType">
+                                <option value="0" selected>Not calculate</option>
+                                <option value="1">Exclude</option>
+                                <option value="2">Include</option>
+                            </select>
                                     Case 1
-                @<select id="txtVatType" class="form-control dropdown" name="VatType">
-                    <option value="0"> N</option>
-                    <option value="1" selected> E</option>
-                    <option value="2">I</option>
-                </select>
+                            @<select id="txtVatType" class="form-control dropdown" name="VatType">
+                                <option value="0">Not Calculate</option>
+                                <option value="1" selected> Exclude</option>
+                                <option value="2">Include</option>
+                            </select>
                                     Case 2
-                                        @<select id="txtVatType" class="form-control dropdown" name="VatType">
-                                            <option value="0"> N</option>
-                                            <option value="1"> E</option>
-                                            <option value="2" selected>I</option>
-                                        </select>
+                            @<select id="txtVatType" class="form-control dropdown" name="VatType">
+                                <option value="0">Not Calculate</option>
+                                <option value="1">Exclude</option>
+                                <option value="2" selected>Include</option>
+                            </select>
                                 End Select
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -525,12 +678,16 @@ End If
     var datachanged = 0;
     var editdetail =@showmodal;
     var msg = '@msg';
+    var docno = '@AccDocNo';
     window.onload = function () {
         if (editdetail == 1) {
             document.getElementById('btnMdl').click();
         }
         if (msg !== '') {
             alert(msg);
+            if (window.location.href.indexOf(docno) < 0) {
+                window.location = window.location.href + '&Code=' + docno;
+            }
         }
     }
     function DataChanged() {
@@ -542,5 +699,53 @@ End If
             return;
         }
         window.location.href = window.location.pathname + '?DB=@dbName&SRC=@dbSource&Form=Transaction&Code=@AccDocNo&Item=' + itemno;
+    }
+    function ShowProduct() {
+        document.getElementById('dvProduct').style.display='inline';
+    }
+    function ShowService() {
+        document.getElementById('dvService').style.display = 'inline';
+    }
+    function SetProduct(code, name, typ,vat,wht) {
+        document.getElementById('txtSaleProductCode').value = code;
+        document.getElementById('txtSalesDescription').value = name;
+        document.getElementById('txtRateVat').value = vat;
+        document.getElementById('txtRateWht').value = wht;
+        switch (typ) {
+            case 'N':
+                document.getElementById('txtVatType').value = 0;
+                break;
+            case 'E':
+                document.getElementById('txtVatType').value = 1;
+                break;
+            case 'I':
+                document.getElementById('txtVatType').value = 2;
+                break;
+        }
+        document.getElementById('dvProduct').style.display = 'none';
+    }
+    function SetService(code, name, typ, vat, wht) {
+        document.getElementById('txtSaleProductCode').value = code;
+        document.getElementById('txtSalesDescription').value = name;
+        document.getElementById('txtRateVat').value = vat;
+        document.getElementById('txtRateWht').value = wht;
+        switch (typ) {
+            case 'N':
+                document.getElementById('txtVatType').value = 0;
+                break;
+            case 'E':
+                document.getElementById('txtVatType').value = 1;
+                break;
+            case 'I':
+                document.getElementById('txtVatType').value = 2;
+                break;
+        }
+        document.getElementById('dvService').style.display='none';
+    }
+    function CalAmount() {
+        let qty = document.getElementById('txtQty').value;
+        let price = document.getElementById('txtPrice').value;
+        let rate = document.getElementById('txtExchangeRate').value;
+        document.getElementById('txtAmount').value = Number(qty) * Number(price) * Number(rate);
     }
 </script>
