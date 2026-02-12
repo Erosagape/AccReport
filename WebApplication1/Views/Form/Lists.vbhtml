@@ -27,7 +27,7 @@
     End If
     Dim sql = String.Format("select AccDocType, AccDocNo,PartyName,DocRefNo,AccBatchDate,AccEffectiveDate,IssueBy from Acc_TransactionHD {0} order by AccDocNo", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
-    Dim docTypes = obj.GetDataFromSQL("select distinct AccDocType from Acc_TransactionHD")
+    Dim docTypes = obj.GetDataFromSQL("select distinct AccDocType from Acc_TransactionHD" & IIf(docType <> "", String.Format(" WHERE AccDocType='{0}'", docType), ""))
 End Code
 <div class="row">
     <div class="col-md-3">
@@ -42,6 +42,9 @@ End Code
     <div class="col-sm-3">
         Type : 
         <select id="txtDocType" class="form-control dropdown">
+            <option value="">
+                ALL
+            </option>
             @If docTypes.Rows.Count > 0 Then
                 For Each dr As Data.DataRow In docTypes.Rows
                     If docType.Equals(dr("AccDocType")) Then
@@ -61,7 +64,7 @@ End Code
 <input type = "button" onclick="RefreshPage()" class="btn btn-primary" value="Refresh" />
 <br>
 @If dt.Rows.Count > 0 Then
-    @<table border="1"class="DataTable table table-border table-responsive" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<table border="1"class="DataTable table" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
                 <th>#</th>
