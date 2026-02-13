@@ -30,8 +30,12 @@
             background-color:darkblue;
             color:white;
         }
-        b,h1,h2,h3,h4,h5 {
+        b {
             color:darkblue;
+        }
+        h1,h2,h3,h4,h5 {
+            color:darkblue;
+            font-size:large;
         }
         .colnum {
             text-align:right;

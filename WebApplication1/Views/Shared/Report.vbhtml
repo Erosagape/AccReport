@@ -21,6 +21,7 @@
         h1,h2,h3,h4,h5 {
             color:darkblue;
             font-weight:bold;
+            font-size:large;
         }
         th {
             background-color:darkblue;
