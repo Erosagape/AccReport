@@ -29,18 +29,16 @@
     Dim dt = obj.GetDataFromSQL(sql)
     Dim docTypes = obj.GetDataFromSQL("select distinct AccDocType from Acc_TransactionHD" & IIf(docType <> "", String.Format(" WHERE AccDocType='{0}'", docType), ""))
 End Code
+<h2>Transaction List</h2>
 <div class="row">
-    <div class="col-md-3">
-	<h2>Transaction List</h2>
-    </div>
     <div class="col-md-3">
         Date From : <input type="date" id="txtDateFrom" value="@datefrom" class="form-control" />
     </div>
     <div class="col-md-3">
         To : <input type="date" id="txtDateTo" value="@dateto" class="form-control" />
     </div>
-    <div class="col-sm-3">
-        Type : 
+    <div class="col-md-3">
+        Type :
         <select id="txtDocType" class="form-control dropdown">
             <option value="">
                 ALL
@@ -60,8 +58,12 @@ End Code
             End If
         </select>
     </div>
+    <div class="col-sm-3">
+        <br />
+        <input type="button" onclick="RefreshPage()" class="btn btn-primary" value="Refresh" />        
+    </div>
 </div>
-<input type = "button" onclick="RefreshPage()" class="btn btn-primary" value="Refresh" />
+<input type="button" class="btn btn-warning" value="Add" onclick="AddNewDoc()" />
 <br>
 @If dt.Rows.Count > 0 Then
     @<table border="1"class="DataTable table" style="border-style:solid;border-collapse:collapse;border-width:thin;">
@@ -94,6 +96,10 @@ Else
     @<b>@obj.Message</b>
 End If
 <script type="text/javascript">
+    function AddNewDoc() {
+        var typ = document.getElementById('txtDocType').value;
+        window.open("?Form=Transaction&SRC=@dbSource&DB=@dbName&Type=" + typ, "_blank");
+    }
     function RefreshPage() {
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;

@@ -30,7 +30,7 @@ select * from vJournal_All where JournalNo='{0}' order by AccCode,ItemNo
     Dim entryBy As String = ""
     Dim totalDebit As Double = 0
     Dim totalCredit As Double = 0
-    Dim totalRows As Integer = 20
+    Dim totalRows As Integer = 10
     If dt.Rows.Count > 0 Then
         voucherNo = dt.Rows(0)("JournalNo").ToString()
         effectiveDate = Convert.ToDateTime(dt.Rows(0)("EffectiveDate")).ToString("dd/MM/yyyy")
@@ -45,22 +45,17 @@ End Code
     <div style="text-align: left;flex: 60%;">
         <table style="width:100%">
             <tr>
-                <td>Description / คำอธิบาย : </td>
-            </tr>
-            <tr>
-                <td>@description</td>
+                <td><b>Description / คำอธิบาย : </b><br>@description</td>
             </tr>
         </table>
     </div>
     <div style="text-align:right;flex:40%;">
         <table style="width:100%">
             <tr>
-                <td>Voucher No / เลขที่เอกสาร :</td>
-                <td>@voucherNo</td>
+                <td><b>Voucher No / เลขที่เอกสาร :</b><br>@voucherNo</td>
             </tr>
-            <tr>
-                <td>Effective Date / วันที่ลงบัญชี :</td>
-                <td>@effectiveDate</td>
+            <tr>                
+                <td><b>Effective Date / วันที่ลงบัญชี :</b><br>@effectiveDate</td>
             </tr>
         </table>
     </div>
@@ -100,10 +95,10 @@ End Code
                         <td>
                             @dr("AccDesc").ToString()
                         </td>
-                        <td class="text-right">
+                        <td class="colnum">
                             @Convert.ToDouble(dr("Debit")).ToString("#,###,##0.00")
                         </td>
-                        <td class="text-right">
+                        <td class="colnum">
                             @Convert.ToDouble(dr("Credit")).ToString("#,###,##0.00")
                         </td>
                     </tr>
@@ -122,8 +117,8 @@ End Code
         <tfoot>
             <tr>
                 <td colspan="3"> TOTAL</td>
-                <td Class="text-right">@totalDebit.ToString("#,###,##0.00")</td>
-                <td Class="text-right">@totalCredit.ToString("#,###,##0.00")</td>
+                <td Class="colnum">@totalDebit.ToString("#,###,##0.00")</td>
+                <td Class="colnum">@totalCredit.ToString("#,###,##0.00")</td>
             </tr>
         </tfoot>
     </table>

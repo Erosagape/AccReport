@@ -27,83 +27,87 @@ select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
 End Code
 <h2>Purchase Requisition / ใบขออนุมัติซื้อ</h2>
 @If dt.Rows.Count > 0 Then
-    @<table style="width:100%">
-    <tr>
-        <td>PR No / เลขที่เอกสาร :</td>
-        <td>@dt.Rows(0)("AccDocNo")</td>
-    </tr>
-    <tr>
-        <td>Effective Date / วันที่ต้องการ :</td>
-        <td>@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
-    </tr>
-    <tr>
-        <td>Reference No / อ้างถึง :</td>
-        <td>@dt.Rows(0)("DocRefNo")</td>
-    </tr>
-</table>
-    @<table style="width:100%;vertical-align:top;">
+    @<div style="display:flex;flex-direction:row;">
+        <div style="flex:2">
+            <table style="width:100%;vertical-align:top;">
+                <tr>
+                    <td><b>Supplier / ผู้ขาย</b>: @dt.Rows(0)("PartyName")</td>
+                </tr>
+                <tr>
+                    <td><b>Address / ที่อยู่ </b>: @dt.Rows(0)("PartyAddress")</td>
+                </tr>
+                <tr>
+                    <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี  </b>: @dt.Rows(0)("PartyTaxCode")</td>
+                </tr>
+            </table>
+        </div>
+        <div style="flex:1">
+            <table style="width:100%;text-align:right;">
+                <tr>
+                    <td><b>PR No / เลขที่เอกสาร</b> : @dt.Rows(0)("AccDocNo")</td>
+                </tr>
+                <tr>
+                    <td><b>Effective Date / วันที่ต้องการ </b> : @Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
+                </tr>
+                <tr>
+                    <td><b>Reference No / อ้างถึง </b> : @dt.Rows(0)("DocRefNo")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
+         <thead>
+             <tr>
+                 <th>No</th>
+                 <th>Description</th>
+                 <th>Qty</th>
+                 <th>Price</th>
+                 <th>Currency</th>
+                 <th>Amount</th>
+             </tr>
+         </thead>
+        @For Each dr As Data.DataRow In dt.Rows
+            @<tr>
+                <td>@dr("AccItemNo")</td>
+                <td>@dr("SalesDescription").ToString</td>
+                <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
+                <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
+                <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
+                <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+            </tr>
+        Next
         <tr>
-            <td>Supplier / ผู้ขาย :</td>
-            <td>@dt.Rows(0)("PartyName")</td>
+            <td colspan="3" rowspan="4"></td>
+            <td colspan="2"> Total Amount</td>
+            <td Class="colnum">@Convert.ToDouble(dt.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
         </tr>
         <tr>
-            <td>Address / ที่อยู่ :</td>
-            <td>@dt.Rows(0)("PartyAddress")</td>
+            <td colspan="2"> Vat</td>
+            <td Class="colnum">@Convert.ToDouble(dt.Rows(0)("TotalVat")).ToString("#,###,#0.00")</td>
         </tr>
         <tr>
-            <td>Tax ID / เลขประจำตัวผู้เสียภาษี :</td>
-            <td>@dt.Rows(0)("PartyTaxCode")</td>
+            <td colspan="2">With-holding Tax</td>
+            <td Class="colnum">@Convert.ToDouble(dt.Rows(0)("TotalWht")).ToString("#,###,#0.00")</td>
+        </tr>
+        <tr>
+            <td colspan="2"> Total Net</td>
+            <td Class="colnum">@Convert.ToDouble(dt.Rows(0)("TotalNet")).ToString("#,###,#0.00")</td>
         </tr>
     </table>
-        @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
-             <tr>
-                 <td>No</td>
-                 <td>Description</td>
-                 <td>Qty</td>
-                 <td>Price</td>
-                 <td>Currency</td>
-                 <td>Amount</td>
-             </tr>
-            @For Each dr As Data.DataRow In dt.Rows
-                @<tr>
-                    <td>@dr("AccItemNo")</td>
-                    <td>@dr("SalesDescription").ToString</td>
-                    <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
-                    <td class="text-right">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
-                    <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
-                    <td class="text-right">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
-                </tr>
-            Next
-            <tr>
-                <td colspan="3" rowspan="4"></td>
-                <td colspan="2"> Total Amount</td>
-                <td Class="text-right">@Convert.ToDouble(dt.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
-            </tr>
-            <tr>
-                <td colspan="2"> Vat</td>
-                <td Class="text-right">@Convert.ToDouble(dt.Rows(0)("TotalVat")).ToString("#,###,#0.00")</td>
-            </tr>
-            <tr>
-                <td colspan="2">With-holding Tax</td>
-                <td Class="text-right">@Convert.ToDouble(dt.Rows(0)("TotalWht")).ToString("#,###,#0.00")</td>
-            </tr>
-            <tr>
-                <td colspan="2"> Total Net</td>
-                <td Class="text-right">@Convert.ToDouble(dt.Rows(0)("TotalNet")).ToString("#,###,#0.00")</td>
-            </tr>
-        </table>
-        @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
-            <tr>
-                <td> ผู้ขออนุมัติ / Request By</td>                
-                <td> ผู้อนุมัติ / Approve By</td>
-            </tr>
-            <tr>
-                <td> <br /><br /><br /></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>@dt.Rows(0)("IssueBy") </td>
-                <td></td>
-            </tr>
-        </table>
+    @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
+        <tr>
+            <td> ผู้ขออนุมัติ / Request By</td>
+            <td> ผู้อนุมัติ / Approve By</td>
+        </tr>
+        <tr>
+            <td> <br /><br /><br /></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>@dt.Rows(0)("IssueBy") </td>
+            <td></td>
+        </tr>
+    </table>
 End If

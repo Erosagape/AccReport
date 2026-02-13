@@ -30,7 +30,7 @@ select * from vJournal_All where JournalNo='{0}' order by ItemNo
     Dim entryBy As String = ""
     Dim totalDebit As Double = 0
     Dim totalCredit As Double = 0
-    Dim totalRows As Integer = 20
+    Dim totalRows As Integer = 10
     If dt.Rows.Count > 0 Then
         voucherNo = dt.Rows(0)("JournalNo").ToString()
         effectiveDate = Convert.ToDateTime(dt.Rows(0)("EffectiveDate")).ToString("dd/MM/yyyy")
@@ -45,22 +45,17 @@ End Code
     <div style="text-align: left;flex: 60%;">
         <table style="width:100%">
             <tr>
-                <td>Description / คำอธิบาย : </td>
-            </tr>
-            <tr>
-                <td>@description</td>
+                <td><b>Description / คำอธิบาย : </b><br>@description</td>
             </tr>
         </table>
     </div>
     <div style="text-align:right;flex:40%;">
         <table style="width:100%">
-            <tr>
-                <td>Voucher No / เลขที่เอกสาร :</td>
-                <td>@voucherNo</td>
+            <tr>                
+                <td><b>Voucher No / เลขที่เอกสาร :</b><br>@voucherNo</td>
             </tr>
-            <tr>
-                <td>Effective Date / วันที่ลงบัญชี :</td>
-                <td>@effectiveDate</td>
+            <tr>                
+                <td><b>Effective Date / วันที่ลงบัญชี :</b><br>@effectiveDate</td>
             </tr>
         </table>
     </div>
@@ -70,17 +65,14 @@ End Code
     Dim dt1 = obj.GetDataFromSQL(String.Format(sql, voucherNo))
     If dt1.Rows.Count > 0 Then
         @<table style="width:100%;vertical-align:top;">
-            <tr>
-                <td>Pay to / ผู้รับเงิน :</td>
-                <td>@dt1.Rows(0)("PartyName")</td>
+            <tr>                
+                <td><b>Pay to / ผู้รับเงิน :</b><br>@dt1.Rows(0)("PartyName")</td>
             </tr>
-            <tr>
-                <td>Address / ที่อยู่ :</td>
-                <td>@dt1.Rows(0)("PartyAddress")</td>
+            <tr>                
+                <td><b>Address / ที่อยู่ :</b><br>@dt1.Rows(0)("PartyAddress")</td>
             </tr>
-            <tr>
-                <td>Tax ID / เลขประจำตัวผู้เสียภาษี :</td>
-                <td>@dt1.Rows(0)("PartyTaxCode")</td>
+            <tr>                
+                <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b><br>@dt1.Rows(0)("PartyTaxCode")</td>
             </tr>
         </table>
     Else
@@ -109,10 +101,10 @@ End Code
                         <td>
                             @dr("AccDesc").ToString()
                         </td>
-                        <td class="text-right">
+                        <td class="colnum">
                             @Convert.ToDouble(dr("Debit")).ToString("#,###,##0.00")
                         </td>
-                        <td class="text-right">
+                        <td class="colnum">
                             @Convert.ToDouble(dr("Credit")).ToString("#,###,##0.00")
                         </td>
                     </tr>Next
@@ -130,8 +122,8 @@ End Code
         <tfoot>
             <tr>
                 <td colspan="3"> TOTAL</td>
-                <td Class="text-right">@totalDebit.ToString("#,###,##0.00")</td>
-                <td Class="text-right">@totalCredit.ToString("#,###,##0.00")</td>
+                <td Class="colnum">@totalDebit.ToString("#,###,##0.00")</td>
+                <td Class="colnum">@totalCredit.ToString("#,###,##0.00")</td>
             </tr>
         </tfoot>
     </table>
@@ -148,27 +140,27 @@ End Code
                 @<tr>
                     <td>@dr("SalesDescription").ToString</td>
                     <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
-                    <td class="text-right">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
+                    <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
                     <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
-                    <td class="text-right">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+                    <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
                 </tr>
             Next
             @<tr>
                 <td colspan="2" rowspan="4"></td>
                 <td colspan="2"> Total Amount</td>
-                <td Class="text-right">@Convert.ToDouble(dt1.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
+                <td Class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
             </tr>
             @<tr>
                 <td colspan="2"> Vat</td>
-                <td Class="text-right">@Convert.ToDouble(dt1.Rows(0)("TotalVat")).ToString("#,###,#0.00")</td>
+                <td Class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalVat")).ToString("#,###,#0.00")</td>
             </tr>
             @<tr>
                 <td colspan="2">With-holding Tax</td>
-                <td Class="text-right">@Convert.ToDouble(dt1.Rows(0)("TotalWht")).ToString("#,###,#0.00")</td>
+                <td Class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalWht")).ToString("#,###,#0.00")</td>
             </tr>
             @<tr>
                 <td colspan="2"> Total Net</td>
-                <td Class="text-right">@Convert.ToDouble(dt1.Rows(0)("TotalNet")).ToString("#,###,#0.00")</td>
+                <td Class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalNet")).ToString("#,###,#0.00")</td>
             </tr>
 
         End If

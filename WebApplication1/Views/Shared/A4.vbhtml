@@ -7,7 +7,8 @@
     <title>@ViewBag.Title</title>
     <!-- Load paper.css for happy printing -->
     <link rel="stylesheet" href="~/Content/paper.css">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
     <!-- Set page size here: A5, A4 or A3 -->
     <!-- Set also "landscape" if you need -->
     <style>
@@ -17,6 +18,23 @@
         }
         @@page {
             size: A4
+        }
+        table {
+            margin-top:5px;
+            margin-bottom:5px;
+        }
+        th,td {
+            padding:2px 2px 2px 2px;
+        }
+        th {
+            background-color:darkblue;
+            color:white;
+        }
+        b,h1,h2,h3,h4,h5 {
+            color:darkblue;
+        }
+        .colnum {
+            text-align:right;
         }
     </style>
 </head>

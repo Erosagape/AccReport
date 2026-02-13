@@ -18,21 +18,22 @@
     End If
     Dim obj = New AccReport.CUtil(".", dbSource)
     Dim sqlw = String.Format(" where EntryDate>='{0}' and EntryDate<='{1}'", datefrom, dateto)
-    Dim sql = String.Format("select * from Acc_JournalHD {0} order by JournalNo", sqlw)
+    Dim sql = String.Format("select * from Acc_JournalHD {0} order by EntryId DESC", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
 End Code
+<h2>Journal List</h2>
 <div class="row">
-    <div class="col-md-3">
-	<h2>Journal List</h2>
-    </div>
     <div class="col-md-3">
         Date From : <input type="date" id="txtDateFrom" value="@datefrom" class="form-control" />
     </div>
     <div class="col-md-3">
         To : <input type="date" id="txtDateTo" value="@dateto" class="form-control" />
     </div>
+    <div class="col-md-3">
+        <br />
+        <input type="button" onclick="RefreshPage()" value="Refresh" class="btn btn-primary" />
+    </div>
 </div>
-<input type="button" onclick="RefreshPage()" value="Refresh" class="btn btn-primary" />
 <br>
 @If dt.Rows.Count > 0 Then
     @<table border="1" class="DataTable table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
@@ -48,12 +49,21 @@ End Code
         <tbody>
             @For Each dr As Data.DataRow In dt.Rows
                 @<tr>
-    <td><a class="btn btn-success" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a></td>
-    @For Each dc As Data.DataColumn In dt.Columns
-        @<td>@dr(dc.ColumnName)</td>
-    Next
-
-</tr>
+                     <td>
+                         @If dr("JournalNo").ToString().Substring(0, 2) = "RV" Then
+                             @<a Class="btn btn-success" href="?Form=FormRV&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
+                         Else
+                             If dr("JournalNo").ToString().Substring(0, 2) = "PV" Then
+                                 @<a Class="btn btn-success" href="?Form=FormPV&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
+                             Else
+                                 @<a Class="btn btn-success" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
+                             End If
+                         End If
+                     </td>
+                    @For Each dc As Data.DataColumn In dt.Columns
+                        @<td>@dr(dc.ColumnName)</td>
+                    Next
+                </tr>
             Next
         </tbody>
     </table>

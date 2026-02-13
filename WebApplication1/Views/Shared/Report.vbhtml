@@ -5,9 +5,26 @@
 <head>
     <meta charset="utf-8">
     <title>@ViewBag.Title</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
     <style>
+	* {
+            font-size: 14px;
+            font-family: 'Prompt', sans-serif;
+        }
         @@page {
             size: A4
+        }
+        table {
+            width:100%;
+        }
+        h1,h2,h3,h4,h5 {
+            color:darkblue;
+            font-weight:bold;
+        }
+        th {
+            background-color:darkblue;
+            color:white;
         }
     </style>
 </head>

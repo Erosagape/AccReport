@@ -18,6 +18,40 @@ End Code
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
+    <style>
+        div {
+            color:darkblue;
+        }
+	input {
+            color:black;
+        }
+        input[type="number"][readonly] {
+            background-color:palegreen;
+        }
+        input[type="date"][readonly],input[type="text"][readonly] {
+            background-color:lightcyan;
+        }
+        input[type="text"],input[type="number"],input[type="date"],textarea {
+            background-color:lightyellow;
+        }
+        h1,h2,h3,h4,h5,h6 {
+            color:blue;
+        }
+        table {
+            margin-top:5px;
+            margin-bottom:5px;
+        }
+        th {
+            text-align:center;
+	    color:white;
+            background-color:red;
+	    padding:5px 5px 5px 5px;
+        }
+        td {
+            background-color:lightyellow;
+            font-weight:bold;
+        }
+    </style>
 </head>
 <body style="background-color:lightgray;">
     <div id="topMenu" class="navbar navbar-inverse navbar-fixed-top">

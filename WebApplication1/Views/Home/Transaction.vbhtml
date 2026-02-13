@@ -140,6 +140,41 @@ EXECUTE @@RC = [dbo].[Insert_PIToJournal]
             msg = obj.Message
         End If
     End If
+    If Not Request.Form("submitPVFromPI") Is Nothing Then
+        Dim sql As String = "DECLARE @@RC int
+DECLARE @@invno nvarchar(50)='{0}'
+DECLARE @@userid nvarchar(50)='{1}'
+DECLARE @@taxno nvarchar(50)='{2}'
+DECLARE @@docdate date='{3}'
+DECLARE @@pvno nvarchar(20)='{4}'
+DECLARE @@accdebit nvarchar(20)='{5}'
+DECLARE @@acccredit nvarchar(20)='{6}'
+
+EXECUTE @@RC = [dbo].[Insert_PVFromPI] 
+   @@invno
+  ,@@userid
+  ,@@taxno
+  ,@@docdate
+  ,@@pvno
+  ,@@accdebit
+  ,@@acccredit
+"
+        sql = String.Format(sql,
+                          Request.Form("APNo"),
+                          Request.Form("APUserID"),
+                          Request.Form("RCVNo"),
+                          Convert.ToDateTime(Request.Form("APPayDate")).ToString("yyyy-MM-dd"),
+                          Request.Form("PVNo"),
+                          Request.Form("DebitCode"),
+                          Request.Form("CreditCode")
+        )
+        dtAP = obj.GetDataFromSQL(sql)
+        If dtAP.Rows.Count > 0 Then
+            msg = "Create Number " & dtAP.Rows(0)("JournalNo") & " Complete"
+        Else
+            msg = obj.Message
+        End If
+    End If
 End Code
 <h2>Transaction Center</h2>
 <form action="" method="post">
@@ -206,6 +241,25 @@ End Code
     Due Date* : <input type="date" name="APDueDate" id="txtAPDueDate" />
     <br />
     <input type="submit" name="submitPIToJournal" value="Create Data" />
+</form>
+<form method="post" action="">
+    <b>Create Cash Payment for Bill of Expenses</b>
+    <br />
+    Approve By* : <input type="text" value="@ViewBag.User" name="APUserID" id="txtAPUser2" />
+    <br />
+    PI No : <input type="text" name="APNo" id="txtAPNO2" />
+    <br />
+    Payment Date* : <input type="date" name="APPayDate" id="txtAPPayDate" />
+    <br />
+    Receipt No : <input type="text" name="RCVNo" id="txtRCVNo" />
+    <br />
+    A/C Cash : <input type="text" name="CreditCode" id="txtCredit" />
+    <br />
+    A/C Expense : <input type="text" name="DebitCode" id="txtDebit" />
+    <br />
+    Add to Existing No : <input type="text" name="PVNo" id="txtPVNo" />
+    <br />
+    <input type="submit" name="submitPVFromPI" value="Create Data" />
 </form>
 <script type="text/javascript">
     var msg = '@msg';

@@ -50,7 +50,7 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <a href="?Form=ReportJobEN&DB=@dbname&SRC=@dbSource">Check Data after posted</a>
+                <a href="?Form=ReportJob&DB=@dbname&SRC=@dbSource">Check Data after posted</a>
             </div>
         </div>
         <b>Account Documents</b>

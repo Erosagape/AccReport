@@ -787,20 +787,20 @@ End If
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?Form=LinkJobAdv&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href = "?Form=LinkJobAdv&SRC=@dbSource&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
     function RefreshPage() {
         var br = document.getElementById('txtBranch').value;
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href="?Form=LinkJob&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
+        window.location.href="?Form=LinkJob&SRC=@dbSource&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt;
     }
     function ProcessData() {
         var br = document.getElementById('txtBranch').value;
         var db = document.getElementById('txtDatabase').value;
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?Form=TransferJob&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt +"&Adv=Y&AR=Y&AP=Y&RCV=Y&CST=Y";
+        window.location.href = "?Form=TransferJob&SRC=@dbSource&DB=" + db + "&Branch=" + br + "&DateFrom=" + df + "&DateTo=" + dt +"&Adv=Y&AR=Y&AP=Y&RCV=Y&CST=Y";
     }
 </script>
