@@ -9,8 +9,8 @@
         dbSource = Request.QueryString("SRC")
     End If
 End Code
-<div style="display:flex;padding:5px 5px 5px 5px;">
-    <div style="flex:1;background-color:lightyellow;">
+<div class="row">
+    <div class="col-sm-4" style="padding:5px 5px 5px 5px">
         <b>Master Files</b>
         <div class="row">
             <div class="col-sm-12">
@@ -124,7 +124,7 @@ End Code
             </div>
         </div>
     </div>
-    <div style="flex:3">
+    <div class="col-sm-8" style="padding:5px 5px 5px 5px">
         @Code
             Dim sql = "select * from Mas_AccConfig where ConfigCode='PROFILE_CONFIG'"
             Dim dt = New AccReport.CUtil(".", dbSource).GetDataFromSQL(sql)

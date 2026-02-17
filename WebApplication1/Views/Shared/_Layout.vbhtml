@@ -19,6 +19,20 @@ End Code
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
     <style>
+	.navbar a {
+           color: white; /* Change link color to white */
+        }
+        .nav-link.active { color: darkblue; }
+        .nav li:hover a { color: darkblue; }	
+	.icon-bar {
+	   background-color: white; /* Or any other color value */
+        }
+	.navbar-custom {
+	   background-color: darkblue; /* Or any other color value */
+        }
+        b {
+            color:blue;
+        }
         div {
             color:darkblue;
         }
@@ -54,8 +68,11 @@ End Code
     </style>
 </head>
 <body style="background-color:lightgray;">
-    <div id="topMenu" class="navbar navbar-inverse navbar-fixed-top">
+    <div id="topMenu" class="navbar navbar-custom navbar-dark navbar-fixed-top">
         <div class="container">
+            <div class="navbar-brand navbar-right">
+               <a href="~/?DB=@dbName&SRC=@dbSource&Form=Login"><span class="glyphicon glyphicon-log-in"></span>@ViewBag.User</a>
+            </div>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
@@ -70,6 +87,7 @@ End Code
                 </ul>
             </div>
         </div>
+
     </div>
     <div class="body-content">
         <div class="container" style="background-color:white;">

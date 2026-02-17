@@ -49,19 +49,26 @@ End Code
         <tbody>
             @For Each dr As Data.DataRow In dt.Rows
                 @<tr>
-                     <td>
-                         @If dr("JournalNo").ToString().Substring(0, 2) = "RV" Then
-                             @<a Class="btn btn-success" href="?Form=FormRV&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
-                         Else
-                             If dr("JournalNo").ToString().Substring(0, 2) = "PV" Then
-                                 @<a Class="btn btn-success" href="?Form=FormPV&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
-                             Else
-                                 @<a Class="btn btn-success" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
-                             End If
-                         End If
-                     </td>
+                    <td>
+                        @If dr("JournalNo").ToString().Substring(0, 2) = "RV" Then
+                            @<a Class="btn btn-success" href="?Form=FormRV&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
+                        Else
+                            If dr("JournalNo").ToString().Substring(0, 2) = "PV" Then
+                                @<a Class="btn btn-success" href="?Form=FormPV&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
+                            Else
+                                @<a Class="btn btn-success" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">Print</a>
+                            End If
+                        End If
+                    </td>
                     @For Each dc As Data.DataColumn In dt.Columns
-                        @<td>@dr(dc.ColumnName)</td>
+                        If dc.ColumnName.Equals("JournalNo") Then
+                            @<td>
+                                <a href="?Form=Journal&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">@dr(dc.ColumnName)</a>
+                             </td>
+                        Else
+                            @<td>@dr(dc.ColumnName)</td>
+                        End If
+
                     Next
                 </tr>
             Next
