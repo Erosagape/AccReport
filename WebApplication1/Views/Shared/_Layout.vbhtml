@@ -19,51 +19,72 @@ End Code
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
     <style>
-	.navbar a {
-           color: white; /* Change link color to white */
+        .navbar a {
+            color: white; /* Change link color to white */
         }
-        .nav-link.active { color: darkblue; }
-        .nav li:hover a { color: darkblue; }	
-	.icon-bar {
-	   background-color: white; /* Or any other color value */
+
+        .nav-link.active {
+            color: darkblue;
         }
-	.navbar-custom {
-	   background-color: darkblue; /* Or any other color value */
+
+        .nav li:hover a {
+            color: darkblue;
         }
+
+        .icon-bar {
+            background-color: white; /* Or any other color value */
+        }
+
+        .navbar-custom {
+            background-color: darkblue; /* Or any other color value */
+        }
+
         b {
-            color:blue;
+            color: blue;
         }
+
         div {
-            color:darkblue;
+            color: darkblue;
         }
-	input {
-            color:black;
+
+        input {
+            color: black;
         }
+
         input[type="number"][readonly] {
-            background-color:palegreen;
+            background-color: palegreen;
         }
-        input[type="date"][readonly],input[type="text"][readonly] {
-            background-color:lightcyan;
+
+        input[type="date"][readonly], input[type="text"][readonly] {
+            background-color: lightcyan;
         }
-        input[type="text"],input[type="number"],input[type="date"],textarea {
-            background-color:lightyellow;
+
+        input[type="text"], input[type="number"], input[type="date"], textarea {
+            background-color: lightyellow;
         }
-        h1,h2,h3,h4,h5,h6 {
-            color:blue;
+
+        h1, h2, h3, h4, h5, h6 {
+            color: blue;
         }
+
         table {
-            margin-top:5px;
-            margin-bottom:5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
         }
+
         th {
-            text-align:center;
-	    color:white;
-            background-color:red;
-	    padding:5px 5px 5px 5px;
+            text-align: center;
+            color: white;
+            background-color: red;
+            padding: 5px 5px 5px 5px;
         }
+
         td {
-            background-color:lightyellow;
-            font-weight:bold;
+            background-color: lightyellow;
+            font-weight: bold;
+        }
+        .colnum {
+            text-align: right;
         }
     </style>
 </head>
@@ -71,7 +92,7 @@ End Code
     <div id="topMenu" class="navbar navbar-custom navbar-dark navbar-fixed-top">
         <div class="container">
             <div class="navbar-brand navbar-right">
-               <a href="~/?DB=@dbName&SRC=@dbSource&Form=Login"><span class="glyphicon glyphicon-log-in"></span>@ViewBag.User</a>
+                <a href="~/?DB=@dbName&SRC=@dbSource&Form=Login"><span class="glyphicon glyphicon-log-in"></span>@ViewBag.User</a>
             </div>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -96,7 +117,7 @@ End Code
             <p>
                 &copy; @DateTime.Now.Year - Database = @dbSource
             </p>
-        </div>        
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
