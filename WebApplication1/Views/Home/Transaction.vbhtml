@@ -16,6 +16,15 @@
     Dim msg As String = ""
 End Code
 <h2>Transaction Center</h2>
+<select id="cboDocType">
+    @Code
+        Dim dtDoc As Data.DataTable = obj.GetDataFromSQL("SELECT * FROM Mas_DocConfig order by TName")
+        For Each dr As Data.DataRow In dtDoc.Rows
+            @<option value="@dr("Category")">@dr("TName") - @dr("Category")</option>
+        Next
+    End Code
+</select>
+<input type="button" class="btn btn-warning" value="Add" onclick="AddNewDoc()" />
 @*--Insert_POFromPR*@
 <form action="" method="post">
     <b>Create Purchase Order from Purchase Requisition</b>
@@ -490,11 +499,125 @@ EXECUTE @@RC = [dbo].[Insert_SOFromSR]
     <br />
     <input type="submit" name="submitSOFromSR" value="Create Data" />
 </form>
+@*--Insert_DIFromPO*@
+<form action="" method="post">
+    <b>Create inventory data from PO</b>
+    <br />
+    Approve By* : <input type="text" value="@ViewBag.User" name="DOUserID" id="txtDOUser" />
+    <br />
+    PO No :  <input type="text" name="PONo" id="txtPONo3" />
+    <br />
+    Delivery Date* : <input type="date" name="DeliveryDate" id="txtDODate" />
+    <br />
+    Warranty Date* : <input type="date" name="DueDate" id="txtDueDate" />
+    <br />
+    Reference No :  <input type="text" name="RefNo" id="txtRefNo1" />
+    <br />
+    Warehouse Code :  <input type="text" name="WHCode" id="txtWarehouse" />
+    @Code
+        If Not Request.Form("submitDIFromPO") Is Nothing Then
+            Dim sql As String = "DECLARE @@RC int
+DECLARE @@pono nvarchar(10)='{0}'
+DECLARE @@docdate date='{1}'
+DECLARE @@duedate date='{2}'
+DECLARE @@refno nvarchar(50)='{3}'
+DECLARE @@userid nvarchar(50)='{4}'
+DECLARE @@itemno int=0
+DECLARE @@qty float=0
+DECLARE @@dno nvarchar(20)=''
+DECLARE @@whcode nvarchar(20)='{5}'
+
+EXECUTE @@RC = [dbo].[Insert_DIFromPO]
+@@pono
+,@@docdate
+,@@duedate
+,@@refno
+,@@userid
+,@@itemno
+,@@qty
+,@@dno
+,@@whcode"
+            sql = String.Format(sql,
+                                Request.Form("PONo"),
+                                Convert.ToDateTime(Request.Form("DeliveryDate")).ToString("yyyy-MM-dd"),
+                                Convert.ToDateTime(Request.Form("DueDate")).ToString("yyyy-MM-dd"),
+                                Request.Form("RefNo"),
+                                Request.Form("DOUserID"),
+                                Request.Form("WHCode"))
+            dtPO = obj.GetDataFromSQL(sql)
+            If dtPO.Rows.Count > 0 Then
+                msg = "Create Number " & dtPO.Rows(0)("AccDocNo") & " Complete"
+            Else
+                msg = obj.Message
+            End If
+        End If
+    End Code
+    <br />
+    <input type="submit" name="submitDIFromPO" value="Create Data" />
+</form>
+@*--Insert_DIFromPI*@
+<form action="" method="post">
+    <b>Create inventory data from Supplier Invoice/Delivery</b>
+    <br />
+    Approve By* : <input type="text" value="@ViewBag.User" name="DOUserID" id="txtDOUser" />
+    <br />
+    Supplier Delivery/Invoice No :  <input type="text" name="PINo" id="txtPINo1" />
+    <br />
+    Delivery Date* : <input type="date" name="DeliveryDate" id="txtDODate" />
+    <br />
+    Reference No :  <input type="text" name="RefNo" id="txtRefNo1" />
+    <br />
+    Warehouse Code :  <input type="text" name="WHCode" id="txtWarehouse" />
+    @Code
+        If Not Request.Form("submitDIFromPI") Is Nothing Then
+            Dim sql As String = "DECLARE @@RC int
+DECLARE @@pino nvarchar(10)='{0}'
+DECLARE @@docdate date='{1}'
+DECLARE @@refno nvarchar(50)='{2}'
+DECLARE @@userid nvarchar(50)='{3}'
+DECLARE @@costtype int=0
+DECLARE @@itemno int=0
+DECLARE @@qty float=0
+DECLARE @@dno nvarchar(20)=''
+DECLARE @@whcode nvarchar(10)='{4}'
+
+EXECUTE @@RC = [dbo].[Insert_DIFromPI] 
+   @@pino
+  ,@@docdate
+  ,@@refno
+  ,@@userid
+  ,@@costtype
+  ,@@itemno
+  ,@@qty
+  ,@@dno
+  ,@@whcode
+"
+            sql = String.Format(sql,
+                            Request.Form("PINo"),
+                            Convert.ToDateTime(Request.Form("DeliveryDate")).ToString("yyyy-MM-dd"),
+                            Request.Form("RefNo"),
+                            Request.Form("DOUserID"),
+                            Request.Form("WHCode"))
+            dtPO = obj.GetDataFromSQL(sql)
+            If dtPO.Rows.Count > 0 Then
+                msg = "Create Number " & dtPO.Rows(0)("AccDocNo") & " Complete"
+            Else
+                msg = obj.Message
+            End If
+        End If
+    End Code
+    <br />
+    <input type="submit" name="submitDIFromPI" value="Create Data" />
+</form>
 <script type="text/javascript">
     var msg = '@msg';
     window.onload = function() {
         if (msg !== '') {
             alert(msg);
         }
+    }
+    function AddNewDoc() {
+        var typ = document.getElementById('cboDocType').value;
+        window.open("Form?Form=Transaction&SRC=@dbSource&DB=@dbName&Type=" + typ, "_blank");
     }
 </script>

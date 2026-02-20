@@ -7,8 +7,8 @@
         padding: 5px 5px 5px 5px;
     }
 </style>
-@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
+    Layout = "~/Views/Shared/A4.vbhtml"
     ViewData("Title") = "General Ledger"
     Dim accCode As String = ""
     If Not Request.QueryString("Code") Is Nothing Then

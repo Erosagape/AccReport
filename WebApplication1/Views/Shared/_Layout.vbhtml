@@ -92,7 +92,7 @@ End Code
     <div id="topMenu" class="navbar navbar-custom navbar-dark navbar-fixed-top">
         <div class="container">
             <div class="navbar-brand navbar-right">
-                <a href="~/?DB=@dbName&SRC=@dbSource&Form=Login"><span class="glyphicon glyphicon-log-in"></span>@ViewBag.User</a>
+                <a href="~/?DB=@dbName&SRC=@dbSource&Form=Login">@ViewBag.User <span class="glyphicon glyphicon-log-in"></span></a>
             </div>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

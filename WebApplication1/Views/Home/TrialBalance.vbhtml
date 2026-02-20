@@ -3,8 +3,8 @@
         display: none;
     }
 </style>
-@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
+    Layout = "~/Views/Shared/A4.vbhtml"
     ViewData("Title") = "Trial Balance"
     Dim yy = DateTime.Now.Year
     If Not Request.QueryString("Period") Is Nothing Then

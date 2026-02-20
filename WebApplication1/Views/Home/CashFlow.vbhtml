@@ -6,8 +6,8 @@
         padding: 5px 5px 5px 5px;
     }
 </style>
-@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
+    Layout = "~/Views/Shared/A4.vbhtml"
     ViewBag.Title = "Cash Flow"
     Dim dbname = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
@@ -58,16 +58,16 @@ End Code
         </td>
         <td style="text-align:right;">
             @If dr("lvl") = 0 Or dr("lvl") > 2 Then
-                @<b>@dr("CashIn")</b>
+                @<b>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</b>
             Else
-                @<span>@dr("CashIn")</span>
+                @<span>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</span>
             End If
         </td>
         <td style="text-align:right;">
             @If dr("lvl") = 0 Or dr("lvl") > 2 Then
-                @<b>@dr("CashOut")</b>
+                @<b>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</b>
             Else
-                @<span>@dr("CashOut")</span>
+                @<span>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</span>
             End If
         </td>
     </tr>

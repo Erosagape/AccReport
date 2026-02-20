@@ -7,8 +7,8 @@
         font-size: 10px;
     }
 </style>
-@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
+    Layout = "~/Views/Shared/A4_Landscape.vbhtml"
     ViewData("Title") = "Monthly Balance"
     Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
@@ -62,7 +62,7 @@ order by Period DESC
 End Code
 @If dt.Rows.Count > 0 Then
     @<div class="container">
-        Select Month:
+        Select Year:
         <select id="cboPeriod" onchange="SetPeriod(this.value)">
             @For each dr In dt.Rows
                 If dr("Period").ToString().Equals(period) Then
@@ -92,7 +92,7 @@ End Code
                 Dim dec(2) As Double
                 Dim tot(2) As Double
                 Dim bal(2) As Double
-                @<table border="1" style="border-style:solid;border-width:thin;">
+                @<table border="1" class="table DataTable">
                     <thead>
                         <tr>
                             <th rowspan="2">Acc Code</th>
@@ -119,36 +119,36 @@ End Code
                         </tr>
                         <tr>
                             @If accu <> "" Then
-                                @<td>Debit</td>
-                                @<td>Credit</td>
+                                @<th>Debit</th>
+                                @<th>Credit</th>
                             End If
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
-                            <td>Debit</td>
-                            <td>Credit</td>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
                             @If accu = "" Then
-                                @<td>Debit</td>
-                                @<td>Credit</td>
+                                @<th>Debit</th>
+                                @<th>Credit</th>
                             Else
                             End If
                         </tr>

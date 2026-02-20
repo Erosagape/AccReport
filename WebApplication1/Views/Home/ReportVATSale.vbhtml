@@ -37,8 +37,9 @@
     Dim sql As String="
     select t.* from 
 vTransaction_H as t 
-where EXISTS(select 1 from vJournal_All WHERE Description=t.AccDocNo and AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat') and Credit>0)
-and TotalVat>0 {0}
+--where EXISTS(select 1 from vJournal_All WHERE Description=t.AccDocNo and AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat') and Credit>0) and TotalVat>0
+where AccDocType='RC'
+{0}
     "
     Dim dh = obj.GetDataFromSQL(String.Format(sql, sqlW))
     Dim tb As New Data.DataTable

@@ -3,8 +3,8 @@
         display: none;
     }
 </style>
-@Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
 @Code
+    Layout = "~/Views/Shared/A4.vbhtml"
     ViewData("Title") = "Balance Sheet"
     Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
