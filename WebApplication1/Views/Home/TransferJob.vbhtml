@@ -47,6 +47,11 @@ begin
 EXEC dbo.Insert_ReceiptFromJob '{0}','{1}',''
 EXEC dbo.Insert_PostReceiptToJournal '{0}','{1}',''
 end
+
+if '{2}'='WHT'
+begin
+EXEC dbo.Insert_WHTaxFromJob '{0}','{1}'
+end
 "
     Dim dateFrom  
     Dim dateTo 
@@ -70,6 +75,7 @@ End Code
         <option value="PAY">Billed Payment</option>
         <option value="INV">Customer Billing and Costing</option>
         <option value="RCP">Customer Payment</option>
+        <option value="WHT">Withholding-Tax</option>
     </select>
     <input type="submit" name="Submit" value="Process" />
     <label>@msg</label>

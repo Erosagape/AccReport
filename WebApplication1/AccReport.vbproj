@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\logo-tawan.jpg" />
+    <Content Include="App_Data\OverView.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -223,6 +224,7 @@
     <Content Include="logo-tawan.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="OverView.png" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -317,6 +319,7 @@
     <Content Include="Views\Home\Supplier.vbhtml" />
     <Content Include="Views\Home\Customer.vbhtml" />
     <Content Include="Views\Form\Journal.vbhtml" />
+    <Content Include="Views\Home\CompanyInfo.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

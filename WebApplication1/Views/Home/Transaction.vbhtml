@@ -609,6 +609,65 @@ EXECUTE @@RC = [dbo].[Insert_DIFromPI]
     <br />
     <input type="submit" name="submitDIFromPI" value="Create Data" />
 </form>
+@*--Insert_DIFromPC*@
+<form action="" method="post">
+    <b>Create inventory data from Payment Confirmation</b>
+    <br />
+    Approve By* : <input type="text" value="@ViewBag.User" name="DOUserID" id="txtDOUser3" />
+    <br />
+    Payment Note No :  <input type="text" name="PINo" id="txtPINo3" />
+    <br />
+    Delivery Date* : <input type="date" name="DeliveryDate" id="txtDODate3" />
+    <br />
+    Warranty Date* : <input type="date" name="DueDate" id="txtDueDate2" />
+    <br />
+    Reference No :  <input type="text" name="RefNo" id="txtRefNo2" />
+    <br />
+    Warehouse Code :  <input type="text" name="WHCode" id="txtWarehouse2" />
+    @Code
+        If Not Request.Form("submitDIFromPC") Is Nothing Then
+            Dim sql As String = "DECLARE @@RC int
+DECLARE @@pcno nvarchar(10)='{0}'
+DECLARE @@docdate date='{1}'
+DECLARE @@duedate date='{2}'
+DECLARE @@refno nvarchar(50)='{3}'
+DECLARE @@userid nvarchar(50)='{4}'
+DECLARE @@itemno int=0
+DECLARE @@qty float=0
+DECLARE @@dno nvarchar(20)=''
+DECLARE @@whcode nvarchar(20)='{5}'
+
+EXECUTE @@RC = [dbo].[Insert_DIFromPC] 
+   @@pcno
+  ,@@docdate
+  ,@@duedate
+  ,@@refno
+  ,@@userid
+  ,@@itemno
+  ,@@qty
+  ,@@dno
+  ,@@whcode
+"
+            sql = String.Format(sql,
+                            Request.Form("PINo"),
+                            Convert.ToDateTime(Request.Form("DeliveryDate")).ToString("yyyy-MM-dd"),
+                            Convert.ToDateTime(Request.Form("DueDate")).ToString("yyyy-MM-dd"),
+                            Request.Form("RefNo"),
+                            Request.Form("DOUserID"),
+                            Request.Form("WHCode")
+            )
+            dtPO = obj.GetDataFromSQL(sql)
+            If dtPO.Rows.Count > 0 Then
+                msg = "Create Number " & dtPO.Rows(0)("AccDocNo") & " Complete"
+            Else
+                msg = obj.Message
+            End If
+        End If
+    End Code
+    <br />
+    <input type="submit" name="submitDIFromPC" value="Create Data" />
+</form>
+
 <script type="text/javascript">
     var msg = '@msg';
     window.onload = function() {
@@ -618,6 +677,6 @@ EXECUTE @@RC = [dbo].[Insert_DIFromPI]
     }
     function AddNewDoc() {
         var typ = document.getElementById('cboDocType').value;
-        window.open("Form?Form=Transaction&SRC=@dbSource&DB=@dbName&Type=" + typ, "_blank");
+        window.location.href=window.location.pathname + "/Form?Form=Transaction&SRC=@dbSource&DB=@dbName&Type=" + typ;
     }
 </script>

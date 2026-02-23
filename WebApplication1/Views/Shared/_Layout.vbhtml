@@ -92,7 +92,12 @@ End Code
     <div id="topMenu" class="navbar navbar-custom navbar-dark navbar-fixed-top">
         <div class="container">
             <div class="navbar-brand navbar-right">
-                <a href="~/?DB=@dbName&SRC=@dbSource&Form=Login">@ViewBag.User <span class="glyphicon glyphicon-log-in"></span></a>
+                @If ViewBag.User <> "" Then
+                    @<a href="~/?DB=@dbName&SRC=@dbSource&Form=Login">@ViewBag.User<span Class="glyphicon glyphicon-log-in"></span></a>
+                Else
+                    @<a href="~/?DB=@dbName&SRC=@dbSource&Form=Login">Guest <span Class="glyphicon glyphicon-log-in"></span></a>
+                End If
+
             </div>
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -111,7 +116,7 @@ End Code
 
     </div>
     <div class="body-content">
-        <div class="container" style="background-color:white;">
+        <div class="container" style="background-color:white;overflow:scroll;">
             @RenderBody()
             <hr />
             <p>

@@ -36,7 +36,7 @@ End Code
 </div>
 <br>
 @If dt.Rows.Count > 0 Then
-    @<table border="1" class="DataTable table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<table border="1" class="table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
                 <th>#</th>
@@ -66,7 +66,15 @@ End Code
                                 <a href="?Form=Journal&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">@dr(dc.ColumnName)</a>
                              </td>
                         Else
-                            @<td>@dr(dc.ColumnName)</td>
+			    if dc.ColumnName.IndexOf("Date")>0 Then
+				@<td>@Convert.ToDateTime(dr(dc.ColumnName)).ToString("dd/MM/yyyy")</td>
+                            Else
+                                if dc.ColumnName.IndexOf("Debit")>0 OR dc.ColumnName.IndexOf("Credit")>0 Then
+				    @<td>@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                Else
+                                    @<td>@dr(dc.ColumnName)</td>
+                                End If
+                            End If
                         End If
 
                     Next

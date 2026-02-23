@@ -23,7 +23,6 @@
 select a.*,isnull(b.WarehouseCode,a.WarehouseCode) as WarehouseReceiveCode,isnull(b.WarehouseName,a.WarehouseCode) as WarehouseReceiveName
 from vTransaction_All a
 left join vStock_Card b on a.StockTransNo=b.TransID
-left join vStock_Card b on a.StockTransNo=b.TransID
 where a.AccDocNo='{0}'
 "
 
@@ -31,7 +30,9 @@ where a.AccDocNo='{0}'
 End Code
 <h2>Stock Receive Note / ใบตรวจรับสินค้า</h2>
 @If dt.Rows.Count > 0 Then
-    @<table style="width:100%">
+@<div style="display:flex;flex-direction:row;">
+<div style="flex:1">
+    <table style="width:100%">
         <tr>
             <td><b>Document No / เลขที่เอกสาร :</b><br>@dt.Rows(0)("AccDocNo")</td>
         </tr>
@@ -42,7 +43,9 @@ End Code
             <td><b>Reference No / อ้างถึง :</b><br>@dt.Rows(0)("DocRefNo")</td>
         </tr>
     </table>
-    @<table style="width:100%;vertical-align:top;">
+</div>
+<div style="flex:2">
+    <table style="width:100%;vertical-align:top;">
         <tr>            
             <td><b>From / จากบริษัท :</b><br>@dt.Rows(0)("PartyName")</td>
         </tr>
@@ -53,6 +56,8 @@ End Code
             <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b><br>@dt.Rows(0)("PartyTaxCode")</td>
         </tr>
     </table>
+</div>
+</div>
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
          <tr>
              <th>No</th>

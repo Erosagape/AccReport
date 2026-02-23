@@ -66,17 +66,17 @@ End Code
 <input type="button" class="btn btn-warning" value="Add" onclick="AddNewDoc()" />
 <br>
 @If dt.Rows.Count > 0 Then
-    @<table border="1"class="DataTable table" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<table border="1"class="table" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
                 <th>#</th>
                 @For each dc As Data.DataColumn In dt.Columns
-                    @<th>@dc.ColumnName</th>
+                    @<th class="d-table-cell">@dc.ColumnName</th>
                 Next
 
             </tr>
         </thead>
-        <tbody>
+        <tbody>            
             @For Each dr As Data.DataRow In dt.Rows
                 Dim frmName = dr("AccDocType").ToString()
                 @<tr>
@@ -85,7 +85,11 @@ End Code
                         If dc.ColumnName = "AccDocNo" Then
                             @<td><a href="?Form=Transaction&SRC=@dbSource&DB=@dbName&Code=@dr("AccDocNo")">@dr(dc.ColumnName)</a></td>
                         Else
-                            @<td>@dr(dc.ColumnName)</td>
+                            If dc.ColumnName.IndexOf("Date") > 0 Then
+                                @<td>@Convert.ToDateTime(dr(dc.ColumnName)).ToString("dd/MM/yyyy")</td>
+                            Else
+                                @<td>@dr(dc.ColumnName)</td>
+                            End If
                         End If
                     Next
                 </tr>

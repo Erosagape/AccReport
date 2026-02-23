@@ -95,7 +95,14 @@ End Code
         </thead>
         <tbody>
             @If dt.Rows.Count > 0 Then
+                Dim accname As String = ""
                 For Each dr As Data.DataRow In dt.Rows
+                    If accname <> dr("AccRemark") Then
+                        accname = dr("AccRemark")
+                        @<tr>
+                            <td colspan="6" style="font-weight:bold;color:darkred">@accname</td>
+                        </tr>
+                    End If
                     @<tr>
                         <td>
                             @dr("AccCode").ToString()

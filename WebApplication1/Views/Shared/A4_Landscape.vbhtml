@@ -49,7 +49,7 @@ table {
 <body class="A3 landscape">
     <!-- Each sheet element should have the class "sheet" -->
     <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
-    <div class="sheet padding-10mm">
+    <div class="sheet padding-10mm" style="overflow:auto;">
         @Html.Partial("~/Views/Shared/ReportHeader.vbhtml")
         @RenderBody
     </div>
