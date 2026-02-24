@@ -319,7 +319,6 @@
     <Content Include="Views\Home\Supplier.vbhtml" />
     <Content Include="Views\Home\Customer.vbhtml" />
     <Content Include="Views\Form\Journal.vbhtml" />
-    <Content Include="Views\Home\CompanyInfo.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

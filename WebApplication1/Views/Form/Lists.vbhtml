@@ -20,7 +20,7 @@
     If Not Request.QueryString("Type") Is Nothing Then
         docType = Request.QueryString("Type")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sqlw = String.Format(" where AccBatchDate>='{0}' and AccBatchDate<='{1}'", datefrom, dateto)
     If docType <> "" Then
         sqlw &= String.Format(" and AccDocType='{0}'", docType)

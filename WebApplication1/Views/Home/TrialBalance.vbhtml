@@ -22,7 +22,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
 
     Dim lang = "TH"
     If Not Request.QueryString("LANG") Is Nothing Then

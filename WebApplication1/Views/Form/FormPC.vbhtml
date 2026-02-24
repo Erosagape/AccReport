@@ -18,7 +18,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql = "
 select * from vTransaction_All where AccDocNo='{0}' order by AccDocNo,AccItemNo
 "

@@ -8,7 +8,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql = "SELECT * FROM Mas_Customer"
     Dim dt = obj.GetDataFromSQL(sql)
 End Code

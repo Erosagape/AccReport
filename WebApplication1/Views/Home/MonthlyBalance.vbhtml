@@ -27,7 +27,7 @@
 select distinct Period from vSum_BalanceMonthly
 order by Period DESC
 "
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim dt = obj.GetDataFromSQL(sql)
     Dim period = ""
     Dim accu = ""

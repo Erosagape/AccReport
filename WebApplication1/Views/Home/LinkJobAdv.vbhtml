@@ -78,7 +78,7 @@ order by t.GroupField,t.AccCode
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     sql = String.Format(sql, branch, datefrom, dateto)
     Dim dt = obj.GetDataFromSQL(sql)
 End Code

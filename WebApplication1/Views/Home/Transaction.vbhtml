@@ -8,7 +8,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim dtAP As New Data.DataTable
     Dim dtPI As New Data.DataTable
     Dim dtPO As New Data.DataTable

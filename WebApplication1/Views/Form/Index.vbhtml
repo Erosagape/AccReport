@@ -16,7 +16,7 @@
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateto = Request.QueryString("DateTo")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sqlw = String.Format(" where EntryDate>='{0}' and EntryDate<='{1}'", datefrom, dateto)
     Dim sql = String.Format("select * from Acc_JournalHD {0} order by EntryId DESC", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)

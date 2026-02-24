@@ -38,7 +38,7 @@
         qry = Request.QueryString("Query")
         sqlW &= String.Format(" AND (EXISTS(select 1 from Acc_WHTaxDetail where DocNo=a.DocNo and PayTaxDesc like '%{0}%')  OR TName3 like '%{0}%' OR DocNo like '%{0}%' OR FormTypeName like '%{0}%' OR TaxLawName like '%{0}%')", qry)
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql = "SELECT TaxNumber1,Branch1,TName1, 
 TaxNumber2,Branch2,TName2, 
 TaxNumber3,Branch3,TName3, 

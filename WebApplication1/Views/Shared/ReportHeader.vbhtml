@@ -8,7 +8,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil("", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim logoFileName = "mnl-logo.jpg"
     Dim companyName = "Tawan Technology Co.,ltd"
     Dim companyAddr1 = "507 SOI BANGNA-TRAD 56,BANGNA-TRAD ROAD"

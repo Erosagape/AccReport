@@ -7,12 +7,12 @@
     Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
-    End If    
+    End If
     Dim qry As String = "select GETDATE() as CurrentDate;"
     If Not Request.Form("Qry") Is Nothing Then
         qry = Request.Form("Qry")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)    
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql = qry
     Dim dt = obj.GetDataFromSQL(sql)
 End Code

@@ -33,7 +33,7 @@
         partyName = Request.QueryString("PartyName")
         sqlW &= String.Format(" AND PartyName like '%{0}%'", partyName)
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
 
     Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vSO_H WHERE TotalNet>0 {0} ORDER BY PartyName,AccBatchDate,AccDocNo", sqlW))
     Dim tb As New Data.DataTable

@@ -56,7 +56,7 @@
     Dim sqlH As String = ""
     Dim sqlD As String = ""
     Dim sql = "select * from Mas_AccConfig where ConfigCode='PROFILE_CONFIG'"
-    Dim dt = New AccReport.CUtil(".", dbSource).GetDataFromSQL(sql)
+    Dim dt = New AccReport.CUtil(ViewBag.WebIP, dbSource).GetDataFromSQL(sql)
     If dt.Rows.Count > 0 Then
         For Each dr As Data.DataRow In dt.Rows
             If dr("ConfigKey").Equals("COMPANY_TAXNUMBER") Then
@@ -107,7 +107,7 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
 
         End If
 
-        Dim th = New AccReport.CUtil(".", dbSource).GetDataFromSQL(String.Format(sqlH, yy, mm, tx))
+        Dim th = New AccReport.CUtil(ViewBag.WebIP, dbSource).GetDataFromSQL(String.Format(sqlH, yy, mm, tx))
         For Each rh As System.Data.DataRow In th.Rows
             strHeader = "H" & "|"   '#1 HEADER
             strHeader &= tr & "|"   '#2 รหัสผู้นำส่ง
@@ -162,7 +162,7 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
             Dim lastDoc = ""
             Dim lastAddr = ""
             Dim rc As Integer = 0
-            Dim td = New AccReport.CUtil(".", dbSource).GetDataFromSQL(String.Format(sqlD, yy, mm, tx))
+            Dim td = New AccReport.CUtil(ViewBag.WebIP, dbSource).GetDataFromSQL(String.Format(sqlD, yy, mm, tx))
             For Each rd As System.Data.DataRow In td.Rows
                 rc += 1
                 Dim pDate = ""

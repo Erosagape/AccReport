@@ -33,7 +33,7 @@
         qry = Request.QueryString("Query")
         sqlW &= String.Format(" AND EXISTS(select 1 from vTransaction_D where DocNo=t.AccDocNo and (SalesDescription like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql As String="
     select t.* from 
 vTransaction_H as t 

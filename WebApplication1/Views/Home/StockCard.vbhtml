@@ -9,7 +9,7 @@
         dbSource = Request.QueryString("SRC")
     End If
 
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim dateFrom = New Date(DateTime.Now.Year, Now.Month, 1).ToString("yyyy-MM-dd")
     If Not Request.QueryString("DateFrom") Is Nothing Then
         dateFrom = Request.QueryString("DateFrom")

@@ -33,7 +33,7 @@
         qry = Request.QueryString("Query")
         sqlW &= String.Format(" AND EXISTS(select 1 from vAR_D where AccDocNo=a.AccDocNo and (SalesProductName like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
 
     Dim dh = obj.GetDataFromSQL(String.Format("SELECT *,Isnull(TotalPayment,0) as TotalPay,DATEDIFF(day,GETDATE(),AccEffectiveDate) as OverdueDays FROM vAR_Payment a WHERE DocStatus<>99 {0} ORDER BY AccDocNo", sqlW))
     Dim tb As New Data.DataTable

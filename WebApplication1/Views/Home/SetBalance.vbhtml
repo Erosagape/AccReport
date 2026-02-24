@@ -9,7 +9,7 @@
         dbSource = Request.QueryString("SRC")
     End If
     Dim postMessage As String = ""
-    Dim obj = New AccReport.CUtil(".", dbName)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbName)
     Dim dtAccCode = obj.GetDataFromSQL("SELECT AccCode,AccName FROM vMas_AccCode ORDER BY AccCode")
     If Not Request.Form("Submit") Is Nothing Then
         Dim rowCount As Integer = Request.Form("rowCount")

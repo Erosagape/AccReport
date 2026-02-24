@@ -9,7 +9,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim bPost As Boolean = False
     Dim dt As New Data.DataTable
     Dim dtSum As New Data.DataTable

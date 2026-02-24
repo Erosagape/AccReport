@@ -41,7 +41,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim dt = obj.GetDataFromSQL(sql)
     Dim msg As String = "Ready"
     If obj.Message = "" Then

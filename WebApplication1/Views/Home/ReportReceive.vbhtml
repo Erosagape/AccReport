@@ -33,7 +33,7 @@
         qry = Request.QueryString("Query")
         sqlW &= String.Format(" AND (EXISTS(select 1 from Acc_JournalDT where EntryID=a.EntryID and AccName like '%{0}%') OR JournalNo like '%{0}%')", qry)
     End If
-    Dim obj = New AccReport.CUtil(".", dbSource)
+    Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
 
     Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vJournal_All a WHERE JournalNo like 'RV%' and AccCode<>'' {0} ORDER BY EntryID,Credit", sqlW))
     Dim tb As New Data.DataTable

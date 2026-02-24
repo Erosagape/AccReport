@@ -146,7 +146,7 @@ End Code
                 Dim logoName As String = ""
                 Dim sql = "select * from Mas_AccConfig where ConfigCode='PROFILE_CONFIG'"
                 Dim configSelector As String = "COMPANY_ADDRESS1_EN,COMPANY_ADDRESS2_EN,COMPANY_EMAIL,COMPANY_FAX,COMPANY_LOGO,COMPANY_NAME_EN,COMPANY_TAXBRANCH,COMPANY_TAXNUMBER,COMPANY_TEL,"
-                Dim dt = New AccReport.CUtil(".", dbSource).GetDataFromSQL(sql)
+                Dim dt = New AccReport.CUtil(ViewBag.WebIP, dbSource).GetDataFromSQL(sql)
                 If dt.Rows.Count > 0 Then
                     For Each dr As Data.DataRow In dt.Rows
                         If configSelector.IndexOf(dr("ConfigKey") & ",") >= 0 Then
