@@ -332,8 +332,14 @@ SELECT * from vTransaction_All where AccDocNo='{0}'
     End If
     @If AccDocType <> "" Then
         dtStatus = obj.GetDataFromSQL(String.Format("SELECT * FROM Mas_AccConfig WHERE ConfigCode='{0}_STATUS' ", AccDocType))
+        Dim dtDocType = obj.GetDataFromSQL(String.Format("SELECT * FROM Mas_DocConfig WHERE Category='{0}'", AccDocType))
+        If dtDocType.Rows.Count>0 Then
+            @<h2>@dtDocType.Rows(0)("TName") (@AccDocType)</h2>
+        End If
+    Else
+        @<h2>Transaction</h2>
     End If
-    <h2>Transaction (@AccDocType)</h2>
+    
     <input type="hidden" id="txtAccDocType" name="AccDocType" value="@AccDocType" />
     <div class="row">
         <div class="col-sm-2">
@@ -461,8 +467,8 @@ SELECT * from vTransaction_All where AccDocNo='{0}'
                             <td>@iRow</td>
                             <td>@dr("SalesDescription")</td>
                             <td>@dr("Qty") @dr("UnitMea")</td>
-                            <td>@dr("Price")</td>
-                            <td class="text-right">@dr("Amount") @dr("Currency")</td>
+                            <td>@Convert.ToDouble(dr("Price")).ToString("#,###0.00")</td>
+                            <td class="text-right">@Convert.ToDouble(dr("Amount")).ToString("#,###0.00") @dr("Currency")</td>
                         </tr>
                     End If
                 Next
