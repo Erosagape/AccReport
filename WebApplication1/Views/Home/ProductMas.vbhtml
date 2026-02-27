@@ -4,6 +4,10 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
+    Dim dbName = ViewBag.JobDatabase
+    If Not Request.QueryString("DB") Is Nothing Then
+        dbName = Request.QueryString("DB")
+    End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim tsql As String = ""
     Dim dt As New System.Data.DataTable
@@ -58,6 +62,130 @@ End Code
             </div>
             <div class="modal-footer">
                 <input type="button" class="btn btn-danger" data-dismiss="modal" value="X" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlWarehouse">
+    <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Select Warehouse
+            </div>
+            <div class="modal-body">
+                <table class="table table-responsive" border="1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Warehouse Code</th>
+                            <th>Warehouse Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Code
+                            Dim dw As Data.DataView = obj.GetDataFromSQL("SELECT * FROM vMas_Warehouse").DefaultView
+                            For Each dr As Data.DataRow In dw.ToTable().Rows
+                                @<tr>
+                                    <td>
+                                        <input type="button" class="btn btn-warning" onclick="SetDataWarehouse('@dr("WarehouseCode").ToString()','@dr("Name").ToString()','@dr("AssetAccCode").ToString()','@dr("IncomeAccCode").ToString()','@dr("ExpenseAccCode").ToString()','@dr("AssetAccName").ToString()','@dr("IncomeAccName").ToString()','@dr("ExpenseAccName").ToString()')" value="Select" data-dismiss="modal" />
+                                    </td>
+                                    <td>
+                                        @dr("WarehouseCode").ToString()
+                                    </td>
+                                    <td>
+                                        @dr("Name").ToString()
+                                    </td>
+                                </tr>
+                            Next
+                        End Code
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="mdlProductType" class="modal fade">
+    <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+            <div class="modal_header">
+                Select Product Type
+            </div>
+            <div class="modal-body">
+                <table class="table table-responsive" border="1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type Code</th>
+                            <th>Type Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Code
+                            Dim dp = obj.GetDataFromSQL("SELECT * FROM vMas_ProductType")
+                            If dp.Rows.Count > 0 Then
+                                For Each dr As Data.DataRow In dp.Rows
+                                    @<tr>
+                                        <td>
+                                            <input type="button" class="btn btn-warning" onclick="SetDataProductType('@dr("ProductTypeCode").ToString()','@dr("ProductTypeName")','@dr("IsMaterial")','@dr("IsService")','@dr("RateVat")','@dr("RateWht")','@dr("VatType")')" value="Select" data-dismiss="modal" />
+                                        </td>
+                                        <td>
+                                            @dr("ProductTypeCode").ToString()
+                                        </td>
+                                        <td>
+                                            @dr("ProductTypeName").ToString()
+                                        </td>
+                                    </tr>
+                                Next
+                            End If
+                        End Code
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-danger" data-dismiss="modal" value="Close" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlAccCode">
+    <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Select Account Code
+            </div>
+            <div class="modal-body">
+                <table class="table table-responsive" border="1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Account Code</th>
+                            <th>Account Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Code
+                            Dim ds = obj.GetDataFromSQL("SELECT * FROM Mas_AccCode")
+                            If ds.Rows.Count > 1 Then
+                                For Each dr As Data.DataRow In ds.Rows
+                                    @<tr>
+                                        <td>
+                                            <input type="button" class="btn btn-warning" onclick="SetData('@dr("AccCode").ToString()','@dr("AccName")')" value="Select" data-dismiss="modal" />
+                                        </td>
+                                        <td>
+                                            @dr("AccCode").ToString()
+                                        </td>
+                                        <td>
+                                            @dr("AccName").ToString()
+                                        </td>
+                                    </tr>
+                                Next
+                            End If
+                        End Code
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-danger" data-dismiss="modal" value="Close" />
             </div>
         </div>
     </div>
@@ -118,8 +246,8 @@ End Code
     Dim ProductUnitStock = ""
     Dim ProductTypeCode = ""
     Dim ProductTypeName = ""
-    Dim IsService As Boolean = False
-    Dim IsMaterial As Boolean = False
+    Dim IsService As Integer = 0
+    Dim IsMaterial As Integer = 0
     Dim VatType As Integer = 1
     Dim VatRate As Double = 0
     Dim WhtRate As Double = 0
@@ -215,11 +343,9 @@ end
         tsql = "
 if not exists(select 1 from Mas_Products where ProductCode='{0}')
 begin
-declare @@id int=(select isnull(MAX(ProductID),0)+1 from Mas_Products);
-
-insert into Mas_Products(ProductID,ProductCode,ProductName,Brand,[Color],[Size],SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode,
-AssetAccCode,IncomeAccCode,ExpenseAccCode) 
-select @@id,'{0}','{1}','{2}','{3}',{4},'{5}',{6},'{7}','{8}','{9}','{10}','{11}','{12}';
+insert into Mas_Products(ProductCode,ProductName,Brand,[Color],[Size],SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode,
+AssetAccCode,IncomeAccCode,ExpenseAccCode)
+select '{0}','{1}','{2}','{3}',{4},'{5}',{6},'{7}','{8}','{9}','{10}','{11}','{12}';
 end
 else
 begin
@@ -235,8 +361,8 @@ ExpenseAccCode='{12}'
 where ProductCode='{0}'
 end
 "
-        tsql = String.Format(tsql, ProductCode, ProductName, ProductBrand, ProductColor, ProductSize, ProductSizeUnit, 
-  ProductVolume, ProductVolumeUnit, ProductUnitStock, ProductTypeCode,AssetCode,IncomeCode,ExpenseCode)
+        tsql = String.Format(tsql, ProductCode, ProductName, ProductBrand, ProductColor, ProductSize, ProductSizeUnit,
+  ProductVolume, ProductVolumeUnit, ProductUnitStock, ProductTypeCode, AssetCode, IncomeCode, ExpenseCode)
         msg = obj.ExecuteSQL(tsql)
         If msg.Equals("OK") = False Then
             @<span>@msg</span>
@@ -341,7 +467,7 @@ End Code
         <h4>Inventory Setting</h4>
         <div class="row">
             <div class="col-sm-3">
-                Product Type
+                <a href="#txtProductTypeCode" data-toggle="modal" data-target="#mdlProductType" onclick="ShowModal('txtProductTypeCode')">Product Type</a>
                 <br />
                 <input type="text" id="txtProductTypeCode" class="form-control" name="productTypeCode" value="@ProductTypeCode" />
             </div>
@@ -354,31 +480,17 @@ End Code
         <div class="row">
             <div class="col-sm-3">
                 Sales Type<br />
-                @If IsService Then
-                    @<select id="cboIsService" name="isService" class="form-control dropdown">
-                        <option value="1" selected>Services</option>
-                        <option value="0">Goods</option>
+                    <select id="cboIsService" name="isService" class="form-control dropdown">
+                        <option value="1" @(If(IsService = 0, "", "selected"))>Services</option>
+                        <option value="0" @(If(IsService = 1, "", "selected"))>Goods</option>
                     </select>
-                Else
-                    @<select id="cboIsService" name="isService" class="form-control dropdown">
-                        <option value="1">Services</option>
-                        <option value="0" selected>Goods</option>
-                    </select>
-                End If
             </div>
             <div class="col-sm-3">
                 Inventory Type<br />
-                @If IsMaterial Then
-                    @<select id="cboIsMaterial" name="isMaterial" class="form-control dropdown">
-                        <option value="1" selected>Material</option>
-                        <option value="0">Finished Goods</option>
+                    <select id="cboIsMaterial" name="isMaterial" class="form-control dropdown">
+                        <option value="1" @(If(IsMaterial = 0, "", "selected"))>Material</option>
+                        <option value="0" @(If(IsMaterial = 1, "", "selected"))>Finished Goods</option>
                     </select>
-                Else
-                    @<select id="cboIsMaterial" name="isMaterial" class="form-control dropdown">
-                        <option value="1">Material</option>
-                        <option value="0" selected>Finished Goods</option>
-                    </select>
-                End If
             </div>
             <div class="col-sm-2">
                 VAT
@@ -407,7 +519,8 @@ End Code
         <h4>Store Setting</h4>
         <div class="row">
             <div class="col-sm-3">
-                Store Code<br />
+                <a href="#txtWarehouseCode" data-toggle="modal" data-target="#mdlWarehouse" onclick="ShowModal('txtWarehouseCode')">Store Code</a>
+                <br />
                 <input type="text" id="txtWarehouseCode" class="form-control" value="@WarehouseCode" name="warehouseCode" />
             </div>
             <div class="col-sm-7">
@@ -429,7 +542,8 @@ End Code
         <h4>G/L Setup</h4>
         <div class="row">
             <div class="col-sm-4">
-                Asset Code<br />
+                <a href="#txtAssetCode" data-toggle="modal" data-target="#mdlAccCode" onclick="ShowModal('txtAssetCode')">Asset Code</a>
+                <br />
                 <input type="text" id="txtAssetCode" name="assetAccCode" class="form-control" value="@AssetCode" />
             </div>
             <div class="col-sm-6">
@@ -439,7 +553,8 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-4">
-                Income Code<br />
+                <a href="#txtIncomeCode" data-toggle="modal" data-target="#mdlAccCode" onclick="ShowModal('txtIncomeCode')">Income Code</a>
+                <br />
                 <input type="text" id="txtIncomeCode" name="incomeAccCode" class="form-control" value="@IncomeCode" />
             </div>
             <div class="col-sm-6">
@@ -449,7 +564,8 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-4">
-                Expense Code<br />
+                <a href="#txtExpenseCode" data-toggle="modal" data-target="#mdlAccCode" onclick="ShowModal('txtExpenseCode')">Income Code</a>
+                <br />
                 <input type="text" id="txtExpenseCode" name="expenseAccCode" class="form-control" value="@ExpenseCode" />
             </div>
             <div class="col-sm-6">
@@ -462,11 +578,38 @@ End Code
 </div>
 <script type="text/javascript">
     let msg = '@postMessage';
+    let targetCtl = '';
     if (msg !== '') {
         alert(msg);
         window.location = window.location.href;
     }
     function ShowProduct(code) {
-	window.location = "?Form=ProductMas&SRC=@dbSource&Code=" + code;
+	    window.location = "?Form=ProductMas&DB=@dbName&SRC=@dbSource&Code=" + code;
+    }
+    function ShowModal(ctl) {
+        targetCtl = ctl;
+    }
+    function SetData(code, name) {
+        document.getElementById(targetCtl).value = code;
+        document.getElementById(targetCtl.replace('Code', 'Name')).value = name;
+    }
+    function SetDataProductType(code, name, ism, isv, rv, rw, vt) {
+        document.getElementById(targetCtl).value = code;
+        document.getElementById(targetCtl.replace('Code', 'Name')).value = name;
+        document.getElementById('cboIsMaterial').value = ism;
+        document.getElementById('cboIsService').value = isv;
+        document.getElementById('txtVatRate').value = rv;
+        document.getElementById('txtWhtRate').value = rw;
+        document.getElementById('cboVatType').value = vt;
+    }
+    function SetDataWarehouse(code,name,ast,icm,exp,astn,icmn,expn) {
+        document.getElementById(targetCtl).value = code;
+        document.getElementById(targetCtl.replace('Code', 'Name')).value = name;
+        document.getElementById('txtAssetCode').value = ast;
+        document.getElementById('txtIncomeCode').value = icm;
+        document.getElementById('txtExpenseCode').value = exp;
+        document.getElementById('txtAssetName').value = astn;
+        document.getElementById('txtIncomeName').value = icmn;
+        document.getElementById('txtExpenseName').value = expn;
     }
 </script>

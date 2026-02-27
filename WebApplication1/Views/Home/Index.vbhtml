@@ -25,17 +25,27 @@ End Code
             <b>ข้อมูลมาตรฐาน</b>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=Profile&SRC=@dbSource">ข้อมูลกิจการ</a>
+                    <a href="?Form=Profile&DB=@dbname&SRC=@dbSource">ข้อมูลกิจการ</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=ConfigAcc&SRC=@dbSource">กำหนดมาตรฐานการลงบัญชี</a>
+                    <a href="?Form=ConfigAcc&DB=@dbname&SRC=@dbSource">กำหนดมาตรฐานการลงบัญชี</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=ProductMas&SRC=@dbSource">ข้อมูลสินค้าและยริการ</a>
+                    <a href="?Form=Warehouse&DB=@dbname&SRC=@dbSource">ข้อมูลคลังสินค้า/กลุ่มงานบริการ</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ProductType&DB=@dbname&SRC=@dbSource">ประเภทสินค้าและยริการ</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">ข้อมูลสินค้าและยริการ</a>
                 </div>
             </div>
             <div class="row">

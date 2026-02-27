@@ -24,17 +24,27 @@ End Code
             <b>Master Files</b>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=Profile&SRC=@dbSource">Company Profile</a>
+                    <a href="?Form=Profile&DB=@dbname&SRC=@dbSource">Company Profile</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=ConfigAcc&SRC=@dbSource">Standard Entry</a>
+                    <a href="?Form=ConfigAcc&DB=@dbname&SRC=@dbSource">Standard Entry</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=ProductMas&SRC=@dbSource">Products</a>
+                    <a href="?Form=Warehouse&DB=@dbname&SRC=@dbSource">Warehouse/Service Group</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ProductType&DB=@dbname&SRC=@dbSource">Product Type</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">Products</a>
                 </div>
             </div>
             <div class="row">
@@ -76,7 +86,7 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=StockCard&SRC=@dbSource">Stock Card</a>
+                    <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource">Stock Card</a>
                 </div>
             </div>
             <b>Account Reports</b>
