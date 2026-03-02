@@ -13,6 +13,8 @@
     Dim bPost As Boolean = False
     Dim msg = "Ready"
     Dim sql = "
+EXEC dbo.Insert_ProductsCodeFromJob
+
 if '{2}'='ADV'
 begin
 EXEC dbo.Insert_AdvanceFromJob '{0}','{1}'
