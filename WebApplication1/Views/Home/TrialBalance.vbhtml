@@ -75,12 +75,12 @@
     End If
     Dim dateFrom = New Date(yy, 1, 1).ToString("yyyy-MM-dd")
     Dim dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
-    Dim sumDebit = 0
-    Dim sumCredit = 0
-    Dim sumPDebit = 0
-    Dim sumPCredit = 0
-    Dim sumNDebit = 0
-    Dim sumNCredit = 0
+    Dim sumDebit As Double= 0
+    Dim sumCredit As Double = 0
+    Dim sumPDebit As Double = 0
+    Dim sumPCredit As Double = 0
+    Dim sumNDebit As Double = 0
+    Dim sumNCredit As Double = 0
 End Code
 @If lang = "EN" Then
     @<h3>Trial Balance</h3>

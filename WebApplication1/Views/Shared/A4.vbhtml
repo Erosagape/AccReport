@@ -40,6 +40,10 @@
         .colnum {
             text-align:right;
         }
+        .footer-title {
+            background-color:darkblue;
+            color:white;
+        }
     </style>
 </head>
 

@@ -27,6 +27,9 @@
             background-color:darkblue;
             color:white;
         }
+        .colnum {
+            text-align:right;
+        }
     </style>
 </head>
 

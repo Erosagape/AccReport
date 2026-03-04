@@ -17,9 +17,8 @@ EXEC dbo.Insert_ProductsCodeFromJob
 
 if '{2}'='ADV'
 begin
-EXEC dbo.Insert_AdvanceFromJob '{0}','{1}'
-EXEC dbo.Insert_DPToJournal '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}',''
+EXEC dbo.Insert_AdvanceFromJob_V2 '{0}','{1}'
+EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}'
 end
 
 if '{2}'='CLR'
@@ -30,10 +29,8 @@ end
 
 if '{2}'='PAY'
 begin
-EXEC dbo.Insert_BillPayFromJob '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_BillPayToJournal '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_PVFromBillPay '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
+EXEC dbo.Insert_BillPayFromJob_V2 '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
 --EXEC dbo.Insert_PVFromBillPay_V2 '{0}','{1}'
 end
 
@@ -41,7 +38,7 @@ if '{2}'='INV'
 begin
 EXEC dbo.Insert_InvoiceFromJob '{0}','{1}','STAFF_ACC'
 EXEC dbo.Insert_PostInvoiceToJournal '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_CostFromJob '{0}','{1}'
+--EXEC dbo.Insert_CostToJournal_V2 '{0}','{1}','STAFF_ACC'
 end
 
 if '{2}'='RCP'
@@ -55,8 +52,8 @@ begin
 EXEC dbo.Insert_WHTaxFromJob '{0}','{1}'
 end
 "
-    Dim dateFrom
-    Dim dateTo
+    Dim dateFrom As Date = DateTime.MinValue
+    Dim dateTo As Date = DateTime.MinValue
     If Not Request.Form("Submit") Is Nothing Then
         Dim postType As String = Request.Form("PostType")
         bPost = True
@@ -82,4 +79,3 @@ End Code
     <input type="submit" name="Submit" value="Process" />
     <label>@msg</label>
 </form>
-
