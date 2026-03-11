@@ -21,7 +21,16 @@
     End If
     Dim postMessage As String = ""
     If configKey <> "" And configCode <> "" Then
-        If obj.ExecuteSQL(String.Format("UPDATE Mas_AccConfig SET ConfigValue='{2}' WHERE ConfigCode='{0}' AND ConfigKey='{1}' ", configCode, configKey, configValue)) = "OK" Then
+        Dim sql As String = "IF EXISTS(select 1 from Mas_AccConfig WHERE ConfigCode='{0}' AND ConfigKey='{1}')
+BEGIN
+UPDATE Mas_AccConfig SET ConfigValue='{2}' WHERE ConfigCode='{0}' AND ConfigKey='{1}';
+END
+ELSE
+BEGIN
+INSERT INTO Mas_AccConfig SELECT '{0}','{1}','{2}';
+END
+"
+        If obj.ExecuteSQL(String.Format(sql, configCode, configKey, configValue)) = "OK" Then
             postMessage = "Save Complete!"
         Else
             postMessage = obj.Message
@@ -65,6 +74,50 @@ End Code
                                         </td>
                                         <td>
                                             @dr("AccName").ToString()
+                                        </td>
+                                    </tr>
+                                Next
+                            End If
+                        End Code
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-danger" value="X" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlSelect2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Select Product Code
+                <input type="hidden" id="txtRow" value="@idRow" />
+            </div>
+            <div class="modal-body">
+                <table class="table table-responsive" border="1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Code
+                            dt = obj.GetDataFromSQL("SELECT * FROM Mas_Products")
+                            If dt.Rows.Count > 1 Then
+                                For Each dr As Data.DataRow In dt.Rows
+                                    @<tr>
+                                        <td>
+                                            <input type="button" class="btn btn-warning" onclick="SetData('@dr("ProductCode").ToString()','@dr("ProductName").ToString()')" value="Select" data-dismiss="modal" />
+                                        </td>
+                                        <td>
+                                            @dr("ProductCode").ToString()
+                                        </td>
+                                        <td>
+                                            @dr("ProductName").ToString()
                                         </td>
                                     </tr>
                                 Next
@@ -282,6 +335,42 @@ End Code
     <div class="row">
         <div class="col-sm-3">
             <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Default Credit (@configKey)</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "ADV_CONFIG"
+    configKey = "DefaultCost"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.ProductName from Mas_AccConfig a inner join Mas_Products b on a.ConfigValue=b.ProductCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("ProductName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect2" onclick="SetRowReturn(@idRow)">Code for Non-fix Advance</a>
             <input type="hidden" name="Key" value="@configKey" />
             <input type="hidden" name="Code" value="@configCode" />
         </div>
@@ -593,6 +682,42 @@ End Code
     idName = "txtName" & idRow
 
     configCode = "VAT_CONFIG"
+    configKey = "Rate"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.* from Mas_AccConfig a where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = ""
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" onclick="">VAT Rate</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="hidden" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "VAT_CONFIG"
     configKey = "UndueInputVat"
     configValue = ""
     accName = ""
@@ -732,6 +857,222 @@ End Code
     </div>
 </form>
 <h4>Setting for WHT</h4>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "WHT_CONFIG"
+    configKey = "RateBroker"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.* from Mas_AccConfig a where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = ""
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#">Broker/Rental Tax Rate</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="hidden" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "WHT_CONFIG"
+    configKey = "RateServ"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.* from Mas_AccConfig a where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = ""
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#">Services Tax Rate</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="hidden" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "WHT_CONFIG"
+    configKey = "RateTran"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.* from Mas_AccConfig a where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = ""
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#">Transport Tax Rate</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="hidden" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "WHT_CONFIG"
+    configKey = "RateInsur"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.* from Mas_AccConfig a where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = ""
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#">Dividend Tax Rate</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="hidden" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "WHT_CONFIG"
+    configKey = "RateAds"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.* from Mas_AccConfig a where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = ""
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#">Advertisement Tax Rate</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="hidden" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "WHT_CONFIG"
+    configKey = "RateInterests"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.* from Mas_AccConfig a where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = ""
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#">Interests Tax Rate</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="hidden" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
 @Code
     idRow += 1
     idVal = "txtVal" & idRow
