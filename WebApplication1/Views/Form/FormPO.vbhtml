@@ -28,65 +28,65 @@ End Code
 <h2>Purchase Order / ใบสั่งซื้อ</h2>
 @If dt.Rows.Count > 0 Then
     @<div style="display:flex;flex-direction:row">
-        <div style="flex:2">
-            <table style="width:100%;vertical-align:top;">
-                <tr>
-                    <td><b>To / ถึงบริษัท :</b>@dt.Rows(0)("PartyName")</td>
-                </tr>
-                <tr>
-                    <td><b>Address / ที่อยู่ :</b>@dt.Rows(0)("PartyAddress")</td>
-                </tr>
-                <tr>
-                    <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b>@dt.Rows(0)("PartyTaxCode")</td>
-                </tr>
-            </table>
-        </div>
-        <div style="flex:1">
-            <table style="width:100%">
-                <tr>
-                    <td><b>PO No / เลขที่เอกสาร :</b><br> @dt.Rows(0)("AccDocNo")</td>
-                </tr>
-                <tr>
-                    <td><b>PO Date / วันที่สั่งซื้อ :</b><br>@Convert.ToDateTime(dt.Rows(0)("AccBatchDate")).ToString("dd/MM/yyyy")</td>
-                </tr>
-                <tr>
-                    <td><b>Delivery Date / วันที่ต้องการ :</b><br>@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
-                </tr>
-                <tr>
-                    <td><b>Reference No / อ้างถึง :</b><br>@dt.Rows(0)("DocRefNo")</td>
-                </tr>
-            </table>
-        </div>
+    <div style="flex:2">
+        <table style="width:100%;vertical-align:top;">
+            <tr>                
+                <td><b>To / ถึงบริษัท :</b>@dt.Rows(0)("PartyName")</td>
+            </tr>
+            <tr>
+                <td><b>Address / ที่อยู่ :</b>@dt.Rows(0)("PartyAddress")</td>
+            </tr>
+            <tr>                
+                <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b>@dt.Rows(0)("PartyTaxCode")</td>
+            </tr>
+        </table>
     </div>
+    <div style="flex:1">
+        <table style="width:100%">
+            <tr>                
+                <td><b>PO No / เลขที่เอกสาร :</b><br> @dt.Rows(0)("AccDocNo")</td>
+            </tr>
+            <tr>
+                <td><b>PO Date / วันที่สั่งซื้อ :</b><br>@Convert.ToDateTime(dt.Rows(0)("AccBatchDate")).ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>                
+                <td><b>Delivery Date / วันที่ต้องการ :</b><br>@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>                
+                <td><b>Reference No / อ้างถึง :</b><br>@dt.Rows(0)("DocRefNo")</td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Ref#</th>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Currency</th>
-                <th>Amount</th>
-            </tr>
-        </thead>
-
+         <thead>
+             <tr>
+                 <th>No</th>
+                 <th>Ref#</th>
+                 <th>Description</th>
+                 <th>Qty</th>
+                 <th>Price</th>
+                 <th>Currency</th>
+                 <th>Amount</th>
+             </tr>
+         </thead>
+        
         @For Each dr As Data.DataRow In dt.Rows
             @<tr>
-                <td>@dr("AccItemNo")</td>
-                <td>@dr("AccSourceDocNo").ToString</td>
-                <td><b>@dr("ProductCode") / @dr("ProductName")</b> <br> @dr("SalesDescription").ToString</td>
-                <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
-                <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
-                <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
-                <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
-            </tr>
+    <td>@dr("AccItemNo")</td>
+    <td>@dr("AccSourceDocNo").ToString</td>
+    <td><b>@dr("ProductCode") / @dr("ProductName")</b> <br> @dr("SalesDescription").ToString</td>
+    <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
+    <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
+    <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
+    <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+</tr>
         Next
         <tr>
             <td colspan="4" rowspan="4">
-                REMARKS:
+            REMARKS:
             </td>
             <td colspan="2"> Total Amount</td>
             <td Class="colnum">@Convert.ToDouble(dt.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>

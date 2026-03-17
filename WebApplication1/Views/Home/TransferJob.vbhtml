@@ -38,7 +38,11 @@ if '{2}'='INV'
 begin
 EXEC dbo.Insert_InvoiceFromJob '{0}','{1}','STAFF_ACC'
 EXEC dbo.Insert_PostInvoiceToJournal '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_CostToJournal_V2 '{0}','{1}','STAFF_ACC'
+end
+
+if '{2}'='CST'
+begin
+EXEC dbo.Insert_CostToJournal_V2 '{0}','{1}','STAFF_ACC'
 end
 
 if '{2}'='RCP'
@@ -47,13 +51,19 @@ EXEC dbo.Insert_ReceiptFromJob '{0}','{1}',''
 EXEC dbo.Insert_PostReceiptToJournal '{0}','{1}',''
 end
 
+if '{2}'='CN'
+begin
+EXEC dbo.Insert_CNDNFromJob '{0}','{1}',''
+EXEC dbo.Insert_PostCNDNToJournal '{0}','{1}'
+end
+
 if '{2}'='WHT'
 begin
 EXEC dbo.Insert_WHTaxFromJob '{0}','{1}'
 end
 "
-    Dim dateFrom As Date = DateTime.MinValue
-    Dim dateTo As Date = DateTime.MinValue
+    Dim dateFrom
+    Dim dateTo
     If Not Request.Form("Submit") Is Nothing Then
         Dim postType As String = Request.Form("PostType")
         bPost = True
@@ -70,10 +80,12 @@ End Code
     <br />
     <select name="PostType" id="cboPostType">
         <option value="ADV">Advance Expenses</option>
-        <option value="CLR">Clearing Expenses</option>
-        <option value="PAY">Billed Payment</option>
-        <option value="INV">Customer Billing and Costing</option>
-        <option value="RCP">Customer Payment</option>
+        <option value="CLR">Clearing Advance</option>
+        <option value="CST">Costing</option>
+        <option value="PAY">Expenses Billed</option>
+        <option value="INV">Invoice to Customer</option>
+        <option value="RCP">Customer Receipts</option>
+        <option value="CN">Credit & Debit Note</option>
         <option value="WHT">Withholding-Tax</option>
     </select>
     <input type="submit" name="Submit" value="Process" />

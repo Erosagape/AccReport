@@ -43,6 +43,7 @@ End Code
             <option value="PI">Purchase Invoice Report</option>
             <option value="Sale">Sale Order Report</option>
             <option value="SI">Sale Invoice Report</option>
+            <option value="RC">Sale Receipt Report</option>
             <option value="AR">Account Receiveable Report</option>
             <option value="AP">Account Payable Report</option>
             <option value="Payment">Payment Voucher Report</option>

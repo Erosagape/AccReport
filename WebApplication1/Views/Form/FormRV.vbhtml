@@ -18,9 +18,15 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
+    Dim rptSum As Boolean = False
+    If Not Request.QueryString("Type") Is Nothing Then
+        If Request.QueryString("Type") = "Sum" Then
+            rptSum = True
+        End If
+    End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql = "
-select * from vJournal_All where JournalNo='{0}' order by ItemNo
+select * from vJournal_All where JournalNo='{0}' order by AccCode
 "
 
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
@@ -45,7 +51,7 @@ End Code
     <div style="text-align: left;flex: 60%;">
         <table style="width:100%">
             <tr>
-                <td>Description / คำอธิบาย : </td>
+                <td><b>Description<br />คำอธิบาย : </b></td>
             </tr>
             <tr>
                 <td>@description</td>
@@ -55,32 +61,31 @@ End Code
     <div style="text-align:right;flex:40%;">
         <table style="width:100%">
             <tr>
-                <td>Voucher No / เลขที่เอกสาร :</td>
+                <td><b>Voucher No<br />เลขที่เอกสาร :</b></td>
                 <td>@voucherNo</td>
             </tr>
             <tr>
-                <td>Effective Date / วันที่ลงบัญชี :</td>
+                <td><b>Effective Date<br />วันที่ลงบัญชี :</b></td>
                 <td>@effectiveDate</td>
             </tr>
         </table>
     </div>
 </div>
 @If voucherNo <> "" Then
-    sql = "select a.* from vTransaction_All a where exists(select 1 from vJournal_All where JournalNo='{0}' and AccDesc=a.AccDocNo)"
+    sql = "select a.* from vTransaction_All a where exists(select 1 from vJournal_All where JournalNo='{0}' and Description=a.AccDocNo)"
     Dim dt1 = obj.GetDataFromSQL(String.Format(sql, voucherNo))
     If dt1.Rows.Count > 0 Then
         @<table style="width:100%;vertical-align:top;">
-            <tr>                
+            <tr>
                 <td><b>Pay From / ผู้จ่ายเงิน :</b>@dt1.Rows(0)("PartyName")</td>
             </tr>
-            <tr>                
+            <tr>
                 <td><b>Address / ที่อยู่ :</b>@dt1.Rows(0)("PartyAddress")</td>
             </tr>
             <tr>
                 <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b>@dt1.Rows(0)("PartyTaxCode")</td>
             </tr>
-        </table>
-    Else
+        </table>Else
         @obj.Message
     End If
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
@@ -88,7 +93,9 @@ End Code
             <tr>
                 <th>Account Code</th>
                 <th>Account Name</th>
-                <th>Detail</th>
+                @If rptSum = False Then
+                    @<th>Detail</th>
+                End If
                 <th>Debit</th>
                 <th>Credit</th>
             </tr>
@@ -96,91 +103,114 @@ End Code
         <tbody>
             @If dt.Rows.Count > 0 Then
                 Dim accname As String = ""
+                Dim sumDr As Double = 0
+                Dim sumCr As Double = 0
                 For Each dr As Data.DataRow In dt.Rows
-                    If accname <> dr("AccRemark") Then
-                        accname = dr("AccRemark")
+                    If accname <> dr("AccName") Then
+                        If sumDr > 0 Or sumCr > 0 Then
+                            @<tr style=@IIf(rptSum = False, "font-weight:bold;background-color:lightblue;color:darkblue", "")>
+                                <td>@dr("AccCode")</td>
+                                <td colspan=@IIf(rptSum = False, "2", "1")>@accname</td>
+                                <td class="colnum">
+                                    @sumDr.ToString("#,###,##0.00")
+                                </td>
+                                <td class="colnum">
+                                    @sumCr.ToString("#,###,##0.00")
+                                </td>
+                            </tr>
+                            sumDr = 0
+                            sumCr = 0
+                        End If
+                        accname = dr("AccName")
+                        If rptSum = False Then
+                            @<tr style="font-weight:bold;color:darkred;background-color:lightyellow;">
+                                <td colspan="6">@accname</td>
+                            </tr>
+                        End If
+                    End If
+                    sumDr += Convert.ToDouble(dr("Debit"))
+                    sumCr += Convert.ToDouble(dr("Credit"))
+                    If rptSum = False Then
                         @<tr>
-                            <td colspan="6" style="font-weight:bold;color:darkred">@accname</td>
+                            <td>
+                                @dr("AccCode").ToString()
+                            </td>
+                            <td>
+                                @dr("AccRemark").ToString()
+                            </td>
+                            <td>
+                                @dr("AccDesc").ToString()
+                            </td>
+                            <td class="colnum">
+                                @Convert.ToDouble(dr("Debit")).ToString("#,###,##0.00")
+                            </td>
+                            <td class="colnum">
+                                @Convert.ToDouble(dr("Credit")).ToString("#,###,##0.00")
+                            </td>
                         </tr>
                     End If
-                    @<tr>
-                        <td>
-                            @dr("AccCode").ToString()
-                        </td>
-                        <td>
-                            @dr("AccRemark").ToString()
-                        </td>
-                        <td>
-                            @dr("AccDesc").ToString()
-                        </td>
-                        <td class="colnum">
-                            @Convert.ToDouble(dr("Debit")).ToString("#,###,##0.00")
-                        </td>
-                        <td class="colnum">
-                            @Convert.ToDouble(dr("Credit")).ToString("#,###,##0.00")
-                        </td>
-                    </tr>Next
+                Next
             End If
             @For i As Integer = 1 To totalRows - dt.Rows.Count
                 @<tr>
                     <td><br /></td>
                     <td></td>
-                    <td></td>
+                    @IIf(rptSum = False, <td></td>, "")
                     <td></td>
                     <td></td>
                 </tr>
             Next
         </tbody>
         <tfoot>
-            <tr>
-                <td colspan="3"> TOTAL</td>
+            <tr style="background-color:lightyellow;font-weight:bold;">
+                <td colspan=@IIf(rptSum = False, "3", "2")> TOTAL</td>
                 <td Class="colnum">@totalDebit.ToString("#,###,##0.00")</td>
                 <td Class="colnum">@totalCredit.ToString("#,###,##0.00")</td>
             </tr>
         </tfoot>
     </table>
-    @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
-    <tr>
-        <td>Description</td>
-        <td>Qty</td>
-        <td>Price</td>
-        <td>Currency</td>
-        <td>Amount</td>
-    </tr>
-    @If dt1.Rows.Count > 0 Then
-        For Each dr As Data.DataRow In dt1.Rows
-            @<tr>
-                <td>@dr("SalesDescription").ToString</td>
-                <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
-                <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
-                <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
-                <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+    @If dt1.Rows.Count > 0 And rptSum Then
+        @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
+            <tr>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Currency</th>
+                <th>Amount</th>
             </tr>
-        Next
-        @<tr>
-            <td colspan="2" rowspan="4"></td>
-            <td colspan="2">Total Amount</td>
-            <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
-        </tr>
-        @<tr>
-            <td colspan="2">Vat</td>
-            <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalVat")).ToString("#,###,#0.00")</td>
-        </tr>
-        @<tr>
-            <td colspan="2">With-holding Tax</td>
-            <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalWht")).ToString("#,###,#0.00")</td>
-        </tr>
-        @<tr>
-            <td colspan="2">Total Net</td>
-            <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalNet")).ToString("#,###,#0.00")</td>
-        </tr>
+            @For Each dr As Data.DataRow In dt1.Rows
+                @<tr>
+                    <td>@dr("SalesDescription").ToString</td>
+                    <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
+                    <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
+                    <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
+                    <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+                </tr>
+            Next
+            <tr>
+                <td colspan="2" rowspan="4"></td>
+                <td colspan="2" style="background-color:lightyellow;">Total Amount</td>
+                <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="background-color:lightyellow;">Vat</td>
+                <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalVat")).ToString("#,###,#0.00")</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="background-color:lightyellow;">With-holding Tax</td>
+                <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalWht")).ToString("#,###,#0.00")</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="background-color:lightyellow;">Total Net</td>
+                <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalNet")).ToString("#,###,#0.00")</td>
+            </tr>            
+        </table>
     End If
-</table>
     @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
         <tr>
-            <td> ผู้รับเงิน / Receive By</td>
-            <td> ผู้บันทึกบัญชี / Entry By</td>
-            <td> ผู้อนุมัติ / Approve By</td>
+            <th> ผู้รับเงิน / Receive By</th>
+            <th> ผู้บันทึกบัญชี / Entry By</th>
+            <th> ผู้อนุมัติ / Approve By</th>
         </tr>
         <tr>
             <td> <br /><br /><br /></td>
@@ -198,4 +228,4 @@ End Code
             <td> ผู้จัดการฝ่ายบัญชี / Account Manager</td>
         </tr>
     </table>
-end if
+End If
