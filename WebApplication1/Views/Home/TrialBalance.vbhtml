@@ -30,6 +30,9 @@
     End If
     Dim sql = ""
     Dim pm As String = ""
+    Dim dateFrom = New Date(yy, 1, 1).ToString("yyyy-MM-dd")
+    Dim dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
+
     If mm = "" Then
         pm = "BalDr as PrevDr,BalCr as PrevCr,Dec_Dr-BalDr as Dr,Dec_Cr-BalCr as Cr"
         sql = String.Format("select AccCode,AccName,Dec_Dr as NextDr,Dec_Cr as NextCr," + pm + " from vSum_BalanceMonthlyCompare where Period={0} ORDER BY AccCode", yy)
@@ -37,28 +40,52 @@
 
         Select Case mm
             Case 1
+                dateFrom = New Date(yy, 1, 1).ToString("yyyy-MM-dd")
+                dateTo = New Date(yy, 1, 31).ToString("yyyy-MM-dd")
                 pm = "BalDr as PrevDr,BalCr as PrevCr,Dr_Jan as NextDr,Cr_Jan as NextCr"
             Case 2
+                dateFrom = New Date(yy, 2, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 3, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Jan as PrevDr,Cr_Jan as PrevCr,Dr_Feb as NextDr,Cr_Feb as NextCr"
             Case 3
+                dateFrom = New Date(yy, 3, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 4, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Feb as PrevDr,Cr_Feb as PrevCr,Dr_Mar as NextDr,Cr_Mar as NextCr"
             Case 4
+                dateFrom = New Date(yy, 4, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 5, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Mar as PrevDr,Cr_Mar as PrevCr,Dr_Apr as NextDr,Cr_Apr as NextCr"
             Case 5
+                dateFrom = New Date(yy, 5, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 6, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Apr as PrevDr,Cr_Apr as PrevCr,Dr_May as NextDr,Cr_May as NextCr"
             Case 6
+                dateFrom = New Date(yy, 6, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 7, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_May as PrevDr,Cr_May as PrevCr,Dr_Jun as NextDr,Cr_Jun as NextCr"
             Case 7
+                dateFrom = New Date(yy, 7, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 8, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Jun as PrevDr,Cr_Jun as PrevCr,Dr_Jul as NextDr,Cr_Jul as NextCr"
             Case 8
+                dateFrom = New Date(yy, 8, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 9, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Jul as PrevDr,Cr_Jul as PrevCr,Dr_Aug as NextDr,Cr_Aug as NextCr"
             Case 9
+                dateFrom = New Date(yy, 9, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 10, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Aug as PrevDr,Cr_Aug as PrevCr,Dr_Sep as NextDr,Cr_Sep as NextCr"
             Case 10
+                dateFrom = New Date(yy, 10, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 11, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Sep as PrevDr,Cr_Sep as PrevCr,Dr_Oct as NextDr,Cr_Oct as NextCr"
             Case 11
+                dateFrom = New Date(yy, 11, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy, 12, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Oct as PrevDr,Cr_Oct as PrevCr,Dr_Nov as NextDr,Cr_Nov as NextCr"
             Case 12
+                dateFrom = New Date(yy, 12, 1).ToString("yyyy-MM-dd")
+                dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
                 pm = "Dr_Nov as PrevDr,Cr_Nov as PrevCr,Dr_Dec as NextDr,Cr_Dec as NextCr"
         End Select
         sql = String.Format("select AccCode,AccName,Dr" + mm + " as Dr,Cr" + mm + " as Cr," + pm + " from vSum_BalanceMonthlyCompare where Period={0} ORDER BY AccCode", yy)
@@ -73,9 +100,7 @@
     Else
         msg = obj.Message
     End If
-    Dim dateFrom = New Date(yy, 1, 1).ToString("yyyy-MM-dd")
-    Dim dateTo = DateAdd("d", -1, New Date(yy + 1, 1, 1)).ToString("yyyy-MM-dd")
-    Dim sumDebit As Double= 0
+    Dim sumDebit As Double = 0
     Dim sumCredit As Double = 0
     Dim sumPDebit As Double = 0
     Dim sumPCredit As Double = 0

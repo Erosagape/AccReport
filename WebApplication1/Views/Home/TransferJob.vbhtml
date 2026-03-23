@@ -17,8 +17,9 @@ EXEC dbo.Insert_ProductsCodeFromJob
 
 if '{2}'='ADV'
 begin
-EXEC dbo.Insert_AdvanceFromJob_V2 '{0}','{1}'
-EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}'
+--EXEC dbo.Insert_AdvanceFromJob_V2 '{0}','{1}'
+--EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}'
+EXEC dbo.Insert_AdvanceToJournal_V3 '{0}','{1}'
 end
 
 if '{2}'='CLR'
