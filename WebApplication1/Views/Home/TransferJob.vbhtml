@@ -24,8 +24,10 @@ end
 
 if '{2}'='CLR'
 begin
-EXEC dbo.Insert_ClearFromJob '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_PostClearToJournal  '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_ClearFromJob '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_PostClearToJournal  '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_ClearMoneyFromAdvance '{0}','{1}'
+EXEC dbo.Insert_ClearMoneyFromNoAdvance '{0}','{1}'
 end
 
 if '{2}'='PAY'
