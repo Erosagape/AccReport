@@ -320,6 +320,7 @@
     <Content Include="Views\Home\Customer.vbhtml" />
     <Content Include="Views\Form\Journal.vbhtml" />
     <Content Include="Views\Home\ReportRC.vbhtml" />
+    <Content Include="Views\Home\MonthlyBalance_V2.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

@@ -30,34 +30,48 @@ EXEC dbo.Insert_ClearMoneyFromAdvance '{0}','{1}'
 EXEC dbo.Insert_ClearMoneyFromNoAdvance '{0}','{1}'
 end
 
+if '{2}'='CAV'
+begin
+EXEC dbo.Insert_CostFromAdvance '{0}','{1}'
+end
+
 if '{2}'='PAY'
 begin
-EXEC dbo.Insert_BillPayFromJob_V2 '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
+--EXEC dbo.Insert_BillPayFromJob_V2 '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
 --EXEC dbo.Insert_PVFromBillPay_V2 '{0}','{1}'
+EXEC dbo.Insert_BillPayToJournal_V3 '{0}','{1}'
+EXEC dbo.Insert_PVFromBillPay_V3 '{0}','{1}'
 end
 
 if '{2}'='INV'
 begin
-EXEC dbo.Insert_InvoiceFromJob '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_PostInvoiceToJournal '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_InvoiceFromJob '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_PostInvoiceToJournal '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_InvoiceFromJob_V2 '{0}','{1}'
 end
 
 if '{2}'='CST'
 begin
-EXEC dbo.Insert_CostToJournal_V2 '{0}','{1}','STAFF_ACC'
+--EXEC dbo.Insert_CostToJournal_V2 '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_ClearExpenseFromAdvance '{0}','{1}'
+EXEC dbo.Insert_ClearExpenseFromBillPay '{0}','{1}'
+EXEC dbo.Insert_ClearExpenseFromManualEntry '{0}','{1}'
 end
 
 if '{2}'='RCP'
 begin
-EXEC dbo.Insert_ReceiptFromJob '{0}','{1}',''
-EXEC dbo.Insert_PostReceiptToJournal '{0}','{1}',''
+--EXEC dbo.Insert_ReceiptFromJob '{0}','{1}',''
+--EXEC dbo.Insert_PostReceiptToJournal '{0}','{1}',''
+EXEC dbo.Insert_ReceiptFromJob_V2 '{0}','{1}'
+EXEC dbo.Insert_RVFromJob_V2 '{0}','{1}'
 end
 
 if '{2}'='CN'
 begin
-EXEC dbo.Insert_CNDNFromJob '{0}','{1}',''
-EXEC dbo.Insert_PostCNDNToJournal '{0}','{1}'
+--EXEC dbo.Insert_CNDNFromJob '{0}','{1}',''
+--EXEC dbo.Insert_PostCNDNToJournal '{0}','{1}'
+EXEC dbo.Insert_CNDNFromJob_V2 '{0}','{1}'
 end
 
 if '{2}'='WHT'
@@ -82,12 +96,13 @@ End Code
     To Date : <input type="date" name="DateTo" id="txtDateTo" value="@dateTo" />
     <br />
     <select name="PostType" id="cboPostType">
-        <option value="ADV">Advance Expenses</option>
-        <option value="CLR">Clearing Advance</option>
-        <option value="CST">Costing</option>
-        <option value="PAY">Expenses Billed</option>
-        <option value="INV">Invoice to Customer</option>
-        <option value="RCP">Customer Receipts</option>
+        <option value="ADV">Advance Payment</option>
+        <option value="CLR">Clearing Money From Advance</option>
+        <option value="CST">Clearing Expenses From Advance</option>
+        <option value="CAV">Cost From Clearing</option>
+        <option value="PAY">Account Payables</option>
+        <option value="INV">Account Receivables (Setup)</option>
+        <option value="RCP">Account Receivables (Payment)</option>
         <option value="CN">Credit & Debit Note</option>
         <option value="WHT">Withholding-Tax</option>
     </select>
