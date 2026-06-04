@@ -321,6 +321,16 @@
     <Content Include="Views\Form\Journal.vbhtml" />
     <Content Include="Views\Home\ReportRC.vbhtml" />
     <Content Include="Views\Home\MonthlyBalance_V2.vbhtml" />
+    <Content Include="Views\Home\ConfigDepre.vbhtml" />
+    <Content Include="Views\Home\ReportAgingAP.vbhtml" />
+    <Content Include="Views\Home\ReportAgingAR.vbhtml" />
+    <Content Include="Views\Home\ReportDepre.vbhtml" />
+    <Content Include="Views\Home\ReportJournal.vbhtml" />
+    <Content Include="Views\Home\ReportPC.vbhtml" />
+    <Content Include="Views\Home\TransferJob_EN.vbhtml" />
+    <Content Include="Views\Home\TransferJob_TH.vbhtml" />
+    <Content Include="Views\Form\FormWHTax3D.vbhtml" />
+    <Content Include="Views\Form\FormWHTax53D.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
