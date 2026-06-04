@@ -37,7 +37,8 @@
     Dim sql As String="
     select t.*,
 TotalBaseAmount as TotalBaseVAT,
-TotalTaxAmount as TotalBaseNONVAT
+TotalNonVatAmount as TotalBaseNONVAT,
+TotalTaxAmount as TotalBaseWHT
 from 
 vTransaction_H as t 
 --where EXISTS(select 1 from vJournal_All WHERE Description=t.AccDocNo and AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat') and Credit>0) and TotalVat>0
@@ -71,6 +72,7 @@ End Code
         Dim totalWht As Double=0
         Dim totalNet As Double=0
         Dim totalAmtVat As Double = 0
+        Dim totalAmtWht As Double = 0
         Dim totalAmtNonVat As Double = 0
         @<table>
             <thead>
@@ -81,6 +83,7 @@ End Code
                     <th>Customer Name</th>
                     <th>Amount Vat</th>
                     <th>Amount Non-Vat</th>
+                    <th>Amount Wht</th>
                     <th>Vat</th>
                     <th>Wht</th>
                     <th>Net</th>
@@ -92,6 +95,7 @@ End Code
                     totalWht+=obj.GetDouble(rh("TotalWht"))
                     totalNet+=obj.GetDouble(rh("TotalNet"))
                     totalAmtVat += obj.GetDouble(rh("TotalBaseVAT"))
+                    totalAmtWht += obj.GetDouble(rh("TotalBaseWHT"))
                     totalAmtNonVat += obj.GetDouble(rh("TotalBaseNONVAT"))
                     @<tr style="font-weight:bold;">
                         <td>@rh("AccDocNo")</td>
@@ -104,6 +108,7 @@ End Code
                         <td>@rh("PartyName")</td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalBaseVAT")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalBaseNONVAT")).ToString("#,##0.00") </td>
+                        <td style="text-align:right">@Convert.ToDouble(rh("TotalBaseWHT")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalVat")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalWht")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalNet")).ToString("#,##0.00") </td>
@@ -115,6 +120,7 @@ End Code
                     <td colspan="4">TOTAL</td>
                     <td style="text-align:right">@totalAmtVat.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalAmtNonVat.ToString("#,##0.00")</td>
+                    <td style="text-align:right">@totalAmtWht.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalVat.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalWht.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalNet.ToString("#,##0.00")</td>

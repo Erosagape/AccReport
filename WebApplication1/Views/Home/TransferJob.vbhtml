@@ -17,15 +17,12 @@ EXEC dbo.Insert_ProductsCodeFromJob
 
 if '{2}'='ADV'
 begin
---EXEC dbo.Insert_AdvanceFromJob_V2 '{0}','{1}'
---EXEC dbo.Insert_AdvanceToJournal_V2 '{0}','{1}'
+EXEC dbo.Insert_AdvanceFromJob_V2 '{0}','{1}'
 EXEC dbo.Insert_AdvanceToJournal_V3 '{0}','{1}'
 end
 
 if '{2}'='CLR'
 begin
---EXEC dbo.Insert_ClearFromJob '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_PostClearToJournal  '{0}','{1}','STAFF_ACC'
 EXEC dbo.Insert_ClearMoneyFromAdvance '{0}','{1}'
 EXEC dbo.Insert_ClearMoneyFromNoAdvance '{0}','{1}'
 end
@@ -37,23 +34,19 @@ end
 
 if '{2}'='PAY'
 begin
---EXEC dbo.Insert_BillPayFromJob_V2 '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_BillPayToJournal_V2 '{0}','{1}'
---EXEC dbo.Insert_PVFromBillPay_V2 '{0}','{1}'
+EXEC dbo.Insert_BillPayFromJob_V2 '{0}','{1}','STAFF_ACC'
 EXEC dbo.Insert_BillPayToJournal_V3 '{0}','{1}'
 EXEC dbo.Insert_PVFromBillPay_V3 '{0}','{1}'
 end
 
 if '{2}'='INV'
 begin
---EXEC dbo.Insert_InvoiceFromJob '{0}','{1}','STAFF_ACC'
---EXEC dbo.Insert_PostInvoiceToJournal '{0}','{1}','STAFF_ACC'
-EXEC dbo.Insert_InvoiceFromJob_V2 '{0}','{1}'
+EXEC dbo.Insert_InvoiceFromJob '{0}','{1}','STAFF_ACC'
+EXEC dbo.Insert_InvoiceToJournal_V2 '{0}','{1}'
 end
 
 if '{2}'='CST'
 begin
---EXEC dbo.Insert_CostToJournal_V2 '{0}','{1}','STAFF_ACC'
 EXEC dbo.Insert_ClearExpenseFromAdvance '{0}','{1}'
 EXEC dbo.Insert_ClearExpenseFromBillPay '{0}','{1}'
 EXEC dbo.Insert_ClearExpenseFromManualEntry '{0}','{1}'
@@ -61,17 +54,15 @@ end
 
 if '{2}'='RCP'
 begin
---EXEC dbo.Insert_ReceiptFromJob '{0}','{1}',''
---EXEC dbo.Insert_PostReceiptToJournal '{0}','{1}',''
-EXEC dbo.Insert_ReceiptFromJob_V2 '{0}','{1}'
+EXEC dbo.Insert_ReceiptFromJob '{0}','{1}',''
+EXEC dbo.Insert_ReceiptToJournal_V2 '{0}','{1}'
 EXEC dbo.Insert_RVFromJob_V2 '{0}','{1}'
 end
 
 if '{2}'='CN'
 begin
---EXEC dbo.Insert_CNDNFromJob '{0}','{1}',''
---EXEC dbo.Insert_PostCNDNToJournal '{0}','{1}'
-EXEC dbo.Insert_CNDNFromJob_V2 '{0}','{1}'
+EXEC dbo.Insert_CNDNFromJob '{0}','{1}',''
+EXEC dbo.Insert_CNDNToJournal '{0}','{1}'
 end
 
 if '{2}'='WHT'

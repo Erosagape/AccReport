@@ -62,7 +62,7 @@ End Code
         <table style="width:100%">
             <tr>
                 <td><b>Voucher No<br />เลขที่เอกสาร :</b></td>
-                <td>@voucherNo</td>
+                <td><a href="?Form=Journal&SRC=@dbSource&DB=@dbName&Code=@voucherNo">@voucherNo</a></td>
             </tr>
             <tr>
                 <td><b>Effective Date<br />วันที่ลงบัญชี :</b></td>

@@ -36,7 +36,7 @@ End Code
         }
 
         .navbar-custom {
-            background-color: darkblue; /* Or any other color value */
+            background-color: #f24544; /* Or any other color value */
         }
 
         b {

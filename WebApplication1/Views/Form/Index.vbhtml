@@ -16,34 +16,77 @@
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateto = Request.QueryString("DateTo")
     End If
+    Dim filter As String = ""
+    If Not Request.QueryString("Filter") Is Nothing Then
+        filter = Request.QueryString("Filter")
+    End If
+    Dim docType As String = ""
+    If Not Request.QueryString("Type") Is Nothing Then
+        docType = Request.QueryString("Type")
+        filter = docType
+    End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
-    Dim sqlw = String.Format(" where EntryDate>='{0}' and EntryDate<='{1}'", datefrom, dateto)
+    Dim sqlw = String.Format(" where EntryDate>='{0}' and EntryDate<='{1}' AND JournalNo like '%{2}%'", datefrom, dateto, filter)
     Dim sql = String.Format("select * from Acc_JournalHD {0} order by EntryId DESC", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
 End Code
 <h2>Journal List</h2>
 <div class="row">
     <div class="col-md-3">
-        Date From : <input type="date" id="txtDateFrom" value="@datefrom" class="form-control" />
+        Date From : <br />
+        <input type="date" id="txtDateFrom" value="@datefrom" class="form-control" />
     </div>
     <div class="col-md-3">
-        To : <input type="date" id="txtDateTo" value="@dateto" class="form-control" />
+        To : <br />
+        <input type="date" id="txtDateTo" value="@dateto" class="form-control" />
     </div>
     <div class="col-md-3">
+        Filter Head : 
         <br />
-        <input type="button" onclick="RefreshPage()" value="Refresh" class="btn btn-primary" />
+        <div style="display:flex">
+            <input type="text" id="txtHeader" value="@filter" class="form-control" />
+            <input type="button" onclick="RefreshPage()" value="Filter" class="btn btn-primary" />
+        </div>
+        
     </div>
-</div>
+        <div class="col-md-3">
+
+            Document Type :
+            <br />
+            <div style="display:flex">
+                <select id="cboDocType" class="form-control">
+                    <option value="">All</option>
+                    <option value="RV">Receipt Voucher</option>
+                    <option value="PV">Payment Voucher</option>
+                    <option value="BL">Balance Entries</option>
+                    <option value="AJ">Adjustment Entries</option>
+                    <option value="BT">Bank Transactions</option>
+                    <option value="JV">Journal Entries</option>
+                </select>
+                <input type="button" onclick="OpenNewdoc()" value="New" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
 <br>
 @If dt.Rows.Count > 0 Then
-    @<table border="1" class="table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<div>
+        <b>Total Records : @dt.Rows.Count</b>   
+    </div>
+    @<table id="tbData" border="1" class="table table-responsive table-border" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
-                <th>#</th>
+                <th rowspan="2">#</th>
                 @For each dc As Data.DataColumn In dt.Columns
-                    @<th>@dc.ColumnName</th>
+                    @<th onclick="sortTable('tbData', @dc.Ordinal)">@dc.ColumnName</th>
                 Next
-
+            </tr>
+            <tr>
+                @For Each dc As Data.DataColumn In dt.Columns
+                    Dim t = "txtCliteria" & dc.Ordinal
+                    @<th>
+                        <input type="text" id="@t" class="form-control" placeholder="Search @dc.ColumnName" onkeyup="searchTableByColumn('tbData','@t',@dc.Ordinal)" />
+                    </th>
+                Next
             </tr>
         </thead>
         <tbody>
@@ -64,13 +107,13 @@ End Code
                         If dc.ColumnName.Equals("JournalNo") Then
                             @<td>
                                 <a href="?Form=Journal&SRC=@dbSource&DB=@dbName&Code=@dr("JournalNo")">@dr(dc.ColumnName)</a>
-                             </td>
+                            </td>
                         Else
-			    if dc.ColumnName.IndexOf("Date")>0 Then
-				@<td>@Convert.ToDateTime(dr(dc.ColumnName)).ToString("dd/MM/yyyy")</td>
+                            If dc.ColumnName.IndexOf("Date") > 0 Then
+                                @<td>@Convert.ToDateTime(dr(dc.ColumnName)).ToString("dd/MM/yyyy")</td>
                             Else
-                                if dc.ColumnName.IndexOf("Debit")>0 OR dc.ColumnName.IndexOf("Credit")>0 Then
-				    @<td>@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
+                                If dc.ColumnName.IndexOf("Debit") > 0 Or dc.ColumnName.IndexOf("Credit") > 0 Then
+                                    @<td>@Convert.ToDouble(dr(dc.ColumnName)).ToString("#,##0.00")</td>
                                 Else
                                     @<td>@dr(dc.ColumnName)</td>
                                 End If
@@ -85,10 +128,21 @@ End Code
 Else
     @<b>@obj.Message</b>
 End If
+<script src="~/Scripts/util.js"></script>
 <script type="text/javascript">
+    function OpenNewdoc() {
+        var docType = document.getElementById('cboDocType').value;
+        if (docType == "") {
+            alert("Please select document type");
+            return;
+        }
+        window.location.href = "?Form=Journal&Type=" + docType + "&SRC=@dbSource&DB=@dbName";
+    }
     function RefreshPage() {
         var df = document.getElementById('txtDateFrom').value;
         var dt = document.getElementById('txtDateTo').value;
-        window.location.href = "?DateFrom=" + df + "&DateTo=" + dt + "&DB=@dbName&SRC=@dbSource";
+        var filter = document.getElementById('txtHeader').value;
+        var docType = document.getElementById('cboDocType').value;
+        window.location.href = "?DateFrom=" + df + "&DateTo=" + dt + "&Filter=" + filter + "&Type=" + docType + "&DB=@dbName&SRC=@dbSource";
     }
 </script> 

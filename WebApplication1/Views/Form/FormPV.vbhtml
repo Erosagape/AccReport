@@ -36,8 +36,7 @@ select * from vJournal_All where JournalNo='{0}' order by ItemNo
         effectiveDate = Convert.ToDateTime(dt.Rows(0)("EffectiveDate")).ToString("dd/MM/yyyy")
         description = dt.Rows(0)("Description").ToString()
         entryBy = dt.Rows(0)("EntryBy").ToString()
-        totalDebit = Convert.ToDouble(dt.Rows(0)("TotalDebit"))
-        totalCredit = Convert.ToDouble(dt.Rows(0)("TotalCredit"))
+
     End If
 End Code
 <h2>Payment Voucher / ใบสำคัญจ่าย</h2>
@@ -52,7 +51,7 @@ End Code
     <div style="text-align:right;flex:40%;">
         <table style="width:100%">
             <tr>                
-                <td><b>Voucher No / เลขที่เอกสาร :</b><br>@voucherNo</td>
+                <td><b>Voucher No / เลขที่เอกสาร :</b><br><a href="?Form=Journal&SRC=@dbSource&DB=@dbName&Code=@voucherNo">@voucherNo</a></td>
             </tr>
             <tr>                
                 <td><b>Effective Date / วันที่ลงบัญชี :</b><br>@effectiveDate</td>
@@ -92,6 +91,8 @@ End Code
             @If dt.Rows.Count > 0 Then
                 Dim accname As String = ""
                 For Each dr As Data.DataRow In dt.Rows
+	        totalDebit += Convert.ToDouble(dr("Debit"))
+        	totalCredit += Convert.ToDouble(dr("Credit"))
                     If accname <> dr("AccRemark") Then
                         accname = dr("AccRemark")
                         @<tr>

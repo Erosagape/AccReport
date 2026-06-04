@@ -1,6 +1,6 @@
 @Code
     Layout = "~/Views/Shared/Report.vbhtml"
-    ViewData("Title") = "Report VAT Purchase"
+    ViewData("Title") = "Report Purchase Confirmation"
     Dim dbname = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbname = Request.QueryString("DB").ToString()
@@ -31,19 +31,11 @@
     Dim qry As String = ""
     If Not Request.QueryString("Query") Is Nothing Then
         qry = Request.QueryString("Query")
-        sqlW &= String.Format(" AND EXISTS(select 1 from vTransaction_D where DocNo=t.AccDocNo and (SalesDescription like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
+        sqlW &= String.Format(" AND EXISTS(select 1 from vTransaction_All where AccDocNo=a.AccDocNo and (SalesDescription like '%{0}%'  OR PartyName like '%{0}%' OR DocRefNo like '%{0}%'))", qry)
     End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
-    Dim sql As String="
-    select t.*,
-TotalBaseAmount as TotalBaseVAT,
-TotalNonVatAmount as TotalBaseNONVAT,
-TotalTaxAmount as TotalBaseWHT
-from 
-vTransaction_H as t 
-where AccDocType='PC' And (TotalVAT>0 OR TotalWht>0) {0}
-    "
-    Dim dh = obj.GetDataFromSQL(String.Format(sql, sqlW))
+
+    Dim dh = obj.GetDataFromSQL(String.Format("SELECT * FROM vTransaction_H a WHERE DocStatus<>99 and AccDocType='PC' AND TotalAmount is not null {0} ORDER BY AccDocNo", sqlW))
     Dim tb As New Data.DataTable
     Dim id As String = ""
 End Code
@@ -57,11 +49,11 @@ End Code
     }
 </style>
 <div id="reportArea">
-    <h4>Input VAT Report</h4>
+    <h4>Purchase Confirmation Report</h4>
     <h4>Date From : @Convert.ToDateTime(dateFrom).ToString("dd/MM/yyyy") To : @Convert.ToDateTime(dateTo).ToString("dd/MM/yyyy")</h4>
     @Code
         If custCode <> "" Then
-            @<h4>Customer Code :@custCode</h4>
+            @<h4>Supplier Code :@custCode</h4>
         End If
         If qry <> "" Then
             @<h4>Filter :*@qry*</h4>
@@ -69,19 +61,16 @@ End Code
         Dim totalVat As Double=0
         Dim totalWht As Double=0
         Dim totalNet As Double=0
-        Dim totalAmtVat As Double = 0
-        Dim totalAmtWht As Double = 0
-        Dim totalAmtNonVat As Double = 0
+        Dim totalAmt As Double=0
         @<table>
             <thead>
                 <tr>
-                    <th>Doc No</th>
-                    <th>Doc Date</th>
-                    <th>Tax Reference</th>
-                    <th>Customer Name</th>
-                    <th>Amount Vat</th>
-                    <th>Amount Non-Vat</th>
-                    <th>Amount Wht</th>
+                    <th>Bill No</th>
+                    <th>Bill Date</th>
+                    <th>Due Date</th>
+                    <th>Supplier Name</th>
+                    <th>Ref No</th>
+                    <th>Amount</th>
                     <th>Vat</th>
                     <th>Wht</th>
                     <th>Net</th>
@@ -92,33 +81,28 @@ End Code
                     totalVat+=obj.GetDouble(rh("TotalVat"))
                     totalWht+=obj.GetDouble(rh("TotalWht"))
                     totalNet+=obj.GetDouble(rh("TotalNet"))
-                    totalAmtVat += obj.GetDouble(rh("TotalBaseVAT"))
-                    totalAmtNonVat += obj.GetDouble(rh("TotalBaseNONVAT"))
-                    totalAmtWht += obj.GetDouble(rh("TotalBaseWHT"))
+                    totalAmt+=obj.GetDouble(rh("TotalAmount"))
                     @<tr style="font-weight:bold;">
                         <td>@rh("AccDocNo")</td>
                         <td>
                             @Convert.ToDateTime(rh("AccBatchDate")).ToString("dd/MM/yyyy")
                         </td>
                         <td>
-                            @rh("PartyTaxCode")
+                            @Convert.ToDateTime(rh("AccEffectiveDate")).ToString("dd/MM/yyyy")
                         </td>
                         <td>@rh("PartyName")</td>
-                        <td style="text-align:right">@Convert.ToDouble(rh("TotalBaseVAT")).ToString("#,##0.00") </td>
-                        <td style="text-align:right">@Convert.ToDouble(rh("TotalBaseNONVAT")).ToString("#,##0.00") </td>
-                        <td style="text-align:right">@Convert.ToDouble(rh("TotalBaseWHT")).ToString("#,##0.00") </td>
+                        <td>@rh("DocRefNo")</td>
+                        <td style="text-align:right">@Convert.ToDouble(rh("TotalAmount")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalVat")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalWht")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalNet")).ToString("#,##0.00") </td>
                     </tr>                
-                Next
+                Next                
             </tbody>
             <tfoot>
                 <tr style="font-weight:bold;text-decoration:underline">
-                    <td colspan="4">TOTAL</td>
-                    <td style="text-align:right">@totalAmtVat.ToString("#,##0.00")</td>
-                    <td style="text-align:right">@totalAmtNonVat.ToString("#,##0.00")</td>
-                    <td style="text-align:right">@totalAmtWht.ToString("#,##0.00")</td>
+                    <td colspan="5">TOTAL</td>
+                    <td style="text-align:right">@totalAmt.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalVat.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalWht.ToString("#,##0.00")</td>
                     <td style="text-align:right">@totalNet.ToString("#,##0.00")</td>

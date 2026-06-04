@@ -23,14 +23,50 @@
     If Not Request.QueryString("Period") Is Nothing Then
         period = Request.QueryString("Period")
     End If
+    Dim accCode As String = ""
+    If Not Request.QueryString("Code") Is Nothing Then
+        accCode = Request.QueryString("Code")
+    End If
+    Dim sql = String.Format("
+DECLARE @@accCode varchar(20)='{1}'
+IF @@accCode=''
+BEGIN
+    SET @@accCode=dbo.GetAccConfig('AP_CONFIG','CashOut')
+END
+EXEC dbo.GetCashFlow {0},@@accCode
+", period, accCode)
 
-    Dim sql = String.Format("EXEC dbo.GetCashFlow {0}", period)
+    Dim dateCheck As Integer = 0
+    Dim dateFrom As String = ""
+    If Not Request.QueryString("DateFrom") Is Nothing Then
+        dateFrom = Request.QueryString("DateFrom")
+        dateCheck += 1
+    End If
+    Dim dateTo As String = ""
+    If Not Request.QueryString("DateTo") Is Nothing Then
+        dateTo = Request.QueryString("DateTo")
+        dateCheck += 1
+    End If
+    If dateCheck = 2 Then
+        sql = String.Format("
+DECLARE @@accCode varchar(20)='{2}'
+IF @@accCode=''
+BEGIN
+    SET @@accCode=dbo.GetAccConfig('AP_CONFIG','CashOut')
+END
+EXEC dbo.GetCashFlow_ByDate '{0}','{1}',@@accCode", dateFrom, dateTo, accCode)
+    End If
     Dim dt As New Data.DataTable()
     dt = obj.GetDataFromSQL(sql)
 End Code
 <h3>งบกระแสเงินสด แบบทางตรง</h3>
-<b>ประจำงวด :</b> @period
+@If dateCheck = 2 Then
+    @<b>ระหว่างวันที่ :</b> @dateFrom @<b>ถึงวันที่ : </b> @dateTo
+Else
+    @<b>ประจำงวด : </b> @period
+End If
 @If dt.Rows.Count > 0 Then
+    @<b>รหัสบัญชี : </b> @<a href="#" onclick="ChangeAccCode()">@dt.Rows(0)("AccCode") </a>
     @<table border="1" style="border-style:solid;border-collapse:collapse;">
          <thead>
              <tr>
@@ -45,26 +81,26 @@ End Code
     @For Each dr As Data.DataRow In dt.Rows
     @<tr>
         <td>
-            @If dr("lvl") = 0 Or dr("lvl") > 2 Then
+            @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
                 @<b>@dr("AccDesc")</b>
-            Else
                 If dr("CashIn") > 0 Then
                     @<b><u>+</u></b>
                 Else
                     @<b><u>-</u></b>
                 End If
+            Else
                 @<span>@dr("AccDesc")</span>
             End If
         </td>
         <td style="text-align:right;">
-            @If dr("lvl") = 0 Or dr("lvl") > 2 Then
+            @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
                 @<b>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</b>
             Else
                 @<span>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</span>
             End If
         </td>
         <td style="text-align:right;">
-            @If dr("lvl") = 0 Or dr("lvl") > 2 Then
+            @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
                 @<b>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</b>
             Else
                 @<span>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</span>
@@ -74,3 +110,18 @@ End Code
     Next
 </table>
 End If 
+<script type="text/javascript">
+    function ChangeAccCode() {
+        var code = prompt("ระบุรหัสบัญชีเงินสดจ่ายที่ต้องการดู");
+        if (code != null) {
+            var url = window.location.href;
+            url = url.replace(/(&|\?)Code=[^&]*/, '');
+            if (url.indexOf("?") > -1) {
+                url += "&Code=" + code;
+            } else {
+                url += "?Code=" + code;
+            }
+            window.location.href = url;
+        }
+    }
+</script>

@@ -11,7 +11,7 @@
 End Code
 <style>
     .banner-foot {
-        background-color: darkblue;  
+        background-color: #f24544; 
         padding:10px 5px 5px 5px;
     }
     .banner-foot b {
@@ -44,6 +44,11 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="?Form=ConfigDepre&LANG=EN&DB=@dbname&SRC=@dbSource">Standard Depreciation</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">Products</a>
                 </div>
             </div>
@@ -65,7 +70,7 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=TransferJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">Post Data to GL Account</a>
+                    <a href="?Form=TransferJob_EN&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">Post Data to GL Account</a>
                 </div>
             </div>
             <div class="row">
@@ -86,7 +91,7 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource">Stock Card</a>
+                    <a href="?Form=Transaction&DB=@dbname&SRC=@dbSource">Posting Center</a>
                 </div>
             </div>
             <b>Account Reports</b>
@@ -97,7 +102,17 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource">Stock Card</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     <a href="?Form=StockOnhand&DB=@dbname&SRC=@dbSource">Stock Onhand</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ReportDepre&LANG=EN&DB=@dbname&SRC=@dbSource&Code=">Depreciation</a>
                 </div>
             </div>
             <div class="row">
@@ -108,17 +123,17 @@ End Code
             <b>Working Sheet</b>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&SRC=@dbSource">Draft Monthly Balance</a>
+                    <a href="?Form=MonthlyBalance_V2&LANG=EN&DB=@dbname&SRC=@dbSource">Draft Monthly Balance</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&Type=1&SRC=@dbSource">Calculate Monthly Balance</a>
+                    <a href="?Form=MonthlyBalance_V2&LANG=EN&DB=@dbname&Type=1&SRC=@dbSource">Calculate Monthly Balance</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance&LANG=EN&DB=@dbname&Type=2&SRC=@dbSource">Accumulate Monthly Balance</a>
+                    <a href="?Form=MonthlyBalance_V2&LANG=EN&DB=@dbname&Type=2&SRC=@dbSource">Accumulate Monthly Balance</a>
                 </div>
             </div>
             <b>Account Sheet</b>

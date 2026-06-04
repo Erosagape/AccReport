@@ -87,6 +87,7 @@ End Code
         <tr>
             <td colspan="4" rowspan="4">
             REMARKS:
+	    <br> @dt.Rows(0)("Text1")
             </td>
             <td colspan="2"> Total Amount</td>
             <td Class="colnum">@Convert.ToDouble(dt.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>

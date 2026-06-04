@@ -34,7 +34,7 @@
     If Not Request.QueryString("SUM") Is Nothing Then
         typereport = Request.QueryString("SUM")
     End If
-    Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}'", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"))
+    Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}',1", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"))
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
     Dim dbSource = ViewBag.AccDatabase

@@ -41,13 +41,17 @@ End Code
         <select id="cboReport" class="form-control dropdown">
             <option value="Purchase">Purchase Order Report</option>
             <option value="PI">Purchase Invoice Report</option>
+            <option value="PC">Purchase Confirmation Report</option>
+            <option value="AgingAP">Purchase Invoice Aging Report</option>
             <option value="Sale">Sale Order Report</option>
             <option value="SI">Sale Invoice Report</option>
             <option value="RC">Sale Receipt Report</option>
+            <option value="AgingAR">Sale Invoice Aging Report</option>
             <option value="AR">Account Receiveable Report</option>
             <option value="AP">Account Payable Report</option>
             <option value="Payment">Payment Voucher Report</option>
             <option value="Receive">Receive Voucher Report</option>
+            <option value="Journal">Journal Entries Report</option>
             <option value="VATSale">Output VAT Report</option>
             <option value="VATBuy">Input VAT Report</option>
             <option value="WHTax">Withholding Report (Detail)</option>

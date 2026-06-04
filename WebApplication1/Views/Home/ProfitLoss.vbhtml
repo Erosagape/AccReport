@@ -37,8 +37,8 @@ group by AccCode,AccName order by AccCode
     If yy <> "" Then
         sqlw += String.Format(" WHERE Period='{0}'", yy)
     End If
-    Dim sumDebit = 0
-    Dim sumCredit = 0
+    Dim sumDebit As Double = 0
+    Dim sumCredit As Double = 0
 
     Dim dt = obj.GetDataFromSQL(String.Format(sql, sqlw))
     Dim msg As String = "Ready"

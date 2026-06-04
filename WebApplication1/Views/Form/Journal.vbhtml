@@ -107,18 +107,18 @@ EXECUTE @@RC = [dbo].[SetJournalHeader]
             Dim sqlD As String = "
 IF {1}=0
 BEGIN
-    DECLARE @@seq as int=0;
-    SET @@seq =(select isnull(MAX(Seq),0)+1 from Acc_JournalDT where EntryId={0});
+DECLARE @@seq as int=0;
+SET @@seq =(select isnull(MAX(Seq),0)+1 from Acc_JournalDT where EntryId={0});
 
-    INSERT INTO Acc_JournalDT (EntryId,Seq,AccCode,AccName,AccDesc,Debit,Credit)
-    SELECT {0},@@seq,'{2}','{3}','{4}',{5},{6};
+INSERT INTO Acc_JournalDT (EntryId,Seq,AccCode,AccName,AccDesc,Debit,Credit)
+SELECT {0},@@seq,'{2}','{3}','{4}',{5},{6};
 END
 ELSE
 BEGIN
-    UPDATE Acc_JournalDT
-    SET AccCode='{2}',
-    AccName='{3}',AccDesc='{4}',Debit={5},Credit={6}
-    WHERE EntryId={0} AND Seq={1};
+UPDATE Acc_JournalDT
+SET AccCode='{2}',
+AccName='{3}',AccDesc='{4}',Debit={5},Credit={6}
+WHERE EntryId={0} AND Seq={1};
 END
 
 update h
@@ -280,6 +280,21 @@ End Code
                             </tr>
                         Next
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                @If dt.Rows(0)("JournalNo").ToString().Substring(0, 2) = "RV" Then
+                                    @<a Class="btn btn-success" href="?Form=FormRV&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print</a>
+                                Else
+                                    If dt.Rows(0)("JournalNo").ToString().Substring(0, 2) = "PV" Then
+                                        @<a Class="btn btn-success" href="?Form=FormPV&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print</a>
+                                    Else
+                                        @<a Class="btn btn-success" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print</a>
+                                    End If
+                                End If
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             End If
         End If
@@ -409,7 +424,6 @@ End If
     var datachanged = 0;
     var msg = '@msg';
     var docno = '@JournalNo';
-    var editDetail = @showDetail;
     window.onload = function () {
         if (msg !== '') {
             alert(msg);
@@ -419,7 +433,7 @@ End If
                 window.location = window.location.pathname + '?DB=@dbName&SRC=@dbSource&Form=Journal&Code='+docno;
             }
         }
-        if (editDetail == 1) {
+        if ('@showDetail' == '1') {
             document.getElementById('btnMdl').click();
         }
     }

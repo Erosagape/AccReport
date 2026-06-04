@@ -37,46 +37,56 @@ End Code
     <div class="col-md-3">
         To : <input type="date" id="txtDateTo" value="@dateto" class="form-control" />
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
         Type :
-        <select id="txtDocType" class="form-control dropdown">
-            <option value="">
-                ALL
-            </option>
-            @If docTypes.Rows.Count > 0 Then
-                For Each dr As Data.DataRow In docTypes.Rows
-                    If docType.Equals(dr("AccDocType")) Then
-                        @<option value="@dr("AccDocType")" selected>
-                            @dr("AccDocTypeName") - @dr("AccDocType")
-                        </option>
-                    Else
-                        @<option value="@dr("AccDocType")">
-                            @dr("AccDocTypeName") - @dr("AccDocType")
-                        </option>
-                    End If
-                Next
-            End If
-        </select>
-    </div>
-    <div class="col-sm-3">
         <br />
-        <input type="button" onclick="RefreshPage()" class="btn btn-primary" value="Refresh" />        
+        <div style="display:flex">
+            <select id="txtDocType" class="form-control dropdown">
+                <option value="">
+                    ALL
+                </option>
+                @If docTypes.Rows.Count > 0 Then
+                    For Each dr As Data.DataRow In docTypes.Rows
+                        If docType.Equals(dr("AccDocType")) Then
+                            @<option value="@dr("AccDocType")" selected>
+                                @dr("AccDocTypeName") - @dr("AccDocType")
+                            </option>
+                        Else
+                            @<option value="@dr("AccDocType")">
+                                @dr("AccDocTypeName") - @dr("AccDocType")
+                            </option>
+                        End If
+                    Next
+                End If
+            </select>
+            <input type="button" onclick="RefreshPage()" class="btn btn-primary" value="Filter" />
+            <input type="button" class="btn btn-warning" value="Add" onclick="AddNewDoc()" />
+        </div>
     </div>
 </div>
-<input type="button" class="btn btn-warning" value="Add" onclick="AddNewDoc()" />
 <br>
 @If dt.Rows.Count > 0 Then
-    @<table border="1"class="table" style="border-style:solid;border-collapse:collapse;border-width:thin;">
+    @<div>
+        <b>Total Records : @dt.Rows.Count</b>
+    </div>
+    @<table id="tbData" border="1" class="table" style="border-style:solid;border-collapse:collapse;border-width:thin;">
         <thead>
             <tr>
-                <th>#</th>
+                <th rowspan="2">#</th>
                 @For each dc As Data.DataColumn In dt.Columns
-                    @<th class="d-table-cell">@dc.ColumnName</th>
+                    @<th onclick="sortTable('tbData', @dc.Ordinal)" class="d-table-cell">@dc.ColumnName</th>
                 Next
-
+            </tr>
+            <tr>
+                @For Each dc As Data.DataColumn In dt.Columns
+                    Dim t = "txtCliteria" & dc.Ordinal
+                    @<th>
+                        <input type="text" id="@t" class="form-control" placeholder="Search @dc.ColumnName" onkeyup="searchTableByColumn('tbData','@t',@dc.Ordinal)" />
+                    </th>
+                Next
             </tr>
         </thead>
-        <tbody>            
+        <tbody>
             @For Each dr As Data.DataRow In dt.Rows
                 Dim frmName = dr("AccDocType").ToString()
                 @<tr>
@@ -99,6 +109,7 @@ End Code
 Else
     @<b>@obj.Message</b>
 End If
+<script src="~/Scripts/util.js"></script>
 <script type="text/javascript">
     function AddNewDoc() {
         var typ = document.getElementById('txtDocType').value;

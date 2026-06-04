@@ -8,7 +8,7 @@
     }
 </style>
 @Code
-    Layout = "~/Views/Shared/A4_Landscape.vbhtml"
+    Layout = "~/Views/Shared/Report.vbhtml"
     ViewData("Title") = "Monthly Balance"
     Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
@@ -97,7 +97,7 @@ End Code
                 Dim dec(2) As Double
                 Dim tot(2) As Double
                 Dim bal(2) As Double
-                @<table border="1" class="table DataTable">
+                @<table border="1" class="table DataTable" style="border-collapse:collapse;">
                     <thead>
                         <tr>
                             <th rowspan="2">Acc Code</th>
@@ -290,7 +290,7 @@ End If
         window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom="+CDate(dateFrom)+"&DateTo="+CDate(dateTo);
     }
     function SetPeriod(period) {
-        window.location.href = "?Form=MonthlyBalance&SRC=@dbSource&DB=@dbName&Period=" + period + (accu==''?'':'&Type='+accu);
+        window.location.href = "?Form=MonthlyBalance_V2&SRC=@dbSource&DB=@dbName&Period=" + period + (accu==''?'':'&Type='+accu);
     }
     function SetAccu(val, period) {
         switch (val) {

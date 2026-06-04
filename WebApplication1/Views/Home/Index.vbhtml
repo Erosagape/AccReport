@@ -11,7 +11,7 @@
 End Code
 <style>
     .banner-foot {
-        background-color: darkblue;
+        background-color: #f24544;
         padding: 10px 5px 5px 5px;
     }
 
@@ -45,6 +45,11 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="?Form=ConfigDepre&LANG=TH&DB=@dbname&SRC=@dbSource">มาตรฐานค่าเสื่อมราคา</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">ข้อมูลสินค้าและยริการ</a>
                 </div>
             </div>
@@ -66,7 +71,7 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=TransferJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">ดึงรายการไประบบบัญชีแยกประเภท</a>
+                    <a href="?Form=TransferJob_TH&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">ดึงรายการไประบบบัญชีแยกประเภท</a>
                 </div>
             </div>
             <div class="row">
@@ -87,7 +92,7 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource">สต๊อกการ์ด</a>
+                    <a href="?Form=Transaction&DB=@dbname&SRC=@dbSource">ผ่านรายการไปสมุดรายวัน</a>
                 </div>
             </div>
             <b>รายงานสรุปทางบัญชี</b>
@@ -98,7 +103,17 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource">สต๊อกการ์ด</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     <a href="?Form=StockOnhand&DB=@dbname&SRC=@dbSource">สินค้าคงเหลือ</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ReportDepre&LANG=TH&DB=@dbname&SRC=@dbSource&Code=">สรุปค่าเสื่อมราคา</a>
                 </div>
             </div>
             <div class="row">
@@ -109,17 +124,17 @@ End Code
             <b>กระดาษทำการ</b>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance&DB=@dbname&SRC=@dbSource">ยอดเคลื่อนไหวสิ้นเดือน</a>
+                    <a href="?Form=MonthlyBalance_V2&DB=@dbname&SRC=@dbSource">ยอดเคลื่อนไหวสิ้นเดือน</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance&DB=@dbname&Type=1&SRC=@dbSource">สรุปยอดคงเหลือสิ้นเดือน</a>
+                    <a href="?Form=MonthlyBalance_V2&DB=@dbname&Type=1&SRC=@dbSource">สรุปยอดคงเหลือสิ้นเดือน</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance&DB=@dbname&Type=2&SRC=@dbSource">สรุปยอดยกไปสิ้นเดือน</a>
+                    <a href="?Form=MonthlyBalance_V2&DB=@dbname&Type=2&SRC=@dbSource">สรุปยอดยกไปสิ้นเดือน</a>
                 </div>
             </div>
             <b>งบการเงิน</b>

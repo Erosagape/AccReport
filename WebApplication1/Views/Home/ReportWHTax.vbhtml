@@ -97,7 +97,9 @@ End Code
             <tbody>
                 @For each rh As Data.DataRow In dh.Rows
                     @<tr style="font-weight:bold;">
-                        <td>@rh("DocNo")</td>
+                        <td>
+                            <a class="btn btn-success" href="~/Form?Form=FormWHTax&SRC=@dbSource&DB=@dbname&Code=@rh("DocNo")">@rh("DocNo")</a>                            
+                        </td>
                         <td>
                             @Convert.ToDateTime(rh("DocDate")).ToString("dd/MM/yyyy")
                         </td>

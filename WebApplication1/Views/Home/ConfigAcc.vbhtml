@@ -1434,6 +1434,78 @@ End Code
         </div>
     </div>
 </form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "GL_CONFIG"
+    configKey = "AccrueExpense"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Accrue Expense</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
+@Code
+    idRow += 1
+    idVal = "txtVal" & idRow
+    idName = "txtName" & idRow
+
+    configCode = "GL_CONFIG"
+    configKey = "AccrueIncome"
+    configValue = ""
+    accName = ""
+
+    tsql = "select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b on a.ConfigValue=b.AccCode where a.ConfigCode='{0}' AND a.ConfigKey='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(tsql, configCode, configKey))
+    If dt.Rows.Count > 0 Then
+        configKey = dt.Rows(0)("ConfigKey").ToString()
+        configValue = dt.Rows(0)("ConfigValue").ToString()
+        accName = dt.Rows(0)("AccName").ToString()
+    End If
+End Code
+<form action="" method="post">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="#" data-toggle="modal" data-target="#mdlSelect" onclick="SetRowReturn(@idRow)">Accrue Income</a>
+            <input type="hidden" name="Key" value="@configKey" />
+            <input type="hidden" name="Code" value="@configCode" />
+        </div>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="@idVal" name="Val" value="@configValue" />
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="@idName" name="Name" value="@accName" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn btn-success" name="Submit" value="Save" />
+        </div>
+    </div>
+</form>
 <script type="text/javascript">
     var msg = '@postMessage';
     if (msg !== '') {
