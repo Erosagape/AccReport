@@ -109,54 +109,58 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
 
         Dim th = New AccReport.CUtil(ViewBag.WebIP, dbSource).GetDataFromSQL(String.Format(sqlH, yy, mm, tx))
         For Each rh As System.Data.DataRow In th.Rows
-            strHeader = "H" & "|"   '#1 HEADER
-            strHeader &= tr & "|"   '#2 รหัสผู้นำส่ง
-            If rh("TaxNumber2").ToString <> "" Then
-                strHeader &= rh("TaxNumber2").ToString & "|"    '#3 เลขประจำตัวผู้เสียภาษีอากรผู้นำส่ง
-                strHeader &= CInt("0" & rh("Branch2").ToString).ToString("000000") & "|"    '#4 สาขาที่ผู้นำส่ง
-                strHeader &= "3" & "|"   '#5 ประเภทการนำส่ง (1=ผู้หักภาษี 2=ตัวแทน 3=ตัวกลาง 4=ยื่นรวม)
+            If frm <> "1" Then
+                strHeader = "H" & "|"   '#1 HEADER
+                strHeader &= tr & "|"   '#2 รหัสผู้นำส่ง
+                If rh("TaxNumber2").ToString <> "" Then
+                    strHeader &= rh("TaxNumber2").ToString & "|"    '#3 เลขประจำตัวผู้เสียภาษีอากรผู้นำส่ง
+                    strHeader &= CInt("0" & rh("Branch2").ToString).ToString("000000") & "|"    '#4 สาขาที่ผู้นำส่ง
+                    strHeader &= "3" & "|"   '#5 ประเภทการนำส่ง (1=ผู้หักภาษี 2=ตัวแทน 3=ตัวกลาง 4=ยื่นรวม)
+                Else
+                    strHeader &= rh("TaxNumber1").ToString & "|"    '#3 เลขประจำตัวผู้เสียภาษีอากรผู้นำส่ง
+                    strHeader &= CInt("0" & rh("Branch1").ToString).ToString("000000") & "|"    '#4 สาขาที่ผู้นำส่ง
+                    strHeader &= "1" & "|"   '#5 ประเภทการนำส่ง (1=ผู้หักภาษี 2=ตัวแทน 3=ตัวกลาง 4=ยื่นรวม)
+                End If
+                If frm = "7" Then
+                    strHeader &= "PND53" & "|"   '#6 ประเภทแบบภาษี PND
+                End If
+                If frm = "4" Then
+                    strHeader &= "PND3" & "|"   '#6 ประเภทแบบภาษี PND
+                End If
+                strHeader &= rh("TaxNumber1").ToString & "|"    '#7 เลขประจำตัวผู้เสียภาษีอากรผู้มีหน้าที่หักภาษี
+                strHeader &= CInt("0" & rh("Branch1").ToString).ToString("000000") & "|"    '#8 สาขาที่ผู้มีหน้าที่หักภาษี
+                strHeader &= "สำนักงานใหญ่" & "|"    '#9 ชื่อแผนก/ส่วน/ฝ่าย (สํานักงานใหญ่ กรณีไม่ แยกนําส่งเป็นแผนก)
+                If CInt("0" & rh("TaxLawNo").ToString) = 1 Then
+                    strHeader &= "1" & "|"    '#10 มาตรา 3 เตรส
+                Else
+                    strHeader &= "0" & "|"    '#10 มาตรา 3 เตรส
+                End If
+                If CInt("0" & rh("TaxLawNo").ToString) = 2 Then
+                    strHeader &= "1" & "|"    '#11 มาตรา 48 ทวิ
+                Else
+                    strHeader &= "0" & "|"    '#11 มาตรา 48 ทวิ
+                End If
+                If CInt("0" & rh("TaxLawNo").ToString) = 3 Then
+                    strHeader &= "1" & "|"    '#12 มาตรา 50(3)(4)(5)
+                Else
+                    strHeader &= "0" & "|"    '#12 มาตรา 50(3)(4)(5)
+                End If
+                strHeader &= "0" & "|"    '#13 สถานะผู้ประกอบการรายใหญ่
+                strHeader &= CInt("0" & mm).ToString("00") & "|"    '#14 เดือนภาษี
+                strHeader &= CInt("0" & yy).ToString("0000") + 543 & "|"    '#15 ปีภาษี
+                strHeader &= "V" & "|"    '#16 ประเภทสาขา (V=สาขาภาษีมูลค่าเพิ่ม( S=สาขาภาษีธุรกิจเฉพาะ กรณีเป็นทั้งสอง ระบุ “V” กรณียื่นสื่อฯ ถ้าไม่มีค่าให้ระบุเป็น Null หรือ Pipe “|” ติดกัน)
+                strHeader &= CInt("0" & rh("SeqInForm").ToString).ToString("00") & "|"    '#17 ประเภทการยื่นแบบ
+                strHeader &= rh("TotalDoc") & "|"    '#18 รวมจำนวนราย
+                strHeader &= rh("TotalPayAmount") & "|"    '#19 รวมจำนวนเงินได้ทั้งสิ้น
+                strHeader &= rh("TotalPayTax") & "|"    '#20 รวมจำนวนเงินภาษีนำส่งทั้งสิ้น
+                strHeader &= "0.00" & "|"    '#21 จำนวนเงินเพิ่ม
+                strHeader &= rh("TotalPayTax") & "|"    '#22 จำนวนเงินยอดรวมภาษีนำส่งทั้งสิ้นและเงินเพิ่ม
+                strHeader &= "0.00" & "|"    '#23 จำนวนเงินโอนผ่านธนาคาร
+                strHeader &= tu & "|"    '#24 รหัส user
+                strHeader &= "1" & ""    '#25 ช่องทางการยื่นแบบ
             Else
-                strHeader &= rh("TaxNumber1").ToString & "|"    '#3 เลขประจำตัวผู้เสียภาษีอากรผู้นำส่ง
-                strHeader &= CInt("0" & rh("Branch1").ToString).ToString("000000") & "|"    '#4 สาขาที่ผู้นำส่ง
-                strHeader &= "1" & "|"   '#5 ประเภทการนำส่ง (1=ผู้หักภาษี 2=ตัวแทน 3=ตัวกลาง 4=ยื่นรวม)
+
             End If
-            If frm = "7" Then
-                strHeader &= "PND53" & "|"   '#6 ประเภทแบบภาษี PND
-            End If
-            If frm = "4" Then
-                strHeader &= "PND3" & "|"   '#6 ประเภทแบบภาษี PND
-            End If
-            strHeader &= rh("TaxNumber1").ToString & "|"    '#7 เลขประจำตัวผู้เสียภาษีอากรผู้มีหน้าที่หักภาษี
-            strHeader &= CInt("0" & rh("Branch1").ToString).ToString("000000") & "|"    '#8 สาขาที่ผู้มีหน้าที่หักภาษี
-            strHeader &= "สำนักงานใหญ่" & "|"    '#9 ชื่อแผนก/ส่วน/ฝ่าย (สํานักงานใหญ่ กรณีไม่ แยกนําส่งเป็นแผนก)
-            If CInt("0" & rh("TaxLawNo").ToString) = 1 Then
-                strHeader &= "1" & "|"    '#10 มาตรา 3 เตรส
-            Else
-                strHeader &= "0" & "|"    '#10 มาตรา 3 เตรส
-            End If
-            If CInt("0" & rh("TaxLawNo").ToString) = 2 Then
-                strHeader &= "1" & "|"    '#11 มาตรา 48 ทวิ
-            Else
-                strHeader &= "0" & "|"    '#11 มาตรา 48 ทวิ
-            End If
-            If CInt("0" & rh("TaxLawNo").ToString) = 3 Then
-                strHeader &= "1" & "|"    '#12 มาตรา 50(3)(4)(5)
-            Else
-                strHeader &= "0" & "|"    '#12 มาตรา 50(3)(4)(5)
-            End If
-            strHeader &= "0" & "|"    '#13 สถานะผู้ประกอบการรายใหญ่
-            strHeader &= CInt("0" & mm).ToString("00") & "|"    '#14 เดือนภาษี
-            strHeader &= CInt("0" & yy).ToString("0000") + 543 & "|"    '#15 ปีภาษี
-            strHeader &= "V" & "|"    '#16 ประเภทสาขา (V=สาขาภาษีมูลค่าเพิ่ม( S=สาขาภาษีธุรกิจเฉพาะ กรณีเป็นทั้งสอง ระบุ “V” กรณียื่นสื่อฯ ถ้าไม่มีค่าให้ระบุเป็น Null หรือ Pipe “|” ติดกัน)
-            strHeader &= CInt("0" & rh("SeqInForm").ToString).ToString("00") & "|"    '#17 ประเภทการยื่นแบบ
-            strHeader &= rh("TotalDoc") & "|"    '#18 รวมจำนวนราย
-            strHeader &= rh("TotalPayAmount") & "|"    '#19 รวมจำนวนเงินได้ทั้งสิ้น
-            strHeader &= rh("TotalPayTax") & "|"    '#20 รวมจำนวนเงินภาษีนำส่งทั้งสิ้น
-            strHeader &= "0.00" & "|"    '#21 จำนวนเงินเพิ่ม
-            strHeader &= rh("TotalPayTax") & "|"    '#22 จำนวนเงินยอดรวมภาษีนำส่งทั้งสิ้นและเงินเพิ่ม
-            strHeader &= "0.00" & "|"    '#23 จำนวนเงินโอนผ่านธนาคาร
-            strHeader &= tu & "|"    '#24 รหัส user
-            strHeader &= "1" & ""    '#25 ช่องทางการยื่นแบบ
 
             strDetail = ""
             Dim lastDoc = ""
@@ -173,7 +177,10 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
                 Catch ex As Exception
                     pDate = rd("PayDate").ToString()
                 End Try
-                strDetail &= vbCrLf
+
+                If strHeader <> "" Then
+                    strDetail &= vbCrLf
+                End If
                 strDetail &= "D" & "|"  '#1 DETAIL ต้องระบุเป็น D (ตัวพิมพ์ใหญ่)
                 strDetail &= rc & "|"  '#2 ลำดับที่
                 strDetail &= CInt("0" & rd("Branch3").ToString).ToString("000000") & "|"    '#3 สาขาผู้หักภาษี
@@ -193,28 +200,41 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
                 If frm = "7" Then
                     strDetail &= "บริษัท|"    '#6 คำนำหน้าชื่อ
                 End If
-                strDetail &= rd("TName3").ToString().Replace("บริษัท", "").Trim() & "|"    '#7 ชื่อผู้มีเงินได้
-                strDetail &= "|"    '#8 ชื่อสกุลผู้มีเงินได้
+                If frm <> "1" Then
+                    strDetail &= rd("TName3").ToString().Replace("บริษัท", "").Trim() & "|"    '#7 ชื่อผู้มีเงินได้
+                    strDetail &= "|"    '#8 ชื่อสกุลผู้มีเงินได้
+                Else
+                    Dim nme = rd("TName3").ToString()
+                    Dim array = (nme & "   ").Split(" ")
+                    strDetail &= array(0) & "|"    '#6 คำนำหน้าชื่อ
+                    strDetail &= array(1) & "|"    '#7 ชื่อผู้มีเงินได้
+                    strDetail &= array(2) & "|"    '#8 ชื่อสกุลผู้มีเงินได้
+                End If
                 strDetail &= pDate & "|"    '#9 วันเดือนปีที่จ่าย เงินได้รายการที่ 1
                 strDetail &= rd("PayRate").ToString() & "|"    '#10 อัตราภาษี
                 strDetail &= rd("PayAmount").ToString() & "|"    '#11 จำนวนเงินที่จ่าย
                 strDetail &= rd("PayTax").ToString() & "|"    '#12 จำนวนเงินภาษี
-                strDetail &= rd("PayTaxDesc").ToString() & "|"    '#13 ประเภทเงินได้
+                If frm = "1" Then
+                    strDetail &= "1|"    '#13 ประเภทเงินได้
+                Else
+                    strDetail &= rd("PayTaxDesc").ToString() & "|"    '#13 ประเภทเงินได้
+                End If
                 strDetail &= rd("PayTaxType").ToString() & "|"    '#14 เงื่อนไขการหักภาษี (1=หัก ณ ที่จ่าย, 2=ออกให้ตลอดไป, 3=ออกให้ครั้งเดียว ถ้าไม่มีค่าให้ระบุเป็น Null หรือ Pipe “|” ติดกัน)
-                strDetail &= "00000000|"    '#15 ข้อมูลเปล่าๆ รายการ 2
-                strDetail &= "|"    '#16
-                strDetail &= "|"    '#17
-                strDetail &= "|"    '#18
-                strDetail &= "|"    '#19
-                strDetail &= "|"    '#20
+                If frm <> "1" Then
+                    strDetail &= "00000000|"    '#15 ข้อมูลเปล่าๆ รายการ 2
+                    strDetail &= "|"    '#16
+                    strDetail &= "|"    '#17
+                    strDetail &= "|"    '#18
+                    strDetail &= "|"    '#19
+                    strDetail &= "|"    '#20
 
-                strDetail &= "00000000|"    '#21  ข้อมูลเปล่าๆ รายการ 3
-                strDetail &= "|"    '#22
-                strDetail &= "|"    '#23
-                strDetail &= "|"    '#24
-                strDetail &= "|"    '#25
-                strDetail &= "|"    '#26
-
+                    strDetail &= "00000000|"    '#21  ข้อมูลเปล่าๆ รายการ 3
+                    strDetail &= "|"    '#22
+                    strDetail &= "|"    '#23
+                    strDetail &= "|"    '#24
+                    strDetail &= "|"    '#25
+                    strDetail &= "|"    '#26
+                End If
                 strDetail &= rd("Address3").ToString()
 
                 'strDetail &= "|"    '#27 ชื่ออาคาร
@@ -247,6 +267,9 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
         End If
         If frm = "4" Then
             fname &= "3"
+        End If
+        If frm = "1" Then
+            fname &= "1"
         End If
         fname &= "_" & strTaxNo & "_" & CInt(strTaxBranch).ToString("000000") & "_" & CInt(yy) + 543 & "_" & CInt(mm).ToString("00")
         Response.AddHeader("content-disposition", "attachment; filename=PND" & fname & "_00_00.txt")
@@ -286,17 +309,11 @@ End Code
         </div>
         <div class="col-sm-6">
             @Code
-                If frm = "4" Then
-                    @<select name="FormType">
-                        <option value="4" selected>3</option>
-                        <option value="7">53</option>
-                    </select>
-                Else
-                    @<select name="FormType">
-                        <option value="4">3</option>
-                        <option value="7" selected>53</option>
-                    </select>
-                End If
+                @<select name="FormType">
+                    <option value="1" @(IIf(frm = "1", Html.AttributeEncode("selected"), ""))>1</option>
+                    <option value="4" @(IIf(frm = "4", Html.AttributeEncode("selected"), ""))>3</option>
+                    <option value="7" @(IIf(frm = "7", Html.AttributeEncode("selected"), ""))>53</option>
+                </select>
             End Code
         </div>
     </div>
