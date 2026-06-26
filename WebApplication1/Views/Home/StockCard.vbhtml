@@ -33,7 +33,7 @@
     sql &= " ORDER BY AccEffectiveDate,TransID"
 End Code
 <h2>@ViewBag.Title</h2>
-<div id="mdlProduct" class="modal modal-dialog">    
+<div id="mdlProduct" class="modal modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             Select Product
@@ -43,62 +43,65 @@ End Code
                 Dim sqlSelect = "select distinct StockProductCode,ProductName,WarehouseCode from vStock_Onhand"
                 Dim ds = obj.GetDataFromSQL(sqlSelect)
                 @<table border="1" class="table table-bordered table-responsive">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Code</th>
-                                <th>Name</th>
-                                <th>Warehouse</th>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Warehouse</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for Each dr As Data.DataRow In ds.Rows
+                            @<tr>
+                                <td data-dismiss="modal">
+                                    <input type="button" class="btn btn-success" onclick="SetData('@dr("StockProductCode")','@dr("WarehouseCode")')" value="Select" />
+                                </td>
+                                <td>@dr("StockProductCode")</td>
+                                <td>@dr("ProductName")</td>
+                                <td>@dr("WarehouseCode")</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @for Each dr As Data.DataRow In ds.Rows
-                                @<tr>
-                            <td data-dismiss="modal">
-                                <input type="button" class="btn btn-success" onclick="SetData('@dr("StockProductCode")','@dr("WarehouseCode")')" value="Select"/>
-                            </td>
-<td>@dr("StockProductCode")</td>
-<td>@dr("ProductName")</td>
-<td>@dr("WarehouseCode")</td>
-</tr>
-                            Next
-                        </tbody>
+                        Next
+                    </tbody>
                 </table>
             End Code
         </div>
         <div class="modal-footer">
-            <input type="button" data-dismiss="modal" class="btn btn-danger" value="Close"/>
+            <input type="button" data-dismiss="modal" class="btn btn-danger" value="Close" />
         </div>
-    </div>    
+    </div>
 </div>
 <div class="container">
     <div class="row">
         <div class="col-sm-3">
             <a href="#" data-target="#mdlProduct" data-toggle="modal">Product Code:</a>
             <br />
-            <input type="text" id="txtProductCode" value="@pdcode" />            
+            <input type="text" id="txtProductCode" value="@pdcode" />
         </div>
         <div Class="col-sm-3">
-            <Label> Warehouse :   </label>
+            <Label> Warehouse :   </Label>
             <br />
-            <input type = "text" id="txtWarehouseCode" value="@warehouse"/>
+            <input type="text" id="txtWarehouseCode" value="@warehouse" />
         </div>
         <div Class="col-sm-3">
-            <Label>Date From:</label>
+            <Label>Date From:</Label>
             <br />
-            <input type = "date" id="txtDateFrom" value="@dateFrom" />
+            <input type="date" id="txtDateFrom" value="@dateFrom" />
         </div>
         <div Class="col-sm-3">
             To
             <br />
-            <input type = "date" id="txtDateTo" value="@dateTo" />
+            <input type="date" id="txtDateTo" value="@dateTo" />
         </div>
     </div>
     <div Class="row">
-        <div Class="col">
-            <input type = "button" value="Show" Class="btn btn-success" onclick="RefreshPage()" />
+        <div Class="col-sm-1">
+            <input type="button" value="Show Data" Class="btn btn-success" onclick="RefreshPage()" />
         </div>
-    </div>        
+        <div Class="col-sm-1">
+            <input type="button" value="Print Report" Class="btn btn-primary" onclick="PrintReport()" />
+        </div>
+    </div>
 </div>
 <div Class="container-fluid">
     @Code
@@ -117,7 +120,7 @@ End Code
 
         dt = obj.GetDataFromSQL(sql)
 
-    @<table border="1" class="table table-bordered">
+        @<table border="1" class="table table-bordered">
             <thead>
                 <tr>
                     <th>Date</th>
@@ -130,54 +133,52 @@ End Code
                     <th>AMT</th>
                 </tr>
             </thead>
-        <tbody>
-            <tr>
-                <td></td>
-                <td>Balance</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="text-right">@avgPrice</td>
-                <td class="text-right">@balQty</td>
-                <td class="text-right">@balAmount</td>
-            </tr>
-            @For Each dr As Data.DataRow In dt.Rows
-                balQty += obj.GetDouble(dr("QtyIN"))
-                balQty -= obj.GetDouble(dr("QtyOUT"))
-                balAmount += obj.GetDouble(dr("AmountIN"))
-                balAmount -= obj.GetDouble(dr("AmountOUT"))
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>Balance</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-right">@avgPrice</td>
+                    <td class="text-right">@balQty</td>
+                    <td class="text-right">@balAmount</td>
+                </tr>
+                @For Each dr As Data.DataRow In dt.Rows
+                    balQty += obj.GetDouble(dr("QtyIN"))
+                    balQty -= obj.GetDouble(dr("QtyOUT"))
+                    balAmount += obj.GetDouble(dr("AmountIN"))
+                    balAmount -= obj.GetDouble(dr("AmountOUT"))
                     @<tr>
-    <td>
-        @Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
-    </td>
-    <td>
-        @dr("AccDocNo").ToString()
-    </td>
-    <td>
-        @dr("PartyName").ToString()
-    </td>
-    <td class="text-right">
-        @dr("QtyIN")
-    </td>
-    <td class="text-right">
-        @dr("QtyOUT")
-    </td>
-    <td class="text-right">
-        @dr("Price")
-    </td>
-    <td class="text-right">
-        @balQty
-    </td>
-    <td class="text-right">
-        @balAmount
-    </td>
-</tr>
-            Next
-        </tbody>
-    </table>
-
-
-        End Code
+                        <td>
+                            @Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @dr("AccDocNo").ToString()
+                        </td>
+                        <td>
+                            @dr("PartyName").ToString()
+                        </td>
+                        <td class="text-right">
+                            @dr("QtyIN")
+                        </td>
+                        <td class="text-right">
+                            @dr("QtyOUT")
+                        </td>
+                        <td class="text-right">
+                            @dr("Price")
+                        </td>
+                        <td class="text-right">
+                            @balQty
+                        </td>
+                        <td class="text-right">
+                            @balAmount
+                        </td>
+                    </tr>
+                Next
+            </tbody>
+        </table>
+    End Code
 </div>
 
 <script type="text/javascript">
@@ -191,6 +192,12 @@ End Code
         let dateTo = document.getElementById('txtDateTo').value;
         let productCode = document.getElementById('txtProductCode').value;
         window.location.href = "?Form=StockCard&DB=@dbname&SRC=@dbSource&Code="+ productCode +"&DateFrom="+ dateFrom + "&DateTo=" + dateTo + "&WH=" + warehouseCode;
+    }
+    function PrintReport() {
+        let dateFrom = document.getElementById('txtDateFrom').value;
+        let dateTo = document.getElementById('txtDateTo').value;
+        let productCode = document.getElementById('txtProductCode').value;
+        window.location.href = "?Form=ReportStock&DB=@dbname&SRC=@dbSource&Code="+ productCode +"&DateFrom="+ dateFrom + "&DateTo=" + dateTo;
     }
 </script>
 

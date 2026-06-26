@@ -34,7 +34,11 @@
     If Not Request.QueryString("SUM") Is Nothing Then
         typereport = Request.QueryString("SUM")
     End If
-    Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}',1", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"))
+    Dim groupreport As String = "0"
+    If Not Request.QueryString("GROUP") Is Nothing Then
+        groupreport = Request.QueryString("GROUP")
+    End If
+    Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}',{3}", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"), groupreport)
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
     Dim dbSource = ViewBag.AccDatabase
@@ -50,20 +54,20 @@
             sql = "select *,ABS(SUM(CASE WHEN JournalNo<>'-' THEN Debit-Credit ELSE 0 END) OVER(PARTITION BY AccCode ORDER BY ItemNo)) as Balance
 from (
 SELECT *,ROW_NUMBER() OVER (order by AccCode) as ItemNo FROM (
-select 0 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail 
-from Acc_TempGL
-where JournalNo=''
-group by AccRemark,JournalNo,AccCode,AccName,AccDetail
-union all
-select 1 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail 
-from Acc_TempGL
-where JournalNo NOT IN('-','')
-group by AccRemark,JournalNo,AccCode,AccName,AccDetail
-union all
-select 2 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail 
-from Acc_TempGL
-where JournalNo='-'
-group by AccRemark,JournalNo,AccCode,AccName,AccDetail
+    select 0 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail 
+    from Acc_TempGL
+    where JournalNo=''
+    group by AccRemark,JournalNo,AccCode,AccName,AccDetail
+    union all
+    select 1 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail 
+    from Acc_TempGL
+    where JournalNo NOT IN('-','')
+    group by AccRemark,JournalNo,AccCode,AccName,AccDetail
+    union all
+    select 2 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail 
+    from Acc_TempGL
+    where JournalNo='-'
+    group by AccRemark,JournalNo,AccCode,AccName,AccDetail
 ) t
 ) src"
             dt = obj.GetDataFromSQL(sql)

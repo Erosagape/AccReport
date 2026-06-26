@@ -20,9 +20,10 @@
         @@page {
             size: A3 landscape
         }
-table {
+        table {
             margin-top:5px;
             margin-bottom:5px;
+            border-style:solid;
         }
         th,td {
             padding:2px 2px 2px 2px;
@@ -40,6 +41,9 @@ table {
         }
         .colnum {
             text-align:right;
+        }
+        table[border="1"] > th,table[border="1"] td {
+            border-style:solid;
         }
     </style>
 </head>

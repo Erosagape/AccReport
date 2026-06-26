@@ -159,6 +159,16 @@ End Code
                     <a href="#" onclick="OpenForm('CashFlow')">งบกระแสเงินสด</a>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="#" onclick="OpenForm('ReportCompare','&TYPE=Y')">งบเปรียบเทียบรายปี</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="#" onclick="OpenForm('ReportCompare','&TYPE=Q')">งบเปรียบเทียบตามไตรมาส</a>
+                </div>
+            </div>
         </div>
         <div class="col-sm-8" style="padding: 5px 5px 5px 5px; text-align: center;">
             <img src="~/OverView.png" style="width:100%;" />
@@ -201,8 +211,8 @@ End Code
 </div>
 
 <script type="text/javascript">
-    function OpenForm(fname) {
+    function OpenForm(fname,param='') {
         let period = document.getElementById('txtPeriod').value;
-        window.open("?Form=" + fname + "&LANG=TH&DB=@dbname&SRC=@dbSource&Period=" + period,'_blank');
+        window.open("?Form=" + fname + "&LANG=TH&DB=@dbname&SRC=@dbSource&Period=" + period + param,'_blank');
     }
 </script>

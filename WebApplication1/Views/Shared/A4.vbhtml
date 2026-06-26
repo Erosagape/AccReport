@@ -44,6 +44,9 @@
             background-color:darkblue;
             color:white;
         }
+        table[border="1"] > th,table[border="1"] td {
+            border-style:solid;
+        }
     </style>
 </head>
 

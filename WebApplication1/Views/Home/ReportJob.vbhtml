@@ -16,11 +16,11 @@
     Dim dtTrans As New Data.DataTable
     Dim JobNo As String = ""
     Dim sql As String = "
-select JournalNo,EntryDate,AccCode,AccName,AccDesc,
+select JournalNo,EntryDate,AccCode,AccName,AccRemark as AccDesc,
 sum(Debit) as Debit,sum(Credit) as Credit
-from vJournal_All where AccRemark='{0}'
-group by EntryDate,JournalNo,AccCode,AccName,AccDesc
-order by EntryDate,JournalNo,6 DESC,7
+from vJournal_All where AccDesc='{0}'
+group by EntryDate,JournalNo,AccCode,AccName,AccRemark
+order by EntryDate,JournalNo,Debit,Credit
 "
     Dim sqlSum As String = "
 select * from (
@@ -28,7 +28,7 @@ select AccCode,AccName,
 sum(Debit) as Debit,sum(Credit) as Credit,
 (case when Sum(Debit)>Sum(Credit) then Sum(Debit)-Sum(Credit) else 0 end) as BalDebit,
 (case when Sum(Debit)<Sum(Credit) then Sum(Credit)-Sum(Debit) else 0 end) as BalCredit
-from vJournal_All where AccRemark='{0}'
+from vJournal_All where AccDesc='{0}'
 group by AccCode,AccName
 union all
 select b.AccCode,b.AccName,
@@ -36,7 +36,7 @@ sum(Debit) as Debit,sum(Credit) as Credit,
 (case when Sum(Debit)>Sum(Credit) then Sum(Debit)-Sum(Credit) else 0 end) as BalDebit,
 (case when Sum(Debit)<Sum(Credit) then Sum(Credit)-Sum(Debit) else 0 end) as BalCredit
 from vJournal_All a,vMas_AccCode b 
-where AccRemark='{0}' and b.AccCode=dbo.GetAccConfig('GL_CONFIG','ProfitLoss')
+where AccDesc='{0}' and b.AccCode=dbo.GetAccConfig('GL_CONFIG','ProfitLoss')
 and substring(a.AccCode,1,1)>='4' and substring(a.AccCode,1,1)<='5'
 group by b.AccCode,b.AccName
 ) t
@@ -66,6 +66,10 @@ End Code
 <form method="post" action="">
     <input type="text" id="txtJNo" name="JobNo" value="@JobNo" />
     <input type="submit" value="Show Posted Data" />
+    <br />
+    @If bPost Then
+        @<b>Journal Lists</b>
+    End If
     <table id="tbJournal" border="1" style="border-collapse:collapse;border-style:solid;border-width:thin">
         @If dt.Rows.Count > 0 Then
             @<thead>
@@ -153,9 +157,7 @@ End Code
             </tbody>
         End If
     </table>
-    @If bPost Then
-        @<b>Transaction Lists</b>
-    End If
+
     <table id="tbTrans" border="1" style="border-collapse:collapse;border-style:solid;border-width:thin">
         @If dtTrans.Rows.Count > 0 Then
             Dim chk As String = ""
@@ -172,8 +174,8 @@ End Code
                 @For each dr As Data.DataRow In dtTrans.Rows
                     If chk <> dr("AccDocType").ToString() Then
                         @<tr>
-                             <td colspan="5"><b>@dr("AccDocType").ToString() / @dr("AccDocTypeName").ToString()</b></td>
-                         </tr>
+                            <td colspan="5"><b>@dr("AccDocType").ToString() / @dr("AccDocTypeName").ToString()</b></td>
+                        </tr>
                         chk = dr("AccDocType").ToString()
                     End If
                     @<tr>

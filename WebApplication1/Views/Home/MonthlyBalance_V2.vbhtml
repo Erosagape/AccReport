@@ -8,7 +8,7 @@
     }
 </style>
 @Code
-    Layout = "~/Views/Shared/Report.vbhtml"
+    Layout = "~/Views/Shared/A4_Landscape.vbhtml"
     ViewData("Title") = "Monthly Balance"
     Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then

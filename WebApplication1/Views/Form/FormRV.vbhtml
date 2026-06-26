@@ -1,9 +1,4 @@
-﻿<style>
-    #topMenu {
-        display: none;
-    }
-</style>
-@Code
+﻿@Code
     Layout = "~/Views/Shared/A4.vbhtml"
     ViewData("Title") = "FormRV"
     Dim docno As String = ""
@@ -46,32 +41,37 @@ select * from vJournal_All where JournalNo='{0}' order by AccCode
         totalCredit = Convert.ToDouble(dt.Rows(0)("TotalCredit"))
     End If
 End Code
-<h2>Receive Voucher / ใบสำคัญรับ</h2>
-<div style="display:flex;flex-direction:row;">
-    <div style="text-align: left;flex: 60%;">
-        <table style="width:100%">
-            <tr>
-                <td><b>Description<br />คำอธิบาย : </b></td>
-            </tr>
-            <tr>
-                <td>@description</td>
-            </tr>
-        </table>
-    </div>
-    <div style="text-align:right;flex:40%;">
-        <table style="width:100%">
-            <tr>
-                <td><b>Voucher No<br />เลขที่เอกสาร :</b></td>
-                <td><a href="?Form=Journal&SRC=@dbSource&DB=@dbName&Code=@voucherNo">@voucherNo</a></td>
-            </tr>
-            <tr>
-                <td><b>Effective Date<br />วันที่ลงบัญชี :</b></td>
-                <td>@effectiveDate</td>
-            </tr>
-        </table>
-    </div>
-</div>
+<style>
+    #topMenu {
+        display: none;
+    }
+</style>
 @If voucherNo <> "" Then
+    @<h2>Receive Voucher / ใบสำคัญรับ</h2>
+    @<div style="display:flex;flex-direction:row;">
+        <div style="text-align: left;flex: 60%;">
+            <table style="width:100%">
+                <tr>
+                    <td><b>Description<br />คำอธิบาย : </b></td>
+                </tr>
+                <tr>
+                    <td>@Html.Raw(description)</td>
+                </tr>
+            </table>
+        </div>
+        <div style="text-align:right;flex:40%;">
+            <table style="width:100%">
+                <tr>
+                    <td><b>Voucher No<br />เลขที่เอกสาร :</b></td>
+                    <td><a href="?Form=Journal&SRC=@dbSource&DB=@dbName&Code=@voucherNo">@voucherNo</a></td>
+                </tr>
+                <tr>
+                    <td><b>Effective Date<br />วันที่ลงบัญชี :</b></td>
+                    <td>@effectiveDate</td>
+                </tr>
+            </table>
+        </div>
+    </div>
     sql = "select a.* from vTransaction_All a where exists(select 1 from vJournal_All where JournalNo='{0}' and Description=a.AccDocNo)"
     Dim dt1 = obj.GetDataFromSQL(String.Format(sql, voucherNo))
     If dt1.Rows.Count > 0 Then
@@ -85,7 +85,8 @@ End Code
             <tr>
                 <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b>@dt1.Rows(0)("PartyTaxCode")</td>
             </tr>
-        </table>Else
+        </table>
+    Else
         @obj.Message
     End If
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
@@ -124,7 +125,7 @@ End Code
                         accname = dr("AccName")
                         If rptSum = False Then
                             @<tr style="font-weight:bold;color:darkred;background-color:lightyellow;">
-                                <td colspan="6">@accname</td>
+                                <td colspan="5">@accname</td>
                             </tr>
                         End If
                     End If
@@ -152,13 +153,25 @@ End Code
                 Next
             End If
             @For i As Integer = 1 To totalRows - dt.Rows.Count
-                @<tr>
-                    <td><br /></td>
-                    <td></td>
-                    @IIf(rptSum = False, <td></td>, "")
-                    <td></td>
-                    <td></td>
-                </tr>
+                If rptSum = False Then
+                    @<tr>
+                        <td><br /></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                Else
+                    @<tr>
+                        <td><br /></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                End If
             Next
         </tbody>
         <tfoot>
@@ -203,7 +216,7 @@ End Code
             <tr>
                 <td colspan="2" style="background-color:lightyellow;">Total Net</td>
                 <td class="colnum">@Convert.ToDouble(dt1.Rows(0)("TotalNet")).ToString("#,###,#0.00")</td>
-            </tr>            
+            </tr>
         </table>
     End If
     @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">

@@ -17,7 +17,7 @@
         dateFrom = Request.QueryString("DateFrom")
         sqlW &= String.Format(" AND AccBatchDate>='{0}'", dateFrom)
     End If
-    Dim dateTo = DateAdd("d",-1,DateAdd("m", 1, New Date(DateTime.Now.Year, Now.Month, 1)))
+    Dim dateTo = DateAdd("d", -1, DateAdd("m", 1, New Date(DateTime.Now.Year, Now.Month, 1)))
     If Not Request.QueryString("DateTo") Is Nothing Then
         dateTo = Request.QueryString("DateTo")
         sqlW &= String.Format(" AND AccBatchDate<='{0}'", dateTo)
@@ -58,10 +58,10 @@ End Code
         If qry <> "" Then
             @<h4>Filter :*@qry*</h4>
         End If
-        Dim totalVat As Double=0
-        Dim totalWht As Double=0
-        Dim totalNet As Double=0
-        Dim totalPay As Double=0
+        Dim totalVat As Double = 0
+        Dim totalWht As Double = 0
+        Dim totalNet As Double = 0
+        Dim totalPay As Double = 0
         @<table>
             <thead>
                 <tr>
@@ -79,10 +79,10 @@ End Code
             </thead>
             <tbody>
                 @For each rh As Data.DataRow In dh.Rows
-                    totalVat+=obj.GetDouble(rh("TotalVat"))
-                    totalWht+=obj.GetDouble(rh("TotalWht"))
-                    totalNet+=obj.GetDouble(rh("TotalNet"))
-                    totalPay+=obj.GetDouble(rh("TotalPay"))
+                    totalVat += obj.GetDouble(rh("TotalVat"))
+                    totalWht += obj.GetDouble(rh("TotalWht"))
+                    totalNet += obj.GetDouble(rh("TotalNet"))
+                    totalPay += obj.GetDouble(rh("TotalPay"))
                     @<tr style="font-weight:bold;">
                         <td>@rh("AccDocNo")</td>
                         <td>
@@ -98,7 +98,7 @@ End Code
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalNet")).ToString("#,##0.00") </td>
                         <td style="text-align:right">@Convert.ToDouble(rh("TotalPay")).ToString("#,##0.00") </td>
                         <td>@rh("OverdueDays")</td>
-                    </tr>                
+                    </tr>
                 Next
             </tbody>
             <tfoot>

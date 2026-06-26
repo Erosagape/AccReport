@@ -151,12 +151,12 @@ end
         If Not Request.Form("chkRInv") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
         procName = "Insert_ReceiptToJournal_V3"
         sql = "
-if '" & Request.Form("chkRPay") & "'='ON'
+if '" & Request.Form("chkRTax") & "'='ON'
 begin
     EXEC dbo." & procName & " '{0}','{1}'
 end
 "
-        If Not Request.Form("chkRPay") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
+        If Not Request.Form("chkRTax") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
         procName = "Insert_RVFromJob_V2"
         sql = "
 if '" & Request.Form("chkRPay") & "'='ON'
@@ -227,21 +227,22 @@ End Code
             </td>
             <td>
                 บัญชีจ่าย/ซิ้อเงินสด <br />
-                2.1 <input type="checkbox"  id="chkPAdv" name="chkPAdv" /> บันทึกบัญชีจ่ายเงินตามใบเบิกค่าใช้จ่าย <br />
-                2.2 <input type="checkbox"  id="chkPExpAdv" name="chkPExpAdv" /> บันทึกบัญชีเคลียร์ปิดค่าใช้จ่ายใบเบิก <br />
-                2.3 <input type="checkbox"  id="chkPExpClr" name="chkPExpClr" /> บันทึกบัญชีค่าใช้จ่ายจากใบเคลียร์ <br />
-                2.4 <input type="checkbox"  id="chkPCost" name="chkPCost" /> บันทึกบัญชีปิดต้นทุนจากใบเคลียร์ <br />
+                2.1 <input type="checkbox" id="chkPAdv" name="chkPAdv" /> บันทึกบัญชีจ่ายเงินตามใบเบิกค่าใช้จ่าย <br />
+                2.2 <input type="checkbox" id="chkPExpAdv" name="chkPExpAdv" /> บันทึกบัญชีเคลียร์ปิดค่าใช้จ่ายใบเบิก <br />
+                2.3 <input type="checkbox" id="chkPExpClr" name="chkPExpClr" /> บันทึกบัญชีค่าใช้จ่ายจากใบเคลียร์ <br />
+                2.4 <input type="checkbox" id="chkPCost" name="chkPCost" /> บันทึกบัญชีปิดต้นทุนจากใบเคลียร์ <br />
                 บัญชีเจ้าหนี้/ซื้อเงินเชื่อ <br />
-                2.5 <input type="checkbox"  id="chkPInv" name="chkPInv" /> บันทึกบัญชีตั้งเจ้าหนี้จากใบรับวางบิล <br />
-                2.6 <input type="checkbox"  id="chkPExpBill" name="chkPExpBill" /> บันทึกบัญชีค่าใช้จ่ายจากใบรับวางบิล <br />
-                2.7 <input type="checkbox"  id="chkPBill" name="chkPBill" /> บันทึกบัญชีจ่ายชำระหนี้จากใบรับวางบิล <br />
+                2.5 <input type="checkbox" id="chkPInv" name="chkPInv" /> บันทึกบัญชีตั้งเจ้าหนี้จากใบรับวางบิล <br />
+                2.6 <input type="checkbox" id="chkPExpBill" name="chkPExpBill" /> บันทึกบัญชีค่าใช้จ่ายจากใบรับวางบิล <br />
+                2.7 <input type="checkbox" id="chkPBill" name="chkPBill" /> บันทึกบัญชีจ่ายชำระหนี้จากใบรับวางบิล <br />
                 บัญชีรับ/ขายเงินสด <br />
-                2.8 <input type="checkbox"  id="chkRInv" name="chkRInv" /> บันทึกบัญชีตั้งลูกหนี้จากใบแจ้งหนี้ <br />
-                2.9 <input type="checkbox"  id="chkRPay" name="chkRPay" /> บันทึกบัญชีรับชำระหนี้จากลูกค้า <br />
-                2.10 <input type="checkbox"  id="chkRCN" name="chkRCN" /> บันทึกบัญชีปรับปรุงลูกหนี้จากใบเพิ่มหนี้/ลดหนี้ <br />
+                2.8 <input type="checkbox" id="chkRInv" name="chkRInv" /> บันทึกบัญชีตั้งลูกหนี้จากใบแจ้งหนี้ <br />
+                2.9 <input type="checkbox" id="chkRTax" name="chkRTax" /> บันทึกบัญชีใบเสร็จรับเงิน/ใบกำกับภาษี <br />
+                2.10 <input type="checkbox" id="chkRPay" name="chkRPay" /> บันทึกบัญชีรับชำระหนี้จากลูกค้า <br />
+                2.11 <input type="checkbox" id="chkRCN" name="chkRCN" /> บันทึกบัญชีปรับปรุงลูกหนี้จากใบเพิ่มหนี้/ลดหนี้ <br />
                 บัญชีอื่นๆ <br />
-                2.11 <input type="checkbox"  id="chkPClrAdv" name="chkPClrAdv" /> เคลียร์เงินทดรองคงค้างจากการเบิกค่าใช้จ่าย <br />
-                2.12 <input type="checkbox"  id="chkPClrOth" name="chkPClrOth" /> เคลียร์เงินทดรองคงค้างจากใบเคลียร์ <br />
+                2.12 <input type="checkbox" id="chkPClrAdv" name="chkPClrAdv" /> เคลียร์เงินทดรองคงค้างจากการเบิกค่าใช้จ่าย <br />
+                2.13 <input type="checkbox" id="chkPClrOth" name="chkPClrOth" /> เคลียร์เงินทดรองคงค้างจากใบเคลียร์ <br />
             </td>
         </tr>
     </table>

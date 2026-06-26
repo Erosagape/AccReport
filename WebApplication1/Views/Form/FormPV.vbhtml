@@ -20,7 +20,7 @@
     End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql = "
-select * from vJournal_All where JournalNo='{0}' order by ItemNo
+select * from vJournal_All where JournalNo='{0}' order by AccName,ItemNo
 "
 
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
@@ -93,8 +93,8 @@ End Code
                 For Each dr As Data.DataRow In dt.Rows
 	        totalDebit += Convert.ToDouble(dr("Debit"))
         	totalCredit += Convert.ToDouble(dr("Credit"))
-                    If accname <> dr("AccRemark") Then
-                        accname = dr("AccRemark")
+                    If accname <> dr("AccName").ToString() Then
+                        accname = dr("AccName").ToString()
                         @<tr>
                                <td colspan="6" style="font-weight:bold;color:darkred">@accname</td>
                         </tr>
@@ -104,7 +104,7 @@ End Code
                             @dr("AccCode").ToString()
                         </td>
                         <td>
-                            @dr("AccName").ToString()
+                            @dr("AccRemark").ToString()
                         </td>
                         <td>
                             @dr("AccDesc").ToString()
