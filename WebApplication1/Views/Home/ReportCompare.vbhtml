@@ -105,6 +105,8 @@ End Code
         <input type="submit" value="Generate Report" name="SubmitDate" class="btn btn-primary" />
     </form>
     If dt.Rows.Count > 0 Then
+        Dim dateFrom = Request.Form("DateBegin")
+        Dim dateTo = Request.Form("DateEnd")
         @<h2>@cliteria</h2>
         @<table class="table table-bordered table-striped">
             <thead>
@@ -130,7 +132,9 @@ End Code
             <tbody>
                 @For Each row As Data.DataRow In dt.Rows
                     @<tr>
-                        <td>@row("AccCode").ToString()</td>
+                         <td>
+                             <a href="?Form=GeneralLedger&SRC=@dbSource&DB=@dbname&Code=@row("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@row("AccCode").ToString()</a>
+                         </td>
                         <td>@row("AccName").ToString()</td>
                         <td class="colnum">@Convert.ToDecimal(row("Dr_Before")).ToString("N2")</td>
                         <td class="colnum">@Convert.ToDecimal(row("Cr_Before")).ToString("N2")</td>
@@ -159,6 +163,8 @@ End If
         <input type="submit" value="Generate Report" name="SubmitYear" class="btn btn-primary" />
     </form>
     If dt.Rows.Count > 0 Then
+        Dim dateFrom = New Date(fiscalYear, 1, 1).ToString("yyyy-MM-dd")
+        Dim dateTo = New Date(fiscalYear, 12, 31).ToString("yyyy-MM-dd")
         @<h2>@cliteria</h2>
         @<table class="table table-bordered table-striped">
             <thead>
@@ -185,7 +191,9 @@ End If
             <tbody>
                 @For Each row As Data.DataRow In dt.Rows
                     @<tr>
-                        <td>@row("AccCode").ToString()</td>
+                        <td>
+                            <a href="?Form=GeneralLedger&SRC=@dbSource&DB=@dbname&Code=@row("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@row("AccCode").ToString()</a>
+                        </td>
                         <td>@row("AccName").ToString()</td>
                         <td class="colnum">@Convert.ToDecimal(row("Dr_LastYear")).ToString("N2")</td>
                         <td class="colnum">@Convert.ToDecimal(row("Cr_LastYear")).ToString("N2")</td>
@@ -250,7 +258,9 @@ End If
                 @For Each row As Data.DataRow In dt.Rows
                     If quarter > 0 Then
                         @<tr>
-                            <td>@row("AccCode").ToString()</td>
+                            <td>
+                                @row("AccCode").ToString()
+                            </td>
                             <td>@row("AccName").ToString()</td>
                             @If "1,5".Contains(row("AccCode").ToString().Substring(0, 1)) Then
                                 If Convert.ToDecimal(row("Dr_LQ" & quarter)) > 0.0 Then
@@ -287,7 +297,9 @@ End If
                         </tr>
                     Else
                         @<tr>
-                            <td>@row("AccCode").ToString()</td>
+                            <td>
+                                @row("AccCode").ToString()
+                            </td>
                             <td>@row("AccName").ToString()</td>
                             @For i As Integer = 1 To 4
                                 If "1,5".Contains(row("AccCode").ToString().Substring(0, 1)) Then

@@ -331,6 +331,7 @@
     <Content Include="Views\Home\TransferJob_TH.vbhtml" />
     <Content Include="Views\Form\FormWHTax3D.vbhtml" />
     <Content Include="Views\Form\FormWHTax53D.vbhtml" />
+    <Content Include="Views\Home\ReportCompare.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

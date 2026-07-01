@@ -34,11 +34,15 @@
     If Not Request.QueryString("SUM") Is Nothing Then
         typereport = Request.QueryString("SUM")
     End If
+    Dim filterreport As String = ""
+    If Not Request.QueryString("FILTER") Is Nothing Then
+        filterreport = Request.QueryString("FILTER")
+    End If
     Dim groupreport As String = "0"
     If Not Request.QueryString("GROUP") Is Nothing Then
         groupreport = Request.QueryString("GROUP")
     End If
-    Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}',{3}", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"), groupreport)
+    Dim sql As String = String.Format("EXEC dbo.Generate_ReportGL '{0}','{1}','{2}',{3},'{4}'", accCode, dateFrom.ToString("yyyy-MM-dd"), dateTo.ToString("yyyy-MM-dd"), groupreport, filterreport)
     'Dim cnnStr = "Data Source=.;Initial Catalog=AccConcept;User id=sa;Password='9t;yogm851';Persist Security Info=False"
     'Dim obj = New AccReport.CUtil(cnnStr)
     Dim dbSource = ViewBag.AccDatabase
@@ -157,7 +161,7 @@ End If
                                 End If
                             </td>
                             <td colspan="5">
-                                    @dr("AccDetail")
+                                @dr("AccDetail")
                             </td>
                         </tr>
                         groupVal = dr("JournalNo")
@@ -233,8 +237,11 @@ End If
                     End If
                     i += 1
                     If i >= 1 Then
-                        sumDebit += obj.GetDouble(dr("Debit"))
-                        sumCredit += obj.GetDouble(dr("Credit"))
+                        If i > 1 And i < dt.Rows.Count Then
+                            sumDebit += obj.GetDouble(dr("Debit"))
+                            sumCredit += obj.GetDouble(dr("Credit"))
+                        End If
+
                         groupDebit += obj.GetDouble(dr("Debit"))
                         groupCredit += obj.GetDouble(dr("Credit"))
                     End If
@@ -262,6 +269,16 @@ End If
                     </tr>
                 End If
             Next
+            @If typereport = "Y" Then
+                @<tr style="font-weight:bold">
+                    <td></td>
+                    <td>TOTAL</td>
+                    <td style="text-align:right;">@sumDebit.ToString("#,##0.00")</td>
+                    <td style="text-align:right;">@sumCredit.ToString("#,##0.00")</td>
+                    <td style="text-align:right;"></td>                    
+                    <td></td>
+                </tr>
+            End If
         </tbody>
     </table>
 </div>
