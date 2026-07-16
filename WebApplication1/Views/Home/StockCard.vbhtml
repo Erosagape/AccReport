@@ -33,7 +33,7 @@
     sql &= " ORDER BY AccEffectiveDate,TransID"
 End Code
 <h2>@ViewBag.Title</h2>
-<div id="mdlProduct" class="modal modal-dialog">
+<div id="mdlProduct" class="modal" role="dialog">
     <div class="modal-content">
         <div class="modal-header">
             Select Product

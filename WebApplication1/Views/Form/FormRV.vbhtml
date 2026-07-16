@@ -110,7 +110,7 @@ End Code
                     If accname <> dr("AccName") Then
                         If sumDr > 0 Or sumCr > 0 Then
                             @<tr style=@IIf(rptSum = False, "font-weight:bold;background-color:lightblue;color:darkblue", "")>
-                                <td>@dr("AccCode")</td>
+                                <td>SUM</td>
                                 <td colspan=@IIf(rptSum = False, "2", "1")>@accname</td>
                                 <td class="colnum">
                                     @sumDr.ToString("#,###,##0.00")
@@ -151,6 +151,16 @@ End Code
                         </tr>
                     End If
                 Next
+                @<tr style=@IIf(rptSum = False, "font-weight:bold;background-color:lightblue;color:darkblue", "")>
+                    <td>SUM</td>
+                    <td colspan=@IIf(rptSum = False, "2", "1")>@accname</td>
+                    <td class="colnum">
+                        @sumDr.ToString("#,###,##0.00")
+                    </td>
+                    <td class="colnum">
+                        @sumCr.ToString("#,###,##0.00")
+                    </td>
+                </tr>
             End If
             @For i As Integer = 1 To totalRows - dt.Rows.Count
                 If rptSum = False Then

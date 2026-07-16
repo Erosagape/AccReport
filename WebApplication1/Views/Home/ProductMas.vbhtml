@@ -344,8 +344,8 @@ end
 if not exists(select 1 from Mas_Products where ProductCode='{0}')
 begin
 insert into Mas_Products(ProductCode,ProductName,Brand,[Color],[Size],SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode,
-AssetAccCode,IncomeAccCode,ExpenseAccCode)
-select '{0}','{1}','{2}','{3}',{4},'{5}',{6},'{7}','{8}','{9}','{10}','{11}','{12}';
+AssetAccCode,IncomeAccCode,ExpenseAccCode,WarehouseCode)
+select '{0}','{1}','{2}','{3}',{4},'{5}',{6},'{7}','{8}','{9}','{10}','{11}','{12}','{13}';
 end
 else
 begin
@@ -354,15 +354,17 @@ set ProductName='{1}',
 Brand='{2}',[Color]='{3}',
 [Size]={4},SizeUnit='{5}',
 [Volume]={6},VolumeUnit='{7}',
-UnitStock='{8}',ProductTypeCode='{9}',
+UnitStock='{8}',
+ProductTypeCode='{9}',
 AssetAccCode='{10}',
 IncomeAccCode='{11}',
-ExpenseAccCode='{12}'
+ExpenseAccCode='{12}',
+WarehouseCode='{13}'
 where ProductCode='{0}'
 end
 "
         tsql = String.Format(tsql, ProductCode, ProductName, ProductBrand, ProductColor, ProductSize, ProductSizeUnit,
-  ProductVolume, ProductVolumeUnit, ProductUnitStock, ProductTypeCode, AssetCode, IncomeCode, ExpenseCode)
+  ProductVolume, ProductVolumeUnit, ProductUnitStock, ProductTypeCode, AssetCode, IncomeCode, ExpenseCode, WarehouseCode)
         msg = obj.ExecuteSQL(tsql)
         If msg.Equals("OK") = False Then
             @<span>@msg</span>

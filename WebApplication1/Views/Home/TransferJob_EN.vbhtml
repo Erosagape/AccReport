@@ -109,14 +109,6 @@ begin
 end
 "
         If Not Request.Form("chkPExpClr") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_CostFromAdvance"
-        sql = "
-if '" & Request.Form("chkPCost") & "'='ON'
-begin
-    EXEC dbo." & procName & " '{0}','{1}'
-end
-"
-        If Not Request.Form("chkPCost") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
         procName = "Insert_BillPayToJournal_V3"
         sql = "
 if '" & Request.Form("chkPInv") & "'='ON'
@@ -230,19 +222,18 @@ End Code
                 2.1 <input type="checkbox" id="chkPAdv" name="chkPAdv" /> Advance Payment (PV-A)<br />
                 2.2 <input type="checkbox" id="chkPExpAdv" name="chkPExpAdv" /> Clear Advance Entry (AJ-A)<br />
                 2.3 <input type="checkbox" id="chkPExpClr" name="chkPExpClr" /> Expense From Clearing (AJ-C) <br />
-                2.4 <input type="checkbox" id="chkPCost" name="chkPCost" /> Cost From Advance (PV-C)<br />
                 Payables <br />
-                2.5 <input type="checkbox" id="chkPInv" name="chkPInv" /> A/P Setup (PI)<br />
-                2.6 <input type="checkbox" id="chkPExpBill" name="chkPExpBill" /> Expense From Bill (AJ-P)<br />
-                2.7 <input type="checkbox" id="chkPBill" name="chkPBill" /> A/P Payment (PV-P)<br />
+                2.4 <input type="checkbox" id="chkPInv" name="chkPInv" /> A/P Setup (PI)<br />
+                2.5 <input type="checkbox" id="chkPExpBill" name="chkPExpBill" /> Expense From Bill (AJ-P)<br />
+                2.6 <input type="checkbox" id="chkPBill" name="chkPBill" /> A/P Payment (PV-P)<br />
                 Receivables <br />
-                2.8 <input type="checkbox" id="chkRInv" name="chkRInv" /> A/R Invoice (SI)<br />
-                2.9 <input type="checkbox" id="chkRTax" name="chkRTax" /> A/R Tax Receipt (RC)<br />
-                2.10 <input type="checkbox" id="chkRPay" name="chkRPay" /> A/R Payment (RV-R)<br />
-                2.11 <input type="checkbox" id="chkRCN" name="chkRCN" /> A/R Adjust From CN/DN (AJ-CN)<br />
+                2.7 <input type="checkbox" id="chkRInv" name="chkRInv" /> A/R Invoice (SI)<br />
+                2.8 <input type="checkbox" id="chkRTax" name="chkRTax" /> A/R Tax Receipt (RC)<br />
+                2.9 <input type="checkbox" id="chkRPay" name="chkRPay" /> A/R Payment (RV-R)<br />
+                2.10 <input type="checkbox" id="chkRCN" name="chkRCN" /> A/R Adjust From CN/DN (AJ-R)<br />
                 Other <br />
-                2.12 <input type="checkbox" id="chkPClrAdv" name="chkPClrAdv" /> Return/Payment From Advance (RV-A/PV-A)<br />
-                2.13 <input type="checkbox" id="chkPClrOth" name="chkPClrOth" /> Payment To Staff From Clearing (RV-C/PV-C)<br />
+                2.11 <input type="checkbox" id="chkPClrAdv" name="chkPClrAdv" /> Return/Payment From Advance (RV-A/PV-A)<br />
+                2.12 <input type="checkbox" id="chkPClrOth" name="chkPClrOth" /> Payment To Staff From Clearing (RV-C/PV-C)<br />
             </td>
         </tr>
     </table>

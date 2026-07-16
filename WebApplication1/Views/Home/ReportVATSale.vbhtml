@@ -42,7 +42,7 @@ TotalTaxAmount as TotalBaseWHT
 from 
 vTransaction_H as t 
 --where EXISTS(select 1 from vJournal_All WHERE Description=t.AccDocNo and AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat') and Credit>0) and TotalVat>0
-where AccDocType='RC'
+where AccDocType='RC' And (TotalVat>0 or TotalWht>0)
 {0}
     "
     Dim dh = obj.GetDataFromSQL(String.Format(sql, sqlW))

@@ -30,29 +30,29 @@ End Code
          <div style="flex:2">
              <table style="width:100%;vertical-align:top;">
                  <tr>                     
-                     <td><b>From / บริษัท :</b>@dt.Rows(0)("PartyName")</td>
+                     <td><b>From / บริษัท :</b><br />@dt.Rows(0)("PartyName")</td>
                  </tr>
                  <tr>                     
-                     <td><b>Address / ที่อยู่ :</b>@dt.Rows(0)("PartyAddress")</td>
+                     <td><b>Address / ที่อยู่ :</b><br />@dt.Rows(0)("PartyAddress")</td>
                  </tr>
                  <tr>                     
-                     <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b>@dt.Rows(0)("PartyTaxCode")</td>
+                     <td><b>Tax ID / เลขประจำตัวผู้เสียภาษี :</b><br />@dt.Rows(0)("PartyTaxCode")</td>
                  </tr>
              </table>
          </div>
     <div style="flex:1">
         <table style="width:100%">
             <tr>                
-                <td><b>PI No / เลขที่เอกสาร :</b>@dt.Rows(0)("AccDocNo")</td>
+                <td><b>PI No / เลขที่เอกสาร :</b><br />@dt.Rows(0)("AccDocNo")</td>
             </tr>
             <tr>                
-                <td><b>Invoice Date / วันที่รับวางบิล :</b>@Convert.ToDateTime(dt.Rows(0)("AccBatchDate")).ToString("dd/MM/yyyy")</td>
+                <td><b>Invoice Date / วันที่รับวางบิล :</b><br />@Convert.ToDateTime(dt.Rows(0)("AccBatchDate")).ToString("dd/MM/yyyy")</td>
             </tr>
             <tr>                
-                <td><b>Due Date / กำหนดชำระ :</b>@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
+                <td><b>Due Date / กำหนดชำระ :</b><br />@Convert.ToDateTime(dt.Rows(0)("AccEffectiveDate")).ToString("dd/MM/yyyy")</td>
             </tr>
             <tr>                
-                <td><b>Reference No / อ้างถึง :</b>@dt.Rows(0)("DocRefNo")</td>
+                <td><b>Reference No / อ้างถึง :</b><br />@dt.Rows(0)("DocRefNo")</td>
             </tr>
         </table>
     </div>
@@ -102,9 +102,9 @@ End Code
     </table>
     @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
          <tr>
-             <td>Entry By</td>
-             <td>Check By</td>
-             <td>Approve By</td>
+             <th>Entry By</th>
+             <th>Check By</th>
+             <th>Approve By</th>
          </tr>
          <tr>
              <td> <br /><br /><br /></td>

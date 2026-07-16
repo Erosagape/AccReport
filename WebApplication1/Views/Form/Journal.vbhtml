@@ -160,7 +160,7 @@ where h.EntryId={0};
             AccCode = dtDetail.Rows(0)("AccCode")
             AccName = dtDetail.Rows(0)("GLDesc")
             GLName = dtDetail.Rows(0)("GLName")
-            AccDesc = dtDetail.Rows(0)("AccDesc")
+            AccDesc ="" & dtDetail.Rows(0)("AccDesc")
             Debit = dtDetail.Rows(0)("Debit")
             Credit = dtDetail.Rows(0)("Credit")
         End If

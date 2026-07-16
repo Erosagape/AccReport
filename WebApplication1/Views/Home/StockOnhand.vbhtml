@@ -34,7 +34,7 @@
     sql &= " ORDER BY StockProductCode"
 End Code
 <h2>Stock Onhand</h2>
-<div id="mdlProduct" class="modal modal-dialog">
+<div id="mdlProduct" class="modal" role="dialog">
     <div class="modal-content">
         <div class="modal-header">
             Select Product

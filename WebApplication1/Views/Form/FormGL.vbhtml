@@ -36,8 +36,6 @@ select * from vJournal_All where JournalNo='{0}' order by AccCode,ItemNo
         effectiveDate = Convert.ToDateTime(dt.Rows(0)("EffectiveDate")).ToString("dd/MM/yyyy")
         description = dt.Rows(0)("Description").ToString()
         entryBy = dt.Rows(0)("EntryBy").ToString()
-        totalDebit = Convert.ToDouble(dt.Rows(0)("TotalDebit"))
-        totalCredit = Convert.ToDouble(dt.Rows(0)("TotalCredit"))
     End If
 End Code
 <h2>Journal Voucher / ใบลงบันทึกบัญชี</h2>
@@ -76,7 +74,9 @@ End Code
         <tbody>
             @If dt.Rows.Count > 0 Then
                 For Each dr As Data.DataRow In dt.Rows
-                    irow+=1
+                    irow += 1
+                    totalDebit += Convert.ToDouble(dr("Debit"))
+                    totalCredit += Convert.ToDouble(dr("Credit"))
                     If chk<> dr("AccCode") Then
                     @<tr>
                         <td colspan="5" style="font-weight:bold;">

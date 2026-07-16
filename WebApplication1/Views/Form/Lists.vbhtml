@@ -27,7 +27,7 @@
     End If
     Dim sql = String.Format("select AccDocType, AccDocNo,PartyName,DocRefNo,AccBatchDate,AccEffectiveDate,IssueBy from Acc_TransactionHD {0} order by AccDocNo", sqlw)
     Dim dt = obj.GetDataFromSQL(sql)
-    Dim docTypes = obj.GetDataFromSQL("select distinct a.AccDocType as AccDocType,isnull(b.TName,'N/A') as AccDocTypeName from Acc_TransactionHD a left join Mas_DocConfig b on a.AccDocType=b.Category " & sqlw & IIf(docType <> "", String.Format(" AND  a.AccDocType='{0}'", docType), ""))
+    Dim docTypes = obj.GetDataFromSQL("select distinct a.AccDocType as AccDocType,isnull(b.TName,'N/A') as AccDocTypeName from Acc_TransactionHD a left join Mas_DocConfig b on a.AccDocType=b.Category ")
 End Code
 <h2>Transaction List</h2>
 <div class="row">

@@ -98,15 +98,15 @@ End Code
     </table>
     @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
         <tr>
-            <td> ผู้ขออนุมัติ / Request By</td>
-            <td> ผู้อนุมัติ / Approve By</td>
+            <th> ผู้ขออนุมัติ / Request By</th>
+            <th> ผู้อนุมัติ / Approve By</th>
         </tr>
         <tr>
             <td> <br /><br /><br /></td>
             <td></td>
         </tr>
         <tr>
-            <td>@dt.Rows(0)("IssueBy") </td>
+            <td>@dt.Rows(0)("IssueBy")</td>
             <td></td>
         </tr>
     </table>
