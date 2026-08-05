@@ -44,7 +44,7 @@ End Code
         <div style="flex:1">
             <table style="width:100%">
                 <tr>
-                    <td><b>Tax-Receipt No / เลขที่เอกสาร :</b>@dt.Rows(0)("AccDocNo")</td>
+                    <td><b>Tax-Receipt No / เลขที่เอกสาร :</b><a href="?Form=Transaction&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("AccDocNo")">@dt.Rows(0)("AccDocNo")</a></td>
                 </tr>
                 <tr>
                     <td><b>Receipt Date / วันที่ :</b>@Convert.ToDateTime(dt.Rows(0)("AccBatchDate")).ToString("dd/MM/yyyy")</td>

@@ -2,15 +2,13 @@
     #topMenu {
         display: none;
     }
-    #tblData {
-        font-size:10px !important;
-    }
+
     td {
         padding: 5px 5px 5px 5px;
     }
 </style>
 @Code
-    Layout = "~/Views/Shared/A4_Landscape.vbhtml"
+    Layout = "~/Views/Shared/A4.vbhtml"
     ViewData("Title") = "General Ledger"
     Dim accCode As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
@@ -60,20 +58,20 @@
             sql = "select *,ABS(SUM(CASE WHEN JournalNo<>'-' THEN Debit-Credit ELSE 0 END) OVER(PARTITION BY AccCode ORDER BY ItemNo)) as Balance
 from (
 SELECT *,ROW_NUMBER() OVER (order by AccCode) as ItemNo FROM (
-select 0 as Lvl,AccRemark,JournalNo,EffectiveDate,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail
+select 0 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail
 from Acc_TempGL
 where JournalNo=''
-group by AccRemark,JournalNo,EffectiveDate,AccCode,AccName,AccDetail
+group by AccRemark,JournalNo,AccCode,AccName,AccDetail
 union all
-select 1 as Lvl,AccDesc,JournalNo,EffectiveDate,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail
+select 1 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail
 from Acc_TempGL
 where JournalNo NOT IN('-','')
-group by AccDesc,JournalNo,EffectiveDate,AccCode,AccName,AccDetail
+group by AccRemark,JournalNo,AccCode,AccName,AccDetail
 union all
-select 2 as Lvl,AccRemark,JournalNo,EffectiveDate,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail
+select 2 as Lvl,AccRemark,JournalNo,AccCode,AccName,sum(debit) as Debit,sum(Credit) as Credit,AccDetail
 from Acc_TempGL
 where JournalNo='-'
-group by AccRemark,JournalNo,EffectiveDate,AccCode,AccName,AccDetail
+group by AccRemark,JournalNo,AccCode,AccName,AccDetail
 ) t
 ) src"
             dt = obj.GetDataFromSQL(sql)
@@ -104,16 +102,18 @@ End If
     <input type="button" onclick="SetDate()" value="Apply Date" />
     <input type="button" data-dismiss="modal" onclick="OpenForm(false)" value="Close" class="btn btn-danger" />
 </div>
-<div class="container-fluid">
-    <table id="tblData" border="1" style="border-collapse:collapse;border-style:solid;width:100%;">
+<div>
+    <table border="1" style="border-collapse:collapse;border-style:solid;width:100%">
         <thead>
             <tr>
                 <th>#</th>
-                <th>Date</th>
-                <th>DocNo</th>
-                <th>Description</th>
+                @If typereport <> "Y" Then
+                    @<th>Date</th>
+                    @<th>Description</th>
+                Else
+                    @<th>Description</th>
+                End If
                 <th>Debit</th>
-                <th>Description</th>
                 <th>Credit</th>
                 <th>Balance</th>
             </tr>
@@ -123,48 +123,31 @@ End If
                 If typereport <> "Y" Then
                     If i = 0 Then
                         @<tr style="font-weight:bold;">
-                            <td colspan="7">@dt.Rows(i)("AccName").ToString()</td>
+                            <td colspan="5">@dt.Rows(i)("AccName").ToString()</td>
                             <td>@dt.Rows(i)("AccCode").ToString()</td>
                         </tr>
                         prevBal = obj.GetDouble(dr("Balance"))
                     End If
+                    If groupHead <> dr("AccRemark").ToString() Then
+                        If groupDebit > 0 Or groupCredit > 0 Then
+                            @<tr style="font-weight:bold;background-color:lightyellow;">
+                                <td colspan="3">@groupHead</td>
+                                <td style="text-align:right;">@groupDebit.ToString("#,##0.00")</td>
+                                <td style="text-align:right;">@groupCredit.ToString("#,##0.00")</td>
+                                <td></td>
+                            </tr>
+                            groupDebit = 0
+                            groupCredit = 0
+                        End If
+                        @<tr style="font-weight:bold;background-color:lightblue;">
+                            <td colspan="6">@dt.Rows(i)("AccRemark").ToString()</td>
+                        </tr>
+                        groupHead = dr("AccRemark").ToString()
+                    End If
                     i += 1
                     If groupVal <> dr("JournalNo") Then
-                        groupVal = dr("JournalNo")
-                    End If
-                    If i = dt.Rows.Count Then
-                        nextBal = obj.GetDouble(dr("Balance"))
-                        moveBal = nextBal - prevBal
-                        @<tr style="font-weight:bold">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>TOTAL</td>
-                            <td style="text-align:right;">@sumDebit.ToString("#,##0.00")</td>
-                            <td></td>
-                            <td style="text-align:right;">@sumCredit.ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@moveBal.ToString("#,##0.00")</td>
-                        </tr>
-                        @<tr style="font-weight:bold">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@dr("AccDesc").ToString()</td>
-                            <td style="text-align:right;">@Convert.ToDouble(dr("Debit")).ToString("#,##0.00")</td>
-                            <td></td>
-                            <td style="text-align:right;">@Convert.ToDouble(dr("Credit")).ToString("#,##0.00")</td>
-                            <td style="text-align:right;"></td>
-                        </tr>
-                    Else
-                        If i >= 1 Then
-                            sumDebit += obj.GetDouble(dr("Debit"))
-                            sumCredit += obj.GetDouble(dr("Credit"))
-
-                        End If
-                        @<tr>
-                            <td>@i</td>
-                            <td>@Convert.ToDateTime(dr("EffectiveDate")).ToString("dd/MM/yyyy")</td>
-                            <td>
+                        @<tr style="font-style:italic;font-weight:bold;">
+                            <td colspan="2">
                                 @If String.Concat(dr("JournalNo").ToString(), "XX").Substring(0, 2) = "RV" Then
                                     @<a href="~/Form?Form=FormRV&SRC=@dbSource&DB=@dbname&Code=@dr("JournalNo")">@dr("JournalNo")</a>
                                 Else
@@ -179,17 +162,53 @@ End If
                                     End If
                                 End If
                             </td>
-                            <td>
-                                @If Convert.ToDouble(dr("Debit")) > 0 Then
-                                    @dr("AccDesc").ToString() @Html.Raw("&nbsp;") @dr("AccRemark").ToString()
-                                End If
+                            <td colspan="5">
+                                @dr("AccDetail")
                             </td>
+                        </tr>
+                        groupVal = dr("JournalNo")
+                    End If
+                    If i = dt.Rows.Count Then
+                        If groupDebit > 0 Or groupCredit > 0 Then
+                            @<tr style="font-weight:bold;background-color:lightyellow;">
+                                <td colspan="3">@groupHead</td>
+                                <td style="text-align:right;">@groupDebit.ToString("#,##0.00")</td>
+                                <td style="text-align:right;">@groupCredit.ToString("#,##0.00")</td>
+                                <td></td>
+                            </tr>
+                            groupDebit = 0
+                            groupCredit = 0
+                        End If
+                        nextBal = obj.GetDouble(dr("Balance"))
+                        moveBal = nextBal - prevBal
+                        @<tr style="font-weight:bold">
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td style="text-align:right;">@sumDebit.ToString("#,##0.00")</td>
+                            <td style="text-align:right;">@sumCredit.ToString("#,##0.00")</td>
+                            <td style="text-align:right;">@moveBal.ToString("#,##0.00")</td>
+                        </tr>
+                        @<tr style="font-weight:bold">
+                            <td></td>
+                            <td></td>
+                            <td>@dr("AccDesc").ToString()</td>
                             <td style="text-align:right;">@Convert.ToDouble(dr("Debit")).ToString("#,##0.00")</td>
-                            <td>
-                                @If Convert.ToDouble(dr("Credit")) > 0 Then
-                                    @dr("AccDesc").ToString() @Html.Raw("&nbsp;") @dr("AccRemark").ToString()
-                                End If
-                            </td>
+                            <td style="text-align:right;">@Convert.ToDouble(dr("Credit")).ToString("#,##0.00")</td>
+                            <td style="text-align:right;"></td>
+                        </tr>
+                    Else
+                        If i >= 1 Then
+                            sumDebit += obj.GetDouble(dr("Debit"))
+                            sumCredit += obj.GetDouble(dr("Credit"))
+                            groupDebit += obj.GetDouble(dr("Debit"))
+                            groupCredit += obj.GetDouble(dr("Credit"))
+                        End If
+                        @<tr>
+                            <td>@i</td>
+                            <td>@Convert.ToDateTime(dr("EffectiveDate")).ToString("dd/MM/yyyy")</td>
+                            <td>@dr("AccDesc").ToString()</td>
+                            <td style="text-align:right;">@Convert.ToDouble(dr("Debit")).ToString("#,##0.00")</td>
                             <td style="text-align:right;">@Convert.ToDouble(dr("Credit")).ToString("#,##0.00")</td>
                             <td style="text-align:right;">@Convert.ToDouble(dr("Balance")).ToString("#,##0.00")</td>
                         </tr>
@@ -197,7 +216,7 @@ End If
                 Else
                     If i = 0 Then
                         @<tr style="font-weight:bold;">
-                            <td colspan="7">@dt.Rows(i)("AccName").ToString()</td>
+                            <td colspan="4">@dt.Rows(i)("AccName").ToString()</td>
                             <td>@dt.Rows(i)("AccCode").ToString()</td>
                         </tr>
                         prevBal = obj.GetDouble(dr("Balance"))
@@ -205,17 +224,16 @@ End If
                     If groupHead <> dr("AccRemark").ToString() Then
                         If groupDebit > 0 Or groupCredit > 0 Then
                             @<tr style="font-weight:bold;background-color:lightyellow;">
-                                <td colspan="4">@groupHead</td>
+                                <td colspan="2">@groupHead</td>
                                 <td style="text-align:right;">@groupDebit.ToString("#,##0.00")</td>
-                                <td></td>
                                 <td style="text-align:right;">@groupCredit.ToString("#,##0.00")</td>
-                                <td style="text-align:right;">@(Math.Abs(groupDebit - groupCredit).ToString("#,##0.00"))</td>
+                                <td></td>
                             </tr>
                             groupDebit = 0
                             groupCredit = 0
                         End If
                         @<tr style="font-weight:bold;background-color:lightblue;">
-                            <td colspan="8">@dt.Rows(i)("AccRemark").ToString()</td>
+                            <td colspan="5">@dt.Rows(i)("AccRemark").ToString()</td>
                         </tr>
                         groupHead = dr("AccRemark").ToString()
                     End If
@@ -231,7 +249,6 @@ End If
                     End If
                     @<tr>
                         <td>@i</td>
-                        <td>@Convert.ToDateTime(dr("EffectiveDate")).ToString("dd/MM/yyyy")</td>
                         <td>
                             @If String.Concat(dr("JournalNo").ToString(), "XX").Substring(0, 2) = "RV" Then
                                 @<a href="~/Form?Form=FormRV&SRC=@dbSource&DB=@dbname&Code=@dr("JournalNo")">@dr("JournalNo")</a>
@@ -246,18 +263,9 @@ End If
                                     End If
                                 End If
                             End If
-                        </td>
-                        <td>
-                            @If Convert.ToDouble(dr("Debit")) > 0 Then
-                                @dr("AccDetail")
-                            End If
+                            @dr("AccDetail")
                         </td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Debit")).ToString("#,##0.00")</td>
-                        <td>
-                            @If Convert.ToDouble(dr("Credit")) > 0 Then
-                                @dr("AccDetail")
-                            End If
-                        </td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Credit")).ToString("#,##0.00")</td>
                         <td style="text-align:right;">@Convert.ToDouble(dr("Balance")).ToString("#,##0.00")</td>
                     </tr>
@@ -266,13 +274,10 @@ End If
             @If typereport = "Y" Then
                 @<tr style="font-weight:bold">
                     <td></td>
-                    <td></td>
-                    <td></td>
                     <td>TOTAL</td>
                     <td style="text-align:right;">@sumDebit.ToString("#,##0.00")</td>
-                    <td></td>
                     <td style="text-align:right;">@sumCredit.ToString("#,##0.00")</td>
-                    <td style="text-align:right;">@(Math.Abs(sumDebit - sumCredit).ToString("#,##0.00"))</td>
+                    <td style="text-align:right;"></td>
                     <td></td>
                 </tr>
             End If
@@ -314,7 +319,7 @@ End If
             mdl.style.display = "block";
             return;
         }
-        mdl.style.display = "none";
+        mdl.style.display = "none";        
     }
 
 </script>

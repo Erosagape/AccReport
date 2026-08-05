@@ -483,15 +483,15 @@ End Code
             <div class="col-sm-3">
                 Sales Type<br />
                     <select id="cboIsService" name="isService" class="form-control dropdown">
-                        <option value="1" @(If(IsService = 0, "", "selected"))>Services</option>
-                        <option value="0" @(If(IsService = 1, "", "selected"))>Goods</option>
+                        <option value="1" @(If(IsService = 1, "selected", ""))>Services</option>
+                        <option value="0" @(If(IsService = 0, "selected", ""))>Goods</option>
                     </select>
             </div>
             <div class="col-sm-3">
                 Inventory Type<br />
                     <select id="cboIsMaterial" name="isMaterial" class="form-control dropdown">
-                        <option value="1" @(If(IsMaterial = 0, "", "selected"))>Material</option>
-                        <option value="0" @(If(IsMaterial = 1, "", "selected"))>Finished Goods</option>
+                        <option value="1" @(If(IsMaterial = 1, "selected", ""))>Material</option>
+                        <option value="0" @(If(IsMaterial = 0, "selected", ""))>Finished Goods</option>
                     </select>
             </div>
             <div class="col-sm-2">

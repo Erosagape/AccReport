@@ -16,9 +16,14 @@ End Code
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
     <style>
+        * {
+            font-size: 14px;
+            font-family: 'Prompt', sans-serif;
+        }
+
         .navbar a {
             color: white; /* Change link color to white */
         }
@@ -36,7 +41,7 @@ End Code
         }
 
         .navbar-custom {
-            background-color: #f24544; /* Or any other color value */
+            background-color: darkblue; /* Or any other color value */
         }
 
         b {
@@ -51,17 +56,17 @@ End Code
             color: black;
         }
 
-        input[type="number"][readonly] {
-            background-color: palegreen;
-        }
+            input[type="number"][readonly] {
+                background-color: palegreen;
+            }
 
-        input[type="date"][readonly], input[type="text"][readonly] {
-            background-color: lightcyan;
-        }
+            input[type="date"][readonly], input[type="text"][readonly] {
+                background-color: lightcyan;
+            }
 
-        input[type="text"], input[type="number"], input[type="date"], textarea {
-            background-color: lightyellow;
-        }
+            input[type="text"], input[type="number"], input[type="date"], textarea {
+                background-color: lightyellow;
+            }
 
         h1, h2, h3, h4, h5, h6 {
             color: blue;
@@ -83,6 +88,7 @@ End Code
             background-color: lightyellow;
             font-weight: bold;
         }
+
         .colnum {
             text-align: right;
         }

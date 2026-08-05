@@ -85,9 +85,9 @@ End Code
     function drawChart1() {
         var data = google.visualization.arrayToDataTable([
             ['Name', 'Value'],
-            ['รายได้', @sumIncome],
-            ['ค่าใช้จ่าย', @sumExpense],
-            ['กำไรขาดทุน', @(Math.Abs(sumIncome - sumExpense))]
+            ['Revenue', @sumIncome],
+            ['Cost', @sumExpense],
+            ['Profit', @(Math.Abs(sumIncome - sumExpense))]
         ]);
 
         var options = {
@@ -101,8 +101,8 @@ End Code
     function drawChart2() {
         var data = google.visualization.arrayToDataTable([
             ['Name', 'Value'],
-            ['สินทรัพย์', @sumAsset],
-            ['หนี้สิน', @sumLiability]
+            ['Asset', @sumAsset],
+            ['Liability', @sumLiability]
         ]);
 
         var options = {
@@ -115,8 +115,8 @@ End Code
     function drawChart3() {
         var data = google.visualization.arrayToDataTable([
             ['Name', 'Value'],
-            ['ลูกหนี้', @sumAR],
-            ['เจ้าหนี้', @sumAP]
+            ['A/R', @sumAR],
+            ['A/P', @sumAP]
         ]);
         var options = {
             is3D: true,
@@ -127,7 +127,7 @@ End Code
     function drawChart4() {
         // Create the data table using an array
         var arr = JSON.parse('@Html.Raw(Json.Encode(arr))');
-        arr.unshift(['Period', 'ค่าใช้จ่าย', 'รายได้', 'กำไรขาดทุน', { role: 'annotation' }]);
+        arr.unshift(['Period', 'Cost', 'Revenue', 'Profit/Loss', { role: 'annotation' }]);
         var data = google.visualization.arrayToDataTable(arr);
 
         // Configure chart options
@@ -156,10 +156,10 @@ End Code
         <table style="width:100%" class="table table-responsive table-bordered">
             <thead>
                 <tr>
-                    <th>รหัสบัญชี</th>
-                    <th>ชื่อบัญชี</th>
-                    <th>เดบิต</th>
-                    <th>เครดิต</th>
+                    <th>Account Code</th>
+                    <th>Account Name</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
                 </tr>
             </thead>
             @If dt.Rows.Count > 0 Then
@@ -177,7 +177,7 @@ End Code
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                ผลการดำเนินงานแต่ละเดือน
+                Performance Monthly
             </div>
             <div class="card-body" id="stackchart1"></div>
         </div>        
@@ -187,7 +187,7 @@ End Code
     <div class="col-sm-4">        
         <div class="card">
             <div class="card-header">
-                กำไรขาดทุน
+                Profit/Loss
             </div>
             <div class="card-body" id="piechart1"></div>
         </div>        
@@ -195,7 +195,7 @@ End Code
     <div class="col-sm-4">        
         <div class="card">
             <div class="card-header">
-                สินทรัพย์/หนี้สิน
+                Asset/Liability
             </div>
             <div class="card-body" id="piechart2"></div>
         </div>
@@ -203,7 +203,7 @@ End Code
     <div class="col-sm-4">
         <div class="card">
             <div class="card-header">
-                ลูกหนี้/เจ้าหนี้
+                Receivable/Payable
             </div>
             <div class="card-body" id="piechart3"></div>
         </div>
@@ -211,51 +211,51 @@ End Code
 </div>
 <div Class="row">
     <div Class="col-sm-4">
-        จากวันที่
+        Date From
         <br />
         <input type="date" id="txtDateFrom" Class="form-control" />
     </div>
     <div Class="col-sm-4">
-        ถึงวันที่
+        Date To
         <br />
         <input type="date" id="txtDateTo" Class="form-control" />
     </div>
     <div Class="col-sm-4">
-        สถานะ:
+        Status:
         <br />
         <input type="text" id="txtStatus" Class="form-control" />
     </div>
 </div>
 <div Class="row">
     <div Class="col-sm-6">
-        คำค้นชื่อ:
+        Name:
         <br />
         <input type="text" id="txtPartyName" Class="form-control" />
     </div>
 </div>
 <div Class="row">
     <div Class="col-sm-6">
-        รายงาน:
+        Report:
         <br />
         <select id="cboReport" class="form-control dropdown">
-            <option value="Purchase">รายงานใบสั่งซื้อ</option>
-            <option value="PI">รายงานใบแจ้งหนี้ค่าใช้จ่าย</option>
-            <option value="PC">รายงานใบเตรียมจ่าย</option>
-            <option value="AgingAP">รายงานอายุเจ้าหนี้</option>
-            <option value="Sale">รายงานใบสั่งขาย</option>
-            <option value="SI">รายงานใบแจ้งหนี้ค่าบริการลูกค้า</option>
-            <option value="RC">รายงานใบเสร็จรับเงิน</option>
-            <option value="AgingAR">รายงานอายุลูกหนี้</option>
-            <option value="AR">รายงานลูกหนี้</option>
-            <option value="AP">รายงานเจ้าหนี้</option>
-            <option value="Payment">รายงานใบสำคัญจ่าย</option>
-            <option value="Receive">รายงาานใบสำคัญรับ</option>
-            <option value="Journal">รายงานสมุดรายวัน</option>
-            <option value="VATSale">รายงานภาษีขาย</option>
-            <option value="VATBuy">รายงานภาษีซื้อ</option>
-            <option value="WHTax">รายงานการหัก ณ ที่จ่าย</option>
-            <option value="WHTaxSum">รายงานสรุปการหัก ณ ที่จ่าย</option>
-            <option value="PRD">รายงานนำส่งภาษี</option>
+            <option value="Purchase">Purchase Order Report</option>
+            <option value="PI">Purchase Invoice Report</option>
+            <option value="PC">Purchase Confirmation Report</option>
+            <option value="AgingAP">Purchase Invoice Aging Report</option>
+            <option value="Sale">Sale Order Report</option>
+            <option value="SI">Sale Invoice Report</option>
+            <option value="RC">Sale Receipt Report</option>
+            <option value="AgingAR">Sale Invoice Aging Report</option>
+            <option value="AR">Account Receiveable Report</option>
+            <option value="AP">Account Payable Report</option>
+            <option value="Payment">Payment Voucher Report</option>
+            <option value="Receive">Receive Voucher Report</option>
+            <option value="Journal">Journal Entries Report</option>
+            <option value="VATSale">Output VAT Report</option>
+            <option value="VATBuy">Input VAT Report</option>
+            <option value="WHTax">Withholding Report (Detail)</option>
+            <option value="WHTaxSum">Withholding Report (Summary)</option>
+            <option value="PRD">PRD Tax Report</option>
         </select>
     </div>
 </div>

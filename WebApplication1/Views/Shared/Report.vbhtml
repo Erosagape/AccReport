@@ -7,30 +7,36 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
     <style>
-	* {
+        * {
             font-size: 14px;
             font-family: 'Prompt', sans-serif;
         }
+
         @@page {
             size: A4
         }
+
         table {
-            width:100%;
+            width: 100%;
         }
-        h1,h2,h3,h4,h5 {
-            color:darkblue;
-            font-weight:bold;
-            font-size:large;
+
+        h1, h2, h3, h4, h5 {
+            color: darkblue;
+            font-weight: bold;
+            font-size: large;
         }
+
         th {
-            background-color:darkblue;
-            color:white;
+            background-color: darkblue;
+            color: white;
         }
+
         .colnum {
-            text-align:right;
+            text-align: right;
         }
-        table[border="1"] > th,table[border="1"] td {
-            border-style:solid;
+
+        table[border="1"] > th, table[border="1"] td {
+            border-style: solid;
         }
     </style>
 </head>

@@ -77,11 +77,11 @@ End Code
             @<tr>
     <td>@dr("AccItemNo")</td>
     <td>@dr("AccSourceDocNo").ToString</td>
-    <td><b>@dr("ProductCode") / @dr("ProductName")</b> <br> @dr("SalesDescription").ToString</td>
+    <td><b>@dr("ProductCode")</b> <br> @dr("SalesDescription").ToString</td>
     <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
     <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
     <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
-    <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+    <td class="colnum">@Convert.ToDouble(dr("DAmt")).ToString("#,###,#0.00")</td>
 </tr>
         Next
         <tr>

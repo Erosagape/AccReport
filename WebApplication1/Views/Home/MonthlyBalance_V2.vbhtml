@@ -97,7 +97,7 @@ End Code
                 Dim dec(2) As Double
                 Dim tot(2) As Double
                 Dim bal(2) As Double
-                @<table border="1" class="table DataTable" style="border-collapse:collapse;">
+                @<table id="myTable" border="1" class="table DataTable" style="border-collapse:collapse;">
                     <thead>
                         <tr>
                             <th rowspan="2">Acc Code</th>
@@ -306,5 +306,5 @@ End If
         }
         SetPeriod(period);
     }
-</script>
 
+</script>

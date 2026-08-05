@@ -58,28 +58,31 @@ End Code
 
 
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
-         <thead>
-             <tr>
-                 <th>No</th>
-                 <th>Description</th>
-                 <th>Qty</th>
-                 <th>Price</th>
-                 <th>Currency</th>
-                 <th>Amount</th>
-             </tr>
-         </thead>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Currency</th>
+                <th>Vat/Tax</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
         @For Each dr As Data.DataRow In dt.Rows
             @<tr>
                 <td>@dr("AccItemNo")</td>
-                <td>@dr("SalesDescription").ToString</td>
-                <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
-                <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
+                <td><b>@dr("ProductCode")</b><br>@dr("SalesDescription").ToString</td>
+                <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00") x @dr("Qty").ToString @dr("UnitMea").ToString</td>
                 <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
-                <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
+                <td>@dr("RateVat").ToString/@dr("RateWht")</td>
+                <td class="colnum">@Convert.ToDouble(dr("DAmt")).ToString("#,###,#0.00")</td>
             </tr>
         Next
         <tr>
-            <td colspan="3" rowspan="4"></td>
+            <td colspan="3" rowspan="4">
+                REMARKS:
+                <br> @dt.Rows(0)("Text1")
+            </td>
             <td colspan="2"> Total Amount</td>
             <td Class="colnum">@Convert.ToDouble(dt.Rows(0)("TotalAmount")).ToString("#,###,#0.00")</td>
         </tr>

@@ -352,7 +352,7 @@ SELECT * from vTransaction_All where AccDocNo='{0}'
                 <label for="txtAccBatchDate" id="lblAccBatchDate">Doc Date</label>
             </div>
             <div class="col-sm-4">
-                <input type="date" id="txtAccBatchDate" name="AccBatchDate" onchange="DataChanged()" class="form-control" value="@AccBatchDate.ToString("yyyy-MM-dd")" readonly />
+                <input type="date" id="txtAccBatchDate" name="AccBatchDate" onchange="DataChanged()" class="form-control" value="@AccBatchDate.ToString("yyyy-MM-dd")" />
             </div>
         </div>
         <div class="row">

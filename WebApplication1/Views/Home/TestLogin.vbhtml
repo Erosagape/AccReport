@@ -6,16 +6,16 @@ End Code
 <script type="text/javascript">
     function TestLogin() {
         var obj = {
-            userId: 'ADMIN',
-            hashPassword: 'xxxxx',
-            dbAlias: 'AccConcept',
-            custId: 'TEST'
-        };        
-        //var json = JSON.stringify({ data : obj });
-        //var json = JSON.stringify(obj);
+            Target: '/?Form=Report',
+            UserPassword: 'A6xnQhbz4Vx2HuGl4lXwZ5U2I8iziLRFnhP5eNfIRvQ=',
+            CustID: 'demoacc',
+            UserID: 'TEST'
+        };
+
         var path = window.location.pathname;
-        $.post(path +'/TestLogin', obj, function () {
+        $.post(path + '/Home/PostLogin', obj, function () {
             alert('success');
+            window.location.reload();
         });
     }
 </script>

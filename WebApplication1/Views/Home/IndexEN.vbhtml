@@ -24,32 +24,70 @@
     Dim cashGroup As String = "111%"
     Dim payablesGroup As String = "212%"
     Dim receivablesGroup As String = "113%"
+    If ViewBag.User = "" Then
+        Response.Redirect("~/Home/Login?DB=" + dbname + "&SRC=" + dbSource)
+    End If
 End Code
 <style>
     .banner-foot {
-        background-color: #f24544;
+        background-color: darkblue;
         padding: 10px 5px 5px 5px;
     }
 
-        .banner-foot b {
-            color: yellow !important;
-        }
+    .banner-foot b {
+        color: yellow !important;
+    }
 
     .card {
         border: 1px solid #e0e0e0;
         border-radius: 8px; /* Smooth, modern rounding */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle, downward soft shadow */
         font-weight: bolder;
+        width: auto;
+        margin:5px 5px 5px 5px;
     }
 </style>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', { packages: ['corechart'] });
+    function openNav() {
+        document.getElementById("mySideBar").style.display = "inline-block";
+        document.getElementById("mySideBar").classList.remove("col-sm-3");
+        document.getElementById("mySideBar").classList.add("col-sm-12");
+
+        document.getElementById("myDashboard").classList.add("col-sm-9");
+        document.getElementById("myDashboard").classList.remove("col-sm-12");
+    }
+
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+        document.getElementById("mySideBar").style.display = "none";
+        document.getElementById("mySideBar").classList.remove("col-sm-12");
+        document.getElementById("mySideBar").classList.add("col-sm-3");
+
+        document.getElementById("myDashboard").classList.remove("col-sm-9");
+        document.getElementById("myDashboard").classList.add("col-sm-12");
+    }
+    var isOpenMenu = false;
+    function ToggleMenu() {
+        if (isOpenMenu) {
+            closeNav();
+        } else {
+            openNav();
+        }
+        isOpenMenu = !isOpenMenu;
+        RedrawCharts();
+    }
 </script>
+<div style="float:right">
+    Date: @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+</div>
+<input type="button" class="openbtn" onclick="ToggleMenu()" value="☰"> Menu
+<br />
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-4" style="padding: 5px 5px 5px 5px;">
-            <b>Master Files</b>
+        <div class="col-sm-3 card" id="mySideBar" style="padding: 5px 5px 5px 5px;display: none;">
+            <b>General Master Files</b>
             <div class="row">
                 <div class="col-sm-12">
                     <a href="?Form=Profile&DB=@dbname&SRC=@dbSource">Company Profile</a>
@@ -67,6 +105,22 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">Suppliers/Venders</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">Customer</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ConfigDepre&LANG=EN&DB=@dbname&SRC=@dbSource">Standard Depreciation</a>
+                </div>
+            </div>
+            <b>Products Master Files</b>
+            <div class="row">
+                <div class="col-sm-12">
                     <a href="?Form=Warehouse&DB=@dbname&SRC=@dbSource">Warehouse/Service Group</a>
                 </div>
             </div>
@@ -77,22 +131,7 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=ConfigDepre&LANG=EN&DB=@dbname&SRC=@dbSource">Standard Depreciation</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
                     <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">Products</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">Suppliers/Venders</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">Customer</a>
                 </div>
             </div>
             <b>Job System Integrated</b>
@@ -130,7 +169,7 @@ End Code
             <b>Account Reports</b>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=Report&DB=@dbname&SRC=@dbSource">Summary</a>
+                    <a href="?Form=ReportEN&DB=@dbname&SRC=@dbSource">Summary</a>
                 </div>
             </div>
             <div class="row">
@@ -169,8 +208,10 @@ End Code
                     <a href="?Form=MonthlyBalance_V2&LANG=EN&DB=@dbname&Type=2&SRC=@dbSource">Accumulate Monthly Balance</a>
                 </div>
             </div>
-            <b>Account Sheet</b>
-            Period : <input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
+            <b>Accounts Sheet</b>
+            Period :
+            <br />
+            <input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
             <div class="row">
                 <div class="col-sm-12">
                     <a href="#" onclick="OpenForm('TrialBalance')">Trial Balance</a>
@@ -202,11 +243,13 @@ End Code
                 </div>
             </div>
         </div>
-        <div class="col-sm-8" style="padding: 5px 5px 5px 5px; text-align: center;">
+        <div class="col-sm-12" id="myDashboard" style="padding: 5px 5px 5px 5px; text-align: center;margin-left:10px;margin-right:10px;margin-bottom:5px;">
             @*<img src="~/OverView.png" style="width:100%;" />*@
-            <h4>Operation Overview</h4>
+            <div class="col-sm-12">
+                <h4>Operation Overview</h4>
+            </div>
             <div class="row">
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalAmount+a.VatAmount-a.WhtAmount),0) as PendingPO
 from vPR_D a
@@ -218,11 +261,16 @@ and not exists(select 1 from vPO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumPO = dt.Rows(0).Item("PendingPO")
                         End If
                     End Code
-                    <b>Pending Purchase</b>
-                    <br />
-                    @sumPO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Pending Purchase
+                        </div>
+                        <div class="card-body">                            
+                            @sumPO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalNet),0) as TotalPO from vPO_H a where a.DocStatus<>99"
                         dt = obj.GetDataFromSQL(sql)
@@ -230,11 +278,16 @@ and not exists(select 1 from vPO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumPO = dt.Rows(0).Item("TotalPO")
                         End If
                     End Code
-                    <b>Purchase Total</b>
-                    <br />
-                    @sumPO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Purchase Total
+                        </div>
+                        <div class="card-body">
+                            @sumPO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalAmount+a.VatAmount-a.WhtAmount),0) as TotalSR from vSR_D a where a.DocStatus<>99
 and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSourceDocItem=a.AccItemNo)"
@@ -243,11 +296,16 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumSO = dt.Rows(0).Item("TotalSR")
                         End If
                     End Code
-                    <b>Pending Sales</b>
-                    <br />
-                    @sumSO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Pending Sales
+                        </div>
+                        <div class="card-body">
+                            @sumSO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalNet),0) as TotalSO from vSO_H a where a.DocStatus<>99"
                         dt = obj.GetDataFromSQL(sql)
@@ -255,14 +313,18 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumSO = dt.Rows(0).Item("TotalSO")
                         End If
                     End Code
-                    <b>Sales Total</b>
-                    <br />
-                    @sumSO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Sales Total
+                        </div>
+                        <div class="card-body">
+                            @sumSO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 card">
-                    <b>TOP 5 - Supplier/Vender</b>
+                <div class="col-sm-6">                    
                     @Code
                         sql = "select TOP(5) PartyCode,sum(TotalNet) as TotalNet from vPC_H where DocStatus<>99 group by PartyCode order by 2 desc"
                         dt = obj.GetDataFromSQL(sql)
@@ -279,7 +341,6 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             var data = google.visualization.arrayToDataTable(@Html.Raw(chartData3));
 
                             var options = {
-                                title: '5 Top Suppliers by Purchase Amount',
                                 chartArea: { width: '50%' },
                                 hAxis: {
                                     title: 'Supplier',
@@ -293,10 +354,17 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             chart.draw(data, options);
                         }
                     </script>
-                    <div id="chartdata3" style="width:100%"></div>
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            TOP 5 - Supplier/Vender
+                        </div>
+                        <div class="card-body">                            
+                            <div id="chartdata3"></div>
+                        </div>
+                    </div>
+                    
                 </div>
-                <div class="col-sm-6 card">
-                    <b>TOP 5 - Customer</b>
+                <div class="col-sm-6">
                     @Code
                         sql = "select TOP(5) PartyCode,sum(TotalNet) as TotalNet from vRC_H where DocStatus<>99 group by PartyCode order by 2 desc"
                         dt = obj.GetDataFromSQL(sql)
@@ -311,10 +379,7 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                         function drawTopCust() {
 
                             var data = google.visualization.arrayToDataTable(@Html.Raw(chartData4));
-
                             var options = {
-                                title: '5 Top Customers by Sales Amount',
-                                chartArea: { width: '50%' },
                                 hAxis: {
                                     title: 'Customer',
                                     minValue: 0
@@ -327,58 +392,89 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             chart.draw(data, options);
                         }
                     </script>
-                    <div id="chartdata4" style="width:100%"></div>
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            TOP 5 - Customer
+                        </div>
+                        <div class="card-body">                            
+                            <div id="chartdata4"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h4>Financial Overview</h4>
             <div class="row">
-                <div class="col-sm-3 card">
+                <div class="col-sm-12">
+                    <h4>Financial Overview</h4>
+                </div>            
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(debit-credit) as CashBalance from vSum_Balance where AccCode like '" & cashGroup & "'"
+                        sql = "select isnull(sum(debit-credit),0) as CashBalance from vSum_Balance where AccCode like '" & cashGroup & "'"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumCash = dt.Rows(0).Item("CashBalance")
                         End If
                     End Code
-                    <b>Cash Balance</b>
-                    <br />
-                    @sumCash.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Cash Onhand
+                        </div>
+                        <div class="card-body">
+                            @sumCash.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(credit-debit) as PayablesBalance from vSum_Balance where AccCode like '" & payablesGroup & "'"
+                        sql = "select isnull(sum(credit-debit),0) as PayablesBalance from vSum_Balance where AccCode like '" & payablesGroup & "'"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumPayables = dt.Rows(0).Item("PayablesBalance")
                         End If
                     End Code
-                    <b>Accrued Expenses</b>
-                    <br />
-                    @sumPayables.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Accrued Expenses
+                        </div>
+                        <div class="card-body">
+                            @sumPayables.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(debit-credit) as ReceivablesBalance from vSum_Balance where AccCode like '" & receivablesGroup & "'"
+                        sql = "select isnull(sum(debit-credit),0) as ReceivablesBalance from vSum_Balance where AccCode like '" & receivablesGroup & "'"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumReceivables = dt.Rows(0).Item("ReceivablesBalance")
                         End If
                     End Code
-                    <b>Accrued Revenue</b>
-                    <br />
-                    @sumReceivables.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Accrued Revenue
+                        </div>
+                        <div class="card-body">
+                            @sumReceivables.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(Credit-Debit) as BaseProfit from vSum_Balance where substring(AccCode,1,1) in('4','5')"
+                        sql = "select isnull(sum(Credit-Debit),0) as BaseProfit from vSum_Balance where substring(AccCode,1,1) in('4','5')"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumProfit = dt.Rows(0).Item("BaseProfit")
                         End If
                     End Code
-                    <b>Sales Profit</b>
-                    <br />
-                    @sumProfit.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Sales Profit
+                        </div>
+                        <div class="card-body">
+                            @sumProfit.ToString("N2")
+                        </div>
+                    </div>
                 </div>
             </div>
             @Code
@@ -414,7 +510,6 @@ group by b.AccName"
                 function drawChart1() {
                     var data = google.visualization.arrayToDataTable(@Html.Raw(chartData1));
                     var options = {
-                      title: 'Income and Expenses',
                       hAxis: {title: 'Year/Month',  titleTextStyle: {color: '#333'}},
                       vAxis: {minValue: 0}
                     };
@@ -425,7 +520,6 @@ group by b.AccName"
                 function drawChart2() {
                     var data = google.visualization.arrayToDataTable(@Html.Raw(chartData2));
                     var options = {
-                        title: 'Source',
                         pieHole: 0.4,
                     };
 
@@ -434,11 +528,26 @@ group by b.AccName"
                 }
             </script>
             <div class="row">
-                <div class="col-sm-8 card">
-                    <div id="areachart1" style="width: 100%;"></div>
+                <div class="col-sm-8">
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Revenue and Cost
+                        </div>
+                        <div class="card-body">
+                            <div id="areachart1"></div>
+                        </div>
+                    </div>                    
                 </div>
-                <div class="col-sm-4 card">
-                    <div id="donutchart1" style="width: 100%;"></div>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            Source of Cost
+                        </div>
+                        <div class="card-body">
+                            <div id="donutchart1"></div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -470,7 +579,6 @@ group by b.AccName"
                     Next
                 End If
             End Code
-
         </div>
         <div class="col-sm-4" style="text-align:center;">
             @If logoName <> "" Then
@@ -481,6 +589,15 @@ group by b.AccName"
 </div>
 
 <script type="text/javascript">
+    function RedrawCharts() {
+        drawChart1();
+        drawChart2();
+        drawTopSup();
+        drawTopCust();
+    }    
+    window.addEventListener('resize', function () {
+        RedrawCharts();
+    });
     function OpenForm(fname,param='') {
         let period = document.getElementById('txtPeriod').value;
         window.open("?Form=" + fname + "&LANG=EN&DB=@dbname&SRC=@dbSource&Period=" + period + param,'_blank');

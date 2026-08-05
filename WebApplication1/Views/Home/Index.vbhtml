@@ -24,13 +24,15 @@
     Dim cashGroup As String = "111%"
     Dim payablesGroup As String = "212%"
     Dim receivablesGroup As String = "113%"
+    If ViewBag.User = "" Then
+        Response.Redirect("~/Home/Login?DB=" + dbName + "&SRC=" + dbSource)
+    End If
 End Code
 <style>
     .banner-foot {
-        background-color: #f24544;
+        background-color: darkblue;
         padding: 10px 5px 5px 5px;
     }
-
 
         .banner-foot b {
             color: yellow !important;
@@ -41,16 +43,51 @@ End Code
         border-radius: 8px; /* Smooth, modern rounding */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle, downward soft shadow */
         font-weight: bolder;
+        width: auto;
+        margin: 5px 5px 5px 5px;
     }
 </style>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', { packages: ['corechart'] });
+    function openNav() {
+        document.getElementById("mySideBar").style.display = "inline-block";
+        document.getElementById("mySideBar").classList.remove("col-sm-3");
+        document.getElementById("mySideBar").classList.add("col-sm-12");
+
+        document.getElementById("myDashboard").classList.add("col-sm-9");
+        document.getElementById("myDashboard").classList.remove("col-sm-12");
+    }
+
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+        document.getElementById("mySideBar").style.display = "none";
+        document.getElementById("mySideBar").classList.remove("col-sm-12");
+        document.getElementById("mySideBar").classList.add("col-sm-3");
+
+        document.getElementById("myDashboard").classList.remove("col-sm-9");
+        document.getElementById("myDashboard").classList.add("col-sm-12");
+    }
+    var isOpenMenu = false;
+    function ToggleMenu() {
+        if (isOpenMenu) {
+            closeNav();
+        } else {
+            openNav();
+        }
+        isOpenMenu = !isOpenMenu;
+        RedrawCharts();
+    }
 </script>
+<div style="float:right">
+    วันที่ @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+</div>
+<input type="button" class="openbtn" onclick="ToggleMenu()" value="☰"> เมนู
+<br />
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-4" style="padding: 5px 5px 5px 5px;">
-            <b>ข้อมูลมาตรฐาน</b>
+        <div class="col-sm-3 card" id="mySideBar" style="padding: 5px 5px 5px 5px;display:none;">
+            <b>ข้อมูลมาตรฐานทั่วไป</b>
             <div class="row">
                 <div class="col-sm-12">
                     <a href="?Form=Profile&DB=@dbname&SRC=@dbSource">ข้อมูลกิจการ</a>
@@ -68,6 +105,22 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">ข้อมูลผู้จำหน่าย/ผู้ให้บริการ</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">ข้อมูลลูกค้า</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="?Form=ConfigDepre&LANG=TH&DB=@dbname&SRC=@dbSource">มาตรฐานค่าเสื่อมราคา</a>
+                </div>
+            </div>
+            <b>ข้อมูลผลิตภัณฑ์และบริการ</b>
+            <div class="row">
+                <div class="col-sm-12">
                     <a href="?Form=Warehouse&DB=@dbname&SRC=@dbSource">ข้อมูลคลังสินค้า/กลุ่มงานบริการ</a>
                 </div>
             </div>
@@ -78,22 +131,7 @@ End Code
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="?Form=ConfigDepre&LANG=TH&DB=@dbname&SRC=@dbSource">มาตรฐานค่าเสื่อมราคา</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
                     <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">ข้อมูลสินค้าและยริการ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">ข้อมูลผู้จำหน่าย/ผู้ให้บริการ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">ข้อมูลลูกค้า</a>
                 </div>
             </div>
             <b>เชื่อมต่อข้อมูลกับระบบ Job</b>
@@ -171,7 +209,7 @@ End Code
                 </div>
             </div>
             <b>งบการเงิน</b>
-            ประจำปี(ค.ศ) : <input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
+            ประจำปี(ค.ศ) <br /><input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
             <div class="row">
                 <div class="col-sm-12">
                     <a href="#" onclick="OpenForm('TrialBalance')">งบทดลอง</a>
@@ -203,11 +241,13 @@ End Code
                 </div>
             </div>
         </div>
-        <div class="col-sm-8" style="padding: 5px 5px 5px 5px; text-align: center;">
+        <div class="col-sm-12" id="myDashboard" style="padding: 5px 5px 5px 5px; text-align: center;margin-left:10px;margin-right:10px;margin-bottom:5px;">
             @*<img src="~/OverView.png" style="width:100%;" />*@
-            <h4>ภาพรวมการดำเนินงาน</h4>
+            <div class="col-sm-12">
+                <h4>ภาพรวมการดำเนินงาน</h4>
+            </div>
             <div class="row">
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalAmount+a.VatAmount-a.WhtAmount),0) as PendingPO
 from vPR_D a
@@ -219,11 +259,16 @@ and not exists(select 1 from vPO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumPO = dt.Rows(0).Item("PendingPO")
                         End If
                     End Code
-                    <b>ใบสั่งซื้อคงค้าง</b>
-                    <br />
-                    @sumPO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            ยอดซื้อรออนุมัติ
+                        </div>
+                        <div class="card-body">
+                            @sumPO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalNet),0) as TotalPO from vPO_H a where a.DocStatus<>99"
                         dt = obj.GetDataFromSQL(sql)
@@ -231,11 +276,16 @@ and not exists(select 1 from vPO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumPO = dt.Rows(0).Item("TotalPO")
                         End If
                     End Code
-                    <b>ยอดซื้อ</b>
-                    <br />
-                    @sumPO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            ยอดซื้อรวม
+                        </div>
+                        <div class="card-body">
+                            @sumPO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalAmount+a.VatAmount-a.WhtAmount),0) as TotalSR from vSR_D a where a.DocStatus<>99
 and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSourceDocItem=a.AccItemNo)"
@@ -244,11 +294,16 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumSO = dt.Rows(0).Item("TotalSR")
                         End If
                     End Code
-                    <b>ใบสั่งขายคงค้าง</b>
-                    <br />
-                    @sumSO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            ยอดขายรออนุมัติ
+                        </div>
+                        <div class="card-body">
+                            @sumSO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
                         sql = "select isnull(sum(a.TotalNet),0) as TotalSO from vSO_H a where a.DocStatus<>99"
                         dt = obj.GetDataFromSQL(sql)
@@ -256,14 +311,18 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             sumSO = dt.Rows(0).Item("TotalSO")
                         End If
                     End Code
-                    <b>ยอดขาย</b>
-                    <br />
-                    @sumSO.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            ยอดขายรวม
+                        </div>
+                        <div class="card-body">
+                            @sumSO.ToString("N2")
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 card">
-                    <b>TOP 5 - ผู้จำหน่าย</b>
+                <div class="col-sm-6">
                     @Code
                         sql = "select TOP(5) PartyCode,sum(TotalNet) as TotalNet from vPC_H where DocStatus<>99 group by PartyCode order by 2 desc"
                         dt = obj.GetDataFromSQL(sql)
@@ -280,24 +339,30 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             var data = google.visualization.arrayToDataTable(@Html.Raw(chartData3));
 
                             var options = {
-                                title: '5 อันดับยอดสั่งซื้อ',
                                 chartArea: { width: '50%' },
                                 hAxis: {
                                     title: 'ผู้จำหน่าย',
                                     minValue: 0
                                 },
                                 vAxis: {
-                                    title: 'ยอดสั่งซื้อ'
+                                    title: 'ยอดซื้อ'
                                 }
                             };
                             var chart = new google.visualization.BarChart(document.getElementById('chartdata3'));
                             chart.draw(data, options);
                         }
                     </script>
-                    <div id="chartdata3" style="width:100%"></div>
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            5 อันดับยอดซื้อผู้จำหน่าย
+                        </div>
+                        <div class="card-body">
+                            <div id="chartdata3"></div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="col-sm-6 card">
-                    <b>TOP 5 - ลูกค้า</b>
+                <div class="col-sm-6">
                     @Code
                         sql = "select TOP(5) PartyCode,sum(TotalNet) as TotalNet from vRC_H where DocStatus<>99 group by PartyCode order by 2 desc"
                         dt = obj.GetDataFromSQL(sql)
@@ -312,10 +377,7 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                         function drawTopCust() {
 
                             var data = google.visualization.arrayToDataTable(@Html.Raw(chartData4));
-
                             var options = {
-                                title: '5 อันดับยอดขาย',
-                                chartArea: { width: '50%' },
                                 hAxis: {
                                     title: 'ลูกค้า',
                                     minValue: 0
@@ -328,58 +390,89 @@ and not exists(select 1 from vSO_D where AccSourceDocNo=a.AccdocNo and AccSource
                             chart.draw(data, options);
                         }
                     </script>
-                    <div id="chartdata4" style="width:100%"></div>
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            5 อันดับยอดขายลูกค้า
+                        </div>
+                        <div class="card-body">
+                            <div id="chartdata4"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h4>ภาพรวมทางการเงิน</h4>
             <div class="row">
-                <div class="col-sm-3 card">
+                <div class="col-sm-12">
+                    <h4>ภาพรวมทางการเงิน</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(debit-credit) as CashBalance from vSum_Balance where AccCode like '" & cashGroup & "'"
+                        sql = "select isnull(sum(debit-credit),0) as CashBalance from vSum_Balance where AccCode like '" & cashGroup & "'"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumCash = dt.Rows(0).Item("CashBalance")
                         End If
                     End Code
-                    <b>เงินสดคงเหลือ</b>
-                    <br />
-                    @sumCash.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            เงินสดและเงินฝากธนาคาร
+                        </div>
+                        <div class="card-body">
+                            @sumCash.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(credit-debit) as PayablesBalance from vSum_Balance where AccCode like '" & payablesGroup & "'"
+                        sql = "select isnull(sum(credit-debit),0) as PayablesBalance from vSum_Balance where AccCode like '" & payablesGroup & "'"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumPayables = dt.Rows(0).Item("PayablesBalance")
                         End If
                     End Code
-                    <b>ค่าใช้จ่ายค้างจ่าย</b>
-                    <br />
-                    @sumPayables.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            ค่าใช้จ่ายค้างจ่าย
+                        </div>
+                        <div class="card-body">
+                            @sumPayables.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(debit-credit) as ReceivablesBalance from vSum_Balance where AccCode like '" & receivablesGroup & "'"
+                        sql = "select isnull(sum(debit-credit),0) as ReceivablesBalance from vSum_Balance where AccCode like '" & receivablesGroup & "'"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumReceivables = dt.Rows(0).Item("ReceivablesBalance")
                         End If
                     End Code
-                    <b>รายได้ค้างรับ</b>
-                    <br />
-                    @sumReceivables.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            รายได้ค้างรับ
+                        </div>
+                        <div class="card-body">
+                            @sumReceivables.ToString("N2")
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-3 card">
+                <div class="col-sm-3">
                     @Code
-                        sql = "select sum(Credit-Debit) as BaseProfit from vSum_Balance where substring(AccCode,1,1) in('4','5')"
+                        sql = "select isnull(sum(Credit-Debit),0) as BaseProfit from vSum_Balance where substring(AccCode,1,1) in('4','5')"
                         dt = obj.GetDataFromSQL(sql)
                         If dt.Rows.Count > 0 Then
                             sumProfit = dt.Rows(0).Item("BaseProfit")
                         End If
                     End Code
-                    <b>กำไรจากการดำเนินงาน</b>
-                    <br />
-                    @sumProfit.ToString("N2")
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            กำไรขั้นต้น
+                        </div>
+                        <div class="card-body">
+                            @sumProfit.ToString("N2")
+                        </div>
+                    </div>
                 </div>
             </div>
             @Code
@@ -415,7 +508,6 @@ group by b.AccName"
                 function drawChart1() {
                     var data = google.visualization.arrayToDataTable(@Html.Raw(chartData1));
                     var options = {
-                      title: 'ภาพรวมรายรับ-รายจ่าย',
                       hAxis: {title: 'ปี/เดือน',  titleTextStyle: {color: '#333'}},
                       vAxis: {minValue: 0}
                     };
@@ -426,7 +518,6 @@ group by b.AccName"
                 function drawChart2() {
                     var data = google.visualization.arrayToDataTable(@Html.Raw(chartData2));
                     var options = {
-                        title: 'สัดส่วนค่าใช้จ่าย',
                         pieHole: 0.4,
                     };
 
@@ -435,11 +526,26 @@ group by b.AccName"
                 }
             </script>
             <div class="row">
-                <div class="col-sm-8 card">
-                    <div id="areachart1" style="width: 100%;"></div>
+                <div class="col-sm-8">
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            รายได้และค่าใช้จ่าย
+                        </div>
+                        <div class="card-body">
+                            <div id="areachart1"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-4 card">
-                    <div id="donutchart1" style="width: 100%;"></div>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            ที่มาของค่าใช้จ่าย
+                        </div>
+                        <div class="card-body">
+                            <div id="donutchart1"></div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -461,12 +567,12 @@ group by b.AccName"
                                     logoName = dr("ConfigValue").ToString()
                                 End If
                             End If
-                            @<div class="row">
-                                <div class="col-sm-12" style="color:white;">
-                                    <b>@dr("ConfigKey").ToString().Replace("COMPANY_", "")</b> :
-                                    @dr("ConfigValue")
-                                </div>
-                            </div>
+                @<div class="row">
+                    <div class="col-sm-12" style="color:white;">
+                        <b>@dr("ConfigKey").ToString().Replace("COMPANY_", "")</b> :
+                        @dr("ConfigValue")
+                    </div>
+                </div>
                         End If
                     Next
                 End If
@@ -474,13 +580,21 @@ group by b.AccName"
         </div>
         <div class="col-sm-4" style="text-align:center;">
             @If logoName <> "" Then
-                @<img src="~/@logoName" style="width:200px;" />
+            @<img src="~/@logoName" style="width:200px;" />
             End If
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
+    function RedrawCharts() {
+        drawChart1();
+        drawChart2();
+        drawTopSup();
+        drawTopCust();
+    }
+    window.addEventListener('resize', function () {
+        RedrawCharts();
+    });
     function OpenForm(fname,param='') {
         let period = document.getElementById('txtPeriod').value;
         window.open("?Form=" + fname + "&LANG=TH&DB=@dbname&SRC=@dbSource&Period=" + period + param,'_blank');

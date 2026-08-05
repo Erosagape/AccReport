@@ -26,11 +26,15 @@
     If Not Request.QueryString("Code") Is Nothing Then
         pdcode = Request.QueryString("Code")
     End If
+    Dim debug As Boolean = False
+    If Not Request.QueryString("DEBUG") Is Nothing Then
+        debug = Request.QueryString("DEBUG") = "Y"
+    End If
 
-    Dim sql = String.Format("select *,TransAmount/TransQty as Price from vStock_Card WHERE WarehouseCode='{0}' and StockProductCode='{1}' ", warehouse, pdcode)
-    sql &= String.Format(" AND AccEffectiveDate>='{0}'", dateFrom)
-    sql &= String.Format(" AND AccEffectiveDate<='{0}'", dateTo)
-    sql &= " ORDER BY AccEffectiveDate,TransID"
+    Dim sql = String.Format("select *,case when TransQty<>0 then TransAmount/TransQty else 0 end as Price from vStock_Card WHERE WarehouseCode like '{0}%' and StockProductCode='{1}' ", warehouse, pdcode)
+    sql &= String.Format(" AND AccBatchDate>='{0}'", dateFrom)
+    sql &= String.Format(" AND AccBatchDate<='{0}'", dateTo)
+    sql &= " ORDER BY AccBatchDate,TransID"
 End Code
 <h2>@ViewBag.Title</h2>
 <div id="mdlProduct" class="modal" role="dialog">
@@ -106,7 +110,7 @@ End Code
 <div Class="container-fluid">
     @Code
         Dim balSql As String = String.Format("select sum(TransQty) as BalQty,sum(TransAmount) as BalAmt from vStock_Card where WarehouseCode='{0}' and  StockProductCode='{1}'", warehouse, pdcode)
-        balSql &= String.Format(" AND AccEffectiveDate<'{0}'", dateFrom)
+        balSql &= String.Format(" AND AccBatchDate<'{0}'", dateFrom)
         Dim dt As New Data.DataTable
         dt = obj.GetDataFromSQL(balSql)
         Dim balQty As Double = 0
@@ -151,7 +155,7 @@ End Code
                     balAmount -= obj.GetDouble(dr("AmountOUT"))
                     @<tr>
                         <td>
-                            @Convert.ToDateTime(dr("AccEffectiveDate")).ToString("dd/MM/yyyy")
+                            @Convert.ToDateTime(dr("AccBatchDate")).ToString("dd/MM/yyyy")
                         </td>
                         <td>
                             @dr("AccDocNo").ToString()
@@ -180,7 +184,11 @@ End Code
         </table>
     End Code
 </div>
-
+@If debug Then
+    @<p>
+        @sql
+    </p>
+End If
 <script type="text/javascript">
     function SetData(pd, wh) {
         document.getElementById('txtWarehouseCode').value = wh;

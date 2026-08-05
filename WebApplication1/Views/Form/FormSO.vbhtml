@@ -60,21 +60,21 @@ End Code
     @<table border="1" style="border-width:thin;border-collapse:collapse;width:100%;">
          <tr>
              <th>No</th>
-             <th>Ref#</th>
              <th>Description</th>
              <th>Qty</th>
              <th>Price</th>
              <th>Currency</th>
+             <th>Vat/Tax</th>
              <th>Amount</th>
          </tr>
         @For Each dr As Data.DataRow In dt.Rows
             @<tr>
     <td>@dr("AccItemNo")</td>
-    <td>@dr("AccSourceDocNo").ToString</td>
-    <td>@dr("SalesDescription").ToString</td>
+    <td><b>@dr("ProductCode")</b> @dr("SalesDescription").ToString</td>
     <td>@dr("Qty").ToString @dr("UnitMea").ToString</td>
     <td class="colnum">@Convert.ToDouble(dr("Price")).ToString("#,###,#0.00")</td>
     <td>@dr("Currency").ToString = @dr("ExchangeRate")</td>
+    <td>@dr("RateVat")/@dr("RateWht")</td>
     <td class="colnum">@Convert.ToDouble(dr("Amount")).ToString("#,###,#0.00")</td>
 </tr>
         Next
@@ -100,8 +100,8 @@ End Code
     </table>
     @<table border="1" style="border-width:thin;width:100%;border-collapse:collapse;text-align:center;">
         <tr>
-            <td>FOR THE COMPANY</td>
-            <td>FOR THE CUSTOMERS</td>
+            <th>FOR THE COMPANY</th>
+            <th>FOR THE CUSTOMERS</th>
         </tr>
         <tr>
             <td> <br /><br /><br /></td>

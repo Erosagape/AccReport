@@ -128,7 +128,7 @@ End Code
 Else
     @<b>@obj.Message</b>
 End If
-<script src="~/Scripts/util.js"></script>
+<script src="~/Scripts/util.js?@DateTime.Now.ToString("yyyyMMddHHMMss")"></script>
 <script type="text/javascript">
     function OpenNewdoc() {
         var docType = document.getElementById('cboDocType').value;

@@ -17,16 +17,21 @@
     Dim warehouse As String = ""
     If Not Request.QueryString("WH") Is Nothing Then
         warehouse = Request.QueryString("WH")
-        sqlW &= String.Format(" WarehouseCode='{0}'", warehouse)
+        sqlW &= String.Format(" WarehouseCode like '{0}%'", warehouse)
     End If
 
     Dim pdcode As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
         pdcode = Request.QueryString("Code")
         If sqlW <> "" Then sqlW &= " AND "
-        sqlW &= String.Format(" StockProductCode='{0}'", pdcode)
+        sqlW &= String.Format(" StockProductCode like '{0}%'", pdcode)
     End If
-
+    Dim accode As String = ""
+    If Not Request.QueryString("acc") Is Nothing Then
+        accode = Request.QueryString("acc")
+        If sqlW <> "" Then sqlW &= " AND "
+        sqlW &= String.Format(" AssetAccCode like '{0}%'", accode)
+    End If
     Dim sql = "select * from vStock_Onhand "
     If sqlW <> "" Then
         sql &= " WHERE " & sqlW
@@ -84,6 +89,11 @@ End Code
             <br />
             <input type="text" id="txtWarehouseCode" value="@warehouse" />
         </div>
+        <div Class="col-sm-3">
+            <Label> G/L Code :   </Label>
+            <br />
+            <input type="text" id="txtAccCode" value="@accode" />
+        </div>
     </div>
     <div Class="row">
         <div Class="col">
@@ -113,27 +123,27 @@ End Code
                         sumQty += dr("SumQty")
                         sumAmount += dr("SumAmount")
                         @<tr>
-    <td>
-        <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource&Code=@dr("StockProductCode")&WH=@dr("WarehouseCode")">
-            @dr("WarehouseCode")
-        </a>        
-    </td>
-    <td>
-        @dr("AssetAccCode") / @dr("AssetAccName")
-    </td>
-    <td>
-        @dr("StockProductCode").ToString() / @dr("ProductName").ToString() @dr("ProductBrand").ToString() @dr("ProductColor").ToString()
-    </td>
-    <td class="text-right">
-        @dr("SumQty") @dr("UnitStock")
-    </td>
-    <td class="text-right">
-        @obj.GetDouble(dr("AvgPrice")).ToString("#,##0.0000")
-    </td>
-    <td class="text-right">
-        @obj.GetDouble(dr("SumAmount")).ToString("#,##0.00")
-    </td>
-</tr>
+                            <td>
+                                <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource&Code=@dr("StockProductCode")&WH=@dr("WarehouseCode")">
+                                    @dr("WarehouseCode")
+                                </a>
+                            </td>
+                            <td>
+                                @dr("AssetAccCode") / @dr("AssetAccName")
+                            </td>
+                            <td>
+                                @dr("StockProductCode").ToString() / @dr("ProductName").ToString() @dr("ProductBrand").ToString() @dr("ProductColor").ToString()
+                            </td>
+                            <td class="text-right">
+                                @dr("SumQty") @dr("UnitStock")
+                            </td>
+                            <td class="text-right">
+                                @obj.GetDouble(dr("AvgPrice")).ToString("#,##0.0000")
+                            </td>
+                            <td class="text-right">
+                                @obj.GetDouble(dr("SumAmount")).ToString("#,##0.00")
+                            </td>
+                        </tr>
                     Next
                     <tr>
                         <td colspan="5">TOTAL</td>
@@ -154,7 +164,8 @@ End Code
     function RefreshPage() {
         let warehouseCode = document.getElementById('txtWarehouseCode').value;
         let productCode = document.getElementById('txtProductCode').value;
-        window.location.href = "?Form=StockOnhand&DB=@dbname&SRC=@dbSource&Code="+ productCode+ "&WH=" + warehouseCode;
+        let accCode = document.getElementById('txtAccCode').value;
+        window.location.href = "?Form=StockOnhand&DB=@dbname&SRC=@dbSource&Acc="+accCode+"&Code="+ productCode+ "&WH=" + warehouseCode;
     }
 </script>
 
