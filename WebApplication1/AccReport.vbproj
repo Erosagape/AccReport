@@ -332,6 +332,17 @@
     <Content Include="Views\Form\FormWHTax3D.vbhtml" />
     <Content Include="Views\Form\FormWHTax53D.vbhtml" />
     <Content Include="Views\Home\ReportCompare.vbhtml" />
+    <Content Include="Views\Home\AccCode.vbhtml" />
+    <Content Include="Views\Home\Dashboard.vbhtml" />
+    <Content Include="Views\Home\DocList.vbhtml" />
+    <Content Include="Views\Home\GeneralLedger_V1.vbhtml" />
+    <Content Include="Views\Home\Journal.vbhtml" />
+    <Content Include="Views\Home\Menu.vbhtml" />
+    <Content Include="Views\Home\MenuDesktop.vbhtml" />
+    <Content Include="Views\Home\ProductType.vbhtml" />
+    <Content Include="Views\Home\ReportEN.vbhtml" />
+    <Content Include="Views\Home\ReportStock.vbhtml" />
+    <Content Include="Views\Home\Warehouse.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
