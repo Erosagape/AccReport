@@ -136,20 +136,20 @@ End Code
                              <a href="?Form=GeneralLedger&SRC=@dbSource&DB=@dbname&Code=@row("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@row("AccCode").ToString()</a>
                          </td>
                         <td>@row("AccName").ToString()</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Dr_Before")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Cr_Before")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Dr_Current")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Cr_Current")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Dr_Balance")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Cr_Balance")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Dr_Forward")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(row("Cr_Forward")).ToString("N2")</td>
+                        <td class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Dr_Before"))).ToString("N2")</td>
+                        <td class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Cr_Before"))).ToString("N2")</td>
+                        <td class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Dr_Current"))).ToString("N2")</td>
+                        <td class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Cr_Current"))).ToString("N2")</td>
+                        <td class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Dr_Balance"))).ToString("N2")</td>
+                        <td class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Cr_Balance"))).ToString("N2")</td>
+                        <td Class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Dr_Forward"))).ToString("N2")</td>
+                        <td Class="colnum">@obj.GetDouble(Convert.ToDecimal(row("Cr_Forward"))).ToString("N2")</td>
                     </tr>
                 Next
             </tbody>
         </table>
     End If
-End If
+                            End If
 @If reportType = "Y" Then
     @<a href="#form1" onclick="OpenForm()"><h2>@(IIf(lang = "TH", "เปรียบเทียบยอดคงเหลือทางบัญชี-รายปี", "Account Balance Comparison By Year"))</h2></a>
     @<form id="form1" method="post" action="" style="display:none;">
@@ -163,13 +163,13 @@ End If
         <input type="submit" value="Generate Report" name="SubmitYear" class="btn btn-primary" />
     </form>
     If dt.Rows.Count > 0 Then
-        Dim dateFrom = New Date(fiscalYear, 1, 1).ToString("yyyy-MM-dd")
-        Dim dateTo = New Date(fiscalYear, 12, 31).ToString("yyyy-MM-dd")
+                                    Dim dateFrom = New Date(fiscalYear, 1, 1).ToString("yyyy-MM-dd")
+                                    Dim dateTo = New Date(fiscalYear, 12, 31).ToString("yyyy-MM-dd")
         @<h2>@cliteria</h2>
         @<table class="table table-bordered table-striped">
             <thead>
-                <tr>
-                    <th rowspan="2">@IIf(lang = "TH", "รหัสบัญชี", "Account Code")</th>
+                                    <tr>
+                                    <th rowspan="2">@IIf(lang = "TH", "รหัสบัญชี", "Account Code")</th>
                     <th rowspan="2">@IIf(lang = "TH", "ชื่อบัญชี", "Account Name")</th>
                     <th colspan="2">@IIf(lang = "TH", (fiscalYear - 1) + 543, fiscalYear - 1)</th>
                     <th colspan="2">@IIf(lang = "TH", "ยอดเคลื่อนไหว", "Movement")</th>
@@ -178,7 +178,7 @@ End If
                     <th rowspan="2">@IIf(lang = "TH", "เปลี่ยนแปลง", "Change")</th>
                 </tr>
                 <tr>
-                    <th>Debit</th>
+                                    <th>Debit</th>
                     <th>Credit</th>
                     <th>Debit</th>
                     <th>Credit</th>
@@ -192,7 +192,7 @@ End If
                 @For Each row As Data.DataRow In dt.Rows
                     @<tr>
                         <td>
-                            <a href="?Form=GeneralLedger&SRC=@dbSource&DB=@dbname&Code=@row("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@row("AccCode").ToString()</a>
+                                    <a href="?Form=GeneralLedger&SRC=@dbSource&DB=@dbname&Code=@row("AccCode")&DateFrom=@dateFrom&DateTo=@dateTo">@row("AccCode").ToString()</a>
                         </td>
                         <td>@row("AccName").ToString()</td>
                         <td class="colnum">@Convert.ToDecimal(row("Dr_LastYear")).ToString("N2")</td>
@@ -209,7 +209,7 @@ End If
             </tbody>
         </table>
     End If
-End If
+                                                                        End If
 @If reportType = "Q" Then
     @<a href="#form1" onclick="OpenForm()"><h2>@(IIf(lang = "TH", "เปรียบเทียบยอดคงเหลือทางบัญชี-ตามไตรมาส", "Account Balance Comparison By Quarter"))</h2></a>
     @<form id="form1" method="post" action="" style="display:none;">
@@ -231,8 +231,8 @@ End If
         @<h2>@cliteria</h2>
         @<table class="table table-bordered table-striped">
             <thead>
-                <tr>
-                    <th>@IIf(lang = "TH", "รหัสบัญชี", "Account Code")</th>
+                                                                                    <tr>
+                                                                                    <th>@IIf(lang = "TH", "รหัสบัญชี", "Account Code")</th>
                     <th>@IIf(lang = "TH", "ชื่อบัญชี", "Account Name")</th>
                     @If quarter > 0 Then
                         @<th>@IIf(lang = "TH", quarter & "/" & (fiscalYear - 1) + 543, "Q" & quarter & "/" & fiscalYear - 1)</th>
@@ -268,23 +268,23 @@ End If
                                 Else
                                     @<td class="colnum">-@Convert.ToDecimal(row("Cr_LQ" & quarter)).ToString("N2")</td>
                                 End If
-                                If Convert.ToDecimal(row("Dr_Q" & quarter)) > 0.0 Then
+                                                                                    If Convert.ToDecimal(row("Dr_Q" & quarter)) > 0.0 Then
                                     @<td class="colnum">@Convert.ToDecimal(row("Dr_Q" & quarter)).ToString("N2")</td>
                                 Else
                                     @<td class="colnum">-@Convert.ToDecimal(row("Cr_Q" & quarter)).ToString("N2")</td>
                                 End If
-                            Else
-                                If Convert.ToDecimal(row("Cr_LQ" & quarter)) > 0.0 Then
+                                                                                    Else
+                                                                                    If Convert.ToDecimal(row("Cr_LQ" & quarter)) > 0.0 Then
                                     @<td class="colnum">@Convert.ToDecimal(row("Cr_LQ" & quarter)).ToString("N2")</td>
                                 Else
                                     @<td class="colnum">-@Convert.ToDecimal(row("Dr_LQ" & quarter)).ToString("N2")</td>
                                 End If
-                                If Convert.ToDecimal(row("Cr_Q" & quarter)) > 0.0 Then
+                                                                                    If Convert.ToDecimal(row("Cr_Q" & quarter)) > 0.0 Then
                                     @<td class="colnum">@Convert.ToDecimal(row("Cr_Q" & quarter)).ToString("N2")</td>
                                 Else
                                     @<td class="colnum">-@Convert.ToDecimal(row("Dr_Q" & quarter)).ToString("N2")</td>
                                 End If
-                            End If
+                                                                                    End If
                             @If Convert.ToDecimal(row("Change_Q" & quarter)) > 0.0 Then
                                 @<td class="colnum">
                                     +@Convert.ToDecimal(row("Change_Q" & quarter)).ToString("N2") (@Convert.ToDecimal(row("Ratio_Q" & quarter)).ToString("N2")%)
@@ -303,29 +303,29 @@ End If
                             <td>@row("AccName").ToString()</td>
                             @For i As Integer = 1 To 4
                                 If "1,5".Contains(row("AccCode").ToString().Substring(0, 1)) Then
-                                    If Convert.ToDecimal(row("Dr_LQ" & i)) > 0.0 Then
+                                                                                    If Convert.ToDecimal(row("Dr_LQ" & i)) > 0.0 Then
                                         @<td class="colnum">@Convert.ToDecimal(row("Dr_LQ" & i)).ToString("N2")</td>
                                     Else
                                         @<td class="colnum">-@Convert.ToDecimal(row("Cr_LQ" & i)).ToString("N2")</td>
                                     End If
-                                    If Convert.ToDecimal(row("Dr_Q" & i)) > 0.0 Then
+                                                                                    If Convert.ToDecimal(row("Dr_Q" & i)) > 0.0 Then
                                         @<td class="colnum">@Convert.ToDecimal(row("Dr_Q" & i)).ToString("N2")</td>
                                     Else
                                         @<td class="colnum">-@Convert.ToDecimal(row("Cr_Q" & i)).ToString("N2")</td>
                                     End If
-                                Else
-                                    If Convert.ToDecimal(row("Cr_LQ" & i)) > 0.0 Then
+                                                                                    Else
+                                                                                    If Convert.ToDecimal(row("Cr_LQ" & i)) > 0.0 Then
                                         @<td class="colnum">@Convert.ToDecimal(row("Cr_LQ" & i)).ToString("N2")</td>
                                     Else
                                         @<td class="colnum">-@Convert.ToDecimal(row("Dr_LQ" & i)).ToString("N2")</td>
                                     End If
-                                    If Convert.ToDecimal(row("Cr_Q" & i)) > 0.0 Then
+                                                                                    If Convert.ToDecimal(row("Cr_Q" & i)) > 0.0 Then
                                         @<td class="colnum">@Convert.ToDecimal(row("Cr_Q" & i)).ToString("N2")</td>
                                     Else
                                         @<td class="colnum">-@Convert.ToDecimal(row("Dr_Q" & i)).ToString("N2")</td>
                                     End If
-                                End If
-                                If Convert.ToDecimal(row("Change_Q" & i)) > 0.0 Then
+                                                                                    End If
+                                                                                    If Convert.ToDecimal(row("Change_Q" & i)) > 0.0 Then
                                     @<td class="colnum">
                                         +@Convert.ToDecimal(row("Change_Q" & i)).ToString("N2") (@Convert.ToDecimal(row("Ratio_Q" & i)).ToString("N2")%)
                                     </td>
@@ -334,16 +334,16 @@ End If
                                         @Convert.ToDecimal(row("Change_Q" & i)).ToString("N2") (@Convert.ToDecimal(row("Ratio_Q" & i)).ToString("N2")%)
                                     </td>
                                 End If
-                            Next
+                                                                                    Next
                         </tr>
                     End If
-                Next
+                                                                                    Next
             </tbody>
         </table>
     End If
-End If
-<script type="text/javascript">
-    function OpenForm() {
+                                                                                    End If
+                                                                                    <script type="text/javascript">
+                                                                                        function OpenForm() {
         $("#form1").css("display", "block");
     }
 </script>

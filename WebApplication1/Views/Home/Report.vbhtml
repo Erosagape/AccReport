@@ -238,24 +238,40 @@ End Code
         รายงาน:
         <br />
         <select id="cboReport" class="form-control dropdown">
-            <option value="Purchase">รายงานใบสั่งซื้อ</option>
-            <option value="PI">รายงานใบแจ้งหนี้ค่าใช้จ่าย</option>
-            <option value="PC">รายงานใบเตรียมจ่าย</option>
-            <option value="AgingAP">รายงานอายุเจ้าหนี้</option>
-            <option value="Sale">รายงานใบสั่งขาย</option>
-            <option value="SI">รายงานใบแจ้งหนี้ค่าบริการลูกค้า</option>
-            <option value="RC">รายงานใบเสร็จรับเงิน</option>
-            <option value="AgingAR">รายงานอายุลูกหนี้</option>
-            <option value="AR">รายงานลูกหนี้</option>
-            <option value="AP">รายงานเจ้าหนี้</option>
-            <option value="Payment">รายงานใบสำคัญจ่าย</option>
-            <option value="Receive">รายงาานใบสำคัญรับ</option>
-            <option value="Journal">รายงานสมุดรายวัน</option>
-            <option value="VATSale">รายงานภาษีขาย</option>
-            <option value="VATBuy">รายงานภาษีซื้อ</option>
-            <option value="WHTax">รายงานการหัก ณ ที่จ่าย</option>
-            <option value="WHTaxSum">รายงานสรุปการหัก ณ ที่จ่าย</option>
-            <option value="PRD">รายงานนำส่งภาษี</option>
+            <optgroup label="Purchase Report">
+                <option value="Purchase">รายงานใบสั่งซื้อ</option>
+                <option value="PI">รายงานใบแจ้งหนี้ค่าใช้จ่าย</option>
+            </optgroup>
+            <optgroup label="Sale Report">
+                <option value="Sale">รายงานใบสั่งขาย</option>
+                <option value="SI">รายงานใบแจ้งหนี้ค่าบริการลูกค้า</option>
+            </optgroup>
+            <optgroup label="Payment Report">
+                <option value="PC">รายงานใบเตรียมจ่าย</option>
+                <option value="Payment">รายงานใบสำคัญจ่าย</option>
+            </optgroup>
+            <optgroup label="Payables Report">
+                <option value="AgingAP">รายงานอายุเจ้าหนี้</option>
+                <option value="AP">รายงานเจ้าหนี้</option>                
+            </optgroup>
+            <optgroup label="Receive Report">
+                <option value="RC">รายงานใบเสร็จรับเงิน</option>
+                <option value="Receive">รายงาานใบสำคัญรับ</option>
+            </optgroup>
+            <optgroup label="Receivables Report">
+                <option value="AgingAR">รายงานอายุลูกหนี้</option>
+                <option value="AR">รายงานลูกหนี้</option>                
+            </optgroup>
+            <optgroup label="Journal Report">
+                <option value="Journal">รายงานสมุดรายวัน</option>
+                <option value="VATSale">รายงานภาษีขาย</option>
+                <option value="VATBuy">รายงานภาษีซื้อ</option>
+            </optgroup>
+            <optgroup label="Tax Report">
+                <option value="WHTax">รายงานการหัก ณ ที่จ่าย</option>
+                <option value="WHTaxSum">รายงานสรุปการหัก ณ ที่จ่าย</option>
+                <option value="PRD">รายงานนำส่งภาษี</option>
+            </optgroup>
         </select>
     </div>
 </div>
