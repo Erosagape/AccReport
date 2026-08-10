@@ -245,10 +245,8 @@ End Code
         </div>
         <div class="col-sm-12" id="myDashboard" style="padding: 5px 5px 5px 5px; text-align: center;margin-left:10px;margin-right:10px;margin-bottom:5px;">
             @*<img src="~/OverView.png" style="width:100%;" />*@
-            <div class="row">
-                <div class="col-sm-12">
-                    <h4>Operation Overview</h4>
-                </div>
+            <div class="col-sm-12">
+                <h4>Operation Overview</h4>
             </div>
             <div class="row">
                 <div class="col-sm-3">

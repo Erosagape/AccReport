@@ -73,9 +73,9 @@ End Code
         }
 
             .brand img {
-                width: 168px;
+                width: 100%;
                 height: 31px;
-                object-fit: contain;
+                object-fit: scale-down;
                 background: #fff;
                 border-radius: 3px
             }
@@ -452,10 +452,7 @@ End Code
 <body>
     <div class="app">
         <aside class="sidebar">
-            <div class="brand">
-                <img src="~/logo-tawan.jpg" alt="TAWAN">
-                <small>บริษัท ตะวันเทคโนโลยี จำกัด</small>
-            </div>
+
             <div class="menu-title">เมนูรายงาน</div>
             <a class="nav-link active" href="#"><span class="ico">◉</span><span>Dashboard</span></a>
             <a class="nav-link" href="#"><span class="ico">▤</span><span>รายงานการเงิน</span></a>
@@ -471,13 +468,14 @@ End Code
             <a class="nav-link" href="#"><span class="ico">↝</span><span>กระแสเงินสด</span></a>
             <a class="nav-link" href="#"><span class="ico">⌁</span><span>วิเคราะห์ทางการเงิน</span></a>
             <a class="nav-link" href="#"><span class="ico">✓</span><span>ตรวจสอบภายใน</span></a>
-            <div class="agent">
-                <img src="~/ai-agent.svg" alt="AI Agent">
-            </div>
         </aside>
         <main>
             <header class="topbar">
-                <div class="crumb">☰ &nbsp; รายงานทางบัญชี › Dashboard</div>
+                <div class="crumb">
+                    <div class="brand">
+                        <img src="~/logo-tawan.jpg" alt="TAWAN">
+                    </div>
+                </div>
                 <div class="top-actions">
                     <select class="select"><option>ส.ค. 2569</option></select>
                     <button class="btn">🔔</button>
@@ -486,18 +484,11 @@ End Code
             </header>
             <div class="content">
                 <div class="page-head">
-                    <div>
-                        <h1>รายงานทางบัญชี (Accounting Dashboard)</h1>
-                        <div class="sub">ภาพรวมผลการดำเนินงานทางการเงิน กำไร ขาดทุน ต้นทุน และรายงานตรวจสอบบัญชี</div>
-                    </div>
                     <div class="actions">
                         <button class="btn" onclick="location.reload()">↻ รีเฟรช</button>
                         <button class="btn" onclick="window.print()">⇩ Export / Print</button>
                     </div>
                 </div>
-                <section class="hero">
-                    <img src="~/finance-hero.svg" alt="Financial analytics">
-                </section>
                 <section class="kpis">
                     <div class="card kpi">
                         <div class="label">ยอดขายรวม</div>
