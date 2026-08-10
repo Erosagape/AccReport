@@ -42,7 +42,17 @@
     End Function
     <HttpPost()>
     Function PostLogin(data As FormCollection) As ActionResult
-        Dim obj As New CUtil(ViewBag.WebIP, ViewBag.AccDatabase)
+        Dim DBJob As String = ViewBag.JobDatabase
+        Dim DBAcc As String = ViewBag.AccDatabase
+        If Not Request.QueryString("DB") Is Nothing Then
+            DBJob = Request.QueryString("DB")
+            ViewData("JobDatabase") = DBJob
+        End If
+        If Not Request.QueryString("SRC") Is Nothing Then
+            DBAcc = Request.QueryString("SRC")
+            ViewData("AccDatabase") = DBJob
+        End If
+        Dim obj As New CUtil(ViewBag.WebIP, DBAcc)
         Session("Target") = data("Target")
         Dim dt As Data.DataTable = obj.GetDataFromSQL(String.Format("SELECT * FROM Mas_User where username='{0}' and passwordhash='{1}'", data("UserID"), data("UserPassword")))
         If obj.Message = "" And dt.Rows.Count > 0 Then

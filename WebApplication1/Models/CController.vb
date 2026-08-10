@@ -44,13 +44,14 @@ END
         End If
         Return ""
     End Function
-    Function GetView(vName As String, Optional checkLogin As Boolean = False) As ViewResult
+    Function GetView(vName As String, Optional checkLogin As Boolean = False) As ActionResult
         SetSession(Session("UserLogin"))
         If checkLogin Then
             Session("Target") = vName
             If ViewBag.Token = "" Then
                 ViewBag.Target = vName
-                Return View("Login")
+                Dim routeValues = New With {.DB = ViewBag.JobDatabase, .SRC = ViewBag.AccDatabase}
+                Return RedirectToAction("Login", routeValues)
             End If
         End If
         If ViewBag.WebIP = "" Then
