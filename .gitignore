@@ -362,3 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /WebApplication1/Views/Views20251027.zip
+/WebApplication1/Views/Home/Index20260811.vbhtml
+/WebApplication1/Views/Home/IndexEN20260811.vbhtml
+/WebApplication1/Views/Home/Login20260811.vbhtml
+/WebApplication1/Views/Shared/_Layout20260811.vbhtml

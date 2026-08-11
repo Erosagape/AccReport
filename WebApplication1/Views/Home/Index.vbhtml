@@ -8,6 +8,10 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
+    Dim lang As String = "TH"
+    If Not Request.QueryString("LANG") Is Nothing Then
+        lang = Request.QueryString("LANG")
+    End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql As String = ""
     Dim dt = New Data.DataTable
@@ -25,7 +29,12 @@
     Dim payablesGroup As String = "212%"
     Dim receivablesGroup As String = "113%"
     If ViewBag.User = "" Then
-        Response.Redirect("~/Home/Login?DB=" + dbName + "&SRC=" + dbSource)
+        If lang = "EN" Then
+            Response.Redirect("~/Home/Login?LANG=EN&DB=" + dbname + "&SRC=" + dbSource)
+        Else
+            Response.Redirect("~/Home/Login?LANG=TH&DB=" + dbname + "&SRC=" + dbSource)
+        End If
+
     End If
 End Code
 <style>
@@ -50,198 +59,10 @@ End Code
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', { packages: ['corechart'] });
-    function openNav() {
-        document.getElementById("mySideBar").style.display = "inline-block";
-        document.getElementById("mySideBar").classList.remove("col-sm-3");
-        document.getElementById("mySideBar").classList.add("col-sm-12");
-
-        document.getElementById("myDashboard").classList.add("col-sm-9");
-        document.getElementById("myDashboard").classList.remove("col-sm-12");
-    }
-
-    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-    function closeNav() {
-        document.getElementById("mySideBar").style.display = "none";
-        document.getElementById("mySideBar").classList.remove("col-sm-12");
-        document.getElementById("mySideBar").classList.add("col-sm-3");
-
-        document.getElementById("myDashboard").classList.remove("col-sm-9");
-        document.getElementById("myDashboard").classList.add("col-sm-12");
-    }
-    var isOpenMenu = false;
-    function ToggleMenu() {
-        if (isOpenMenu) {
-            closeNav();
-        } else {
-            openNav();
-        }
-        isOpenMenu = !isOpenMenu;
-        RedrawCharts();
-    }
 </script>
-<div style="float:right">
-    วันที่ @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
-</div>
-<input type="button" class="openbtn" onclick="ToggleMenu()" value="☰"> เมนู
-<br />
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 card" id="mySideBar" style="padding: 5px 5px 5px 5px;display:none;">
-            <b>ข้อมูลมาตรฐานทั่วไป</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Profile&DB=@dbname&SRC=@dbSource">ข้อมูลกิจการ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ConfigAcc&DB=@dbname&SRC=@dbSource">กำหนดมาตรฐานการลงบัญชี</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=DocList&DB=@dbname&SRC=@dbSource">กำหนดมาตรฐานเอกสารต้นทาง</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">ข้อมูลผู้จำหน่าย/ผู้ให้บริการ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">ข้อมูลลูกค้า</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ConfigDepre&LANG=TH&DB=@dbname&SRC=@dbSource">มาตรฐานค่าเสื่อมราคา</a>
-                </div>
-            </div>
-            <b>ข้อมูลผลิตภัณฑ์และบริการ</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Warehouse&DB=@dbname&SRC=@dbSource">ข้อมูลคลังสินค้า/กลุ่มงานบริการ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ProductType&DB=@dbname&SRC=@dbSource">ประเภทสินค้าและยริการ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">ข้อมูลสินค้าและยริการ</a>
-                </div>
-            </div>
-            <b>เชื่อมต่อข้อมูลกับระบบ Job</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=LinkJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">เช็คยอดที่จะลงบันทึกบัญชีคร่าวๆ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=TransferJob_TH&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">ดึงรายการไประบบบัญชีแยกประเภท</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ReportJob&DB=@dbname&SRC=@dbSource">เช็คยอดหลังจากดึงรายการไประบบบัญชี</a>
-                </div>
-            </div>
-            <b>เอกสารทางบัญชี</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="~/Form?Form=Lists&DB=@dbname&SRC=@dbSource">รายการเอกสาร</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="~/Form?DB=@dbname&SRC=@dbSource">สมุดรายวันทั่วไป</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Transaction&DB=@dbname&SRC=@dbSource">ผ่านรายการไปสมุดรายวัน</a>
-                </div>
-            </div>
-            <b>รายงานสรุปทางบัญชี</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Report&DB=@dbname&SRC=@dbSource">ภาพรวม</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource">สต๊อกการ์ด</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=StockOnhand&DB=@dbname&SRC=@dbSource">สินค้าคงเหลือ</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ReportDepre&LANG=TH&DB=@dbname&SRC=@dbSource&Code=">สรุปค่าเสื่อมราคา</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ReportGL&DB=@dbname&SRC=@dbSource">รายงานแยกประเภททั่วไป</a>
-                </div>
-            </div>
-            <b>กระดาษทำการ</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance_V2&DB=@dbname&SRC=@dbSource">ยอดเคลื่อนไหวสิ้นเดือน</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance_V2&DB=@dbname&Type=1&SRC=@dbSource">สรุปยอดคงเหลือสิ้นเดือน</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance_V2&DB=@dbname&Type=2&SRC=@dbSource">สรุปยอดยกไปสิ้นเดือน</a>
-                </div>
-            </div>
-            <b>งบการเงิน</b>
-            ประจำปี(ค.ศ) <br /><input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('TrialBalance')">งบทดลอง</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('ProfitLoss')">งบกำไรขาดทุน</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('BalanceSheet')">งบแสดงสถานะทางการเงิน</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('CashFlow')">งบกระแสเงินสด</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('ReportCompare','&TYPE=Y')">งบเปรียบเทียบรายปี</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('ReportCompare','&TYPE=Q')">งบเปรียบเทียบตามไตรมาส</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12" id="myDashboard" style="padding: 5px 5px 5px 5px; text-align: center;margin-left:10px;margin-right:10px;margin-bottom:5px;">
+        <div class="col-sm-12" style="padding: 5px 5px 5px 5px; text-align: center;margin-left:10px;margin-right:10px;margin-bottom:5px;">
             @*<img src="~/OverView.png" style="width:100%;" />*@
             <div class="col-sm-12">
                 <h4>ภาพรวมการดำเนินงาน</h4>
@@ -595,8 +416,4 @@ group by b.AccName"
     window.addEventListener('resize', function () {
         RedrawCharts();
     });
-    function OpenForm(fname,param='') {
-        let period = document.getElementById('txtPeriod').value;
-        window.open("?Form=" + fname + "&LANG=TH&DB=@dbname&SRC=@dbSource&Period=" + period + param,'_blank');
-    }
 </script>

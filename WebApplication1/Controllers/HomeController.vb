@@ -15,7 +15,17 @@
     End Function
     <HttpPost()>
     Function PostLoginFromJob(data As FormCollection) As ActionResult
-        Dim obj As New CUtil(ViewBag.WebIP, ViewBag.AccDatabase)
+        Dim DBJob As String = ViewBag.JobDatabase
+        Dim DBAcc As String = ViewBag.AccDatabase
+        If Not Request.QueryString("DB") Is Nothing Then
+            DBJob = Request.QueryString("DB")
+            ViewBag.JobDatabase = DBJob
+        End If
+        If Not Request.QueryString("SRC") Is Nothing Then
+            DBAcc = Request.QueryString("SRC")
+            ViewBag.AccDatabase = DBAcc
+        End If
+        Dim obj As New CUtil(ViewBag.WebIP, DBAcc)
         Session("Target") = data("Target")
         If data("CustID") <> "" Then
             ViewBag.JobDatabase = "job_" + data("CustID")
@@ -27,7 +37,7 @@
             Dim chkResult = SetLogin(ViewBag.User, ViewBag.WebIP, ViewBag.JobDatabase, ViewBag.Token, Session.Timeout)
             If chkResult Then
                 If data("Target") <> "" Then
-                    Return Redirect(data("Target"))
+                    Return Redirect(data("Target") & "&DB=" & ViewBag.JobDatabase & "&SRC=" & ViewBag.AccDatabase)
                 End If
                 Return RedirectToAction("Index")
             End If
@@ -46,11 +56,11 @@
         Dim DBAcc As String = ViewBag.AccDatabase
         If Not Request.QueryString("DB") Is Nothing Then
             DBJob = Request.QueryString("DB")
-            ViewData("JobDatabase") = DBJob
+            ViewBag.JobDatabase = DBJob
         End If
         If Not Request.QueryString("SRC") Is Nothing Then
             DBAcc = Request.QueryString("SRC")
-            ViewData("AccDatabase") = DBJob
+            ViewBag.AccDatabase = DBAcc
         End If
         Dim obj As New CUtil(ViewBag.WebIP, DBAcc)
         Session("Target") = data("Target")
@@ -59,7 +69,7 @@
             Dim chkResult = SetLogin(data("UserID"), Request.UserHostAddress, data("CustID"), Session.SessionID, Session.Timeout)
             If chkResult Then
                 If data("Target") <> "" Then
-                    Return Redirect(data("Target"))
+                    Return Redirect(data("Target") & "&DB=" & ViewBag.JobDatabase & "&SRC=" & ViewBag.AccDatabase)
                 End If
                 Return RedirectToAction("Index")
             End If

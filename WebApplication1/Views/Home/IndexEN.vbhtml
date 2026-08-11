@@ -8,6 +8,10 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
+    Dim lang As String = "TH"
+    If Not Request.QueryString("LANG") Is Nothing Then
+        lang = Request.QueryString("LANG")
+    End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql As String = ""
     Dim dt = New Data.DataTable
@@ -25,7 +29,12 @@
     Dim payablesGroup As String = "212%"
     Dim receivablesGroup As String = "113%"
     If ViewBag.User = "" Then
-        Response.Redirect("~/Home/Login?DB=" + dbname + "&SRC=" + dbSource)
+        If lang = "EN" Then
+            Response.Redirect("~/Home/Login?LANG=EN&DB=" + dbname + "&SRC=" + dbSource)
+        Else
+            Response.Redirect("~/Home/Login?LANG=TH&DB=" + dbname + "&SRC=" + dbSource)
+        End If
+
     End If
 End Code
 <style>
@@ -50,199 +59,9 @@ End Code
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', { packages: ['corechart'] });
-    function openNav() {
-        document.getElementById("mySideBar").style.display = "inline-block";
-        document.getElementById("mySideBar").classList.remove("col-sm-3");
-        document.getElementById("mySideBar").classList.add("col-sm-12");
-
-        document.getElementById("myDashboard").classList.add("col-sm-9");
-        document.getElementById("myDashboard").classList.remove("col-sm-12");
-    }
-
-    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-    function closeNav() {
-        document.getElementById("mySideBar").style.display = "none";
-        document.getElementById("mySideBar").classList.remove("col-sm-12");
-        document.getElementById("mySideBar").classList.add("col-sm-3");
-
-        document.getElementById("myDashboard").classList.remove("col-sm-9");
-        document.getElementById("myDashboard").classList.add("col-sm-12");
-    }
-    var isOpenMenu = false;
-    function ToggleMenu() {
-        if (isOpenMenu) {
-            closeNav();
-        } else {
-            openNav();
-        }
-        isOpenMenu = !isOpenMenu;
-        RedrawCharts();
-    }
 </script>
-<div style="float:right">
-    Date: @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
-</div>
-<input type="button" class="openbtn" onclick="ToggleMenu()" value="☰"> Menu
-<br />
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 card" id="mySideBar" style="padding: 5px 5px 5px 5px;display: none;">
-            <b>General Master Files</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Profile&DB=@dbname&SRC=@dbSource">Company Profile</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ConfigAcc&DB=@dbname&SRC=@dbSource">Standard Account Entry</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=DocList&DB=@dbname&SRC=@dbSource">Standard Document Types</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Supplier&DB=@dbname&SRC=@dbSource">Suppliers/Venders</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Customer&DB=@dbname&SRC=@dbSource">Customer</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ConfigDepre&LANG=EN&DB=@dbname&SRC=@dbSource">Standard Depreciation</a>
-                </div>
-            </div>
-            <b>Products Master Files</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Warehouse&DB=@dbname&SRC=@dbSource">Warehouse/Service Group</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ProductType&DB=@dbname&SRC=@dbSource">Product Type</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ProductMas&DB=@dbname&SRC=@dbSource">Products</a>
-                </div>
-            </div>
-            <b>Job System Integrated</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=LinkJobEN&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource"> View current state of data</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=TransferJob_EN&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource">Post Data to GL Account</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ReportJob&DB=@dbname&SRC=@dbSource">Check Data after posted</a>
-                </div>
-            </div>
-            <b>Account Documents</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="~/Form?Form=Lists&DB=@dbname&SRC=@dbSource">List Documents</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="~/Form?DB=@dbname&SRC=@dbSource">Journal Entry</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=Transaction&DB=@dbname&SRC=@dbSource">Posting Center</a>
-                </div>
-            </div>
-            <b>Account Reports</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ReportEN&DB=@dbname&SRC=@dbSource">Summary</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=StockCard&DB=@dbname&SRC=@dbSource">Stock Card</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=StockOnhand&DB=@dbname&SRC=@dbSource">Stock Onhand</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ReportDepre&LANG=EN&DB=@dbname&SRC=@dbSource&Code=">Depreciation</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=ReportGL&LANG=EN&DB=@dbname&SRC=@dbSource">General Ledger</a>
-                </div>
-            </div>
-            <b>Working Sheet</b>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance_V2&LANG=EN&DB=@dbname&SRC=@dbSource">Draft Monthly Balance</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance_V2&LANG=EN&DB=@dbname&Type=1&SRC=@dbSource">Calculate Monthly Balance</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="?Form=MonthlyBalance_V2&LANG=EN&DB=@dbname&Type=2&SRC=@dbSource">Accumulate Monthly Balance</a>
-                </div>
-            </div>
-            <b>Accounts Sheet</b>
-            Period :
-            <br />
-            <input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('TrialBalance')">Trial Balance</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('ProfitLoss')">Profit and Loss</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('BalanceSheet')">Balance Sheet</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('CashFlow')">Cash Flow</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('ReportCompare','&TYPE=Y')">TB Compare by Year</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="#" onclick="OpenForm('ReportCompare','&TYPE=Q')">TB Compare by Quarter</a>
-                </div>
-            </div>
-        </div>
         <div class="col-sm-12" id="myDashboard" style="padding: 5px 5px 5px 5px; text-align: center;margin-left:10px;margin-right:10px;margin-bottom:5px;">
             @*<img src="~/OverView.png" style="width:100%;" />*@
             <div class="col-sm-12">
@@ -598,8 +417,4 @@ group by b.AccName"
     window.addEventListener('resize', function () {
         RedrawCharts();
     });
-    function OpenForm(fname,param='') {
-        let period = document.getElementById('txtPeriod').value;
-        window.open("?Form=" + fname + "&LANG=EN&DB=@dbname&SRC=@dbSource&Period=" + period + param,'_blank');
-    }
 </script>

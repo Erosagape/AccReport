@@ -8,7 +8,7 @@
     If Not Request.QueryString("SRC") Is Nothing Then
         dbSource = Request.QueryString("SRC")
     End If
-    Dim defaultView As String = "Index?DB=" + dbName + "&SRC=" + dbSource
+    Dim defaultView As String = "?Form=Index"
     If Not Request.QueryString("RedirectTo") Is Nothing Then
         defaultView = Request.QueryString("RedirectTo")
     End If
