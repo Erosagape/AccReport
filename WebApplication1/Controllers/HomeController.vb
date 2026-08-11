@@ -37,7 +37,14 @@
             Dim chkResult = SetLogin(ViewBag.User, ViewBag.WebIP, ViewBag.JobDatabase, ViewBag.Token, Session.Timeout)
             If chkResult Then
                 If data("Target") <> "" Then
-                    Return Redirect(data("Target") & "&DB=" & ViewBag.JobDatabase & "&SRC=" & ViewBag.AccDatabase)
+                    Dim strUrl = data("Target")
+                    If strUrl.IndexOf("DB=") < 0 Then
+                        strUrl = strUrl & "&DB=" & ViewBag.JobDatabase
+                    End If
+                    If strUrl.IndexOf("SRC=") < 0 Then
+                        strUrl = strUrl & "&SRC=" & ViewBag.AccDatabase
+                    End If
+                    Return Redirect(strUrl)
                 End If
                 Return RedirectToAction("Index")
             End If
@@ -69,7 +76,14 @@
             Dim chkResult = SetLogin(data("UserID"), Request.UserHostAddress, data("CustID"), Session.SessionID, Session.Timeout)
             If chkResult Then
                 If data("Target") <> "" Then
-                    Return Redirect(data("Target") & "&DB=" & ViewBag.JobDatabase & "&SRC=" & ViewBag.AccDatabase)
+                    Dim strUrl = data("Target")
+                    If strUrl.IndexOf("DB=") < 0 Then
+                        strUrl = strUrl & "&DB=" & ViewBag.JobDatabase
+                    End If
+                    If strUrl.IndexOf("SRC=") < 0 Then
+                        strUrl = strUrl & "&SRC=" & ViewBag.AccDatabase
+                    End If
+                    Return Redirect(strUrl)
                 End If
                 Return RedirectToAction("Index")
             End If
