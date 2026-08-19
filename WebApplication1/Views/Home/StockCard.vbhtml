@@ -170,13 +170,13 @@ End Code
                             @dr("QtyOUT")
                         </td>
                         <td class="text-right">
-                            @dr("Price")
+                            @Convert.ToDecimal(dr("Price")).ToString("N4")
                         </td>
                         <td class="text-right">
                             @balQty
                         </td>
                         <td class="text-right">
-                            @balAmount
+                            @balAmount.ToString("N2")
                         </td>
                     </tr>
                 Next

@@ -57,7 +57,8 @@ sum(case when AccCode like '4%' then Credit-Debit else 0 end) as Revenue,
 ABS(sum(case when AccCode like '4%' then Credit-Debit else 0 end)-sum(case when AccCode like '5%' then Debit-Credit else 0 end)) as ProfitLoss
 from vJournal_All
 where AccCode like '4%' or AccCode like '5%'
-group by concat(Year(EntryDate),'/',FORMAT(Month(EntryDate),'00'))"
+group by concat(Year(EntryDate),'/',FORMAT(Month(EntryDate),'00'))
+order by 1"
     Dim dt3 As Data.DataTable = obj.GetDataFromSQL(sql)
     Dim arr As New List(Of Object())
     For Each dr As Data.DataRow In dt3.Rows
@@ -109,7 +110,7 @@ End Code
             is3D: true,
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('piechart2'));
         chart.draw(data, options);
     }
     function drawChart3() {

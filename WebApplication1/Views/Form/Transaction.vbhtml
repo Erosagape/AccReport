@@ -441,7 +441,6 @@ SELECT * from vTransaction_All where AccDocNo='{0}'
             @<div>
                 <input type="button" id="btnAdd" class="btn btn-warning" onclick="ShowDetail(0)" value="Add Detail" />
                 <input type="submit" name="submitHdr" class="btn btn-success" value="Save Document" />
-                <input type="button" name="btnPrint" class="btn btn-primary" value="Print Document" onclick="PrintData()" />
             </div>
         End If
         @If dt.Rows.Count > 0 Then
@@ -475,6 +474,7 @@ SELECT * from vTransaction_All where AccDocNo='{0}'
                     Next
                 </tbody>
             </table>
+            @<input type = "button" name="btnPrint" Class="btn btn-primary" value="Print Document" onclick="PrintData()" />
         End If
         <div class="row">
             <div class="col-sm-3">

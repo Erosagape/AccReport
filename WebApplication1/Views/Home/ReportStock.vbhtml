@@ -96,7 +96,7 @@ End Code
                         <td>@dr("PartyName")</td>
                         <td class="colnum">@Convert.ToDecimal(dr("QtyIN")).ToString("N2")</td>
                         <td class="colnum">@Convert.ToDecimal(dr("QtyOUT")).ToString("N2")</td>
-                        <td class="colnum">@Convert.ToDecimal(dr("TransPrice")).ToString("N2")</td>
+                        <td class="colnum">@Convert.ToDecimal(dr("TransPrice")).ToString("N4")</td>
                         <td class="colnum">@Convert.ToDecimal(dr("TransAmount")).ToString("N2")</td>
                         <td class="colnum">@Convert.ToDecimal(dr("QtyBal")).ToString("N2")</td>
                         <td class="colnum">@Convert.ToDecimal(dr("TotalBal")).ToString("N2")</td>

@@ -21,7 +21,7 @@
         dateFrom = Request.Form("DateFrom")
         dateTo = Request.Form("DateTo")
         msg = ""
-        procName = "Insert_ProductsCodeFromJob"
+        procName = "Insert_ProductsCodeFromJob_V2"
         sql = "
 if '" & Request.Form("chkProduct") & "'='ON'
 begin
@@ -85,7 +85,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkTWHT") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_AdvanceToJournal_V3"
+        procName = "Insert_AdvanceToJournal_V4"
         sql = "
 if '" & Request.Form("chkPAdv") & "'='ON'
 begin
@@ -93,7 +93,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkPAdv") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_ClearExpenseFromAdvance"
+        procName = "Insert_ClearExpenseFromAdvance_V2"
         sql = "
 if '" & Request.Form("chkPExpAdv") & "'='ON'
 begin
@@ -101,7 +101,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkPExpAdv") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_ClearExpenseFromManualEntry_V2"
+        procName = "Insert_ClearExpenseFromManualEntry_V3"
         sql = "
 if '" & Request.Form("chkPExpClr") & "'='ON'
 begin
@@ -109,7 +109,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkPExpClr") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_BillPayToJournal_V3"
+        procName = "Insert_BillPayToJournal_V4"
         sql = "
 if '" & Request.Form("chkPInv") & "'='ON'
 begin
@@ -117,7 +117,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkPInv") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_ClearExpenseFromBillPay"
+        procName = "Insert_ClearExpenseFromBillPay_V2"
         sql = "
 if '" & Request.Form("chkPExpBill") & "'='ON'
 begin
@@ -133,7 +133,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkPBill") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_InvoiceToJournal_V3"
+        procName = "Insert_InvoiceToJournal_V4"
         sql = "
 if '" & Request.Form("chkRInv") & "'='ON'
 begin
@@ -141,7 +141,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkRInv") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_ReceiptToJournal_V3"
+        procName = "Insert_ReceiptToJournal_V4"
         sql = "
 if '" & Request.Form("chkRTax") & "'='ON'
 begin
@@ -149,7 +149,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkRTax") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_RVFromJob_V2"
+        procName = "Insert_RVFromJob_V3"
         sql = "
 if '" & Request.Form("chkRPay") & "'='ON'
 begin
@@ -157,7 +157,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkRPay") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_CNDNToJournal"
+        procName = "Insert_CNDNToJournal_V2"
         sql = "
 if '" & Request.Form("chkRCN") & "'='ON'
 begin
@@ -165,7 +165,7 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkRCN") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
-        procName = "Insert_ClearMoneyFromAdvance"
+        procName = "Insert_ClearMoneyFromAdvance_V2"
         sql = "
 if '" & Request.Form("chkPClrAdv") & "'='ON'
 begin
@@ -181,6 +181,22 @@ EXEC dbo." & procName & " '{0}','{1}'
 end
 "
         If Not Request.Form("chkPClrOth") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
+        procName = "Insert_CustAdvanceToJournal"
+        sql = "
+if '" & Request.Form("chkCustAdv") & "'='ON'
+begin
+EXEC dbo." & procName & " '{0}','{1}'
+end
+"
+        If Not Request.Form("chkCustAdv") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
+        procName = "DELETE_JOB_JOURNAL"
+        sql = "
+if '" & Request.Form("chkTDel") & "'='ON'
+begin
+EXEC dbo." & procName & " '{0}','{1}'
+end
+"
+        If Not Request.Form("chkTDel") Is Nothing Then msg &= vbCrLf & "Process " & procName & "=" & obj.ExecuteSQL(String.Format(sql, dateFrom, dateTo))
     End If
 End Code
 <style>
@@ -205,7 +221,7 @@ End Code
         <tr>
             <td>
                 1.1 ข้อมูลทั่วไป : <br />
-                <input type="checkbox" id="chkProduct" name="chkProduct" /> ข้อมูลค่าบริการ <br />
+                <input type="checkbox" id="chkProduct" name="chkProduct" /> ข้อมูลค่าบริการ/บัญชีย่อย <br />
                 ระบบซื้อ : <br />
                 1.2 <input type="checkbox" id="chkTAdv" name="chkTAdv" /> ใบเบิกค่าใช้จ่าย <br />
                 1.3 <input type="checkbox" id="chkTPay" name="chkTPay" /> ใบรับวางบิลค่าใช้จ่าย <br />
@@ -216,6 +232,10 @@ End Code
                 1.7 <input type="checkbox" id="chkTCN" name="chkTCN" /> ใบเพิ่มหนี้/ลดหนี้ <br />
                 เอกสารอื่นๆ : <br />
                 1.8 <input type="checkbox" id="chkTWHT" name="chkTWHT" /> ภาษีหัก ณ ที่จ่าย <br />
+                <div style="border-style:solid;background-color:lightgoldenrodyellow;color:red;margin:5px 5px 5px 5px;padding:5px 5px 5px 5px;">
+                    **พิ้นที่อันตราย** <br />
+                    1.9 <input type="checkbox" id="chkTDel" name="chkTDel" /> ล้างข้อมูลจากระบบจ๊อบทั้งหมดตามวันที่ระบุ <br />
+                </div>
             </td>
             <td>
                 บัญชีจ่าย/ซิ้อเงินสด <br />
@@ -234,12 +254,32 @@ End Code
                 บัญชีอื่นๆ <br />
                 2.11 <input type="checkbox" id="chkPClrAdv" name="chkPClrAdv" /> เคลียร์เงินทดรองคงค้างจากการเบิกค่าใช้จ่าย <a href="#mdl212" data-toggle="modal" data-target="#mdl212">(PV-A/RV-A)</a><br />
                 2.12 <input type="checkbox" id="chkPClrOth" name="chkPClrOth" /> เคลียร์เงินทดรองคงค้างจากใบเคลียร์ <a href="#mdl213" data-toggle="modal" data-target="#mdl213">(PV-C/RV-C)</a><br />
+                2.13 <input type="checkbox" id="chkCustAdv" name="chkCustAdv" /> เช็ครับล่วงหน้าจากลูกค้า <a href="#mdl214" data-toggle="modal" data-target="#mdl214">(PV-R)</a><br />
             </td>
         </tr>
     </table>
     <input type="submit" name="Submit" value="Process" />
     <label>@msg</label>
 </form>
+<div class="modal" role="dialog" id="mdl214">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                เช็ครับล่วงหน้าจากลูกค้า
+            </div>
+            <div class="modal-body">
+                <p>
+                    Dr. เงินสด/เงินฝากธนาคาร
+                    <br />&nbsp;&nbsp;Cr. เช็ครับล่วงหน้าจากลูกค้า
+
+                </p>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="X" class="btn btn-danger" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal" role="dialog" id="mdl213">
     <div class="modal-dialog">
         <div class="modal-content">

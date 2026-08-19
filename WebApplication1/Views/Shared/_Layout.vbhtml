@@ -143,7 +143,7 @@ End Code
     <div id="topMenu" class="navbar navbar-custom navbar-dark navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <div style="color:white;" class="navbar-brand navbar-left" onclick="ToggleMenu()">@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</div>
+                <div style="color:white;" class="navbar-brand navbar-left" onclick="ToggleMenu()">☰ @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</div>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     @If ViewBag.User <> "" Then
                         @<b style="color:white;">Welcome @ViewBag.User</b>
@@ -311,6 +311,11 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
+                                <a href="#" onclick="OpenForm('ProfitLossDetail')">งบกำไรขาดทุน (รายละเอียด)</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
                                 <a href="#" onclick="OpenForm('BalanceSheet')">งบแสดงสถานะทางการเงิน</a>
                             </div>
                         </div>
@@ -465,6 +470,11 @@ End Code
                         <div class="row">
                             <div class="col-sm-12">
                                 <a href="#" onclick="OpenForm('ProfitLoss')">Profit and Loss</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a href="#" onclick="OpenForm('ProfitLossDetail')">Profit and Loss (Detail)</a>
                             </div>
                         </div>
                         <div class="row">

@@ -249,7 +249,7 @@ End Code
         @If dt.Rows.Count > 0 Then
             Dim rs As Data.DataTable = obj.GetDataFromSQL(String.Format("SELECT * FROM vJournal_D where EntryId={0} ORDER BY Seq", EntryId))
             If rs.Rows.Count > 0 Then
-                @<table class="table DataTable">
+                @<table class="table table-responsive" border="1" style="border-collapse:collapse;border-width:thin">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -284,12 +284,12 @@ End Code
                         <tr>
                             <td colspan="5">
                                 @If dt.Rows(0)("JournalNo").ToString().Substring(0, 2) = "RV" Then
-                                    @<a Class="btn btn-success" href="?Form=FormRV&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print</a>
+                                    @<a Class="btn btn-primary" href="?Form=FormRV&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print Voucher</a>
                                 Else
                                     If dt.Rows(0)("JournalNo").ToString().Substring(0, 2) = "PV" Then
-                                        @<a Class="btn btn-success" href="?Form=FormPV&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print</a>
+                                        @<a Class="btn btn-primary" href="?Form=FormPV&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print Voucher</a>
                                     Else
-                                        @<a Class="btn btn-success" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print</a>
+                                        @<a Class="btn btn-primary" href="?Form=FormGL&SRC=@dbSource&DB=@dbName&Code=@dt.Rows(0)("JournalNo")">Print Voucher</a>
                                     End If
                                 End If
                             </td>
