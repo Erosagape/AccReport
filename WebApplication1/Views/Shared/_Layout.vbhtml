@@ -27,6 +27,7 @@ End Code
             font-size: 14px;
             font-family: 'Prompt', sans-serif;
         }
+
         .navbar a {
             color: white; /* Change link color to white */
         }
@@ -184,6 +185,11 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
+                                <a href="@Url.Content("~")?Form=AccCode&DB=@dbname&SRC=@dbSource&lang=@lang"> ผังบัญชี</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
                                 <a href="@Url.Content("~")?Form=ConfigAcc&DB=@dbname&SRC=@dbSource&lang=@lang"> กำหนดมาตรฐานการลงบัญชี</a>
                             </div>
                         </div>
@@ -252,7 +258,7 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=Transaction&DB=@dbname&SRC=@dbSource&lang=@lang"> ผ่านรายการไปสมุดรายวัน</a>
+                                <a href="@Url.Content("~")?Form=ApproveCenter&DB=@dbname&SRC=@dbSource&lang=@lang"> ผ่านรายการไปสมุดรายวัน</a>
                             </div>
                         </div>
                         <b> รายงานสรุปทางบัญชี</b>
@@ -345,6 +351,11 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
+                                <a href="@Url.Content("~")?Form=AccCode&DB=@dbname&SRC=@dbSource&lang=@lang"> Accounts</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
                                 <a href="@Url.Content("~")?Form=ConfigAcc&DB=@dbName&SRC=@dbSource&lang=@lang"> Standard Account Entry</a>
                             </div>
                         </div>
@@ -413,7 +424,7 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=Transaction&DB=@dbName&SRC=@dbSource&lang=@lang"> Posting Center</a>
+                                <a href="@Url.Content("~")?Form=ApproveCenter&DB=@dbName&SRC=@dbSource&lang=@lang"> Posting Center</a>
                             </div>
                         </div>
                         <b> Account Reports</b>
