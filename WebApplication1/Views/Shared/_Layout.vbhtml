@@ -183,6 +183,11 @@ End Code
                                 <a href="@Url.Content("~")?Form=Profile&DB=@dbName&SRC=@dbSource&lang=@lang"> ข้อมูลกิจการ</a>
                             </div>
                         </div>
+                       <div class="row">
+                            <div class="col-sm-12">
+                                <a href="@Url.Content("~")?Form=HRMenu&DB=@dbName&SRC=@dbSource&lang=@lang"> ข้อมูลระบบบริหารงานบุคคล</a>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <a href="@Url.Content("~")?Form=AccCode&DB=@dbname&SRC=@dbSource&lang=@lang"> ผังบัญชี</a>
@@ -258,7 +263,7 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=ApproveCenter&DB=@dbname&SRC=@dbSource&lang=@lang"> ผ่านรายการไปสมุดรายวัน</a>
+                                <a href="@Url.Content("~")?Form=Transaction&DB=@dbname&SRC=@dbSource&lang=@lang"> ผ่านรายการไปสมุดรายวัน</a>
                             </div>
                         </div>
                         <b> รายงานสรุปทางบัญชี</b>
@@ -349,6 +354,11 @@ End Code
                                 <a href="@Url.Content("~")?Form=Profile&DB=@dbname&SRC=@dbSource&lang=@lang"> Company Profile</a>
                             </div>
                         </div>
+                       <div class="row">
+                            <div class="col-sm-12">
+                                <a href="@Url.Content("~")?Form=HRMenu&DB=@dbName&SRC=@dbSource&lang=@lang"> Human Resource Files</a>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <a href="@Url.Content("~")?Form=AccCode&DB=@dbname&SRC=@dbSource&lang=@lang"> Accounts</a>
@@ -424,7 +434,7 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=ApproveCenter&DB=@dbName&SRC=@dbSource&lang=@lang"> Posting Center</a>
+                                <a href="@Url.Content("~")?Form=Transaction&DB=@dbName&SRC=@dbSource&lang=@lang"> Posting Center</a>
                             </div>
                         </div>
                         <b> Account Reports</b>
