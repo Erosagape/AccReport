@@ -23,12 +23,17 @@ End Code
 </div>
 <div class="row">
     <div class="col-sm-3">
-        <a href="?Form=HRDivision&SRC=@dbSource&DB=@dbname">Division Data / ข้อมูลฝ่าย</a>
+        <a href="?Form=HRLevel&SRC=@dbSource&DB=@dbname">Staff Level / ระดับพนักงาน</a>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-3">
-        <a href="?Form=HRLevel&SRC=@dbSource&DB=@dbname">Staff Level / ระดับพนักงาน</a>
+        <a href="?Form=HRPosition&SRC=@dbSource&DB=@dbname">Position Configuration / กำหนดตำแหน่งงาน</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3">
+        <a href="?Form=HRContractType&SRC=@dbSource&DB=@dbname">Contract Type / ประเภทสัญญาจ้าง</a>
     </div>
 </div>
 <div class="row">
@@ -38,12 +43,7 @@ End Code
 </div>
 <div class="row">
     <div class="col-sm-3">
-        <a href="?Form=HRContract&SRC=@dbSource&DB=@dbname">Contract Configuration / กำหนดสัญญาจ้าง</a>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-3">
-        <a href="?Form=HRPosition&SRC=@dbSource&DB=@dbname">Position Configuration / กำหนดตำแหน่งงาน</a>
+        <a href="?Form=HRContract&SRC=@dbSource&DB=@dbname">Employee Contract / สัญญาจ้าง</a>
     </div>
 </div>
 <div class="row">
@@ -54,11 +54,6 @@ End Code
 <div class="row">
     <div class="col-sm-3">
         <b>Payroll Data / ข้อมูลการคิดค่าแรง</b>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-3">
-        <a href="?Form=HRTimeConfig&SRC=@dbSource&DB=@dbname">Shift Configuration / กะเวลาทำงาน</a>
     </div>
 </div>
 <div class="row">

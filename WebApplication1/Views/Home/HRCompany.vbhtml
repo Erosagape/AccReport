@@ -105,7 +105,11 @@ End Code
                     <td>@row("CompanyName")</td>
                     <td>@row("CompanyNameEN")</td>
                     <td>@row("CountryCode")</td>
-                    <td><a href="?Form=HRDivision&SRC=@dbSource&DB=@dbname&Company=@row("CompanyId")" class="btn btn-info">Division</a></td>
+                    <td>
+                        <a href="?Form=HRDivision&SRC=@dbSource&DB=@dbname&Company=@row("CompanyId")" class="btn btn-info">Division</a>
+                        <a href="?Form=HREmployment&SRC=@dbSource&DB=@dbname&Company=@row("CompanyId")" class="btn btn-primary">Employee</a>
+                        <a href="?Form=HRTimeConfig&SRC=@dbSource&DB=@dbname&Company=@row("CompanyId")" class="btn btn-success">Work Time</a>
+                    </td>
                 </tr>
             Next
         </tbody>
