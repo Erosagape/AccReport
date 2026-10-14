@@ -23,20 +23,20 @@ End Code
 <h2>Report - General Ledger</h2>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             Date From:<br />
-            <input type="date" id="txtDateFrom" value="@dateFrom.ToString("yyyy-MM-dd")" />
+            <input type="date" id="txtDateFrom" value="@dateFrom.ToString("yyyy-MM-dd")" class="form-control" />
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             Date To:<br />
-            <input type="date" id="txtDateTo" value="@dateTo.ToString("yyyy-MM-dd")" />
+            <input type="date" id="txtDateTo" value="@dateTo.ToString("yyyy-MM-dd")" class="form-control" />
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <a href="#" data-toggle="modal" data-target="#mdlAccCode">Acc.Code:</a>
             <br />
-            <input type="text" id="txtAccCode" />
+            <input type="text" id="txtAccCode" class="form-control" />
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <br />
             <input type="button" id="btnSubmit" value="Print" onclick="PrintData()" class="btn btn-success"/>
         </div>

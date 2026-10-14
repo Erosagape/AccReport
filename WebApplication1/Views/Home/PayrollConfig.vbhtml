@@ -12,6 +12,9 @@
     Dim dt As New Data.DataTable
 
     Dim positionId As Integer = 0
+    If Request.QueryString("Position") IsNot Nothing Then
+        positionId = Request.QueryString("Position")
+    End If
     Dim contractTypeId As Integer = 0
     Dim salaryPerHour As Double = 0
     Dim salaryPerDay As Double = 0
@@ -105,9 +108,12 @@ on a.PositionId=b.PositionId
 inner join Mas_HRContractType c
 on a.ContractTypeId=c.ContractTypeId
 "
+    If positionId > 0 Then
+        sql &= " WHERE a.PositionId=" & positionId
+    End If
     dt = obj.GetDataFromSQL(sql)
 End Code
-<h2>Payroll Config / กำหนดค่าเงินเดือน</h2>
+<h2>Salary Rate / กำหนดอัตราเงินเดือน</h2>
 @If dt.Rows.Count > 0 Then
     @<div class="row">
         <div class="col-sm-6">

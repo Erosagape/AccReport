@@ -238,24 +238,46 @@ End Code
         Report:
         <br />
         <select id="cboReport" class="form-control dropdown">
-            <option value="Purchase">Purchase Order Report</option>
-            <option value="PI">Purchase Invoice Report</option>
-            <option value="PC">Purchase Confirmation Report</option>
-            <option value="AgingAP">Purchase Invoice Aging Report</option>
-            <option value="Sale">Sale Order Report</option>
-            <option value="SI">Sale Invoice Report</option>
-            <option value="RC">Sale Receipt Report</option>
-            <option value="AgingAR">Sale Invoice Aging Report</option>
-            <option value="AR">Account Receiveable Report</option>
-            <option value="AP">Account Payable Report</option>
-            <option value="Payment">Payment Voucher Report</option>
-            <option value="Receive">Receive Voucher Report</option>
-            <option value="Journal">Journal Entries Report</option>
-            <option value="VATSale">Output VAT Report</option>
-            <option value="VATBuy">Input VAT Report</option>
-            <option value="WHTax">Withholding Report (Detail)</option>
-            <option value="WHTaxSum">Withholding Report (Summary)</option>
-            <option value="PRD">PRD Tax Report</option>
+            <optgroup label="Purchase Report">
+                <option value="Purchase">Purchase Order Report</option>
+                <option value="PI">Purchase Invoice Report</option>
+            </optgroup>
+            <optgroup label="Sale Report">
+                <option value="Sale">Sales Order Report</option>
+                <option value="SI">Sales Invoice Report</option>
+            </optgroup>
+            <optgroup label="Payment Report">
+                <option value="PC">Payment Report</option>
+                <option value="PV">P/V Report</option>
+            </optgroup>
+            <optgroup label="Payables Report">
+                <option value="AgingAP">A/P Aging</option>
+                <option value="AP">A/P Report</option>
+            </optgroup>
+            <optgroup label="Receive Report">
+                <option value="RC">Receipt Report</option>
+                <option value="RV">R/V Report</option>
+            </optgroup>
+            <optgroup label="Receivables Report">
+                <option value="AgingAR">A/R Aging</option>
+                <option value="AR">A/R Report</option>
+            </optgroup>
+            <optgroup label="Journal Report">
+                <option value="Journal">Journal Report</option>
+                <option value="VATSale">Output VAT Report</option>
+                <option value="VATBuy">Input VAT Report</option>
+            </optgroup>
+            <optgroup label="Tax Report">
+                <option value="WHTax">WHT Report</option>
+                <option value="WHTaxSum">WHT Summary</option>
+                <option value="PRD">PRD Report</option>
+            </optgroup>
+            <optgroup label="HR Report">
+                <option value="Time">Work-time Report</option>
+                <option value="Payroll">Payroll Report</option>
+                <option value="Salary">Salary Report</option>
+                <option value="Employee">Employee Report</option>
+            </optgroup>
         </select>
     </div>
 </div>

@@ -18,14 +18,14 @@
     Dim contractId As Integer = 0
     Dim staffId As Integer = 0
     Dim contractTypeId As Integer = 0
-    Dim dateStart As String = ""
-    Dim dateEnd As String = DateTime.Now.ToString("yyyy-MM-dd")
+    Dim dateStart As String = DateTime.Now.ToString("yyyy-MM-dd")
+    Dim dateEnd As String = ""
     Dim approveBy As String = ""
     Dim cancelBy As String = ""
     Dim createBy As String = ViewBag.User
     Dim approveDate As String = ""
     Dim cancelDate As String = ""
-    Dim createDate As String = ""
+    Dim createDate As String = DateTime.Now.ToString("yyyy-MM-dd")
     Dim signDate As String = ""
     Dim contractStatus As Integer = 0
     Dim statusDate As String = DateTime.Now.ToString("yyyy-MM-dd")
@@ -51,39 +51,39 @@
         sql = "
 IF '0'='{0}'
 BEGIN
-    DECLARE @@id int=(SELECT ISNULL(MAX(ContractId),0)+1 FROM Acc_HRContract)
-    DECLARE @@contractno varchar(50)='{1}'
-    if @@contractno=''
-    begin
-        declare @@tmp varchar(20)=concat('CE-',FORMAT(convert(datetime,'{12}'),'yy'),'/____')
-        declare @@running varchar(50)=(select isnull(max(ContractNo),REPLACE(@@tmp,'_','0')) from Acc_HRContract  
-	    where ContractNo like @@tmp)
+DECLARE @@id int=(SELECT ISNULL(MAX(ContractId),0)+1 FROM Acc_HRContract)
+DECLARE @@contractno varchar(50)='{1}'
+if @@contractno=''
+begin
+declare @@tmp varchar(20)=concat('CE-',FORMAT(convert(datetime,'{12}'),'yy'),'/____')
+declare @@running varchar(50)=(select isnull(max(ContractNo),REPLACE(@@tmp,'_','0')) from Acc_HRContract
+where ContractNo like @@tmp)
 
-	    SET @@contractno= dbo.GetMaxRunning(@@running,@@tmp)
-    end
-    INSERT INTO Acc_HRContract
-    SELECT @@contractno,{2},{3},'{4}','{5}','{6}','{8}','{10}','{7}','{9}','{11}','{12}',{13},'{14}','{15}',@@id
+SET @@contractno= dbo.GetMaxRunning(@@running,@@tmp)
+end
+INSERT INTO Acc_HRContract
+SELECT @@contractno,{2},{3},'{4}','{5}','{6}','{8}','{10}','{7}','{9}','{11}','{12}',{13},'{14}','{15}',@@id
 END
 ELSE
 BEGIN
-    UPDATE Acc_HRContract 
-    SET 
-        ContractNo='{1}'
-        ,StaffId={2}
-        ,ContractTypeId={3}
-        ,DateStart='{4}'
-        ,DateEnd='{5}'
-        ,ApproveBy='{6}'
-        ,ApproveDate='{7}'
-        ,CancelBy='{8}'
-        ,CancelDate='{9}'
-        ,CreateBy='{10}'
-        ,CreateDate='{11}'
-        ,SignDate='{12}'
-        ,ContractStatus={13}
-        ,StatusDate='{14}'
-        ,ContractNote='{15}'
-    WHERE ContractId={0}
+UPDATE Acc_HRContract
+SET
+ContractNo='{1}'
+,StaffId={2}
+,ContractTypeId={3}
+,DateStart='{4}'
+,DateEnd='{5}'
+,ApproveBy='{6}'
+,ApproveDate='{7}'
+,CancelBy='{8}'
+,CancelDate='{9}'
+,CreateBy='{10}'
+,CreateDate='{11}'
+,SignDate='{12}'
+,ContractStatus={13}
+,StatusDate='{14}'
+,ContractNote='{15}'
+WHERE ContractId={0}
 END
 "
         msg = obj.ExecuteSQL(String.Format(sql,
@@ -113,14 +113,18 @@ a.CreateBy,
 FORMAT(a.CreateDate,'dd/MM/yyyy') as CreateDate,
 a.ContractNote,
 FORMAT(a.SignDate,'dd/MM/yyyy') as SignDate,
-a.ContractStatus,
+a.ContractStatus,d.StatusName,
 FORMAT(a.StatusDate,'dd/MM/yyyy') as StatusDate
-from 
-Acc_HRContract a 
+from
+Acc_HRContract a
 inner join Mas_HRContractType b
 on a.ContractTypeId=b.ContractTypeId
 inner join Mas_HRStaff c
 on a.StaffId=c.StaffId
+inner join (
+select cast(ConfigKey as int) as StatusCode,ConfigValue as StatusName
+from Mas_HRConfig where ConfigCode='CONTRACT_STATUS'
+) d on a.ContractStatus=d.StatusCode
 "
     dt = obj.GetDataFromSQL(sql)
     If Not Request.QueryString("Id") Is Nothing Then
@@ -162,7 +166,7 @@ End Code
 
 <h2>Employee Contract / สัญญาจ้างพนักงาน</h2>
 <input type="button" class="btn btn-primary" value="New Contract" onclick="ShowDetail(0)" />
-@If dt.Rows.Count>0 Then
+@If dt.Rows.Count > 0 Then
     @<table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -172,9 +176,8 @@ End Code
                 <th>ประเภทสัญญา</th>
                 <th>วันที่เริ่มสัญญา</th>
                 <th>วันที่สิ้นสุดสัญญา</th>
-                <th>หมายเหตุ</th>
-                <th>สถานะสัญญา</th>
-                <th>วันที่เปลี่ยนสถานะ</th>
+                <th>สถานะ</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -188,9 +191,11 @@ End Code
                     <td>@dr("ContractType")</td>
                     <td>@dr("DateStart")</td>
                     <td>@dr("DateEnd")</td>
-                    <td>@dr("ContractNote")</td>
-                    <td>@dr("ContractStatus")</td>
-                    <td>@dr("StatusDate")</td>
+                    <td>@dr("StatusName")</td>
+                    <td>
+                        <input type="button" class="btn btn-primary" value="Bank A/C" onclick="ShowBook('@dr("ContractId")')" />
+                    </td>
+
                 </tr>
             Next
         </tbody>
@@ -275,7 +280,7 @@ End If
                             <label>End Date</label>
                         </div>
                         <div class="col-sm-8">
-                            <input type="date" name="DateEnd" id="txtDateEnd" class="form-control" value="@dateEnd" />
+                            <input type="date" name="DateEnd" id="txtDateEnd" class="form-control" value="@dateEnd" onchange="CheckEnd()" />
                         </div>
                     </div>
                     <div class="row">
@@ -321,6 +326,7 @@ End If
                     </div>
                     <div class="row">
                         <div class="col-sm-4">
+                            <input type="checkbox" id="chkApproved" name="Approved" onchange="SetApproved()" @(If(approveBy <> "", "checked", "")) />
                             <label>Approve By</label>
                         </div>
                         <div class="col-sm-8">
@@ -337,6 +343,7 @@ End If
                     </div>
                     <div class="row">
                         <div class="col-sm-4">
+                            <input type="checkbox" id="chkCancel" name="Cancel" onchange="SetCancel()" @(If(cancelBy <> "", "checked", "")) />
                             <label>Cancel By</label>
                         </div>
                         <div class="col-sm-8">
@@ -391,5 +398,56 @@ End If
     }
     function ShowDetail(id) {
         window.location.href = window.location.pathname + '?DB=@dbName&SRC=@dbSource&Form=HRContract&Id=' + id;
+    }
+    function ShowBook(id) {
+        window.location.href = window.location.pathname + '?DB=@dbName&SRC=@dbSource&Form=HRBookAccount&Id=' + id;
+    }
+    function SetApproved() {
+        var status = document.getElementById("txtContractStatus").value;
+        if (status == '99') {
+            return;
+        }
+        let chk = document.getElementById('chkApproved');
+        let txtApproveBy = document.getElementById('txtApproveBy');
+        let txtApproveDate = document.getElementById('txtApproveDate');
+        if (chk.checked) {
+            document.getElementById('txtContractStatus').value = "1";
+            txtApproveBy.value = '@ViewBag.User';
+            txtApproveDate.value = new Date().toISOString().split('T')[0];
+        } else {
+            document.getElementById('txtContractStatus').value = "0";
+            txtApproveBy.value = '';
+            txtApproveDate.value = '';
+        }
+        CheckEnd();
+    }
+    function SetCancel() {
+        let chk = document.getElementById('chkCancel');
+        let txtCancelBy = document.getElementById('txtCancelBy');
+        let txtCancelDate = document.getElementById('txtCancelDate');
+        if (chk.checked) {
+            document.getElementById('txtContractStatus').value = "99";
+            txtCancelBy.value = '@ViewBag.User';
+            txtCancelDate.value = new Date().toISOString().split('T')[0];
+        } else {
+            txtCancelBy.value = '';
+            document.getElementById('txtContractStatus').value = document.getElementById('txtApproveBy').value!==''? '1':'0';
+            txtCancelDate.value = '';
+            CheckEnd();
+        }
+    }
+    function CheckEnd() {
+        var dateEnd = document.getElementById("txtDateEnd").value;
+        var status = document.getElementById("txtContractStatus").value;
+        var appby = document.getElementById("txtApproveBy").value;
+        if ('@DateTime.Today.ToString("yyyy-MM-dd")' >= dateEnd && status !== '99') {
+            document.getElementById('txtContractStatus').value = "2";
+        }
+        if ('@DateTime.Today.ToString("yyyy-MM-dd")' < dateEnd && status !== '99' && appby!='') {
+            document.getElementById('txtContractStatus').value = "1";
+        }
+        if ('@DateTime.Today.ToString("yyyy-MM-dd")' < dateEnd && status !== '99' && appby == '') {
+            document.getElementById('txtContractStatus').value = "0";
+        }
     }
 </script>

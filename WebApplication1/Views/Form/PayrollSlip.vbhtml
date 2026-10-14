@@ -10,6 +10,10 @@
     If Not Request.QueryString("Code") Is Nothing Then
         docno = Request.QueryString("Code")
     End If
+    Dim id As Integer = 0
+    If Not Request.QueryString("Id") Is Nothing Then
+        Integer.TryParse(Request.QueryString("Id"), id)
+    End If
     Dim dbName = ViewBag.JobDatabase
     If Not Request.QueryString("DB") Is Nothing Then
         dbName = Request.QueryString("DB")
@@ -20,16 +24,17 @@
     End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim dt As New Data.DataTable
-    Dim sql As String = "select b.StaffName,e.PositionName,
+    Dim sql As String = "select concat(b.StaffName,' ',b.StaffLastName) as StaffName,e.PositionName,
 a.* from Acc_HRPayRoll a
 inner join Mas_HRStaff b on
 a.StaffId=b.StaffId
 inner join Acc_HRContract c on b.StaffId=c.StaffId
 inner join Mas_HRPayRollConfig d on c.ContractTypeId=d.ContractTypeId
+inner join Mas_HREmployment f on c.ContractNo=f.ContractNo
+and d.PositionId=f.PositionId and c.StaffId=f.StaffId
 inner join Mas_HRPosition e on d.PositionId=e.PositionId
-where c.ContractStatus<>99
-and a.SlipNo='{0}'"
-    dt = obj.GetDataFromSQL(String.Format(sql, docno))
+where a.SlipNo='{0}' AND a.StaffId='{1}'"
+    dt = obj.GetDataFromSQL(String.Format(sql, docno, id))
 End Code
 @If dt.Rows.Count > 0 Then
     Dim totalPay As Double = 0

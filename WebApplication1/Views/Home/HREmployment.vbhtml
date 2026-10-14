@@ -102,6 +102,7 @@ End Code
                 <th>Begin Date</th>
                 <th>End Date</th>
                 <th>Contract No</th>
+                <th>Payroll</th>
             </tr>
         </thead>
         <tbody>
@@ -122,6 +123,10 @@ End Code
                     <td>@Convert.ToDateTime(dr("BeginDate")).ToString("dd/MM/yyyy")</td>
                     <td>@Convert.ToDateTime(dr("EndDate")).ToString("dd/MM/yyyy")</td>
                     <td>@dr("ContractNo")</td>
+                    <td>
+                        <input type="button" value="Configure Payroll" class="btn btn-sm btn-success" 
+                               onclick="configurePayroll('@dr("PositionId")')" />
+                    </td>
                 </tr>
             Next
         </tbody>
@@ -138,6 +143,44 @@ End If
             <div class="modal-body">
                 <form action="" method="post">
                     <input type="hidden" id="txtCompanyId" name="CompanyId" value="@companyId" />
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Contract No</label>
+                        </div>
+                        <div class="col-sm-8" style="display:flex">
+                            <input type="text" id="txtContractNo" name="ContractNo" value="@contractNo" class="form-control" />
+                            <input type="button" value="..." class="btn btn-default" onclick="openContractList()" />
+                        </div>
+                    </div>
+                    <div id="mdlContract" style="display:none;">
+                        @Code
+                            Dim r = obj.GetDataFromSQL("SELECT a.*,b.StaffName FROM Acc_HRContract a INNER JOIN Mas_HRStaff b ON a.StaffId = b.StaffId WHERE a.ContractStatus=1")
+                            If r.Rows.Count > 0 Then
+                                @<table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Contract No</th>
+                                            <th>Staff</th>
+                                            <th>Period</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @For Each row As System.Data.DataRow In r.Rows
+                                            @<tr>
+                                                <td>
+                                                    <input type="button" value="Select" onclick="selectContract('@row("ContractNo")','@row("ContractTypeId")','@row("StaffId")')" />
+                                                </td>
+                                                <td>@row("ContractNo")</td>
+                                                <td>@row("StaffName")</td>
+                                                <td>@Convert.ToDateTime(row("DateStart")).ToString("dd/MM/yyyy") -@Convert.ToDateTime(row("DateEnd")).ToString("dd/MM/yyyy")</td>
+                                            </tr>
+                                        Next
+                                    </tbody>
+                                </table>
+                            End If
+                        End Code
+                    </div>
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Staff</label>
@@ -204,6 +247,14 @@ End If
                     </div>
                     <div class="row">
                         <div class="col-sm-4">
+                            <label>Contract Days</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="number" id="txtContractDays" name="ContractDays" value="@contractDays" class="form-control" onchange="CalculateDays()" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
                             <label>End Date</label>
                         </div>
                         <div class="col-sm-8">
@@ -226,22 +277,6 @@ End If
                                     End If
                                 End Code
                             </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Contract No</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input type="text" id="txtContractNo" name="ContractNo" value="@contractNo" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Contract Days</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input type="number" id="txtContractDays" name="ContractDays" value="@contractDays" class="form-control" />
                         </div>
                     </div>
                     <input type="submit" name="submit" value="Save" class="btn btn-primary" />
@@ -269,5 +304,25 @@ End If
         document.getElementById('txtContractType').value = CtType;
         document.getElementById('txtContractNo').value = CtNo;
         document.getElementById('txtContractDays').value = CtDays;
+    }
+    function openContractList() {
+        document.getElementById('mdlContract').style.display = 'block';
+    }
+    function selectContract(contractNo,contractType,staffId) {
+        document.getElementById('txtContractNo').value = contractNo;
+        document.getElementById('txtContractType').value = contractType;
+        document.getElementById('txtStaffId').value = staffId;
+        document.getElementById('mdlContract').style.display = 'none';
+    }
+    function configurePayroll(positionId) {
+        window.location.href = '?Form=PayrollConfig&SRC=@dbSource&DB=@dbname&Position=' + positionId;
+    }
+    function CalculateDays() {
+        var dateFrom = new Date(document.getElementById('txtBeginDate').value);
+        var days = Number(document.getElementById('txtContractDays').value);
+        if (days > 0) {
+            var dateTo = dateFrom.setDate(dateFrom.getDate() + days);
+            document.getElementById('txtEndDate').value = new Date(dateTo).toISOString().split("T")[0];
+        }
     }
 </script>

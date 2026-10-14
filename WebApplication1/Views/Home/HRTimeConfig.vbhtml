@@ -172,7 +172,7 @@ End If
                             <label>Work Start</label>
                         </div>
                         <div class="col-sm-8">
-                            <input type="text" id="txtTimeStart" name="TimeStart" class="form-control" value="@timeStart" />
+                            <input type="time" id="txtTimeStart" name="TimeStart" class="form-control" value="@timeStart" />
                         </div>
                     </div>
                     <div class="row">
@@ -180,7 +180,7 @@ End If
                             <label>Work Finish</label>
                         </div>
                         <div class="col-sm-8">
-                            <input type="text" id="txtTimeEnd" name="TimeEnd" class="form-control" value="@timeEnd" />
+                            <input type="time" id="txtTimeEnd" name="TimeEnd" class="form-control" value="@timeEnd" />
                         </div>
                     </div>
                     <div class="row">
@@ -188,7 +188,7 @@ End If
                             <label>Late Start</label>
                         </div>
                         <div class="col-sm-8">
-                            <input type="text" id="txtLateStart" name="LateStart" class="form-control" value="@lateStart" />
+                            <input type="time" id="txtLateStart" name="LateStart" class="form-control" value="@lateStart" />
                         </div>
                     </div>
                     <div class="row">
@@ -196,7 +196,7 @@ End If
                             <label>Overtime Start</label>
                         </div>
                         <div class="col-sm-8">
-                            <input type="text" id="txtOTStart" name="OTStart" class="form-control" value="@otStart" />
+                            <input type="time" id="txtOTStart" name="OTStart" class="form-control" value="@otStart" />
                         </div>
                     </div>
                     <div class="row">

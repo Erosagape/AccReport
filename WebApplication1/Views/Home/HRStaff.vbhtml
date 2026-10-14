@@ -156,7 +156,7 @@ end
     End If
 End Code
 <div class="container-fluid">
-    <h2>Staff/Employee - บันทึกข้อมูลพนักงาน</h2>
+    <h2>Employee Data / ข้อมูลพนักงาน</h2>
     <input type="button" id="btnModal" class="btn btn-primary" onclick="ClearData()" value="Add New Staff" />
     <input type="button" id="btnModalN" class="btn btn-primary" data-toggle="modal" data-target="#mdlData" value="Add New Staff" style="display:none" />
     <table class="table table-responsive">

@@ -10,48 +10,74 @@
     End If
     Dim msg As String = ""
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
-    Dim sql As String = "SELECT * FROM Mas_HRStaff"
+    Dim sql As String = "SELECT * FROM vHR_Payroll"
     Dim dt As New Data.DataTable
     dt = obj.GetDataFromSQL(sql)
     If Request.Form("submit") IsNot Nothing Then
-        Dim StaffId = Request.Form("StaffId")
+        Dim StaffId As Integer = Request.Form("StaffId")
         Dim PayDate = Request.Form("PayDate")
         Dim StartDate = Request.Form("StartDate")
         Dim EndDate = Request.Form("EndDate")
         Dim Note = Request.Form("Note")
         Dim PostFlag = Request.Form("PostFlag")
-        sql = "EXEC dbo.Insert_PayrollByStaff '{0}',1,'{1}',{2}"
-        msg = obj.ExecuteSQL(String.Format(sql, PayDate, ViewBag.User, StaffId))
-        If msg = "OK" Then
-            sql = "EXEC dbo.Insert_AddDeductPayroll '{0}','{1}','{2}',{3}"
-            msg = obj.ExecuteSQL(String.Format(sql, StartDate, EndDate, ViewBag.User, StaffId))
-            If msg = "OK" Then
-                If PostFlag = "Y" Then
-                    sql = "EXEC dbo.Insert_PayrollToJournal '{0}','{1}','{2}','{3}','{4}'"
-                    msg = obj.ExecuteSQL(String.Format(sql, StartDate, EndDate, PayDate, ViewBag.User, Note))
+        If StaffId = 0 Then
+            For Each dr As System.Data.DataRow In dt.Rows
+                sql = "EXEC dbo.Insert_PayrollByStaff '{0}',1,'{1}',{2}"
+                Dim result = obj.ExecuteSQL(String.Format(sql, PayDate, ViewBag.User, dr("StaffId")))
+                If result = "OK" Then
+                    sql = "EXEC dbo.Insert_AddDeductPayroll '{0}','{1}','{2}',{3},'{4}'"
+                    result = obj.ExecuteSQL(String.Format(sql, StartDate, EndDate, ViewBag.User, dr("StaffId"), PayDate))
+                    If result = "OK" Then
+                        msg &= "สร้างรายการเงินเดือน " & dr("StaffName") & " เรียบร้อยแล้ว"
+                    Else
+                        msg &= obj.Message
+                    End If
+                Else
+                    msg &= obj.Message
                 End If
+            Next
+            If PostFlag = "Y" Then
+                sql = "EXEC dbo.Insert_PayrollToJournal '{0}','{1}','{2}'"
+                Dim postmsg = obj.ExecuteSQL(String.Format(sql, PayDate, ViewBag.User, Note))
+                If postmsg = "OK" Then
+                    msg &= "บันทึกบัญชีเรียบร้อยแล้ว"
+                Else
+                    msg &= obj.Message
+                End If
+            End If
+        Else
+            sql = "EXEC dbo.Insert_PayrollByStaff '{0}',1,'{1}',{2}"
+            msg = obj.ExecuteSQL(String.Format(sql, PayDate, ViewBag.User, StaffId))
+            If msg = "OK" Then
+                sql = "EXEC dbo.Insert_AddDeductPayroll '{0}','{1}','{2}',{3},'{4}'"
+                msg = obj.ExecuteSQL(String.Format(sql, StartDate, EndDate, ViewBag.User, StaffId, PayDate))
                 If msg = "OK" Then
-                    msg = "สร้างรายการเงินเดือนเรียบร้อยแล้ว"
+                    If PostFlag = "Y" Then
+                        sql = "EXEC dbo.Insert_PayrollToJournal '{0}','{1}','{2}'"
+                        msg = obj.ExecuteSQL(String.Format(sql, PayDate, ViewBag.User, Note))
+                    End If
+                    If msg = "OK" Then
+                        msg = "สร้างรายการเงินเดือนเรียบร้อยแล้ว"
+                    Else
+                        msg = obj.Message
+                    End If
                 Else
                     msg = obj.Message
                 End If
             Else
                 msg = obj.Message
             End If
-        Else
-            msg = obj.Message
         End If
     End If
 End Code
 
 <h2>สร้างรายการเงินเดือน</h2>
 <div class="container-fluid">
-    <input type="button" value="รายชื่อพนักงาน" onclick="openStaffList()" />
     @If dt.Rows.Count > 0 Then
-
         @<form action="" method="post" style="display:flex;flex-direction:column;width:100%">
             <label>พนักงาน</label>
             <select id="txtStaff" name="StaffId">
+                <option value="0">ALL</option>
                 @For Each dr As Data.DataRow In dt.Rows
                     @<option value="@dr("StaffId")">
                         @dr("StaffName")
@@ -66,6 +92,7 @@ End Code
             <input type="date" name="EndDate" placeholder="วันทำงานสิ้นสุด" />
             <label>หมายเหตุ</label>
             <input type="text" name="Note" placeholder="หมายเหตุ" />
+            <label>ลงบัญชีเลยหรือไม่</label>
             <select name="PostFlag">
                 <option value="N">ยังไม่ลงบัญชี</option>
                 <option value="Y">ลงบัญชี</option>
@@ -73,22 +100,25 @@ End Code
             <input type="submit" name="submit" value="สร้างรายการเงินเดือน" />
         </form>
     End If
-    <table>
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Staff Name</th>
+                <th>Contract Type</th>
                 <th>Slip#</th>
             </tr>
         </thead>
         <tbody>
             @For Each dr As Data.DataRow In dt.Rows
-                Dim rs = obj.GetDataFromSQL(String.Format("SELECT TOP 1 SlipNo,PaymentDate FROM Acc_HRPayRoll WHERE StaffId={0} ORDER BY PaymentDate DESC", dr("StaffId")))
+                Dim rs = obj.GetDataFromSQL(String.Format("SELECT distinct SlipNo,PaymentDate FROM Acc_HRPayRoll WHERE StaffId={0} ORDER BY PaymentDate DESC", dr("StaffId")))
                 @<tr>
-                    <td>@dr("StaffName")</td>
+                    <td>@dr("StaffName") / @dr("PositionName")</td>
+                    <td>@dr("ContractType")</td>
                     <td>
                         @If rs.Rows.Count > 0 Then
-                            Dim r = rs.Rows(0)
-                            @<button type="button" onclick="printSlip('@r("SlipNo")')">@r("SlipNo")</button>
+                            For Each r As Data.DataRow In rs.Rows
+                                @<button type="button" onclick="printSlip('@r("SlipNo")','@dr("StaffId")')">@Convert.ToDateTime(r("PaymentDate")).ToString("dd/MM/yyyy")</button>
+                            Next
                         End If
                     </td>
                 </tr>
@@ -102,8 +132,8 @@ End Code
     if (msg !== '') {
         alert(msg);
     }
-    function printSlip(slipNo) {
-        var url = '@Url.Content("~")/Form?DB=@dbname&SRC=@dbSource&Form=PayrollSlip&Code=' + slipNo;
+    function printSlip(slipNo,staffId) {
+        var url = '@Url.Content("~")/Form?DB=@dbname&SRC=@dbSource&Form=PayrollSlip&Code=' + slipNo + '&Id=' + staffId;
         window.open(url, '_blank');
     }
     function openStaffList() {

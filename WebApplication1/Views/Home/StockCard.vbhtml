@@ -75,36 +75,32 @@ End Code
         </div>
     </div>
 </div>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3">
-            <a href="#" data-target="#mdlProduct" data-toggle="modal">Product Code:</a>
-            <br />
-            <input type="text" id="txtProductCode" value="@pdcode" />
-        </div>
-        <div Class="col-sm-3">
-            <Label> Warehouse :   </Label>
-            <br />
-            <input type="text" id="txtWarehouseCode" value="@warehouse" />
-        </div>
-        <div Class="col-sm-3">
-            <Label>Date From:</Label>
-            <br />
-            <input type="date" id="txtDateFrom" value="@dateFrom" />
-        </div>
-        <div Class="col-sm-3">
-            To
-            <br />
-            <input type="date" id="txtDateTo" value="@dateTo" />
-        </div>
+<div class="row">
+    <div class="col-sm-2">
+        <a href="#" data-target="#mdlProduct" data-toggle="modal">Product Code:</a>
+        <br />
+        <input type="text" id="txtProductCode" value="@pdcode" class="form-control"  />
     </div>
-    <div Class="row">
-        <div Class="col-sm-1">
-            <input type="button" value="Show Data" Class="btn btn-success" onclick="RefreshPage()" />
-        </div>
-        <div Class="col-sm-1">
-            <input type="button" value="Print Report" Class="btn btn-primary" onclick="PrintReport()" />
-        </div>
+    <div Class="col-sm-2">
+        <Label> Warehouse :   </Label>
+        <br />
+        <input type="text" id="txtWarehouseCode" value="@warehouse" class="form-control"  />
+    </div>
+    <div Class="col-sm-2">
+        <Label>Date From:</Label>
+        <br />
+        <input type="date" id="txtDateFrom" value="@dateFrom" class="form-control"  />
+    </div>
+    <div Class="col-sm-2">
+        To
+        <br />
+        <input type="date" id="txtDateTo" value="@dateTo" class="form-control" />
+    </div>
+</div>
+<div Class="row">
+    <div Class="col-sm-3" style="display:flex;">
+        <input type="button" value="Show Data" Class="btn btn-success" onclick="RefreshPage()" />
+        <input type="button" value="Print Report" Class="btn btn-primary" onclick="PrintReport()" />
     </div>
 </div>
 <div Class="container-fluid">

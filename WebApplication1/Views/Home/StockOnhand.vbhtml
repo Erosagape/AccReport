@@ -77,28 +77,25 @@ End Code
         </div>
     </div>
 </div>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3">
-            <a href="#" data-target="#mdlProduct" data-toggle="modal">Product Code:</a>
-            <br />
-            <input type="text" id="txtProductCode" value="@pdcode" />
-        </div>
-        <div Class="col-sm-3">
-            <Label> Warehouse :   </Label>
-            <br />
-            <input type="text" id="txtWarehouseCode" value="@warehouse" />
-        </div>
-        <div Class="col-sm-3">
-            <Label> G/L Code :   </Label>
-            <br />
-            <input type="text" id="txtAccCode" value="@accode" />
-        </div>
+<div class="row">
+    <div class="col-sm-2">
+        <a href="#" data-target="#mdlProduct" data-toggle="modal">Product Code:</a>
+        <br />
+        <input type="text" id="txtProductCode" value="@pdcode" class="form-control" />
     </div>
-    <div Class="row">
-        <div Class="col">
-            <input type="button" value="Show" Class="btn btn-success" onclick="RefreshPage()" />
-        </div>
+    <div Class="col-sm-2">
+        <Label> Warehouse :   </Label>
+        <br />
+        <input type="text" id="txtWarehouseCode" value="@warehouse" class="form-control" />
+    </div>
+    <div Class="col-sm-2">
+        <Label> G/L Code :   </Label>
+        <br />
+        <input type="text" id="txtAccCode" value="@accode" class="form-control" />
+    </div>
+    <div Class="col-sm-2">
+        <br />
+        <input type="button" value="Show" Class="btn btn-success" onclick="RefreshPage()" />
     </div>
 </div>
 <div Class="container-fluid">
@@ -156,6 +153,7 @@ End Code
         End If
     End Code
 </div>
+<input type="button" class="btn btn-primary" value="New Inventory" onclick="AddNewData()"/>
 <script type="text/javascript">
     function SetData(pd, wh) {
         document.getElementById('txtWarehouseCode').value = wh;
@@ -166,6 +164,9 @@ End Code
         let productCode = document.getElementById('txtProductCode').value;
         let accCode = document.getElementById('txtAccCode').value;
         window.location.href = "?Form=StockOnhand&DB=@dbname&SRC=@dbSource&Acc="+accCode+"&Code="+ productCode+ "&WH=" + warehouseCode;
+    }
+    function AddNewData() {
+        window.location.href = "?Form=StockTrans&DB=@dbname&SRC=@dbSource";
     }
 </script>
 

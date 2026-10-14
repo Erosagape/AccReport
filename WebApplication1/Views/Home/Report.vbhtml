@@ -57,8 +57,7 @@ sum(case when AccCode like '4%' then Credit-Debit else 0 end) as Revenue,
 ABS(sum(case when AccCode like '4%' then Credit-Debit else 0 end)-sum(case when AccCode like '5%' then Debit-Credit else 0 end)) as ProfitLoss
 from vJournal_All
 where AccCode like '4%' or AccCode like '5%'
-group by concat(Year(EntryDate),'/',FORMAT(Month(EntryDate),'00'))
-order by 1"
+group by concat(Year(EntryDate),'/',FORMAT(Month(EntryDate),'00'))"
     Dim dt3 As Data.DataTable = obj.GetDataFromSQL(sql)
     Dim arr As New List(Of Object())
     For Each dr As Data.DataRow In dt3.Rows
@@ -110,7 +109,7 @@ End Code
             is3D: true,
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('piechart2'));
+        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
         chart.draw(data, options);
     }
     function drawChart3() {
@@ -249,19 +248,19 @@ End Code
             </optgroup>
             <optgroup label="Payment Report">
                 <option value="PC">รายงานใบเตรียมจ่าย</option>
-                <option value="Payment">รายงานใบสำคัญจ่าย</option>
+                <option value="PV">รายงานใบสำคัญจ่าย</option>
             </optgroup>
             <optgroup label="Payables Report">
                 <option value="AgingAP">รายงานอายุเจ้าหนี้</option>
-                <option value="AP">รายงานเจ้าหนี้</option>                
+                <option value="AP">รายงานเจ้าหนี้</option>
             </optgroup>
             <optgroup label="Receive Report">
                 <option value="RC">รายงานใบเสร็จรับเงิน</option>
-                <option value="Receive">รายงาานใบสำคัญรับ</option>
+                <option value="RV">รายงานใบสำคัญรับ</option>
             </optgroup>
             <optgroup label="Receivables Report">
                 <option value="AgingAR">รายงานอายุลูกหนี้</option>
-                <option value="AR">รายงานลูกหนี้</option>                
+                <option value="AR">รายงานลูกหนี้</option>
             </optgroup>
             <optgroup label="Journal Report">
                 <option value="Journal">รายงานสมุดรายวัน</option>
@@ -272,6 +271,12 @@ End Code
                 <option value="WHTax">รายงานการหัก ณ ที่จ่าย</option>
                 <option value="WHTaxSum">รายงานสรุปการหัก ณ ที่จ่าย</option>
                 <option value="PRD">รายงานนำส่งภาษี</option>
+            </optgroup>
+            <optgroup label="HR Report">
+                <option value="Time">รายงานเวลาเข้าออก</option>
+                <option value="Payroll">รายงานการออกสลิปเงินเดือน</option>
+                <option value="Salary">รายงานการจ่ายประจำเดือน</option>
+                <option value="Employee">รายงานข้อมูลพนักงาน</option>
             </optgroup>
         </select>
     </div>

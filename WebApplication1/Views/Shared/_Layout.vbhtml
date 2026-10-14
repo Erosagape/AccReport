@@ -11,6 +11,28 @@
     If Not Request.QueryString("LANG") Is Nothing Then
         lang = Request.QueryString("LANG")
     End If
+    Dim form As String = "Index"
+    If lang = "EN" Then
+        form = "IndexEN"
+    End If
+    If Not Request.QueryString("Form") Is Nothing Then
+        If form <> "Login" Then
+            form = Request.QueryString("Form")
+        End If
+    End If
+
+    If ViewBag.User = "" And Request.Path.IndexOf("Login") < 0 Then
+        If Request.Path.IndexOf("Form") > 0 Then
+            form = "/" & Request.Url.Segments(1) & "/Form?Form=" & form
+        Else
+            form = "/" & Request.Url.Segments(1) & "?Form=" & form
+        End If
+        If lang = "EN" Then
+            Response.Redirect("~/Home/Login?LANG=EN&DB=" + dbName + "&SRC=" + dbSource & "&RedirectTo=" & form)
+        Else
+            Response.Redirect("~/Home/Login?LANG=TH&DB=" + dbName + "&SRC=" + dbSource & "&RedirectTo=" & form)
+        End If
+    End If
 End Code
 <!DOCTYPE html>
 <html>
@@ -183,7 +205,7 @@ End Code
                                 <a href="@Url.Content("~")?Form=Profile&DB=@dbName&SRC=@dbSource&lang=@lang"> ข้อมูลกิจการ</a>
                             </div>
                         </div>
-                       <div class="row">
+                        <div class="row">
                             <div class="col-sm-12">
                                 <a href="@Url.Content("~")?Form=HRMenu&DB=@dbName&SRC=@dbSource&lang=@lang"> ข้อมูลระบบบริหารงานบุคคล</a>
                             </div>
@@ -354,7 +376,7 @@ End Code
                                 <a href="@Url.Content("~")?Form=Profile&DB=@dbname&SRC=@dbSource&lang=@lang"> Company Profile</a>
                             </div>
                         </div>
-                       <div class="row">
+                        <div class="row">
                             <div class="col-sm-12">
                                 <a href="@Url.Content("~")?Form=HRMenu&DB=@dbName&SRC=@dbSource&lang=@lang"> Human Resource Files</a>
                             </div>
