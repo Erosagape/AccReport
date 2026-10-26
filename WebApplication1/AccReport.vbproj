@@ -348,6 +348,7 @@
     <Content Include="Views\Form\FormDN.vbhtml" />
     <Content Include="Views\Home\LinkGL.vbhtml" />
     <Content Include="Views\Shared\_Layout_MNL.vbhtml" />
+    <Content Include="Views\Home\ProfitLossDetail.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

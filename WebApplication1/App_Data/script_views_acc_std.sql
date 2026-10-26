@@ -1,1238 +1,927 @@
-USE [AccConcept]
-GO
-/****** Object:  StoredProcedure [dbo].[UpdateTotalDebitCredit]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateTotalDebitCredit]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[UpdateTotalDebitCredit]
-GO
-/****** Object:  StoredProcedure [dbo].[UpdatePR_STATUS]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdatePR_STATUS]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[UpdatePR_STATUS]
-GO
-/****** Object:  StoredProcedure [dbo].[UpdatePO_STATUS]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdatePO_STATUS]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[UpdatePO_STATUS]
-GO
-/****** Object:  StoredProcedure [dbo].[TestHR]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TestHR]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[TestHR]
-GO
-/****** Object:  StoredProcedure [dbo].[TestCall_MNL]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TestCall_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[TestCall_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[TestCall]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TestCall]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[TestCall]
-GO
-/****** Object:  StoredProcedure [dbo].[SetTWTLog]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetTWTLog]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetTWTLog]
-GO
-/****** Object:  StoredProcedure [dbo].[SetTransactionStock]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetTransactionStock]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetTransactionStock]
-GO
-/****** Object:  StoredProcedure [dbo].[SetTransactionHeader]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetTransactionHeader]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetTransactionHeader]
-GO
-/****** Object:  StoredProcedure [dbo].[SetTransactionDetail]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetTransactionDetail]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetTransactionDetail]
-GO
-/****** Object:  StoredProcedure [dbo].[SetJournalHeader]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetJournalHeader]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetJournalHeader]
-GO
-/****** Object:  StoredProcedure [dbo].[SetJournalDetail]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetJournalDetail]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetJournalDetail]
-GO
-/****** Object:  StoredProcedure [dbo].[SetDataSale]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetDataSale]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetDataSale]
-GO
-/****** Object:  StoredProcedure [dbo].[SetDataPurchase]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetDataPurchase]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[SetDataPurchase]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_RVFromJob]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_RVFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_RVFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_ReceiptToJournal]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_ReceiptToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_ReceiptToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_PVFromBillPay]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_PVFromBillPay]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_PVFromBillPay]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_InvoiceToJournal]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_InvoiceToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_InvoiceToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_CustAdvanceToJournal]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_CustAdvanceToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_CustAdvanceToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_CNDNToJournal]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_CNDNToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_CNDNToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_ClearMoneyFromNoAdvance]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_ClearMoneyFromNoAdvance]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_ClearMoneyFromAdvance]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_ClearMoneyFromAdvance]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_ClearExpenseFromManualEntry]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_ClearExpenseFromManualEntry]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_ClearExpenseFromAdvance]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_ClearExpenseFromAdvance]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_BillPayToJournal]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_BillPayToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_BillPayToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Process_AdvanceToJournal]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Process_AdvanceToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Process_AdvanceToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromTransaction]    Script Date: 26/10/2026 12:33:13 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_WHTaxFromTransaction]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_WHTaxFromTransaction]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromPC]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_WHTaxFromPC]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_WHTaxFromPC]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_WHTaxFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_WHTaxFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_Transaction]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_Transaction]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_Transaction]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromVender]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SubAccCodeFromVender]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SubAccCodeFromVender]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromUser]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SubAccCodeFromUser]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SubAccCodeFromUser]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromTCharge]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SubAccCodeFromTCharge]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SubAccCodeFromTCharge]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromService]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SubAccCodeFromService]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SubAccCodeFromService]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromSCharge]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SubAccCodeFromSCharge]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SubAccCodeFromSCharge]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromOCharge]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SubAccCodeFromOCharge]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SubAccCodeFromOCharge]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromCustomer]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SubAccCodeFromCustomer]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SubAccCodeFromCustomer]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_StockFromTransaction]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_StockFromTransaction]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_StockFromTransaction]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_StockFromDO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_StockFromDO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_StockFromDO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SOFromSR]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SOFromSR]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SOFromSR]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal_ByDate]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SIToJournal_ByDate]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SIToJournal_ByDate]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SIToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SIToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIFromSO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SIFromSO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SIFromSO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SIFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SIFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_SalaryToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_SalaryToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_SalaryToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromSO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RVFromSO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RVFromSO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromSI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RVFromSI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RVFromSI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromRC]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RVFromRC]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RVFromRC]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V3]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RVFromJob_V3]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RVFromJob_V3]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RVFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RVFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVfromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RVfromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RVfromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RefundFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RefundFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RefundFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ReceiptToJournal_V4]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ReceiptToJournal_V4]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ReceiptToJournal_V3]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ReceiptToJournal_V3]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ReceiptToJournal_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ReceiptToJournal_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ReceiptToJournal_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ReceiptToJournal_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ReceiptToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ReceiptToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ReceiptFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ReceiptFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ReceiptFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ReceiptFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RCFromSO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RCFromSO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RCFromSO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_RCFromSI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_RCFromSI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_RCFromSI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickSellProduct]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_QuickSellProduct]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_QuickSellProduct]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickReceive]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_QuickReceive]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_QuickReceive]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickPayment]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_QuickPayment]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_QuickPayment]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_QuickJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_QuickJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickCashSaleProduct]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_QuickCashSaleProduct]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_QuickCashSaleProduct]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickBuyAsset]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_QuickBuyAsset]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_QuickBuyAsset]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromTransaction]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PVFromTransaction]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PVFromTransaction]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromPO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PVFromPO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PVFromPO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromPI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PVFromPI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PVFromPI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromPC]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PVFromPC]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PVFromPC]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V3]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PVFromBillPay_V3]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PVFromBillPay_V3]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PVFromBillPay_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PVFromBillPay_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PVFromBillPay]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PVFromBillPay]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ProductsCodeFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ProductsCodeFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_demo]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ProductsCodeFromjob_demo]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ProductsCodeFromjob_demo]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ProductsCodeFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ProductsCodeFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostReceiptToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PostReceiptToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PostReceiptToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostInvoiceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PostInvoiceToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PostInvoiceToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostCNDNToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PostCNDNToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PostCNDNToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostClearToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PostClearToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PostClearToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_POFromPR]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_POFromPR]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_POFromPR]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal_ByDate]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PIToJournal_ByDate]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PIToJournal_ByDate]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PIToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PIToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIFromPO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PIFromPO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PIFromPO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PIFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PIFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PCFromPO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PCFromPO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PCFromPO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PCFromPI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PCFromPI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PCFromPI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PayrollToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PayrollToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PayrollToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PayrollByStaff]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_PayrollByStaff]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_PayrollByStaff]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_JVFromCNDN]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_JVFromCNDN]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_JVFromCNDN]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_Journal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_Journal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_Journal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_InvoiceToJournal_V4]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_InvoiceToJournal_V4]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_InvoiceToJournal_V3]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_InvoiceToJournal_V3]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_InvoiceToJournal_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_InvoiceToJournal_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_InvoiceToJournal_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_InvoiceToJournal_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_InvoiceToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_InvoiceToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_InvoiceFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_InvoiceFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_InvoiceFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_InvoiceFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DPToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DPToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DPToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DOFromSO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DOFromSO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DOFromSO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DOFromSI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DOFromSI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DOFromSI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DOFromRC]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DOFromRC]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DOFromRC]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DIFromPO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DIFromPO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DIFromPO]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DIFromPI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DIFromPI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DIFromPI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DIFromPC]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DIFromPC]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DIFromPC]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_DepreByDate]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_DepreByDate]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_DepreByDate]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CustAdvanceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CustAdvanceToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CustAdvanceToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CostToJournal_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CostToJournal_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CostToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CostToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CostFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CostFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CostFromAdvance]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CostFromAdvance]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CNDNToJournal_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CNDNToJournal_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CNDNToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CNDNToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromSI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CNDNFromSI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CNDNFromSI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromPI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CNDNFromPI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CNDNFromPI]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CNDNFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CNDNFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_CNDNFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_CNDNFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance_MNL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearMoneyFromNoAdvance_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearMoneyFromNoAdvance_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearMoneyFromNoAdvance]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearMoneyFromNoAdvance]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearMoneyFromAdvance_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearMoneyFromAdvance_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearMoneyFromAdvance]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearMoneyFromAdvance]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V3]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromManualEntry_V3]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromManualEntry_V3]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromManualEntry_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromManualEntry_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_MNL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromManualEntry_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromManualEntry_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromManualEntry]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromManualEntry]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromBillPay_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromBillPay_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromBillPay]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromBillPay]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromAdvance_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromAdvance_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_MNL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromAdvance_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromAdvance_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ClearExpenseFromAdvance]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ClearExpenseFromAdvance]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BillPayToJournal_V4]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BillPayToJournal_V4]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BillPayToJournal_V3]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BillPayToJournal_V3]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BillPayToJournal_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BillPayToJournal_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BillPayToJournal_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BillPayToJournal_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BillPayToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BillPayToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BillPayFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BillPayFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BillPayFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BillPayFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_BD]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_BD]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_BD]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_ARFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_ARFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_ARFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdvanceToJournal_V4]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdvanceToJournal_V4]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdvanceToJournal_V3]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdvanceToJournal_V3]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdvanceToJournal_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdvanceToJournal_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdvanceToJournal_MNL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdvanceToJournal_MNL]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdvanceToJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdvanceToJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdvanceFromJob_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdvanceFromJob_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdvanceFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdvanceFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdjustSIJournalFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AdjustSIJournalFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AdjustSIJournalFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_AddDeductPayroll]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insert_AddDeductPayroll]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Insert_AddDeductPayroll]
-GO
-/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetWorkSheet_ByHeader_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetWorkSheet_ByHeader_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetWorkSheet_ByHeader]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetWorkSheet_ByHeader]
-GO
-/****** Object:  StoredProcedure [dbo].[GetStockCard]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetStockCard]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetStockCard]
-GO
-/****** Object:  StoredProcedure [dbo].[GetRefundFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetRefundFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetRefundFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[GetReceiptAPFromJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetReceiptAPFromJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetReceiptAPFromJob]
-GO
-/****** Object:  StoredProcedure [dbo].[GetGLTemplate]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetGLTemplate]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetGLTemplate]
-GO
-/****** Object:  StoredProcedure [dbo].[GetCashFlow_ByDate]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetCashFlow_ByDate]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetCashFlow_ByDate]
-GO
-/****** Object:  StoredProcedure [dbo].[GetCashFlow]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetCashFlow]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetCashFlow]
-GO
-/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare_V2]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetBalanceSheetCompare_V2]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetBalanceSheetCompare_V2]
-GO
-/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetBalanceSheetCompare]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetBalanceSheetCompare]
-GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_YearCompare]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetBalance_YearCompare]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetBalance_YearCompare]
-GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_QuarterCompare]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetBalance_QuarterCompare]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetBalance_QuarterCompare]
-GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_JournalByJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetBalance_JournalByJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetBalance_JournalByJob]
-GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_DateCompare]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetBalance_DateCompare]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[GetBalance_DateCompare]
-GO
-/****** Object:  StoredProcedure [dbo].[Generate_ReportGL_ByJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Generate_ReportGL_ByJob]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Generate_ReportGL_ByJob]
-GO
-/****** Object:  StoredProcedure [dbo].[Generate_ReportGL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Generate_ReportGL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Generate_ReportGL]
-GO
-/****** Object:  StoredProcedure [dbo].[Generate_GLClosingWHT]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Generate_GLClosingWHT]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Generate_GLClosingWHT]
-GO
-/****** Object:  StoredProcedure [dbo].[Generate_GLClosingVAT]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Generate_GLClosingVAT]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Generate_GLClosingVAT]
-GO
-/****** Object:  StoredProcedure [dbo].[Generate_GLClosingProfit]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Generate_GLClosingProfit]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Generate_GLClosingProfit]
-GO
-/****** Object:  StoredProcedure [dbo].[DELETE_JOB_JOURNAL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DELETE_JOB_JOURNAL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[DELETE_JOB_JOURNAL]
-GO
-/****** Object:  StoredProcedure [dbo].[DELETE_ALL_TRANSCTION]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DELETE_ALL_TRANSCTION]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[DELETE_ALL_TRANSCTION]
-GO
-/****** Object:  StoredProcedure [dbo].[DELETE_ALL_JOURNAL]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DELETE_ALL_JOURNAL]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[DELETE_ALL_JOURNAL]
-GO
-/****** Object:  StoredProcedure [dbo].[CopyTransaction]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CopyTransaction]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CopyTransaction]
-GO
-/****** Object:  StoredProcedure [dbo].[ClosePR]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ClosePR]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[ClosePR]
-GO
-/****** Object:  StoredProcedure [dbo].[ClosePO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ClosePO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[ClosePO]
-GO
-/****** Object:  StoredProcedure [dbo].[CloseDI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CloseDI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CloseDI]
-GO
-/****** Object:  StoredProcedure [dbo].[CancelPR]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CancelPR]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CancelPR]
-GO
-/****** Object:  StoredProcedure [dbo].[CancelPO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CancelPO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CancelPO]
-GO
-/****** Object:  StoredProcedure [dbo].[CancelPI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CancelPI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CancelPI]
-GO
-/****** Object:  StoredProcedure [dbo].[CancelPC]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CancelPC]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CancelPC]
-GO
-/****** Object:  StoredProcedure [dbo].[CancelJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CancelJournal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CancelJournal]
-GO
-/****** Object:  StoredProcedure [dbo].[CancelDO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CancelDO]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CancelDO]
-GO
-/****** Object:  StoredProcedure [dbo].[CancelDI]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CancelDI]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[CancelDI]
-GO
-/****** Object:  StoredProcedure [dbo].[Calculate_Depre]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Calculate_Depre]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[Calculate_Depre]
-GO
-/****** Object:  View [dbo].[vSum_TransactionByType]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_TransactionByType]'))
-DROP VIEW [dbo].[vSum_TransactionByType]
-GO
-/****** Object:  View [dbo].[vSum_TransactionByDocType]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_TransactionByDocType]'))
-DROP VIEW [dbo].[vSum_TransactionByDocType]
-GO
-/****** Object:  View [dbo].[vSum_StockByType]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_StockByType]'))
-DROP VIEW [dbo].[vSum_StockByType]
-GO
-/****** Object:  View [dbo].[vStock_Document]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vStock_Document]'))
-DROP VIEW [dbo].[vStock_Document]
-GO
-/****** Object:  View [dbo].[vRV_LinkJob]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vRV_LinkJob]'))
-DROP VIEW [dbo].[vRV_LinkJob]
-GO
-/****** Object:  View [dbo].[vRC_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vRC_All]'))
-DROP VIEW [dbo].[vRC_All]
-GO
-/****** Object:  View [dbo].[vProfileConfig]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vProfileConfig]'))
-DROP VIEW [dbo].[vProfileConfig]
-GO
-/****** Object:  View [dbo].[vPC_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_All]'))
-DROP VIEW [dbo].[vPC_All]
-GO
-/****** Object:  View [dbo].[vMas_User]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_User]'))
-DROP VIEW [dbo].[vMas_User]
-GO
-/****** Object:  View [dbo].[vMas_HROrgChart]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_HROrgChart]'))
-DROP VIEW [dbo].[vMas_HROrgChart]
-GO
-/****** Object:  View [dbo].[vMas_DocConfigSchema]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_DocConfigSchema]'))
-DROP VIEW [dbo].[vMas_DocConfigSchema]
-GO
-/****** Object:  View [dbo].[vMas_AccConfigCode]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_AccConfigCode]'))
-DROP VIEW [dbo].[vMas_AccConfigCode]
-GO
-/****** Object:  View [dbo].[vJournal_ByPeriod]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vJournal_ByPeriod]'))
-DROP VIEW [dbo].[vJournal_ByPeriod]
-GO
-/****** Object:  View [dbo].[vHR_WorkTimeSummary]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_WorkTimeSummary]'))
-DROP VIEW [dbo].[vHR_WorkTimeSummary]
-GO
-/****** Object:  View [dbo].[vHR_WorkTimeDetail]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_WorkTimeDetail]'))
-DROP VIEW [dbo].[vHR_WorkTimeDetail]
-GO
-/****** Object:  View [dbo].[vHR_PayrollSlip]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_PayrollSlip]'))
-DROP VIEW [dbo].[vHR_PayrollSlip]
-GO
-/****** Object:  View [dbo].[vDI_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vDI_All]'))
-DROP VIEW [dbo].[vDI_All]
-GO
-/****** Object:  View [dbo].[vAcc_CodeConfig]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAcc_CodeConfig]'))
-DROP VIEW [dbo].[vAcc_CodeConfig]
-GO
-/****** Object:  View [dbo].[vOrder_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vOrder_Balance]'))
-DROP VIEW [dbo].[vOrder_Balance]
-GO
-/****** Object:  View [dbo].[vStock_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vStock_Balance]'))
-DROP VIEW [dbo].[vStock_Balance]
-GO
-/****** Object:  View [dbo].[vSO_Delivery]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSO_Delivery]'))
-DROP VIEW [dbo].[vSO_Delivery]
-GO
-/****** Object:  View [dbo].[vSO_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSO_Balance]'))
-DROP VIEW [dbo].[vSO_Balance]
-GO
-/****** Object:  View [dbo].[vDO_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vDO_All]'))
-DROP VIEW [dbo].[vDO_All]
-GO
-/****** Object:  View [dbo].[vTransaction_LinkBack]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vTransaction_LinkBack]'))
-DROP VIEW [dbo].[vTransaction_LinkBack]
-GO
-/****** Object:  View [dbo].[vSum_AllType]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_AllType]'))
-DROP VIEW [dbo].[vSum_AllType]
-GO
-/****** Object:  View [dbo].[vTransaction_Link]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vTransaction_Link]'))
-DROP VIEW [dbo].[vTransaction_Link]
-GO
-/****** Object:  View [dbo].[vPO_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPO_Balance]'))
-DROP VIEW [dbo].[vPO_Balance]
-GO
-/****** Object:  View [dbo].[vPO_Delivery]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPO_Delivery]'))
-DROP VIEW [dbo].[vPO_Delivery]
-GO
-/****** Object:  View [dbo].[vSum_Stock]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_Stock]'))
-DROP VIEW [dbo].[vSum_Stock]
-GO
-/****** Object:  View [dbo].[vSum_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_Balance]'))
-DROP VIEW [dbo].[vSum_Balance]
-GO
-/****** Object:  View [dbo].[vAR_Payment]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAR_Payment]'))
-DROP VIEW [dbo].[vAR_Payment]
-GO
-/****** Object:  View [dbo].[vProfitLoss]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vProfitLoss]'))
-DROP VIEW [dbo].[vProfitLoss]
-GO
-/****** Object:  View [dbo].[vTrialBalance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vTrialBalance]'))
-DROP VIEW [dbo].[vTrialBalance]
-GO
-/****** Object:  View [dbo].[vAP_Payment]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAP_Payment]'))
-DROP VIEW [dbo].[vAP_Payment]
-GO
-/****** Object:  View [dbo].[vStock_Card]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vStock_Card]'))
-DROP VIEW [dbo].[vStock_Card]
-GO
-/****** Object:  View [dbo].[vStock_Onhand]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vStock_Onhand]'))
-DROP VIEW [dbo].[vStock_Onhand]
-GO
-/****** Object:  View [dbo].[vSum_JournalByPrefix]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_JournalByPrefix]'))
-DROP VIEW [dbo].[vSum_JournalByPrefix]
-GO
-/****** Object:  View [dbo].[vPR_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPR_Balance]'))
-DROP VIEW [dbo].[vPR_Balance]
-GO
-/****** Object:  View [dbo].[vPR_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPR_All]'))
-DROP VIEW [dbo].[vPR_All]
-GO
-/****** Object:  View [dbo].[vPO_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPO_All]'))
-DROP VIEW [dbo].[vPO_All]
-GO
-/****** Object:  View [dbo].[vCalculate_Depre_Double]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vCalculate_Depre_Double]'))
-DROP VIEW [dbo].[vCalculate_Depre_Double]
-GO
-/****** Object:  View [dbo].[vCalculate_Depre_Straight]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vCalculate_Depre_Straight]'))
-DROP VIEW [dbo].[vCalculate_Depre_Straight]
-GO
-/****** Object:  View [dbo].[vSR_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSR_Balance]'))
-DROP VIEW [dbo].[vSR_Balance]
-GO
-/****** Object:  View [dbo].[vSR_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSR_All]'))
-DROP VIEW [dbo].[vSR_All]
-GO
-/****** Object:  View [dbo].[vSO_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSO_All]'))
-DROP VIEW [dbo].[vSO_All]
-GO
-/****** Object:  View [dbo].[vSum_BalanceMonthlyCompare]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_BalanceMonthlyCompare]'))
-DROP VIEW [dbo].[vSum_BalanceMonthlyCompare]
-GO
-/****** Object:  View [dbo].[vSum_BalanceMonthlyAccumulate]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_BalanceMonthlyAccumulate]'))
-DROP VIEW [dbo].[vSum_BalanceMonthlyAccumulate]
-GO
-/****** Object:  View [dbo].[vSum_BalanceMonthlyCalculate]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_BalanceMonthlyCalculate]'))
-DROP VIEW [dbo].[vSum_BalanceMonthlyCalculate]
-GO
-/****** Object:  View [dbo].[vSum_BalanceMonthly]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_BalanceMonthly]'))
-DROP VIEW [dbo].[vSum_BalanceMonthly]
-GO
-/****** Object:  View [dbo].[vMas_AccountSheet]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_AccountSheet]'))
-DROP VIEW [dbo].[vMas_AccountSheet]
-GO
-/****** Object:  View [dbo].[vRV_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vRV_All]'))
-DROP VIEW [dbo].[vRV_All]
-GO
-/****** Object:  View [dbo].[vPV_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPV_All]'))
-DROP VIEW [dbo].[vPV_All]
-GO
-/****** Object:  View [dbo].[vMas_DocConfigStandard]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_DocConfigStandard]'))
-DROP VIEW [dbo].[vMas_DocConfigStandard]
-GO
-/****** Object:  View [dbo].[vDI_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vDI_H]'))
-DROP VIEW [dbo].[vDI_H]
-GO
-/****** Object:  View [dbo].[vDI_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vDI_D]'))
-DROP VIEW [dbo].[vDI_D]
-GO
-/****** Object:  View [dbo].[vDO_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vDO_H]'))
-DROP VIEW [dbo].[vDO_H]
-GO
-/****** Object:  View [dbo].[vDO_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vDO_D]'))
-DROP VIEW [dbo].[vDO_D]
-GO
-/****** Object:  View [dbo].[vSR_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSR_H]'))
-DROP VIEW [dbo].[vSR_H]
-GO
-/****** Object:  View [dbo].[vSR_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSR_D]'))
-DROP VIEW [dbo].[vSR_D]
-GO
-/****** Object:  View [dbo].[vSO_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSO_H]'))
-DROP VIEW [dbo].[vSO_H]
-GO
-/****** Object:  View [dbo].[vSO_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSO_D]'))
-DROP VIEW [dbo].[vSO_D]
-GO
-/****** Object:  View [dbo].[vPR_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPR_H]'))
-DROP VIEW [dbo].[vPR_H]
-GO
-/****** Object:  View [dbo].[vPR_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPR_D]'))
-DROP VIEW [dbo].[vPR_D]
-GO
-/****** Object:  View [dbo].[vPC_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_H]'))
-DROP VIEW [dbo].[vPC_H]
-GO
-/****** Object:  View [dbo].[vRC_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vRC_H]'))
-DROP VIEW [dbo].[vRC_H]
-GO
-/****** Object:  View [dbo].[vRC_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vRC_D]'))
-DROP VIEW [dbo].[vRC_D]
-GO
-/****** Object:  View [dbo].[vPC_BalanceBySource]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_BalanceBySource]'))
-DROP VIEW [dbo].[vPC_BalanceBySource]
-GO
-/****** Object:  View [dbo].[vPC_BalanceByDoc]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_BalanceByDoc]'))
-DROP VIEW [dbo].[vPC_BalanceByDoc]
-GO
-/****** Object:  View [dbo].[vPC_BalanceByParty]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_BalanceByParty]'))
-DROP VIEW [dbo].[vPC_BalanceByParty]
-GO
-/****** Object:  View [dbo].[vPC_BalanceByProduct]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_BalanceByProduct]'))
-DROP VIEW [dbo].[vPC_BalanceByProduct]
-GO
-/****** Object:  View [dbo].[vPC_BalanceBySaleDesc]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_BalanceBySaleDesc]'))
-DROP VIEW [dbo].[vPC_BalanceBySaleDesc]
-GO
-/****** Object:  View [dbo].[vPC_Collect]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_Collect]'))
-DROP VIEW [dbo].[vPC_Collect]
-GO
-/****** Object:  View [dbo].[vSI_BalanceBySaleDesc]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSI_BalanceBySaleDesc]'))
-DROP VIEW [dbo].[vSI_BalanceBySaleDesc]
-GO
-/****** Object:  View [dbo].[vSI_BalanceByProduct]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSI_BalanceByProduct]'))
-DROP VIEW [dbo].[vSI_BalanceByProduct]
-GO
-/****** Object:  View [dbo].[vSI_BalanceByParty]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSI_BalanceByParty]'))
-DROP VIEW [dbo].[vSI_BalanceByParty]
-GO
-/****** Object:  View [dbo].[vSI_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSI_Balance]'))
-DROP VIEW [dbo].[vSI_Balance]
-GO
-/****** Object:  View [dbo].[vSI_Receive]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSI_Receive]'))
-DROP VIEW [dbo].[vSI_Receive]
-GO
-/****** Object:  View [dbo].[vSum_JournalByType]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vSum_JournalByType]'))
-DROP VIEW [dbo].[vSum_JournalByType]
-GO
-/****** Object:  View [dbo].[vAV_Payment]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAV_Payment]'))
-DROP VIEW [dbo].[vAV_Payment]
-GO
-/****** Object:  View [dbo].[vAV_BalanceByEmp]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAV_BalanceByEmp]'))
-DROP VIEW [dbo].[vAV_BalanceByEmp]
-GO
-/****** Object:  View [dbo].[vAV_BalanceByParty]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAV_BalanceByParty]'))
-DROP VIEW [dbo].[vAV_BalanceByParty]
-GO
-/****** Object:  View [dbo].[vAV_BalanceByDoc]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAV_BalanceByDoc]'))
-DROP VIEW [dbo].[vAV_BalanceByDoc]
-GO
-/****** Object:  View [dbo].[vAV_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAV_Balance]'))
-DROP VIEW [dbo].[vAV_Balance]
-GO
-/****** Object:  View [dbo].[vAV_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAV_All]'))
-DROP VIEW [dbo].[vAV_All]
-GO
-/****** Object:  View [dbo].[vAR_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAR_H]'))
-DROP VIEW [dbo].[vAR_H]
-GO
-/****** Object:  View [dbo].[vAR_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAR_D]'))
-DROP VIEW [dbo].[vAR_D]
-GO
-/****** Object:  View [dbo].[vMas_ModuleMenu]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_ModuleMenu]'))
-DROP VIEW [dbo].[vMas_ModuleMenu]
-GO
-/****** Object:  View [dbo].[vMas_UserRoleAll]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_UserRoleAll]'))
-DROP VIEW [dbo].[vMas_UserRoleAll]
-GO
-/****** Object:  View [dbo].[vAP_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAP_H]'))
-DROP VIEW [dbo].[vAP_H]
-GO
-/****** Object:  View [dbo].[vAP_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vAP_D]'))
-DROP VIEW [dbo].[vAP_D]
-GO
-/****** Object:  View [dbo].[vPO_Payment]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPO_Payment]'))
-DROP VIEW [dbo].[vPO_Payment]
-GO
-/****** Object:  View [dbo].[vTransaction_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vTransaction_All]'))
-DROP VIEW [dbo].[vTransaction_All]
-GO
-/****** Object:  View [dbo].[vTransaction_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vTransaction_H]'))
-DROP VIEW [dbo].[vTransaction_H]
-GO
-/****** Object:  View [dbo].[vTransaction_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vTransaction_D]'))
-DROP VIEW [dbo].[vTransaction_D]
-GO
-/****** Object:  View [dbo].[vPO_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPO_H]'))
-DROP VIEW [dbo].[vPO_H]
-GO
-/****** Object:  View [dbo].[vJournal_All]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vJournal_All]'))
-DROP VIEW [dbo].[vJournal_All]
-GO
-/****** Object:  View [dbo].[vJournal_H]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vJournal_H]'))
-DROP VIEW [dbo].[vJournal_H]
-GO
-/****** Object:  View [dbo].[vJournal_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vJournal_D]'))
-DROP VIEW [dbo].[vJournal_D]
-GO
-/****** Object:  View [dbo].[vHR_Salary]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_Salary]'))
-DROP VIEW [dbo].[vHR_Salary]
+USE [acc_3x]
 GO
-/****** Object:  View [dbo].[vHR_SalaryConfig]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_SalaryConfig]'))
-DROP VIEW [dbo].[vHR_SalaryConfig]
+/****** Object:  StoredProcedure [dbo].[UpdateTotalDebitCredit]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[UpdateTotalDebitCredit]
 GO
-/****** Object:  View [dbo].[vHR_PayrollConfig]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_PayrollConfig]'))
-DROP VIEW [dbo].[vHR_PayrollConfig]
+/****** Object:  StoredProcedure [dbo].[UpdatePR_STATUS]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[UpdatePR_STATUS]
 GO
-/****** Object:  View [dbo].[vHR_CalTaxEmp]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_CalTaxEmp]'))
-DROP VIEW [dbo].[vHR_CalTaxEmp]
+/****** Object:  StoredProcedure [dbo].[UpdatePO_STATUS]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[UpdatePO_STATUS]
 GO
-/****** Object:  View [dbo].[vHR_PayRoll]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vHR_PayRoll]'))
-DROP VIEW [dbo].[vHR_PayRoll]
+/****** Object:  StoredProcedure [dbo].[TestHR]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[TestHR]
 GO
-/****** Object:  View [dbo].[vPC_CheckPO]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_CheckPO]'))
-DROP VIEW [dbo].[vPC_CheckPO]
+/****** Object:  StoredProcedure [dbo].[TestCall_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[TestCall_MNL]
 GO
-/****** Object:  View [dbo].[vPO_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPO_D]'))
-DROP VIEW [dbo].[vPO_D]
+/****** Object:  StoredProcedure [dbo].[TestCall]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[TestCall]
 GO
-/****** Object:  View [dbo].[vPC_D]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vPC_D]'))
-DROP VIEW [dbo].[vPC_D]
+/****** Object:  StoredProcedure [dbo].[SetTWTLog]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetTWTLog]
 GO
-/****** Object:  View [dbo].[vMas_Product]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_Product]'))
-DROP VIEW [dbo].[vMas_Product]
+/****** Object:  StoredProcedure [dbo].[SetTransactionStock]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetTransactionStock]
 GO
-/****** Object:  View [dbo].[vMas_ProductType]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_ProductType]'))
-DROP VIEW [dbo].[vMas_ProductType]
+/****** Object:  StoredProcedure [dbo].[SetTransactionHeader]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetTransactionHeader]
 GO
-/****** Object:  View [dbo].[vMas_Warehouse]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_Warehouse]'))
-DROP VIEW [dbo].[vMas_Warehouse]
+/****** Object:  StoredProcedure [dbo].[SetTransactionDetail]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetTransactionDetail]
 GO
-/****** Object:  View [dbo].[vMas_AccCode]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vMas_AccCode]'))
-DROP VIEW [dbo].[vMas_AccCode]
+/****** Object:  StoredProcedure [dbo].[SetJournalHeader]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetJournalHeader]
 GO
-/****** Object:  View [dbo].[vBalanceSheet]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vBalanceSheet]'))
-DROP VIEW [dbo].[vBalanceSheet]
+/****** Object:  StoredProcedure [dbo].[SetJournalDetail]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetJournalDetail]
 GO
-/****** Object:  View [dbo].[vTrial_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vTrial_Balance]'))
-DROP VIEW [dbo].[vTrial_Balance]
+/****** Object:  StoredProcedure [dbo].[SetDataSale]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetDataSale]
 GO
-/****** Object:  UserDefinedFunction [dbo].[ProcessAddressSingle]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProcessAddressSingle]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[ProcessAddressSingle]
+/****** Object:  StoredProcedure [dbo].[SetDataPurchase]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[SetDataPurchase]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetRunning]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetRunning]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetRunning]
+/****** Object:  StoredProcedure [dbo].[Process_RVFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_RVFromJob]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewTransaction]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetNewTransaction]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetNewTransaction]
+/****** Object:  StoredProcedure [dbo].[Process_ReceiptToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_ReceiptToJournal]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewStaffCode]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetNewStaffCode]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetNewStaffCode]
+/****** Object:  StoredProcedure [dbo].[Process_PVFromBillPay]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_PVFromBillPay]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewRunning]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetNewRunning]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetNewRunning]
+/****** Object:  StoredProcedure [dbo].[Process_InvoiceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_InvoiceToJournal]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewProduct]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetNewProduct]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetNewProduct]
+/****** Object:  StoredProcedure [dbo].[Process_CustAdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_CustAdvanceToJournal]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewJournal]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetNewJournal]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetNewJournal]
+/****** Object:  StoredProcedure [dbo].[Process_CNDNToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_CNDNToJournal]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewEntry]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetNewEntry]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetNewEntry]
+/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_ClearMoneyFromNoAdvance]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetMaxRunning]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetMaxRunning]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetMaxRunning]
+/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_ClearMoneyFromAdvance]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetAuthorize]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetAuthorize]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetAuthorize]
+/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_ClearExpenseFromManualEntry]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetAccConfig]    Script Date: 26/10/2026 12:33:14 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetAccConfig]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetAccConfig]
+/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_ClearExpenseFromAdvance]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetAccConfig]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_BillPayToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_BillPayToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Process_AdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Process_AdvanceToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromTransaction]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_WHTaxFromTransaction]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromPC]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_WHTaxFromPC]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_WHTaxFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_Transaction]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_Transaction]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromVender]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SubAccCodeFromVender]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromUser]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SubAccCodeFromUser]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromTCharge]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SubAccCodeFromTCharge]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromService]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SubAccCodeFromService]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromSCharge]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SubAccCodeFromSCharge]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromOCharge]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SubAccCodeFromOCharge]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromCustomer]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SubAccCodeFromCustomer]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_StockFromTransaction]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_StockFromTransaction]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_StockFromDO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_StockFromDO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SOFromSR]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SOFromSR]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal_ByDate]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SIToJournal_ByDate]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SIToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SIFromSO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SIFromSO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SIFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SIFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_SalaryToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_SalaryToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromSO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RVFromSO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromSI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RVFromSI]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromRC]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RVFromRC]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V3]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RVFromJob_V3]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RVFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RVfromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RVfromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RefundFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RefundFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ReceiptToJournal_V4]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ReceiptToJournal_V3]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ReceiptToJournal_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ReceiptToJournal_MNL]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ReceiptToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ReceiptFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ReceiptFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RCFromSO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RCFromSO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_RCFromSI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_RCFromSI]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_QuickSellProduct]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_QuickSellProduct]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_QuickReceive]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_QuickReceive]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_QuickPayment]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_QuickPayment]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_QuickJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_QuickJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_QuickCashSaleProduct]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_QuickCashSaleProduct]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_QuickBuyAsset]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_QuickBuyAsset]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromTransaction]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PVFromTransaction]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromPO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PVFromPO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromPI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PVFromPI]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromPC]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PVFromPC]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V3]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PVFromBillPay_V3]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PVFromBillPay_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PVFromBillPay]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ProductsCodeFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_demoacc]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ProductsCodeFromjob_demoacc]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_3xacc]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ProductsCodeFromjob_3xacc]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_3x]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ProductsCodeFromjob_3x]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ProductsCodeFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PostReceiptToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PostReceiptToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PostInvoiceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PostInvoiceToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PostCNDNToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PostCNDNToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PostClearToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PostClearToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_POFromPR]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_POFromPR]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal_ByDate]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PIToJournal_ByDate]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PIToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PIFromPO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PIFromPO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PIFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PIFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PCFromPO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PCFromPO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PCFromPI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PCFromPI]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PayrollToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PayrollToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_PayrollByStaff]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_PayrollByStaff]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_Journal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_Journal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_InvoiceToJournal_V4]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_InvoiceToJournal_V3]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_InvoiceToJournal_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_InvoiceToJournal_MNL]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_InvoiceToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_InvoiceFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_InvoiceFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DPToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DPToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DOFromSO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DOFromSO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DOFromSI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DOFromSI]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DOFromRC]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DOFromRC]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DIFromPO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DIFromPO]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DIFromPI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DIFromPI]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DIFromPC]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DIFromPC]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_DepreByDate]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_DepreByDate]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CustAdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CustAdvanceToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CostToJournal_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CostToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CostFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CostFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CostFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CostFromAdvance]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CNDNToJournal_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CNDNToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CNDNFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_CNDNFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearMoneyFromNoAdvance_MNL]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearMoneyFromNoAdvance]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearMoneyFromAdvance_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearMoneyFromAdvance]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V3]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromManualEntry_V3]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromManualEntry_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromManualEntry_MNL]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromManualEntry]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromBillPay_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromBillPay]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromAdvance_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromAdvance_MNL]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ClearExpenseFromAdvance]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BillPayToJournal_V4]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BillPayToJournal_V3]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BillPayToJournal_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BillPayToJournal_MNL]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BillPayToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BillPayFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BillPayFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_BD]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_BD]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ARFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_ARFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdvanceToJournal_V4]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdvanceToJournal_V3]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdvanceToJournal_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdvanceToJournal_MNL]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdvanceToJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdvanceFromJob_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdvanceFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AdjustSIJournalFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AdjustSIJournalFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_AddDeductPayroll]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Insert_AddDeductPayroll]
+GO
+/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetWorkSheet_ByHeader_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetWorkSheet_ByHeader]
+GO
+/****** Object:  StoredProcedure [dbo].[GetStockCard]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetStockCard]
+GO
+/****** Object:  StoredProcedure [dbo].[GetRefundFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetRefundFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[GetReceiptAPFromJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetReceiptAPFromJob]
+GO
+/****** Object:  StoredProcedure [dbo].[GetGLTemplate]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetGLTemplate]
+GO
+/****** Object:  StoredProcedure [dbo].[GetCashFlow_ByDate]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetCashFlow_ByDate]
+GO
+/****** Object:  StoredProcedure [dbo].[GetCashFlow]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetCashFlow]
+GO
+/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare_V2]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetBalanceSheetCompare_V2]
+GO
+/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetBalanceSheetCompare]
+GO
+/****** Object:  StoredProcedure [dbo].[GetBalance_YearCompare]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetBalance_YearCompare]
+GO
+/****** Object:  StoredProcedure [dbo].[GetBalance_QuarterCompare]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetBalance_QuarterCompare]
+GO
+/****** Object:  StoredProcedure [dbo].[GetBalance_JournalByJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetBalance_JournalByJob]
+GO
+/****** Object:  StoredProcedure [dbo].[GetBalance_DateCompare]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[GetBalance_DateCompare]
+GO
+/****** Object:  StoredProcedure [dbo].[Generate_ReportGL_ByJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Generate_ReportGL_ByJob]
+GO
+/****** Object:  StoredProcedure [dbo].[Generate_ReportGL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Generate_ReportGL]
+GO
+/****** Object:  StoredProcedure [dbo].[Generate_GLClosingWHT]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Generate_GLClosingWHT]
+GO
+/****** Object:  StoredProcedure [dbo].[Generate_GLClosingVAT]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Generate_GLClosingVAT]
+GO
+/****** Object:  StoredProcedure [dbo].[Generate_GLClosingProfit]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Generate_GLClosingProfit]
+GO
+/****** Object:  StoredProcedure [dbo].[DELETE_JOB_JOURNAL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[DELETE_JOB_JOURNAL]
+GO
+/****** Object:  StoredProcedure [dbo].[DELETE_ALL_TRANSCTION]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[DELETE_ALL_TRANSCTION]
+GO
+/****** Object:  StoredProcedure [dbo].[DELETE_ALL_JOURNAL]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[DELETE_ALL_JOURNAL]
+GO
+/****** Object:  StoredProcedure [dbo].[CopyTransaction]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CopyTransaction]
+GO
+/****** Object:  StoredProcedure [dbo].[ClosePR]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[ClosePR]
+GO
+/****** Object:  StoredProcedure [dbo].[ClosePO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[ClosePO]
+GO
+/****** Object:  StoredProcedure [dbo].[CloseDI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CloseDI]
+GO
+/****** Object:  StoredProcedure [dbo].[CancelPR]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CancelPR]
+GO
+/****** Object:  StoredProcedure [dbo].[CancelPO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CancelPO]
+GO
+/****** Object:  StoredProcedure [dbo].[CancelPI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CancelPI]
+GO
+/****** Object:  StoredProcedure [dbo].[CancelPC]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CancelPC]
+GO
+/****** Object:  StoredProcedure [dbo].[CancelJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CancelJournal]
+GO
+/****** Object:  StoredProcedure [dbo].[CancelDO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CancelDO]
+GO
+/****** Object:  StoredProcedure [dbo].[CancelDI]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[CancelDI]
+GO
+/****** Object:  StoredProcedure [dbo].[Calculate_Depre]    Script Date: 26/10/2026 12:29:15 ******/
+DROP PROCEDURE IF EXISTS [dbo].[Calculate_Depre]
+GO
+/****** Object:  View [dbo].[vSum_TransactionByType]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_TransactionByType]
+GO
+/****** Object:  View [dbo].[vSum_TransactionByDocType]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_TransactionByDocType]
+GO
+/****** Object:  View [dbo].[vSum_StockByType]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_StockByType]
+GO
+/****** Object:  View [dbo].[vStock_Document]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vStock_Document]
+GO
+/****** Object:  View [dbo].[vRV_LinkJob]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vRV_LinkJob]
+GO
+/****** Object:  View [dbo].[vRC_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vRC_All]
+GO
+/****** Object:  View [dbo].[vProfileConfig]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vProfileConfig]
+GO
+/****** Object:  View [dbo].[vPC_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_All]
+GO
+/****** Object:  View [dbo].[vMas_User]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_User]
+GO
+/****** Object:  View [dbo].[vMas_HROrgChart]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_HROrgChart]
+GO
+/****** Object:  View [dbo].[vMas_DocConfigSchema]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_DocConfigSchema]
+GO
+/****** Object:  View [dbo].[vMas_AccConfigCode]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_AccConfigCode]
+GO
+/****** Object:  View [dbo].[vJournal_ByPeriod]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vJournal_ByPeriod]
+GO
+/****** Object:  View [dbo].[vHR_WorkTimeSummary]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_WorkTimeSummary]
+GO
+/****** Object:  View [dbo].[vHR_WorkTimeDetail]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_WorkTimeDetail]
+GO
+/****** Object:  View [dbo].[vHR_PayrollSlip]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_PayrollSlip]
+GO
+/****** Object:  View [dbo].[vDI_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vDI_All]
+GO
+/****** Object:  View [dbo].[vAcc_CodeConfig]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAcc_CodeConfig]
+GO
+/****** Object:  View [dbo].[vPC_CheckPO]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_CheckPO]
+GO
+/****** Object:  View [dbo].[vBalanceSheet]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vBalanceSheet]
+GO
+/****** Object:  View [dbo].[vOrder_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vOrder_Balance]
+GO
+/****** Object:  View [dbo].[vStock_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vStock_Balance]
+GO
+/****** Object:  View [dbo].[vSO_Delivery]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSO_Delivery]
+GO
+/****** Object:  View [dbo].[vSO_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSO_Balance]
+GO
+/****** Object:  View [dbo].[vDO_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vDO_All]
+GO
+/****** Object:  View [dbo].[vTransaction_LinkBack]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vTransaction_LinkBack]
+GO
+/****** Object:  View [dbo].[vSum_AllType]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_AllType]
+GO
+/****** Object:  View [dbo].[vTransaction_Link]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vTransaction_Link]
+GO
+/****** Object:  View [dbo].[vPO_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPO_Balance]
+GO
+/****** Object:  View [dbo].[vPO_Delivery]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPO_Delivery]
+GO
+/****** Object:  View [dbo].[vSum_Stock]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_Stock]
+GO
+/****** Object:  View [dbo].[vSum_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_Balance]
+GO
+/****** Object:  View [dbo].[vProfitLoss]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vProfitLoss]
+GO
+/****** Object:  View [dbo].[vTrialBalance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vTrialBalance]
+GO
+/****** Object:  View [dbo].[vStock_Card]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vStock_Card]
+GO
+/****** Object:  View [dbo].[vStock_Onhand]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vStock_Onhand]
+GO
+/****** Object:  View [dbo].[vSum_JournalByPrefix]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_JournalByPrefix]
+GO
+/****** Object:  View [dbo].[vPR_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPR_Balance]
+GO
+/****** Object:  View [dbo].[vPR_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPR_All]
+GO
+/****** Object:  View [dbo].[vPO_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPO_All]
+GO
+/****** Object:  View [dbo].[vCalculate_Depre_Double]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vCalculate_Depre_Double]
+GO
+/****** Object:  View [dbo].[vCalculate_Depre_Straight]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vCalculate_Depre_Straight]
+GO
+/****** Object:  View [dbo].[vSR_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSR_Balance]
+GO
+/****** Object:  View [dbo].[vSR_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSR_All]
+GO
+/****** Object:  View [dbo].[vSO_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSO_All]
+GO
+/****** Object:  View [dbo].[vSum_BalanceMonthlyCompare]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_BalanceMonthlyCompare]
+GO
+/****** Object:  View [dbo].[vSum_BalanceMonthlyAccumulate]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_BalanceMonthlyAccumulate]
+GO
+/****** Object:  View [dbo].[vSum_BalanceMonthlyCalculate]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_BalanceMonthlyCalculate]
+GO
+/****** Object:  View [dbo].[vSum_BalanceMonthly]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_BalanceMonthly]
+GO
+/****** Object:  View [dbo].[vTrial_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vTrial_Balance]
+GO
+/****** Object:  View [dbo].[vMas_AccountSheet]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_AccountSheet]
+GO
+/****** Object:  View [dbo].[vRV_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vRV_All]
+GO
+/****** Object:  View [dbo].[vPV_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPV_All]
+GO
+/****** Object:  View [dbo].[vMas_DocConfigStandard]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_DocConfigStandard]
+GO
+/****** Object:  View [dbo].[vDI_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vDI_H]
+GO
+/****** Object:  View [dbo].[vDI_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vDI_D]
+GO
+/****** Object:  View [dbo].[vDO_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vDO_H]
+GO
+/****** Object:  View [dbo].[vDO_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vDO_D]
+GO
+/****** Object:  View [dbo].[vSR_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSR_H]
+GO
+/****** Object:  View [dbo].[vSR_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSR_D]
+GO
+/****** Object:  View [dbo].[vSO_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSO_H]
+GO
+/****** Object:  View [dbo].[vSO_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSO_D]
+GO
+/****** Object:  View [dbo].[vPR_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPR_H]
+GO
+/****** Object:  View [dbo].[vPR_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPR_D]
+GO
+/****** Object:  View [dbo].[vPC_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_H]
+GO
+/****** Object:  View [dbo].[vPC_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_D]
+GO
+/****** Object:  View [dbo].[vRC_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vRC_H]
+GO
+/****** Object:  View [dbo].[vRC_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vRC_D]
+GO
+/****** Object:  View [dbo].[vPC_BalanceBySource]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_BalanceBySource]
+GO
+/****** Object:  View [dbo].[vPC_BalanceByDoc]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_BalanceByDoc]
+GO
+/****** Object:  View [dbo].[vPC_BalanceByParty]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_BalanceByParty]
+GO
+/****** Object:  View [dbo].[vPC_BalanceByProduct]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_BalanceByProduct]
+GO
+/****** Object:  View [dbo].[vPC_BalanceBySaleDesc]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_BalanceBySaleDesc]
+GO
+/****** Object:  View [dbo].[vPC_Collect]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPC_Collect]
+GO
+/****** Object:  View [dbo].[vSI_BalanceBySaleDesc]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSI_BalanceBySaleDesc]
+GO
+/****** Object:  View [dbo].[vSI_BalanceByProduct]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSI_BalanceByProduct]
+GO
+/****** Object:  View [dbo].[vSI_BalanceByParty]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSI_BalanceByParty]
+GO
+/****** Object:  View [dbo].[vSI_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSI_Balance]
+GO
+/****** Object:  View [dbo].[vSI_Receive]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSI_Receive]
+GO
+/****** Object:  View [dbo].[vSum_JournalByType]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vSum_JournalByType]
+GO
+/****** Object:  View [dbo].[vAV_Payment]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAV_Payment]
+GO
+/****** Object:  View [dbo].[vAV_BalanceByEmp]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAV_BalanceByEmp]
+GO
+/****** Object:  View [dbo].[vAV_BalanceByParty]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAV_BalanceByParty]
+GO
+/****** Object:  View [dbo].[vHR_Salary]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_Salary]
+GO
+/****** Object:  View [dbo].[vHR_SalaryConfig]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_SalaryConfig]
+GO
+/****** Object:  View [dbo].[vHR_PayrollConfig]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_PayrollConfig]
+GO
+/****** Object:  View [dbo].[vHR_CalTaxEmp]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_CalTaxEmp]
+GO
+/****** Object:  View [dbo].[vHR_PayRoll]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vHR_PayRoll]
+GO
+/****** Object:  View [dbo].[vAV_BalanceByDoc]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAV_BalanceByDoc]
+GO
+/****** Object:  View [dbo].[vAV_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAV_Balance]
+GO
+/****** Object:  View [dbo].[vAV_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAV_All]
+GO
+/****** Object:  View [dbo].[vAR_Payment]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAR_Payment]
+GO
+/****** Object:  View [dbo].[vAR_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAR_H]
+GO
+/****** Object:  View [dbo].[vAR_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAR_D]
+GO
+/****** Object:  View [dbo].[vAP_Payment]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAP_Payment]
+GO
+/****** Object:  View [dbo].[vAP_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAP_H]
+GO
+/****** Object:  View [dbo].[vAP_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vAP_D]
+GO
+/****** Object:  View [dbo].[vPO_Payment]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPO_Payment]
+GO
+/****** Object:  View [dbo].[vJournal_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vJournal_All]
+GO
+/****** Object:  View [dbo].[vJournal_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vJournal_H]
+GO
+/****** Object:  View [dbo].[vJournal_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vJournal_D]
+GO
+/****** Object:  View [dbo].[vTransaction_All]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vTransaction_All]
+GO
+/****** Object:  View [dbo].[vTransaction_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vTransaction_H]
+GO
+/****** Object:  View [dbo].[vTransaction_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vTransaction_D]
+GO
+/****** Object:  View [dbo].[vPO_H]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPO_H]
+GO
+/****** Object:  View [dbo].[vPO_D]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vPO_D]
+GO
+/****** Object:  View [dbo].[vMas_Product]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_Product]
+GO
+/****** Object:  View [dbo].[vMas_ProductType]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_ProductType]
+GO
+/****** Object:  View [dbo].[vMas_Warehouse]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_Warehouse]
+GO
+/****** Object:  View [dbo].[vMas_AccCode]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_AccCode]
+GO
+/****** Object:  View [dbo].[vMas_ModuleMenu]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_ModuleMenu]
+GO
+/****** Object:  View [dbo].[vMas_UserRoleAll]    Script Date: 26/10/2026 12:29:15 ******/
+DROP VIEW IF EXISTS [dbo].[vMas_UserRoleAll]
+GO
+/****** Object:  UserDefinedFunction [dbo].[ProcessAddressSingle]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[ProcessAddressSingle]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetRunning]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetRunning]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetNewTransaction]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetNewTransaction]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetNewStaffCode]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetNewStaffCode]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetNewRunning]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetNewRunning]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetNewProduct]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetNewProduct]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetNewJournal]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetNewJournal]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetNewEntry]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetNewEntry]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetMaxRunning]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetMaxRunning]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetAuthorize]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetAuthorize]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetAccConfig]    Script Date: 26/10/2026 12:29:15 ******/
+DROP FUNCTION IF EXISTS [dbo].[GetAccConfig]
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetAccConfig]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1250,7 +939,7 @@ begin
 	return @val;
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetAuthorize]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetAuthorize]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1277,7 +966,7 @@ and b.MenuID=@menu
 return @author
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetMaxRunning]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetMaxRunning]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1309,7 +998,7 @@ begin
 	return @running
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewEntry]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetNewEntry]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1339,7 +1028,7 @@ set @running=(SELECT convert(int,isnull(MAX(SUBSTRING(JournalNo,@startpos,@count
 return @running;
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetNewJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1368,7 +1057,7 @@ set @running=(SELECT CONCAT(@header,ISNULL(FORMAT(convert(int,MAX(SUBSTRING(Jour
 return @running;
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewProduct]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetNewProduct]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1415,7 +1104,7 @@ begin
 	return @running
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewRunning]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetNewRunning]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1459,7 +1148,7 @@ return @running;
 end
 
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewStaffCode]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetNewStaffCode]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1486,7 +1175,7 @@ begin
 	return dbo.GetMaxRunning(@running,@tmp)
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetNewTransaction]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetNewTransaction]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1516,7 +1205,7 @@ set @running=(SELECT CONCAT(@header,ISNULL(FORMAT(convert(int,MAX(SUBSTRING(AccD
 return @running;
 end
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetRunning]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[GetRunning]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1560,7 +1249,7 @@ return @running;
 end
 
 GO
-/****** Object:  UserDefinedFunction [dbo].[ProcessAddressSingle]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  UserDefinedFunction [dbo].[ProcessAddressSingle]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1761,57 +1450,37 @@ return concat(@bldgtext,'|',
 end
 
 GO
-/****** Object:  View [dbo].[vTrial_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_UserRoleAll]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
-
-
-CREATE view [dbo].[vTrial_Balance] 
-as 
-select 
-Period,AccMainCode,AccMainName,AccCode,AccName,
-case when Dr>Cr then Dr-Cr else 0 end as Dr,
-case when Dr<Cr then Cr-Dr else 0 end as Cr
-from (
-select year(a.EntryDate) as Period,c.AccCode,c.AccName,c.AccMainCode,d.AccName as AccMainName,
-sum(b.Debit) as Dr,sum(b.Credit) as Cr 
-from Acc_JournalHD a inner join Acc_JournalDT b on a.EntryId=b.EntryId
-left join Mas_AccCode c on b.AccCode=c.AccCode
-left join Mas_AccCode d on c.AccMainCode=d.AccCode
-group by year(a.EntryDate),c.AccCode,c.AccName,c.AccMainCode,d.AccName
-) t
-GO
-/****** Object:  View [dbo].[vBalanceSheet]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create view [dbo].[vBalanceSheet]
+CREATE view [dbo].[vMas_UserRoleAll]
 as
-SELECT        Period, AccCode, AccName, Dr AS Debit, Cr AS Credit
-FROM            vTrial_Balance
-WHERE        (Dr + cr) > 0 AND AccMainCode < '400000'
-UNION ALL
-SELECT        a.Period, b.AccCode, b.AccName, a.Debit, a.Credit
-FROM            (SELECT        Period, sum(Dr) - Sum(Cr) AS Debit, 0 AS Credit
-                          FROM            vTrial_Balance
-                          WHERE        AccMainCode >= '400000'
-                          GROUP BY Period
-                          HAVING         sum(Dr) > Sum(Cr)
-                          UNION ALL
-                          SELECT        Period, 0 AS Debit, sum(Cr) - Sum(Dr) AS Credit
-                          FROM            vTrial_Balance
-                          WHERE        AccMainCode >= '400000'
-                          GROUP BY Period
-                          HAVING        sum(Cr) > Sum(Dr)) a, Mas_AccCode b
-WHERE        b.AccCode = dbo.GetAccConfig('GL_CONFIG', 'ProfitLoss')
+select a.UserID,a.Active,a.LastUpdate,c.RoleName,b.*,d.MenuName,e.ModuleName
+from Mas_UserRoleAssign a
+inner join Mas_UserRoleAuthor b
+on a.RoleID=b.RoleID
+inner join Mas_UserRole c
+on a.RoleID=c.RoleID
+left join Mas_Menu d
+on b.MenuID=d.MenuID
+left join Mas_UserRoleModule e 
+on b.ModuleID=e.ModuleID 
 GO
-/****** Object:  View [dbo].[vMas_AccCode]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_ModuleMenu]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create view [dbo].[vMas_ModuleMenu]
+as
+select distinct a.ModuleID,a.ModuleName,a.MenuID,a.MenuName,b.WebAddress 
+from vMas_UserRoleAll a
+left join Mas_ModuleMenu b on a.MenuID=b.MenuID
+
+GO
+/****** Object:  View [dbo].[vMas_AccCode]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1824,7 +1493,7 @@ FROM            dbo.Mas_AccType INNER JOIN
                          dbo.Mas_AccCode ON dbo.Mas_AccType.AccTypeID = dbo.Mas_AccCode.AccTypeID LEFT OUTER JOIN
                          dbo.Mas_AccCode AS Mas_AccCode_1 ON dbo.Mas_AccCode.AccMainCode = Mas_AccCode_1.AccCode
 GO
-/****** Object:  View [dbo].[vMas_Warehouse]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_Warehouse]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1857,7 +1526,7 @@ FROM            dbo.Mas_Warehouse AS w LEFT OUTER JOIN
                          dbo.vMas_AccCode AS c2 ON w.IncomeAccCode = c2.AccCode LEFT OUTER JOIN
                          dbo.vMas_AccCode AS c1 ON w.AssetAccCode = c1.AccCode
 GO
-/****** Object:  View [dbo].[vMas_ProductType]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_ProductType]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1913,7 +1582,7 @@ FROM            dbo.vMas_Warehouse AS w INNER JOIN
 
 
 GO
-/****** Object:  View [dbo].[vMas_Product]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_Product]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1977,40 +1646,7 @@ FROM            dbo.Mas_Products AS p INNER JOIN
 
 
 GO
-/****** Object:  View [dbo].[vPC_D]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-CREATE VIEW [dbo].[vPC_D]
-AS
-SELECT        dbo.Acc_TransactionHD.DocRefNo, dbo.Acc_TransactionHD.DocStatus, dbo.Acc_TransactionHD.FiscalYear, dbo.Acc_TransactionHD.AccPostDate, dbo.Acc_TransactionHD.AccDocType, dbo.Acc_TransactionHD.IssueBy, 
-                         dbo.Acc_TransactionHD.PartyAddress, dbo.Acc_TransactionHD.PartyName, dbo.Acc_TransactionHD.PartyTaxCode, dbo.Acc_TransactionHD.PartyCode, dbo.Acc_TransactionHD.AccEffectiveDate, 
-                         dbo.Acc_TransactionHD.AccBatchDate, dbo.Acc_TransactionHD.AccDocNo, dbo.Acc_TransactionDT.AccItemNo, dbo.Acc_TransactionDT.AccSourceDocNo, dbo.Acc_TransactionDT.AccSourceDocItem, 
-                         dbo.Acc_TransactionDT.StockTransNo, dbo.Acc_TransactionDT.Qty, dbo.Acc_TransactionDT.Price, dbo.Acc_TransactionDT.UnitMea, dbo.Acc_TransactionDT.Currency, dbo.Acc_TransactionDT.ExchangeRate, 
-                         dbo.Acc_TransactionDT.Amount, dbo.Acc_TransactionDT.SaleProductCode, dbo.Acc_TransactionDT.SalesDescription, dbo.vMas_Product.ProductID, dbo.vMas_Product.ProductCode, dbo.vMas_Product.ProductName, 
-                         dbo.vMas_Product.ProductBrand, dbo.vMas_Product.ProductColor, dbo.vMas_Product.ProductSize, dbo.vMas_Product.ProductSizeUnit, dbo.vMas_Product.ProductVolume, dbo.vMas_Product.ProductVolumeUnit, 
-                         dbo.vMas_Product.UnitStock, dbo.vMas_Product.ProductTypeCode, dbo.vMas_Product.ProductTypeID, dbo.vMas_Product.ProductTypeName, dbo.vMas_Product.WarehouseID, dbo.vMas_Product.WarehouseCode, 
-                         dbo.vMas_Product.WarehouseName, dbo.vMas_Product.WarehouseLocation, dbo.vMas_Product.WarehouseAddress, dbo.vMas_Product.AssetAccCode, dbo.vMas_Product.AssetAccName, dbo.vMas_Product.AssetAccNameEN, 
-                         dbo.vMas_Product.AssetAccType, dbo.vMas_Product.AssetAccTypeName, dbo.vMas_Product.AssetAccTypeNameEN, dbo.vMas_Product.AssetAccSide, dbo.vMas_Product.AssetAccMainCode, 
-                         dbo.vMas_Product.AssetAccMainName, dbo.vMas_Product.AssetAccMainNameEN, dbo.vMas_Product.IncomeAccCode, dbo.vMas_Product.IncomeAccName, dbo.vMas_Product.IncomeAccNameEN, 
-                         dbo.vMas_Product.IncomeAccType, dbo.vMas_Product.IncomeAccTypeName, dbo.vMas_Product.IncomeAccTypeNameEN, dbo.vMas_Product.IncomeAccSide, dbo.vMas_Product.IncomeAccMainCode, 
-                         dbo.vMas_Product.IncomeAccMainName, dbo.vMas_Product.IncomeAccMainNameEN, dbo.vMas_Product.ExpenseAccCode, dbo.vMas_Product.ExpenseAccName, dbo.vMas_Product.ExpenseAccNameEN, 
-                         dbo.vMas_Product.ExpenseAccType, dbo.vMas_Product.ExpenseAccTypeName, dbo.vMas_Product.ExpenseAccTypeNameEN, dbo.vMas_Product.ExpenseAccSide, dbo.vMas_Product.ExpenseAccMainCode, 
-                         dbo.vMas_Product.ExpenseAccMainName, dbo.vMas_Product.ExpenseAccMainNameEN, dbo.vMas_Product.IsMaterial, dbo.vMas_Product.IsService, dbo.Acc_TransactionDT.RateVat, dbo.Acc_TransactionDT.RateWht, 
-                         dbo.Acc_TransactionDT.VatType,
-(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat) end) else dbo.Acc_TransactionDT.Amount end) as TotalAmount
-,(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateVat*0.01 else dbo.Acc_TransactionDT.Amount-(dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)) end) else 0 end) as VatAmount
-,(case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateWht*0.01 else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)*dbo.Acc_TransactionDT.RateWht*0.01 end) as WhtAmount
-FROM            dbo.Acc_TransactionHD INNER JOIN
-                         dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo INNER JOIN
-                         dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
-wHERE dbo.Acc_TransactionHD.AccDocType='PC'
-GO
-/****** Object:  View [dbo].[vPO_D]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPO_D]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2042,34 +1678,518 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
                          dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
 wHERE dbo.Acc_TransactionHD.AccDocType='PO'
 GO
-/****** Object:  View [dbo].[vPC_CheckPO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPO_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
 
-CREATE view [dbo].[vPC_CheckPO]
+
+CREATE view [dbo].[vPO_H]
 as
-select 
-b.AccDocNo,b.AccItemNo,b.VatType,b.RateVat,b.RateWht,
-(b.TotalAmount+b.VatAmount-b.WhtAmount) as TotalNet,
-sum(a.TotalAmount+a.VatAmount-a.WhtAmount) as TotalPayment,
-case when b.VatType=2 then
-(b.TotalAmount+b.VatAmount-b.WhtAmount)-sum(a.TotalAmount+a.VatAmount-a.WhtAmount) 
-else
-b.TotalAmount-sum(a.TotalAmount)
-end 
-as TotalAmount
-from vPC_D a
-inner join vPO_D b
-on a.AccSourceDocNo=b.AccDocNo 
-and a.AccSourceDocItem=b.AccItemNo 
-group by b.AccDocNo,b.AccItemNo,
-b.TotalAmount,b.VatAmount,b.WhtAmount,b.VatType,b.RateVat,b.RateWht
+select a.*,b.TotalAmount,b.TotalVat,b.TotalWht,b.TotalNet
+,c.StatusName,d.*
+from (
+select dt.AccdocNo,
+sum(dt.TotalAmount) as TotalAmount,
+sum(dt.VatAmount) as TotalVat,
+sum(dt.WhtAmount) as TotalWht,
+sum(dt.TotalAmount+dt.VatAmount-dt.WhtAmount) as TotalNet 
+from 
+(
+	select d.*
+	from vPO_D d
+) dt 
+group by dt.AccDocNo
+) b right join Acc_TransactionHD a on b.AccDocNo=a.AccDocNo 
+left join (
+	select ConfigKey as StatusCode,ConfigValue as StatusName from Mas_AccConfig where ConfigCode='PO_STATUS'
+) c on a.DocStatus=c.StatusCode
+left join (
+  select DocNo,Text1 as ContactName,Text2 as ContactTel,
+  Text3 as BillingCondition,Text4 as PORemark,Text5 as ApproveBy,Date1 as ApproveDate,
+  Text6 as CancelBy,Date2 as CancelDate,Text7 as CancelReason
+  from Acc_AdditionData 
+  where Seq=0
+) d on a.AccDocNo=d.DocNo
+where a.AccDocType='PO'
+GO
+/****** Object:  View [dbo].[vTransaction_D]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+CREATE VIEW [dbo].[vTransaction_D]
+AS
+SELECT        a.AccDocNo AS DocNo, a.AccItemNo, a.AccSourceDocNo, a.AccSourceDocItem, a.StockTransNo, a.Qty, a.Price, a.UnitMea, a.Currency, a.ExchangeRate, a.Amount, a.SaleProductCode, a.SalesDescription, b.Text1 AS DText1, 
+                         b.Date1 AS DDate1, b.Num1 AS DNum1, b.Text2 AS DText2, b.Date2 AS DDate2, b.Num2 AS DNum2, b.Text3 AS DText3, b.Date3 AS DDate3, b.Num3 AS DNum3, b.Text4 AS DText4, b.Date4 AS DDate4, b.Num4 AS DNum4, 
+                         b.Text5 AS DText5, b.Date5 AS DDate5, b.Num5 AS DNum5, b.Text6 AS DText6, b.Date6 AS DDate6, b.Num6 AS DNum6, b.Text7 AS DText7, b.Date7 AS DDate7, b.Num7 AS DNum7, b.Text8 AS DText8, b.Date8 AS DDate8, 
+                         b.Num8 AS DNum8, b.Text9 AS DText9, b.Date9 AS DDate9, b.Num9 AS DNum9, b.Text10 AS DText10, b.Date10 AS DDate10, b.Num10 AS DNum10, a.RateVat AS DRateVat, a.RateWht AS DRateWht, a.VatType AS DVatType,
+(case when a.VatType>=1 then (case when a.VatType=1 then a.Amount else a.Amount*100/(100+a.RateVat) end) else a.Amount end) as TotalAmount
+,(case when a.VatType>=1 then (case when a.VatType=1 then a.Amount*a.RateVat*0.01 else a.Amount-(a.Amount*100/(100+a.RateVat)) end) else 0 end) as VatAmount
+,(case when a.VatType=1 then a.Amount*a.RateWht*0.01 else (a.Amount*100/(100+a.RateVat))*a.RateWht*0.01 end) as WhtAmount
+,(case when a.RateVat>0 then (case when a.VatType=1 then a.Amount else a.Amount*100/(100+a.RateVat) end) else 0 end) as CalVatAmount
+,(case when a.RateWht>0 then (case when a.VatType=1 then a.Amount else a.Amount*100/(100+a.RateVat) end) else 0 end) as CalWhtAmount
+,(case when a.RateVat=0 and a.RateWht=0 then a.Amount else 0 end) as CalNonVatAmount
+FROM            dbo.Acc_TransactionDT AS a LEFT OUTER JOIN
+                         dbo.Acc_AdditionData AS b ON a.AccDocNo = b.DocNo AND a.AccItemNo = b.Seq
+GO
+/****** Object:  View [dbo].[vTransaction_H]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+CREATE VIEW [dbo].[vTransaction_H]
+AS
+SELECT        a.AccDocNo, a.AccBatchDate, a.AccEffectiveDate, a.PartyCode, a.PartyTaxCode, a.PartyName, a.PartyAddress, a.IssueBy, a.AccDocType, 
+d.TName as AccDocTypeName,
+a.AccPostDate, a.FiscalYear, 0 as DocStatus, a.DocRefNo, b.Text1, b.Date1, b.Num1, 
+                         b.Text2, b.Date2, b.Num2, b.Text3, b.Date3, b.Num3, b.Text4, b.Date4, b.Num4, b.Text5, b.Date5, b.Num5, b.Text6, b.Date6, b.Num6, b.Text7, b.Date7, b.Num7, b.Text8, b.Date8, b.Num8, b.Text9, b.Date9, b.Num9, b.Text10, 
+                         b.Date10, b.Num10,c.TotalBaseAmount,c.TotalNonVat as TotalNonVatAmount,c.TotalTaxAmount,c.TotalAmount,c.TotalVat,c.TotalWht,c.TotalNet
+FROM            dbo.Acc_TransactionHD AS a 
+LEFT OUTER JOIN
+(SELECT        DocNo, Seq, Text1, Date1, Num1, Text2, Date2, Num2, Text3, Date3, Num3, Text4, Date4, Num4, Text5, Date5, Num5, Text6, Date6, Num6, Text7, Date7, Num7, Text8, Date8, Num8, Text9, Date9, Num9, Text10, 
+                            Date10, Num10
+FROM            dbo.Acc_AdditionData
+WHERE        (Seq = 0)
+) AS b ON a.AccDocNo = b.DocNo
+LEFT OUTER JOIN
+(
+select dt.docNo,
+sum(dt.TotalAmount) as TotalAmount,
+sum(dt.CalVatAmount) as TotalBaseAmount,
+sum(dt.CalWhtAmount) as TotalTaxAmount,
+sum(dt.VatAmount) as TotalVat,
+sum(dt.WhtAmount) as TotalWht,
+sum(dt.CalNonVatAmount) as TotalNonVat,
+sum(dt.TotalAmount+dt.VatAmount-dt.WhtAmount) as TotalNet 
+from 
+(
+	select d.*
+	from vTransaction_D d
+) dt 
+group by dt.DocNo
+) as c on a.AccDocNo=c.DocNo 
+left outer join Mas_DocConfig d on a.AccDocType=d.Category
+GO
+/****** Object:  View [dbo].[vTransaction_All]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+CREATE VIEW [dbo].[vTransaction_All]
+AS
+SELECT        a.AccDocNo, a.AccBatchDate, a.AccEffectiveDate, a.PartyCode, a.PartyTaxCode, a.PartyName, a.PartyAddress, a.IssueBy, a.AccDocType, 
+a.AccDocTypeName,
+    a.AccPostDate, a.FiscalYear, a.DocStatus, a.DocRefNo, a.Text1, a.Date1, a.Num1, 
+                         a.Text2, a.Date2, a.Num2, a.Text3, a.Date3, a.Num3, a.Text4, a.Date4, a.Num4, a.Text5, a.Date5, a.Num5, a.Text6, a.Date6, a.Num6, a.Text7, a.Date7, a.Num7, a.Text8, a.Date8, a.Num8, a.Text9, a.Date9, a.Num9, a.Text10, 
+                         a.Date10, a.Num10, b.DocNo, b.AccItemNo, b.AccSourceDocNo, b.AccSourceDocItem, b.StockTransNo, b.Qty, b.Price, b.UnitMea, b.Currency, b.ExchangeRate, b.Amount, b.SaleProductCode, b.SalesDescription, b.DText1, 
+                         b.DDate1, b.DNum1, b.DText2, b.DDate2, b.DNum2, b.DText3, b.DDate3, b.DNum3, b.DText4, b.DDate4, b.DNum4, b.DText5, b.DDate5, b.DNum5, b.DText6, b.DDate6, b.DNum6, b.DText7, b.DDate7, b.DNum7, b.DText8, 
+                         b.DDate8, b.DNum8, b.DText9, b.DDate9, b.DNum9, b.DText10, b.DDate10, b.DNum10, b.DRateVat, b.DRateWht, b.DVatType, c.ProductID, c.ProductCode, c.ProductName, c.ProductBrand, c.ProductColor, c.ProductSize, 
+                         c.ProductSizeUnit, c.ProductVolume, c.ProductVolumeUnit, c.UnitStock, c.ProductTypeCode, c.ProductTypeID, c.ProductTypeName, c.WarehouseID, c.WarehouseCode, c.WarehouseName, c.WarehouseLocation, 
+                         c.WarehouseAddress, c.AssetAccCode, c.AssetAccName, c.AssetAccNameEN, c.AssetAccType, c.AssetAccTypeName, c.AssetAccTypeNameEN, c.AssetAccSide, c.AssetAccMainCode, c.AssetAccMainName, 
+                         c.AssetAccMainNameEN, c.IncomeAccCode, c.IncomeAccName, c.IncomeAccNameEN, c.IncomeAccType, c.IncomeAccTypeName, c.IncomeAccTypeNameEN, c.IncomeAccSide, c.IncomeAccMainCode, c.IncomeAccMainName, 
+                         c.IncomeAccMainNameEN, c.ExpenseAccCode, c.ExpenseAccName, c.ExpenseAccNameEN, c.ExpenseAccType, c.ExpenseAccTypeName, c.ExpenseAccTypeNameEN, c.ExpenseAccSide, c.ExpenseAccMainCode, 
+                         c.ExpenseAccMainName, c.ExpenseAccMainNameEN, c.IsMaterial, c.IsService, b.DRateVat as RateVat, b.DRateWht as RateWht, b.DVatType as VatType,
+						 b.VatAmount as DVatAmt,b.WhtAmount as DWhtAmt,b.TotalAmount+b.VatAmount-b.WhtAmount as DNetAmt,
+						 a.TotalAmount,a.TotalVat,a.TotalWht,a.TotalNet,b.TotalAmount as DAmt
+FROM            dbo.vTransaction_H AS a LEFT JOIN
+                         dbo.vTransaction_D AS b ON a.AccDocNo = b.DocNo LEFT OUTER JOIN
+                         dbo.vMas_Product AS c ON b.SaleProductCode = c.ProductCode
+GO
+/****** Object:  View [dbo].[vJournal_D]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE VIEW [dbo].[vJournal_D]
+AS
+SELECT        dbo.Acc_JournalDT.EntryId, dbo.Acc_JournalDT.Seq, dbo.Acc_JournalDT.AccCode,dbo.Mas_AccCode.AccName as GLName,dbo.Mas_AccCode.AccMainCode,
+dbo.Acc_JournalDT.AccName as GLDesc, dbo.Acc_JournalDT.AccDesc as AccDesc, dbo.Acc_JournalDT.Debit, dbo.Acc_JournalDT.Credit, 
+                         dbo.Acc_AdditionData.Text1 AS DText1, dbo.Acc_AdditionData.Date1 AS DDate1, dbo.Acc_AdditionData.Num1 AS DNum1, dbo.Acc_AdditionData.Text2 AS DText2, dbo.Acc_AdditionData.Date2 AS DDate2, 
+                         dbo.Acc_AdditionData.Num2 AS DNum2, dbo.Acc_AdditionData.Text3 AS DText3, dbo.Acc_AdditionData.Date3 AS DDate3, dbo.Acc_AdditionData.Num3 AS DNum3, dbo.Acc_AdditionData.Text4 AS DText4, 
+                         dbo.Acc_AdditionData.Date4 AS DDate4, dbo.Acc_AdditionData.Num4 AS DNum4, dbo.Acc_AdditionData.Text5 AS DText5, dbo.Acc_AdditionData.Date5 AS DDate5, dbo.Acc_AdditionData.Num5 AS DNum5, 
+                         dbo.Acc_AdditionData.Text6 AS DText6, dbo.Acc_AdditionData.Date6 AS DDate6, dbo.Acc_AdditionData.Num6 AS DNum6, dbo.Acc_AdditionData.Text7 AS DText7, dbo.Acc_AdditionData.Date7 AS DDate7, 
+                         dbo.Acc_AdditionData.Num7 AS DNum7, dbo.Acc_AdditionData.Text8 AS DText8, dbo.Acc_AdditionData.Date8 AS DDate8, dbo.Acc_AdditionData.Num8 AS DNum8, dbo.Acc_AdditionData.Text9 AS DText9, 
+                         dbo.Acc_AdditionData.Date9 AS DDate9, dbo.Acc_AdditionData.Num9 AS DNum9, dbo.Acc_AdditionData.Text10 AS DText10, dbo.Acc_AdditionData.Date10 AS DDate10, dbo.Acc_AdditionData.Num10 AS DNum10
+FROM            dbo.Acc_JournalDT INNER JOIN
+                         dbo.Acc_JournalHD ON dbo.Acc_JournalDT.EntryId = dbo.Acc_JournalHD.EntryId LEFT OUTER JOIN
+                         dbo.Acc_AdditionData ON dbo.Acc_JournalHD.JournalNo = dbo.Acc_AdditionData.DocNo AND dbo.Acc_JournalDT.Seq = dbo.Acc_AdditionData.Seq
+						 LEFT JOIN dbo.Mas_AccCode on dbo.Acc_JournalDT.AccCode=dbo.Mas_AccCode.AccCode 
+GO
+/****** Object:  View [dbo].[vJournal_H]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE view [dbo].[vJournal_H]
+as
+select a.*,b.*
+from Acc_JournalHD a
+left join (
+  select * from Acc_AdditionData 
+  where Seq=0
+) b
+on a.JournalNo=b.DocNo
+GO
+/****** Object:  View [dbo].[vJournal_All]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+
+
+CREATE view [dbo].[vJournal_All] 
+as 
+select a.*,b.Seq as ItemNo,b.AccCode,b.GLName as AccName,b.AccMainCode,c.AccName as AccMainCodeName,b.GLDesc as AccRemark,b.AccDesc,b.Debit,b.Credit,c.AccTypeID,
+b.DText1,b.DDate1,b.DNum1,
+b.DText2,b.DDate2,b.DNum2,
+b.DText3,b.DDate3,b.DNum3,
+b.DText4,b.DDate4,b.DNum4,
+b.DText5,b.DDate5,b.DNum5,
+b.DText6,b.DDate6,b.DNum6,
+b.DText7,b.DDate7,b.DNum7,
+b.DText8,b.DDate8,b.DNum8,
+b.DText9,b.DDate9,b.DNum9,
+b.DText10,b.DDate10,b.DNum10
+from vJournal_H a left join vJournal_D b on a.EntryId=b.EntryId
+left join Mas_AccCode c on b.AccMainCode=c.AccCode
 
 GO
-/****** Object:  View [dbo].[vHR_PayRoll]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPO_Payment]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+
+
+CREATE view [dbo].[vPO_Payment]
+as
+select a.*,
+isnull(b.AccDesc,c.AccDesc) as AccDesc,
+isnull(b.TotalPay,0)+isnull(c.TotalPay,0)+isnull(d.TotalPay,0) as TotalPayment,
+isnull(e.PVNo,d.PVNo) as PVNo
+from vPO_H a
+left join
+(
+	SELECT DocReFNo as AccRefNo,
+	max(DocNo) as AccDesc,
+	sum(DNetAmt) as TotalPay
+	from vTransaction_All
+	where DocStatus<>99 and AccSourceDocNo='' and AccDocType ='PC'
+	group by DocRefNo
+) b
+on a.AccdocNo=b.AccRefNo
+left join
+(
+	SELECT d.AccDocNo as AccRefNo,
+	max(e.DocNo) as AccDesc,
+	sum(e.DNetAmt) as TotalPay
+	from vTransaction_All d left join 
+	vTransaction_All e on d.AccDocNo=e.AccSourceDocNo 
+	and d.AccItemNo=e.AccSourceDocItem
+	where d.DocStatus<>99
+	AND d.AccSourceDocNo<>'' 
+	and e.AccDocType='PC'
+	group by d.AccDocNo
+) c
+on a.AccdocNo=c.AccRefNo
+left join (
+	select AccDesc,sum(Credit) as TotalPay,MAX(JournalNo) as PVNo
+	from vJournal_All t
+	where JournalNo like 'PV%' and Credit>0 	
+	and not exists(select 1 from vTransaction_All where AccSourceDocNo=t.AccDesc and AccDocType='PC')
+	group by AccDesc 
+) d
+on a.AccDocNo=d.AccDesc 
+left join (
+	select AccDesc,sum(Credit) as TotalPay,MAX(JournalNo) as PVNo
+	from vJournal_All t
+	where JournalNo like 'PV%' and Credit>0 		
+	group by AccDesc 
+) e
+on isnull(b.AccDesc,c.AccDesc)=e.AccDesc 
+where a.DocStatus<>99
+GO
+/****** Object:  View [dbo].[vAP_D]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vAP_D]
+AS
+SELECT        dbo.Acc_TransactionHD.DocRefNo, dbo.Acc_TransactionHD.DocStatus, dbo.Acc_TransactionHD.FiscalYear, dbo.Acc_TransactionHD.AccPostDate, dbo.Acc_TransactionHD.AccDocType, dbo.Acc_TransactionHD.IssueBy, 
+                         dbo.Acc_TransactionHD.PartyAddress, dbo.Acc_TransactionHD.PartyName, dbo.Acc_TransactionHD.PartyTaxCode, dbo.Acc_TransactionHD.PartyCode, dbo.Acc_TransactionHD.AccEffectiveDate, 
+                         dbo.Acc_TransactionHD.AccBatchDate, dbo.Acc_TransactionHD.AccDocNo, dbo.Acc_TransactionDT.AccItemNo, dbo.Acc_TransactionDT.AccSourceDocNo, dbo.Acc_TransactionDT.AccSourceDocItem, 
+                         dbo.Acc_TransactionDT.StockTransNo, dbo.Acc_TransactionDT.Qty, 
+						 dbo.Acc_TransactionDT.Price  as UnitPrice,
+						 dbo.Acc_TransactionDT.Price*dbo.Acc_TransactionDT.ExchangeRate as Price
+						 , dbo.Acc_TransactionDT.UnitMea, dbo.Acc_TransactionDT.Currency, dbo.Acc_TransactionDT.ExchangeRate, 
+                         dbo.Acc_TransactionDT.Amount, dbo.Acc_TransactionDT.SaleProductCode, dbo.Acc_TransactionDT.SalesDescription, dbo.vMas_Product.ProductID, dbo.vMas_Product.ProductCode, dbo.vMas_Product.ProductName, 
+                         dbo.vMas_Product.ProductBrand, dbo.vMas_Product.ProductColor, dbo.vMas_Product.ProductSize, dbo.vMas_Product.ProductSizeUnit, dbo.vMas_Product.ProductVolume, dbo.vMas_Product.ProductVolumeUnit, 
+                         dbo.vMas_Product.UnitStock, dbo.vMas_Product.ProductTypeCode, dbo.vMas_Product.ProductTypeID, dbo.vMas_Product.ProductTypeName, dbo.vMas_Product.WarehouseID, dbo.vMas_Product.WarehouseCode, 
+                         dbo.vMas_Product.WarehouseName, dbo.vMas_Product.WarehouseLocation, dbo.vMas_Product.WarehouseAddress, dbo.vMas_Product.AssetAccCode, dbo.vMas_Product.AssetAccName, dbo.vMas_Product.AssetAccNameEN, 
+                         dbo.vMas_Product.AssetAccType, dbo.vMas_Product.AssetAccTypeName, dbo.vMas_Product.AssetAccTypeNameEN, dbo.vMas_Product.AssetAccSide, dbo.vMas_Product.AssetAccMainCode, 
+                         dbo.vMas_Product.AssetAccMainName, dbo.vMas_Product.AssetAccMainNameEN, dbo.vMas_Product.IncomeAccCode, dbo.vMas_Product.IncomeAccName, dbo.vMas_Product.IncomeAccNameEN, 
+                         dbo.vMas_Product.IncomeAccType, dbo.vMas_Product.IncomeAccTypeName, dbo.vMas_Product.IncomeAccTypeNameEN, dbo.vMas_Product.IncomeAccSide, dbo.vMas_Product.IncomeAccMainCode, 
+                         dbo.vMas_Product.IncomeAccMainName, dbo.vMas_Product.IncomeAccMainNameEN, dbo.vMas_Product.ExpenseAccCode, dbo.vMas_Product.ExpenseAccName, dbo.vMas_Product.ExpenseAccNameEN, 
+                         dbo.vMas_Product.ExpenseAccType, dbo.vMas_Product.ExpenseAccTypeName, dbo.vMas_Product.ExpenseAccTypeNameEN, dbo.vMas_Product.ExpenseAccSide, dbo.vMas_Product.ExpenseAccMainCode, 
+                         dbo.vMas_Product.ExpenseAccMainName, dbo.vMas_Product.ExpenseAccMainNameEN, dbo.vMas_Product.IsMaterial, dbo.vMas_Product.IsService, dbo.Acc_TransactionDT.RateVat, dbo.Acc_TransactionDT.RateWht, 
+                         dbo.Acc_TransactionDT.VatType, 
+                         (CASE WHEN dbo.Acc_TransactionDT.VatType >= 1 THEN (CASE WHEN dbo.Acc_TransactionDT.VatType = 1 THEN dbo.Acc_TransactionDT.Amount ELSE dbo.Acc_TransactionDT.Amount * 100 / (100 + dbo.Acc_TransactionDT.RateVat)
+                          END) ELSE dbo.Acc_TransactionDT.Amount END) AS TotalAmount, 
+                         (CASE WHEN dbo.Acc_TransactionDT.VatType >= 1 THEN (CASE WHEN dbo.Acc_TransactionDT.VatType = 1 THEN dbo.Acc_TransactionDT.Amount * dbo.Acc_TransactionDT.RateVat * 0.01 ELSE dbo.Acc_TransactionDT.Amount - (dbo.Acc_TransactionDT.Amount
+                          * 100 / (100 + dbo.Acc_TransactionDT.RateVat)) END) ELSE 0 END) AS VatAmount, 
+                         (CASE WHEN dbo.Acc_TransactionDT.VatType = 1 THEN dbo.Acc_TransactionDT.Amount * dbo.Acc_TransactionDT.RateWht * 0.01 ELSE dbo.Acc_TransactionDT.Amount * 100 / (100 + dbo.Acc_TransactionDT.RateVat) 
+                         * dbo.Acc_TransactionDT.RateWht * 0.01 END) AS WhtAmount
+FROM            dbo.Acc_TransactionHD INNER JOIN
+                         dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo INNER JOIN
+                         dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
+WHERE        (dbo.Acc_TransactionHD.AccDocType ='PI')
+GO
+/****** Object:  View [dbo].[vAP_H]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE view [dbo].[vAP_H]
+as
+select a.*,b.TotalAmount,b.TotalVat,b.TotalWht,b.TotalNet 
+,c.StatusName,d.*
+from (
+select dt.AccdocNo,
+sum(dt.TotalAmount) as TotalAmount,
+sum(dt.VatAmount) as TotalVat,
+sum(dt.WhtAmount) as TotalWht,
+sum(dt.TotalAmount+dt.VatAmount-dt.WhtAmount) as TotalNet 
+from 
+(
+	select d.*
+	from vAP_D d
+) dt 
+group by dt.AccDocNo
+) b right join Acc_TransactionHD a on b.AccDocNo=a.AccDocNo 
+left join (
+	select ConfigKey as StatusCode,ConfigValue as StatusName from Mas_AccConfig where ConfigCode='PI_STATUS'
+) c on a.DocStatus=c.StatusCode
+left join (
+   select DocNo,Text6 as CancelBy,Text7 as CancelReason,Date1 as CancelDate
+   from Acc_AdditionData 
+   where Seq=0
+) d on a.AccDocNo=d.DocNo
+where a.AccDocType='PI'
+GO
+/****** Object:  View [dbo].[vAP_Payment]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE view [dbo].[vAP_Payment]
+as
+select a.*,b.AccDesc,isnull(b.TotalPay,0) as TotalPayment
+from vAP_H a
+left join
+(
+	SELECT AccSourceDocNo as AccRefNo,
+	max(DocNo) as AccDesc,
+	sum(DNetAmt) as TotalPay
+	from vTransaction_All
+	where DocStatus<>99
+	AND AccSourceDocNo<>'' and AccDocType IN('PC','PV')
+	group by AccSourceDocNo
+) b
+on a.AccdocNo=b.AccRefNo
+where a.DocStatus<>99
+GO
+/****** Object:  View [dbo].[vAR_D]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vAR_D]
+AS
+SELECT        dbo.Acc_TransactionHD.DocRefNo, dbo.Acc_TransactionHD.DocStatus, dbo.Acc_TransactionHD.FiscalYear, dbo.Acc_TransactionHD.AccPostDate, dbo.Acc_TransactionHD.AccDocType, dbo.Acc_TransactionHD.IssueBy, 
+                         dbo.Acc_TransactionHD.PartyAddress, dbo.Acc_TransactionHD.PartyName, dbo.Acc_TransactionHD.PartyTaxCode, dbo.Acc_TransactionHD.PartyCode, dbo.Acc_TransactionHD.AccEffectiveDate, 
+                         dbo.Acc_TransactionHD.AccBatchDate, dbo.Acc_TransactionHD.AccDocNo, dbo.Acc_TransactionDT.AccItemNo, dbo.Acc_TransactionDT.AccSourceDocNo, dbo.Acc_TransactionDT.AccSourceDocItem, 
+                         dbo.Acc_TransactionDT.StockTransNo, dbo.Acc_TransactionDT.Qty, 
+						 dbo.Acc_TransactionDT.Price  as UnitPrice,
+						 dbo.Acc_TransactionDT.Price*dbo.Acc_TransactionDT.ExchangeRate as Price,
+						 dbo.Acc_TransactionDT.UnitMea, dbo.Acc_TransactionDT.Currency, dbo.Acc_TransactionDT.ExchangeRate, 
+                         dbo.Acc_TransactionDT.Amount, dbo.Acc_TransactionDT.SaleProductCode, dbo.Acc_TransactionDT.SalesDescription, dbo.vMas_Product.ProductID, dbo.vMas_Product.ProductCode, dbo.vMas_Product.ProductName, 
+                         dbo.vMas_Product.ProductBrand, dbo.vMas_Product.ProductColor, dbo.vMas_Product.ProductSize, dbo.vMas_Product.ProductSizeUnit, dbo.vMas_Product.ProductVolume, dbo.vMas_Product.ProductVolumeUnit, 
+                         dbo.vMas_Product.UnitStock, dbo.vMas_Product.ProductTypeCode, dbo.vMas_Product.ProductTypeID, dbo.vMas_Product.ProductTypeName, dbo.vMas_Product.WarehouseID, dbo.vMas_Product.WarehouseCode, 
+                         dbo.vMas_Product.WarehouseName, dbo.vMas_Product.WarehouseLocation, dbo.vMas_Product.WarehouseAddress, dbo.vMas_Product.AssetAccCode, dbo.vMas_Product.AssetAccName, dbo.vMas_Product.AssetAccNameEN, 
+                         dbo.vMas_Product.AssetAccType, dbo.vMas_Product.AssetAccTypeName, dbo.vMas_Product.AssetAccTypeNameEN, dbo.vMas_Product.AssetAccSide, dbo.vMas_Product.AssetAccMainCode, 
+                         dbo.vMas_Product.AssetAccMainName, dbo.vMas_Product.AssetAccMainNameEN, dbo.vMas_Product.IncomeAccCode, dbo.vMas_Product.IncomeAccName, dbo.vMas_Product.IncomeAccNameEN, 
+                         dbo.vMas_Product.IncomeAccType, dbo.vMas_Product.IncomeAccTypeName, dbo.vMas_Product.IncomeAccTypeNameEN, dbo.vMas_Product.IncomeAccSide, dbo.vMas_Product.IncomeAccMainCode, 
+                         dbo.vMas_Product.IncomeAccMainName, dbo.vMas_Product.IncomeAccMainNameEN, dbo.vMas_Product.ExpenseAccCode, dbo.vMas_Product.ExpenseAccName, dbo.vMas_Product.ExpenseAccNameEN, 
+                         dbo.vMas_Product.ExpenseAccType, dbo.vMas_Product.ExpenseAccTypeName, dbo.vMas_Product.ExpenseAccTypeNameEN, dbo.vMas_Product.ExpenseAccSide, dbo.vMas_Product.ExpenseAccMainCode, 
+                         dbo.vMas_Product.ExpenseAccMainName, dbo.vMas_Product.ExpenseAccMainNameEN, dbo.vMas_Product.IsMaterial, dbo.vMas_Product.IsService, dbo.Acc_TransactionDT.RateVat, dbo.Acc_TransactionDT.RateWht, 
+                         dbo.Acc_TransactionDT.VatType,
+(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat) end) else dbo.Acc_TransactionDT.Amount end) as TotalAmount
+,(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateVat*0.01 else dbo.Acc_TransactionDT.Amount-(dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)) end) else 0 end) as VatAmount
+,(case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateWht*0.01 else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)*dbo.Acc_TransactionDT.RateWht*0.01 end) as WhtAmount
+FROM            dbo.Acc_TransactionHD INNER JOIN
+                         dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo INNER JOIN
+                         dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
+wHERE dbo.Acc_TransactionHD.AccDocType='SI'
+GO
+/****** Object:  View [dbo].[vAR_H]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE view [dbo].[vAR_H]
+as
+select a.*,b.TotalAmount,b.TotalNonVat,
+b.TotalVatBase,b.TotalVat,
+b.TotalTaxBase1,b.TotalTaxBase2,b.TotalTaxBase3,b.TotalTaxBase5,b.TotalTaxBase10
+,b.TotalWht,b.TotalNet 
+,c.StatusName
+from (
+select dt.AccdocNo,
+sum(dt.TotalAmount) as TotalAmount,
+sum(dt.TotalNonVat) as TotalNonVat,
+sum(dt.TotalVatBase) as TotalVatBase,
+sum(dt.VatAmount) as TotalVat,
+sum(dt.TotalTaxBase1) as TotalTaxBase1,
+sum(dt.TotalTaxBase2) as TotalTaxBase2,
+sum(dt.TotalTaxBase3) as TotalTaxBase3,
+sum(dt.TotalTaxBase5) as TotalTaxBase5,
+sum(dt.TotalTaxBase10) as TotalTaxBase10,
+sum(dt.WhtAmount) as TotalWht,
+sum(TotalAmount+VatAmount-WhtAmount) as TotalNet 
+from 
+(
+	select d.*,
+	(case when RateWht=1 then Amount else 0 end) as TotalTaxBase1,
+	(case when RateWht=2 then Amount else 0 end) as TotalTaxBase2,
+	(case when RateWht=3 then Amount else 0 end) as TotalTaxBase3,
+	(case when RateWht=5 then Amount else 0 end) as TotalTaxBase5,
+	(case when RateWht=10 then Amount else 0 end) as TotalTaxBase10,
+	(case when RateVat>0 then Amount else 0 end) as TotalVatBase,
+	(case when RateVat=0 and RateWht=0 then Amount else 0 end) as TotalNonVat
+	from vAR_D d
+) dt 
+group by dt.AccDocNo
+) b right join Acc_TransactionHD a on b.AccDocNo=a.AccDocNo 
+left join (
+	select ConfigKey as StatusCode,ConfigValue as StatusName from Mas_AccConfig where ConfigCode='SI_STATUS'
+) c on a.DocStatus=c.StatusCode
+where a.AccDocType='SI'
+GO
+/****** Object:  View [dbo].[vAR_Payment]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE view [dbo].[vAR_Payment]
+as
+select a.*,b.AccDesc,isnull(b.TotalPay,0) as TotalPayment
+from vAR_H a
+left join
+(
+	SELECT AccSourceDocNo as AccRefNo,
+	max(DocNo) as AccDesc,
+	sum(DNetAmt) as TotalPay
+	from vTransaction_All
+	where DocStatus<>99
+	AND AccSourceDocNo<>'' and AccDocType IN('RC','RV')
+	group by AccSourceDocNo
+) b
+on a.AccdocNo=b.AccRefNo
+where a.DocStatus<>99
+GO
+/****** Object:  View [dbo].[vAV_All]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE view [dbo].[vAV_All]
+as
+select a.AccDocNo,a.AccBatchDate,a.PartyName,a.IssueBy,a.ProductCode,a.ProductName,a.SalesDescription,
+a.DNetAmt as AmountNet,
+c.AccDocNo as PaymentDocNo,c.AccItemNo as PaymentItemNo,c.DNetAmt as PaymentNet,
+b.AccDocNo as LinkDocNo,b.AccItemNo as LinkItemNo,b.DNetAmt as UsedNet
+from vTransaction_All a left join vTransaction_All b 
+on a.AccDocNo=b.AccSourceDocNo 
+and a.AccItemNo=b.AccSourceDocItem
+and b.AccDocType='PC'
+left join vTransaction_All c 
+on a.AccDocNo=c.AccSourceDocNo 
+and a.AccItemNo=c.AccSourceDocItem
+and c.AccDocType='DP'
+where exists(select 1 from Acc_TransactionHD where AccDocNo=a.AccDocNo and AccDocType='AV')
+
+GO
+/****** Object:  View [dbo].[vAV_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE view [dbo].[vAV_Balance]
+as
+select *,AmountNet-isnull(Usednet,0) as Balance
+from (
+select AccDocNo,AccBatchDate,IssueBy,PartyName,ProductCode,ProductName,SalesDescription,AmountNet,sum(UsedNet) as UsedNet 
+from vAV_All
+group by AccDocNo,AccBatchDate,IssueBy,PartyName,ProductCode,ProductName,SalesDescription,AmountNet
+) t
+
+GO
+/****** Object:  View [dbo].[vAV_BalanceByDoc]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create view [dbo].[vAV_BalanceByDoc]
+as
+select AccDocNo,AccBatchDate,sum(AmountNet) as AmountNet,sum(UsedNet) as UsedNet,sum(Balance) as Balance 
+from vAV_Balance
+group by AccDocNo,AccBatchDate
+GO
+/****** Object:  View [dbo].[vHR_PayRoll]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2103,7 +2223,7 @@ inner join Mas_HRDepartment dp on p.DepartmentId=dp.DepartmentId
 inner join Mas_HRDivision dv on dp.DivisionId=dv.DivisionId
 where c.ContractStatus=1
 GO
-/****** Object:  View [dbo].[vHR_CalTaxEmp]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vHR_CalTaxEmp]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2191,7 +2311,7 @@ tbl,(
 ) t 
 group by PositionId,PositionName,StaffId,StaffName,SalaryPerMonth,SalaryPerYear,DefaultDeduct,TotalDeduct,SocialDeduct,TotalYearly
 GO
-/****** Object:  View [dbo].[vHR_PayrollConfig]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vHR_PayrollConfig]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2204,7 +2324,7 @@ from Mas_HRPayRollConfig pc
 inner join Mas_HRContractType ct on pc.ContractTypeId=ct.ContractTypeId
 inner join Mas_HRPosition p on pc.PositionId=p.PositionId
 GO
-/****** Object:  View [dbo].[vHR_SalaryConfig]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vHR_SalaryConfig]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2219,7 +2339,7 @@ on sl.ContractTypeId=ct.ContractTypeId
 inner join Mas_HRSalaryType st on sl.SalaryTypeId=st.SalaryTypeId
 left join Mas_AccCode a on sl.AccCode=a.AccCode
 GO
-/****** Object:  View [dbo].[vHR_Salary]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vHR_Salary]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2294,500 +2414,7 @@ select * from (
 ) a
 
 GO
-/****** Object:  View [dbo].[vJournal_D]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-CREATE VIEW [dbo].[vJournal_D]
-AS
-SELECT        dbo.Acc_JournalDT.EntryId, dbo.Acc_JournalDT.Seq, dbo.Acc_JournalDT.AccCode,dbo.Mas_AccCode.AccName as GLName,dbo.Mas_AccCode.AccMainCode,
-dbo.Acc_JournalDT.AccName as GLDesc, dbo.Acc_JournalDT.AccDesc as AccDesc, dbo.Acc_JournalDT.Debit, dbo.Acc_JournalDT.Credit, 
-                         dbo.Acc_AdditionData.Text1 AS DText1, dbo.Acc_AdditionData.Date1 AS DDate1, dbo.Acc_AdditionData.Num1 AS DNum1, dbo.Acc_AdditionData.Text2 AS DText2, dbo.Acc_AdditionData.Date2 AS DDate2, 
-                         dbo.Acc_AdditionData.Num2 AS DNum2, dbo.Acc_AdditionData.Text3 AS DText3, dbo.Acc_AdditionData.Date3 AS DDate3, dbo.Acc_AdditionData.Num3 AS DNum3, dbo.Acc_AdditionData.Text4 AS DText4, 
-                         dbo.Acc_AdditionData.Date4 AS DDate4, dbo.Acc_AdditionData.Num4 AS DNum4, dbo.Acc_AdditionData.Text5 AS DText5, dbo.Acc_AdditionData.Date5 AS DDate5, dbo.Acc_AdditionData.Num5 AS DNum5, 
-                         dbo.Acc_AdditionData.Text6 AS DText6, dbo.Acc_AdditionData.Date6 AS DDate6, dbo.Acc_AdditionData.Num6 AS DNum6, dbo.Acc_AdditionData.Text7 AS DText7, dbo.Acc_AdditionData.Date7 AS DDate7, 
-                         dbo.Acc_AdditionData.Num7 AS DNum7, dbo.Acc_AdditionData.Text8 AS DText8, dbo.Acc_AdditionData.Date8 AS DDate8, dbo.Acc_AdditionData.Num8 AS DNum8, dbo.Acc_AdditionData.Text9 AS DText9, 
-                         dbo.Acc_AdditionData.Date9 AS DDate9, dbo.Acc_AdditionData.Num9 AS DNum9, dbo.Acc_AdditionData.Text10 AS DText10, dbo.Acc_AdditionData.Date10 AS DDate10, dbo.Acc_AdditionData.Num10 AS DNum10
-FROM            dbo.Acc_JournalDT INNER JOIN
-                         dbo.Acc_JournalHD ON dbo.Acc_JournalDT.EntryId = dbo.Acc_JournalHD.EntryId LEFT OUTER JOIN
-                         dbo.Acc_AdditionData ON dbo.Acc_JournalHD.JournalNo = dbo.Acc_AdditionData.DocNo AND dbo.Acc_JournalDT.Seq = dbo.Acc_AdditionData.Seq
-						 LEFT JOIN dbo.Mas_AccCode on dbo.Acc_JournalDT.AccCode=dbo.Mas_AccCode.AccCode 
-GO
-/****** Object:  View [dbo].[vJournal_H]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE view [dbo].[vJournal_H]
-as
-select a.*,b.*
-from Acc_JournalHD a
-left join (
-  select * from Acc_AdditionData 
-  where Seq=0
-) b
-on a.JournalNo=b.DocNo
-GO
-/****** Object:  View [dbo].[vJournal_All]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-
-
-
-
-
-
-CREATE view [dbo].[vJournal_All] 
-as 
-select a.*,b.Seq as ItemNo,b.AccCode,b.GLName as AccName,b.AccMainCode,c.AccName as AccMainCodeName,b.GLDesc as AccRemark,b.AccDesc,b.Debit,b.Credit,c.AccTypeID,
-b.DText1,b.DDate1,b.DNum1,
-b.DText2,b.DDate2,b.DNum2,
-b.DText3,b.DDate3,b.DNum3,
-b.DText4,b.DDate4,b.DNum4,
-b.DText5,b.DDate5,b.DNum5,
-b.DText6,b.DDate6,b.DNum6,
-b.DText7,b.DDate7,b.DNum7,
-b.DText8,b.DDate8,b.DNum8,
-b.DText9,b.DDate9,b.DNum9,
-b.DText10,b.DDate10,b.DNum10
-from vJournal_H a left join vJournal_D b on a.EntryId=b.EntryId
-left join Mas_AccCode c on b.AccMainCode=c.AccCode
-
-GO
-/****** Object:  View [dbo].[vPO_H]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-CREATE view [dbo].[vPO_H]
-as
-select a.*,b.TotalAmount,b.TotalVat,b.TotalWht,b.TotalNet
-,c.StatusName,d.*
-from (
-select dt.AccdocNo,
-sum(dt.TotalAmount) as TotalAmount,
-sum(dt.VatAmount) as TotalVat,
-sum(dt.WhtAmount) as TotalWht,
-sum(dt.TotalAmount+dt.VatAmount-dt.WhtAmount) as TotalNet 
-from 
-(
-	select d.*
-	from vPO_D d
-) dt 
-group by dt.AccDocNo
-) b right join Acc_TransactionHD a on b.AccDocNo=a.AccDocNo 
-left join (
-	select ConfigKey as StatusCode,ConfigValue as StatusName from Mas_AccConfig where ConfigCode='PO_STATUS'
-) c on a.DocStatus=c.StatusCode
-left join (
-  select DocNo,Text1 as ContactName,Text2 as ContactTel,
-  Text3 as BillingCondition,Text4 as PORemark,Text5 as ApproveBy,Date1 as ApproveDate,
-  Text6 as CancelBy,Date2 as CancelDate,Text7 as CancelReason
-  from Acc_AdditionData 
-  where Seq=0
-) d on a.AccDocNo=d.DocNo
-where a.AccDocType='PO'
-GO
-/****** Object:  View [dbo].[vTransaction_D]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-
-CREATE VIEW [dbo].[vTransaction_D]
-AS
-SELECT        a.AccDocNo AS DocNo, a.AccItemNo, a.AccSourceDocNo, a.AccSourceDocItem, a.StockTransNo, a.Qty, a.Price, a.UnitMea, a.Currency, a.ExchangeRate, a.Amount, a.SaleProductCode, a.SalesDescription, b.Text1 AS DText1, 
-                         b.Date1 AS DDate1, b.Num1 AS DNum1, b.Text2 AS DText2, b.Date2 AS DDate2, b.Num2 AS DNum2, b.Text3 AS DText3, b.Date3 AS DDate3, b.Num3 AS DNum3, b.Text4 AS DText4, b.Date4 AS DDate4, b.Num4 AS DNum4, 
-                         b.Text5 AS DText5, b.Date5 AS DDate5, b.Num5 AS DNum5, b.Text6 AS DText6, b.Date6 AS DDate6, b.Num6 AS DNum6, b.Text7 AS DText7, b.Date7 AS DDate7, b.Num7 AS DNum7, b.Text8 AS DText8, b.Date8 AS DDate8, 
-                         b.Num8 AS DNum8, b.Text9 AS DText9, b.Date9 AS DDate9, b.Num9 AS DNum9, b.Text10 AS DText10, b.Date10 AS DDate10, b.Num10 AS DNum10, a.RateVat AS DRateVat, a.RateWht AS DRateWht, a.VatType AS DVatType,
-(case when a.VatType>=1 then (case when a.VatType=1 then a.Amount else a.Amount*100/(100+a.RateVat) end) else a.Amount end) as TotalAmount
-,(case when a.VatType>=1 then (case when a.VatType=1 then a.Amount*a.RateVat*0.01 else a.Amount-(a.Amount*100/(100+a.RateVat)) end) else 0 end) as VatAmount
-,(case when a.VatType=1 then a.Amount*a.RateWht*0.01 else (a.Amount*100/(100+a.RateVat))*a.RateWht*0.01 end) as WhtAmount
-,(case when a.RateVat>0 then (case when a.VatType=1 then a.Amount else a.Amount*100/(100+a.RateVat) end) else 0 end) as CalVatAmount
-,(case when a.RateWht>0 then (case when a.VatType=1 then a.Amount else a.Amount*100/(100+a.RateVat) end) else 0 end) as CalWhtAmount
-,(case when a.RateVat=0 and a.RateWht=0 then a.Amount else 0 end) as CalNonVatAmount
-FROM            dbo.Acc_TransactionDT AS a LEFT OUTER JOIN
-                         dbo.Acc_AdditionData AS b ON a.AccDocNo = b.DocNo AND a.AccItemNo = b.Seq
-GO
-/****** Object:  View [dbo].[vTransaction_H]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-
-CREATE VIEW [dbo].[vTransaction_H]
-AS
-SELECT        a.AccDocNo, a.AccBatchDate, a.AccEffectiveDate, a.PartyCode, a.PartyTaxCode, a.PartyName, a.PartyAddress, a.IssueBy, a.AccDocType, 
-d.TName as AccDocTypeName,
-a.AccPostDate, a.FiscalYear, 0 as DocStatus, a.DocRefNo, b.Text1, b.Date1, b.Num1, 
-                         b.Text2, b.Date2, b.Num2, b.Text3, b.Date3, b.Num3, b.Text4, b.Date4, b.Num4, b.Text5, b.Date5, b.Num5, b.Text6, b.Date6, b.Num6, b.Text7, b.Date7, b.Num7, b.Text8, b.Date8, b.Num8, b.Text9, b.Date9, b.Num9, b.Text10, 
-                         b.Date10, b.Num10,c.TotalBaseAmount,c.TotalNonVat as TotalNonVatAmount,c.TotalTaxAmount,c.TotalAmount,c.TotalVat,c.TotalWht,c.TotalNet
-FROM            dbo.Acc_TransactionHD AS a 
-LEFT OUTER JOIN
-(SELECT        DocNo, Seq, Text1, Date1, Num1, Text2, Date2, Num2, Text3, Date3, Num3, Text4, Date4, Num4, Text5, Date5, Num5, Text6, Date6, Num6, Text7, Date7, Num7, Text8, Date8, Num8, Text9, Date9, Num9, Text10, 
-                            Date10, Num10
-FROM            dbo.Acc_AdditionData
-WHERE        (Seq = 0)
-) AS b ON a.AccDocNo = b.DocNo
-LEFT OUTER JOIN
-(
-select dt.docNo,
-sum(dt.TotalAmount) as TotalAmount,
-sum(dt.CalVatAmount) as TotalBaseAmount,
-sum(dt.CalWhtAmount) as TotalTaxAmount,
-sum(dt.VatAmount) as TotalVat,
-sum(dt.WhtAmount) as TotalWht,
-sum(dt.CalNonVatAmount) as TotalNonVat,
-sum(dt.TotalAmount+dt.VatAmount-dt.WhtAmount) as TotalNet 
-from 
-(
-	select d.*
-	from vTransaction_D d
-) dt 
-group by dt.DocNo
-) as c on a.AccDocNo=c.DocNo 
-left outer join Mas_DocConfig d on a.AccDocType=d.Category
-GO
-/****** Object:  View [dbo].[vTransaction_All]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-
-CREATE VIEW [dbo].[vTransaction_All]
-AS
-SELECT        a.AccDocNo, a.AccBatchDate, a.AccEffectiveDate, a.PartyCode, a.PartyTaxCode, a.PartyName, a.PartyAddress, a.IssueBy, a.AccDocType, 
-a.AccDocTypeName,
-    a.AccPostDate, a.FiscalYear, a.DocStatus, a.DocRefNo, a.Text1, a.Date1, a.Num1, 
-                         a.Text2, a.Date2, a.Num2, a.Text3, a.Date3, a.Num3, a.Text4, a.Date4, a.Num4, a.Text5, a.Date5, a.Num5, a.Text6, a.Date6, a.Num6, a.Text7, a.Date7, a.Num7, a.Text8, a.Date8, a.Num8, a.Text9, a.Date9, a.Num9, a.Text10, 
-                         a.Date10, a.Num10, b.DocNo, b.AccItemNo, b.AccSourceDocNo, b.AccSourceDocItem, b.StockTransNo, b.Qty, b.Price, b.UnitMea, b.Currency, b.ExchangeRate, b.Amount, b.SaleProductCode, b.SalesDescription, b.DText1, 
-                         b.DDate1, b.DNum1, b.DText2, b.DDate2, b.DNum2, b.DText3, b.DDate3, b.DNum3, b.DText4, b.DDate4, b.DNum4, b.DText5, b.DDate5, b.DNum5, b.DText6, b.DDate6, b.DNum6, b.DText7, b.DDate7, b.DNum7, b.DText8, 
-                         b.DDate8, b.DNum8, b.DText9, b.DDate9, b.DNum9, b.DText10, b.DDate10, b.DNum10, b.DRateVat, b.DRateWht, b.DVatType, c.ProductID, c.ProductCode, c.ProductName, c.ProductBrand, c.ProductColor, c.ProductSize, 
-                         c.ProductSizeUnit, c.ProductVolume, c.ProductVolumeUnit, c.UnitStock, c.ProductTypeCode, c.ProductTypeID, c.ProductTypeName, c.WarehouseID, c.WarehouseCode, c.WarehouseName, c.WarehouseLocation, 
-                         c.WarehouseAddress, c.AssetAccCode, c.AssetAccName, c.AssetAccNameEN, c.AssetAccType, c.AssetAccTypeName, c.AssetAccTypeNameEN, c.AssetAccSide, c.AssetAccMainCode, c.AssetAccMainName, 
-                         c.AssetAccMainNameEN, c.IncomeAccCode, c.IncomeAccName, c.IncomeAccNameEN, c.IncomeAccType, c.IncomeAccTypeName, c.IncomeAccTypeNameEN, c.IncomeAccSide, c.IncomeAccMainCode, c.IncomeAccMainName, 
-                         c.IncomeAccMainNameEN, c.ExpenseAccCode, c.ExpenseAccName, c.ExpenseAccNameEN, c.ExpenseAccType, c.ExpenseAccTypeName, c.ExpenseAccTypeNameEN, c.ExpenseAccSide, c.ExpenseAccMainCode, 
-                         c.ExpenseAccMainName, c.ExpenseAccMainNameEN, c.IsMaterial, c.IsService, b.DRateVat as RateVat, b.DRateWht as RateWht, b.DVatType as VatType,
-						 b.VatAmount as DVatAmt,b.WhtAmount as DWhtAmt,b.TotalAmount+b.VatAmount-b.WhtAmount as DNetAmt,
-						 a.TotalAmount,a.TotalVat,a.TotalWht,a.TotalNet,b.TotalAmount as DAmt
-FROM            dbo.vTransaction_H AS a LEFT JOIN
-                         dbo.vTransaction_D AS b ON a.AccDocNo = b.DocNo LEFT OUTER JOIN
-                         dbo.vMas_Product AS c ON b.SaleProductCode = c.ProductCode
-GO
-/****** Object:  View [dbo].[vPO_Payment]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-
-
-
-
-
-
-CREATE view [dbo].[vPO_Payment]
-as
-select a.*,
-isnull(b.AccDesc,c.AccDesc) as AccDesc,
-isnull(b.TotalPay,0)+isnull(c.TotalPay,0)+isnull(d.TotalPay,0) as TotalPayment,
-isnull(e.PVNo,d.PVNo) as PVNo
-from vPO_H a
-left join
-(
-	SELECT DocReFNo as AccRefNo,
-	max(DocNo) as AccDesc,
-	sum(DNetAmt) as TotalPay
-	from vTransaction_All
-	where DocStatus<>99 and AccSourceDocNo='' and AccDocType ='PC'
-	group by DocRefNo
-) b
-on a.AccdocNo=b.AccRefNo
-left join
-(
-	SELECT d.AccDocNo as AccRefNo,
-	max(e.DocNo) as AccDesc,
-	sum(e.DNetAmt) as TotalPay
-	from vTransaction_All d left join 
-	vTransaction_All e on d.AccDocNo=e.AccSourceDocNo 
-	and d.AccItemNo=e.AccSourceDocItem
-	where d.DocStatus<>99
-	AND d.AccSourceDocNo<>'' 
-	and e.AccDocType='PC'
-	group by d.AccDocNo
-) c
-on a.AccdocNo=c.AccRefNo
-left join (
-	select AccDesc,sum(Credit) as TotalPay,MAX(JournalNo) as PVNo
-	from vJournal_All t
-	where JournalNo like 'PV%' and Credit>0 	
-	and not exists(select 1 from vTransaction_All where AccSourceDocNo=t.AccDesc and AccDocType='PC')
-	group by AccDesc 
-) d
-on a.AccDocNo=d.AccDesc 
-left join (
-	select AccDesc,sum(Credit) as TotalPay,MAX(JournalNo) as PVNo
-	from vJournal_All t
-	where JournalNo like 'PV%' and Credit>0 		
-	group by AccDesc 
-) e
-on isnull(b.AccDesc,c.AccDesc)=e.AccDesc 
-where a.DocStatus<>99
-GO
-/****** Object:  View [dbo].[vAP_D]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE VIEW [dbo].[vAP_D]
-AS
-SELECT        dbo.Acc_TransactionHD.DocRefNo, dbo.Acc_TransactionHD.DocStatus, dbo.Acc_TransactionHD.FiscalYear, dbo.Acc_TransactionHD.AccPostDate, dbo.Acc_TransactionHD.AccDocType, dbo.Acc_TransactionHD.IssueBy, 
-                         dbo.Acc_TransactionHD.PartyAddress, dbo.Acc_TransactionHD.PartyName, dbo.Acc_TransactionHD.PartyTaxCode, dbo.Acc_TransactionHD.PartyCode, dbo.Acc_TransactionHD.AccEffectiveDate, 
-                         dbo.Acc_TransactionHD.AccBatchDate, dbo.Acc_TransactionHD.AccDocNo, dbo.Acc_TransactionDT.AccItemNo, dbo.Acc_TransactionDT.AccSourceDocNo, dbo.Acc_TransactionDT.AccSourceDocItem, 
-                         dbo.Acc_TransactionDT.StockTransNo, dbo.Acc_TransactionDT.Qty, 
-						 dbo.Acc_TransactionDT.Price  as UnitPrice,
-						 dbo.Acc_TransactionDT.Price*dbo.Acc_TransactionDT.ExchangeRate as Price
-						 , dbo.Acc_TransactionDT.UnitMea, dbo.Acc_TransactionDT.Currency, dbo.Acc_TransactionDT.ExchangeRate, 
-                         dbo.Acc_TransactionDT.Amount, dbo.Acc_TransactionDT.SaleProductCode, dbo.Acc_TransactionDT.SalesDescription, dbo.vMas_Product.ProductID, dbo.vMas_Product.ProductCode, dbo.vMas_Product.ProductName, 
-                         dbo.vMas_Product.ProductBrand, dbo.vMas_Product.ProductColor, dbo.vMas_Product.ProductSize, dbo.vMas_Product.ProductSizeUnit, dbo.vMas_Product.ProductVolume, dbo.vMas_Product.ProductVolumeUnit, 
-                         dbo.vMas_Product.UnitStock, dbo.vMas_Product.ProductTypeCode, dbo.vMas_Product.ProductTypeID, dbo.vMas_Product.ProductTypeName, dbo.vMas_Product.WarehouseID, dbo.vMas_Product.WarehouseCode, 
-                         dbo.vMas_Product.WarehouseName, dbo.vMas_Product.WarehouseLocation, dbo.vMas_Product.WarehouseAddress, dbo.vMas_Product.AssetAccCode, dbo.vMas_Product.AssetAccName, dbo.vMas_Product.AssetAccNameEN, 
-                         dbo.vMas_Product.AssetAccType, dbo.vMas_Product.AssetAccTypeName, dbo.vMas_Product.AssetAccTypeNameEN, dbo.vMas_Product.AssetAccSide, dbo.vMas_Product.AssetAccMainCode, 
-                         dbo.vMas_Product.AssetAccMainName, dbo.vMas_Product.AssetAccMainNameEN, dbo.vMas_Product.IncomeAccCode, dbo.vMas_Product.IncomeAccName, dbo.vMas_Product.IncomeAccNameEN, 
-                         dbo.vMas_Product.IncomeAccType, dbo.vMas_Product.IncomeAccTypeName, dbo.vMas_Product.IncomeAccTypeNameEN, dbo.vMas_Product.IncomeAccSide, dbo.vMas_Product.IncomeAccMainCode, 
-                         dbo.vMas_Product.IncomeAccMainName, dbo.vMas_Product.IncomeAccMainNameEN, dbo.vMas_Product.ExpenseAccCode, dbo.vMas_Product.ExpenseAccName, dbo.vMas_Product.ExpenseAccNameEN, 
-                         dbo.vMas_Product.ExpenseAccType, dbo.vMas_Product.ExpenseAccTypeName, dbo.vMas_Product.ExpenseAccTypeNameEN, dbo.vMas_Product.ExpenseAccSide, dbo.vMas_Product.ExpenseAccMainCode, 
-                         dbo.vMas_Product.ExpenseAccMainName, dbo.vMas_Product.ExpenseAccMainNameEN, dbo.vMas_Product.IsMaterial, dbo.vMas_Product.IsService, dbo.Acc_TransactionDT.RateVat, dbo.Acc_TransactionDT.RateWht, 
-                         dbo.Acc_TransactionDT.VatType, 
-                         (CASE WHEN dbo.Acc_TransactionDT.VatType >= 1 THEN (CASE WHEN dbo.Acc_TransactionDT.VatType = 1 THEN dbo.Acc_TransactionDT.Amount ELSE dbo.Acc_TransactionDT.Amount * 100 / (100 + dbo.Acc_TransactionDT.RateVat)
-                          END) ELSE dbo.Acc_TransactionDT.Amount END) AS TotalAmount, 
-                         (CASE WHEN dbo.Acc_TransactionDT.VatType >= 1 THEN (CASE WHEN dbo.Acc_TransactionDT.VatType = 1 THEN dbo.Acc_TransactionDT.Amount * dbo.Acc_TransactionDT.RateVat * 0.01 ELSE dbo.Acc_TransactionDT.Amount - (dbo.Acc_TransactionDT.Amount
-                          * 100 / (100 + dbo.Acc_TransactionDT.RateVat)) END) ELSE 0 END) AS VatAmount, 
-                         (CASE WHEN dbo.Acc_TransactionDT.VatType = 1 THEN dbo.Acc_TransactionDT.Amount * dbo.Acc_TransactionDT.RateWht * 0.01 ELSE dbo.Acc_TransactionDT.Amount * 100 / (100 + dbo.Acc_TransactionDT.RateVat) 
-                         * dbo.Acc_TransactionDT.RateWht * 0.01 END) AS WhtAmount
-FROM            dbo.Acc_TransactionHD INNER JOIN
-                         dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo INNER JOIN
-                         dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
-WHERE        (dbo.Acc_TransactionHD.AccDocType ='PI')
-GO
-/****** Object:  View [dbo].[vAP_H]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-CREATE view [dbo].[vAP_H]
-as
-select a.*,b.TotalAmount,b.TotalVat,b.TotalWht,b.TotalNet 
-,c.StatusName,d.*
-from (
-select dt.AccdocNo,
-sum(dt.TotalAmount) as TotalAmount,
-sum(dt.VatAmount) as TotalVat,
-sum(dt.WhtAmount) as TotalWht,
-sum(dt.TotalAmount+dt.VatAmount-dt.WhtAmount) as TotalNet 
-from 
-(
-	select d.*
-	from vAP_D d
-) dt 
-group by dt.AccDocNo
-) b right join Acc_TransactionHD a on b.AccDocNo=a.AccDocNo 
-left join (
-	select ConfigKey as StatusCode,ConfigValue as StatusName from Mas_AccConfig where ConfigCode='PI_STATUS'
-) c on a.DocStatus=c.StatusCode
-left join (
-   select DocNo,Text6 as CancelBy,Text7 as CancelReason,Date1 as CancelDate
-   from Acc_AdditionData 
-   where Seq=0
-) d on a.AccDocNo=d.DocNo
-where a.AccDocType='PI'
-GO
-/****** Object:  View [dbo].[vMas_UserRoleAll]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE view [dbo].[vMas_UserRoleAll]
-as
-select a.UserID,a.Active,a.LastUpdate,c.RoleName,b.*,d.MenuName,e.ModuleName
-from Mas_UserRoleAssign a
-inner join Mas_UserRoleAuthor b
-on a.RoleID=b.RoleID
-inner join Mas_UserRole c
-on a.RoleID=c.RoleID
-left join Mas_Menu d
-on b.MenuID=d.MenuID
-left join Mas_UserRoleModule e 
-on b.ModuleID=e.ModuleID 
-GO
-/****** Object:  View [dbo].[vMas_ModuleMenu]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create view [dbo].[vMas_ModuleMenu]
-as
-select distinct a.ModuleID,a.ModuleName,a.MenuID,a.MenuName,b.WebAddress 
-from vMas_UserRoleAll a
-left join Mas_ModuleMenu b on a.MenuID=b.MenuID
-
-GO
-/****** Object:  View [dbo].[vAR_D]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE VIEW [dbo].[vAR_D]
-AS
-SELECT        dbo.Acc_TransactionHD.DocRefNo, dbo.Acc_TransactionHD.DocStatus, dbo.Acc_TransactionHD.FiscalYear, dbo.Acc_TransactionHD.AccPostDate, dbo.Acc_TransactionHD.AccDocType, dbo.Acc_TransactionHD.IssueBy, 
-                         dbo.Acc_TransactionHD.PartyAddress, dbo.Acc_TransactionHD.PartyName, dbo.Acc_TransactionHD.PartyTaxCode, dbo.Acc_TransactionHD.PartyCode, dbo.Acc_TransactionHD.AccEffectiveDate, 
-                         dbo.Acc_TransactionHD.AccBatchDate, dbo.Acc_TransactionHD.AccDocNo, dbo.Acc_TransactionDT.AccItemNo, dbo.Acc_TransactionDT.AccSourceDocNo, dbo.Acc_TransactionDT.AccSourceDocItem, 
-                         dbo.Acc_TransactionDT.StockTransNo, dbo.Acc_TransactionDT.Qty, 
-						 dbo.Acc_TransactionDT.Price  as UnitPrice,
-						 dbo.Acc_TransactionDT.Price*dbo.Acc_TransactionDT.ExchangeRate as Price,
-						 dbo.Acc_TransactionDT.UnitMea, dbo.Acc_TransactionDT.Currency, dbo.Acc_TransactionDT.ExchangeRate, 
-                         dbo.Acc_TransactionDT.Amount, dbo.Acc_TransactionDT.SaleProductCode, dbo.Acc_TransactionDT.SalesDescription, dbo.vMas_Product.ProductID, dbo.vMas_Product.ProductCode, dbo.vMas_Product.ProductName, 
-                         dbo.vMas_Product.ProductBrand, dbo.vMas_Product.ProductColor, dbo.vMas_Product.ProductSize, dbo.vMas_Product.ProductSizeUnit, dbo.vMas_Product.ProductVolume, dbo.vMas_Product.ProductVolumeUnit, 
-                         dbo.vMas_Product.UnitStock, dbo.vMas_Product.ProductTypeCode, dbo.vMas_Product.ProductTypeID, dbo.vMas_Product.ProductTypeName, dbo.vMas_Product.WarehouseID, dbo.vMas_Product.WarehouseCode, 
-                         dbo.vMas_Product.WarehouseName, dbo.vMas_Product.WarehouseLocation, dbo.vMas_Product.WarehouseAddress, dbo.vMas_Product.AssetAccCode, dbo.vMas_Product.AssetAccName, dbo.vMas_Product.AssetAccNameEN, 
-                         dbo.vMas_Product.AssetAccType, dbo.vMas_Product.AssetAccTypeName, dbo.vMas_Product.AssetAccTypeNameEN, dbo.vMas_Product.AssetAccSide, dbo.vMas_Product.AssetAccMainCode, 
-                         dbo.vMas_Product.AssetAccMainName, dbo.vMas_Product.AssetAccMainNameEN, dbo.vMas_Product.IncomeAccCode, dbo.vMas_Product.IncomeAccName, dbo.vMas_Product.IncomeAccNameEN, 
-                         dbo.vMas_Product.IncomeAccType, dbo.vMas_Product.IncomeAccTypeName, dbo.vMas_Product.IncomeAccTypeNameEN, dbo.vMas_Product.IncomeAccSide, dbo.vMas_Product.IncomeAccMainCode, 
-                         dbo.vMas_Product.IncomeAccMainName, dbo.vMas_Product.IncomeAccMainNameEN, dbo.vMas_Product.ExpenseAccCode, dbo.vMas_Product.ExpenseAccName, dbo.vMas_Product.ExpenseAccNameEN, 
-                         dbo.vMas_Product.ExpenseAccType, dbo.vMas_Product.ExpenseAccTypeName, dbo.vMas_Product.ExpenseAccTypeNameEN, dbo.vMas_Product.ExpenseAccSide, dbo.vMas_Product.ExpenseAccMainCode, 
-                         dbo.vMas_Product.ExpenseAccMainName, dbo.vMas_Product.ExpenseAccMainNameEN, dbo.vMas_Product.IsMaterial, dbo.vMas_Product.IsService, dbo.Acc_TransactionDT.RateVat, dbo.Acc_TransactionDT.RateWht, 
-                         dbo.Acc_TransactionDT.VatType,
-(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat) end) else dbo.Acc_TransactionDT.Amount end) as TotalAmount
-,(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateVat*0.01 else dbo.Acc_TransactionDT.Amount-(dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)) end) else 0 end) as VatAmount
-,(case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateWht*0.01 else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)*dbo.Acc_TransactionDT.RateWht*0.01 end) as WhtAmount
-FROM            dbo.Acc_TransactionHD INNER JOIN
-                         dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo INNER JOIN
-                         dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
-wHERE dbo.Acc_TransactionHD.AccDocType='SI'
-GO
-/****** Object:  View [dbo].[vAR_H]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-CREATE view [dbo].[vAR_H]
-as
-select a.*,b.TotalAmount,b.TotalNonVat,
-b.TotalVatBase,b.TotalVat,
-b.TotalTaxBase1,b.TotalTaxBase2,b.TotalTaxBase3,b.TotalTaxBase5,b.TotalTaxBase10
-,b.TotalWht,b.TotalNet 
-,c.StatusName
-from (
-select dt.AccdocNo,
-sum(dt.TotalAmount) as TotalAmount,
-sum(dt.TotalNonVat) as TotalNonVat,
-sum(dt.TotalVatBase) as TotalVatBase,
-sum(dt.VatAmount) as TotalVat,
-sum(dt.TotalTaxBase1) as TotalTaxBase1,
-sum(dt.TotalTaxBase2) as TotalTaxBase2,
-sum(dt.TotalTaxBase3) as TotalTaxBase3,
-sum(dt.TotalTaxBase5) as TotalTaxBase5,
-sum(dt.TotalTaxBase10) as TotalTaxBase10,
-sum(dt.WhtAmount) as TotalWht,
-sum(TotalAmount+VatAmount-WhtAmount) as TotalNet 
-from 
-(
-	select d.*,
-	(case when RateWht=1 then Amount else 0 end) as TotalTaxBase1,
-	(case when RateWht=2 then Amount else 0 end) as TotalTaxBase2,
-	(case when RateWht=3 then Amount else 0 end) as TotalTaxBase3,
-	(case when RateWht=5 then Amount else 0 end) as TotalTaxBase5,
-	(case when RateWht=10 then Amount else 0 end) as TotalTaxBase10,
-	(case when RateVat>0 then Amount else 0 end) as TotalVatBase,
-	(case when RateVat=0 and RateWht=0 then Amount else 0 end) as TotalNonVat
-	from vAR_D d
-) dt 
-group by dt.AccDocNo
-) b right join Acc_TransactionHD a on b.AccDocNo=a.AccDocNo 
-left join (
-	select ConfigKey as StatusCode,ConfigValue as StatusName from Mas_AccConfig where ConfigCode='SI_STATUS'
-) c on a.DocStatus=c.StatusCode
-where a.AccDocType='SI'
-GO
-/****** Object:  View [dbo].[vAV_All]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE view [dbo].[vAV_All]
-as
-select a.AccDocNo,a.AccBatchDate,a.PartyName,a.IssueBy,a.ProductCode,a.ProductName,a.SalesDescription,
-a.DNetAmt as AmountNet,
-c.AccDocNo as PaymentDocNo,c.AccItemNo as PaymentItemNo,c.DNetAmt as PaymentNet,
-b.AccDocNo as LinkDocNo,b.AccItemNo as LinkItemNo,b.DNetAmt as UsedNet
-from vTransaction_All a left join vTransaction_All b 
-on a.AccDocNo=b.AccSourceDocNo 
-and a.AccItemNo=b.AccSourceDocItem
-and b.AccDocType='PC'
-left join vTransaction_All c 
-on a.AccDocNo=c.AccSourceDocNo 
-and a.AccItemNo=c.AccSourceDocItem
-and c.AccDocType='DP'
-where exists(select 1 from Acc_TransactionHD where AccDocNo=a.AccDocNo and AccDocType='AV')
-
-GO
-/****** Object:  View [dbo].[vAV_Balance]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE view [dbo].[vAV_Balance]
-as
-select *,AmountNet-isnull(Usednet,0) as Balance
-from (
-select AccDocNo,AccBatchDate,IssueBy,PartyName,ProductCode,ProductName,SalesDescription,AmountNet,sum(UsedNet) as UsedNet 
-from vAV_All
-group by AccDocNo,AccBatchDate,IssueBy,PartyName,ProductCode,ProductName,SalesDescription,AmountNet
-) t
-
-GO
-/****** Object:  View [dbo].[vAV_BalanceByDoc]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-create view [dbo].[vAV_BalanceByDoc]
-as
-select AccDocNo,AccBatchDate,sum(AmountNet) as AmountNet,sum(UsedNet) as UsedNet,sum(Balance) as Balance 
-from vAV_Balance
-group by AccDocNo,AccBatchDate
-GO
-/****** Object:  View [dbo].[vAV_BalanceByParty]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vAV_BalanceByParty]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2799,7 +2426,7 @@ from vAV_Balance
 group by PartyName
 
 GO
-/****** Object:  View [dbo].[vAV_BalanceByEmp]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vAV_BalanceByEmp]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2811,7 +2438,7 @@ from vAV_Balance
 group by IssueBy
 
 GO
-/****** Object:  View [dbo].[vAV_Payment]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vAV_Payment]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2822,7 +2449,7 @@ select *,AmountNet-isnull(PaymentNet,0) as Balance
 from vAV_All
 
 GO
-/****** Object:  View [dbo].[vSum_JournalByType]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_JournalByType]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2840,7 +2467,7 @@ sum(Credit) as TotalCredit
 from vJournal_All
 group by SUBSTRING(JournalNo,1,4),AccCode,AccName
 GO
-/****** Object:  View [dbo].[vSI_Receive]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSI_Receive]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2863,7 +2490,7 @@ and b.AccDocType='RC'
 where exists(select 1 from Acc_TransactionHD where AccDocNo=a.AccDocNo and AccDocType='SI')
 
 GO
-/****** Object:  View [dbo].[vSI_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSI_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2877,7 +2504,7 @@ from vSI_Receive
 group by AccDocNo,AccBatchDate,IssueBy,PartyName,ProductCode,ProductName,SalesDescription,AmountNet
 ) t
 GO
-/****** Object:  View [dbo].[vSI_BalanceByParty]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSI_BalanceByParty]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2890,7 +2517,7 @@ from vSI_Balance
 group by PartyName
 
 GO
-/****** Object:  View [dbo].[vSI_BalanceByProduct]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSI_BalanceByProduct]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2902,7 +2529,7 @@ from vSI_Balance
 group by ProductName
 
 GO
-/****** Object:  View [dbo].[vSI_BalanceBySaleDesc]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSI_BalanceBySaleDesc]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2914,7 +2541,7 @@ from vSI_Balance
 group by SalesDescription
 
 GO
-/****** Object:  View [dbo].[vPC_Collect]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_Collect]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2945,7 +2572,7 @@ and c.AccDocType='RC'
 where exists(select 1 from Acc_TransactionHD where AccDocNo=a.AccDocNo and AccDocType='PC')
 
 GO
-/****** Object:  View [dbo].[vPC_BalanceBySaleDesc]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_BalanceBySaleDesc]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2958,7 +2585,7 @@ from vPC_Collect
 group by SalesDescription
 
 GO
-/****** Object:  View [dbo].[vPC_BalanceByProduct]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_BalanceByProduct]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2970,7 +2597,7 @@ from vPC_Collect
 group by ProductName
 
 GO
-/****** Object:  View [dbo].[vPC_BalanceByParty]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_BalanceByParty]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2983,7 +2610,7 @@ from vPC_Collect
 group by PartyName
 
 GO
-/****** Object:  View [dbo].[vPC_BalanceByDoc]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_BalanceByDoc]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2995,7 +2622,7 @@ from vPC_Collect
 group by AccDocNo,AccBatchDate,IssueBy,PartyName
 
 GO
-/****** Object:  View [dbo].[vPC_BalanceBySource]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_BalanceBySource]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3007,7 +2634,7 @@ from vPC_Collect
 group by AccSourceDocNo
 
 GO
-/****** Object:  View [dbo].[vRC_D]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vRC_D]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3040,7 +2667,7 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
                          dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
 wHERE dbo.Acc_TransactionHD.AccDocType='RC'
 GO
-/****** Object:  View [dbo].[vRC_H]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vRC_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3070,7 +2697,40 @@ left join (
 ) c on a.DocStatus=c.StatusCode
 where a.AccDocType='RC'
 GO
-/****** Object:  View [dbo].[vPC_H]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_D]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE VIEW [dbo].[vPC_D]
+AS
+SELECT        dbo.Acc_TransactionHD.DocRefNo, dbo.Acc_TransactionHD.DocStatus, dbo.Acc_TransactionHD.FiscalYear, dbo.Acc_TransactionHD.AccPostDate, dbo.Acc_TransactionHD.AccDocType, dbo.Acc_TransactionHD.IssueBy, 
+                         dbo.Acc_TransactionHD.PartyAddress, dbo.Acc_TransactionHD.PartyName, dbo.Acc_TransactionHD.PartyTaxCode, dbo.Acc_TransactionHD.PartyCode, dbo.Acc_TransactionHD.AccEffectiveDate, 
+                         dbo.Acc_TransactionHD.AccBatchDate, dbo.Acc_TransactionHD.AccDocNo, dbo.Acc_TransactionDT.AccItemNo, dbo.Acc_TransactionDT.AccSourceDocNo, dbo.Acc_TransactionDT.AccSourceDocItem, 
+                         dbo.Acc_TransactionDT.StockTransNo, dbo.Acc_TransactionDT.Qty, dbo.Acc_TransactionDT.Price, dbo.Acc_TransactionDT.UnitMea, dbo.Acc_TransactionDT.Currency, dbo.Acc_TransactionDT.ExchangeRate, 
+                         dbo.Acc_TransactionDT.Amount, dbo.Acc_TransactionDT.SaleProductCode, dbo.Acc_TransactionDT.SalesDescription, dbo.vMas_Product.ProductID, dbo.vMas_Product.ProductCode, dbo.vMas_Product.ProductName, 
+                         dbo.vMas_Product.ProductBrand, dbo.vMas_Product.ProductColor, dbo.vMas_Product.ProductSize, dbo.vMas_Product.ProductSizeUnit, dbo.vMas_Product.ProductVolume, dbo.vMas_Product.ProductVolumeUnit, 
+                         dbo.vMas_Product.UnitStock, dbo.vMas_Product.ProductTypeCode, dbo.vMas_Product.ProductTypeID, dbo.vMas_Product.ProductTypeName, dbo.vMas_Product.WarehouseID, dbo.vMas_Product.WarehouseCode, 
+                         dbo.vMas_Product.WarehouseName, dbo.vMas_Product.WarehouseLocation, dbo.vMas_Product.WarehouseAddress, dbo.vMas_Product.AssetAccCode, dbo.vMas_Product.AssetAccName, dbo.vMas_Product.AssetAccNameEN, 
+                         dbo.vMas_Product.AssetAccType, dbo.vMas_Product.AssetAccTypeName, dbo.vMas_Product.AssetAccTypeNameEN, dbo.vMas_Product.AssetAccSide, dbo.vMas_Product.AssetAccMainCode, 
+                         dbo.vMas_Product.AssetAccMainName, dbo.vMas_Product.AssetAccMainNameEN, dbo.vMas_Product.IncomeAccCode, dbo.vMas_Product.IncomeAccName, dbo.vMas_Product.IncomeAccNameEN, 
+                         dbo.vMas_Product.IncomeAccType, dbo.vMas_Product.IncomeAccTypeName, dbo.vMas_Product.IncomeAccTypeNameEN, dbo.vMas_Product.IncomeAccSide, dbo.vMas_Product.IncomeAccMainCode, 
+                         dbo.vMas_Product.IncomeAccMainName, dbo.vMas_Product.IncomeAccMainNameEN, dbo.vMas_Product.ExpenseAccCode, dbo.vMas_Product.ExpenseAccName, dbo.vMas_Product.ExpenseAccNameEN, 
+                         dbo.vMas_Product.ExpenseAccType, dbo.vMas_Product.ExpenseAccTypeName, dbo.vMas_Product.ExpenseAccTypeNameEN, dbo.vMas_Product.ExpenseAccSide, dbo.vMas_Product.ExpenseAccMainCode, 
+                         dbo.vMas_Product.ExpenseAccMainName, dbo.vMas_Product.ExpenseAccMainNameEN, dbo.vMas_Product.IsMaterial, dbo.vMas_Product.IsService, dbo.Acc_TransactionDT.RateVat, dbo.Acc_TransactionDT.RateWht, 
+                         dbo.Acc_TransactionDT.VatType,
+(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat) end) else dbo.Acc_TransactionDT.Amount end) as TotalAmount
+,(case when dbo.Acc_TransactionDT.VatType>=1 then (case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateVat*0.01 else dbo.Acc_TransactionDT.Amount-(dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)) end) else 0 end) as VatAmount
+,(case when dbo.Acc_TransactionDT.VatType=1 then dbo.Acc_TransactionDT.Amount*dbo.Acc_TransactionDT.RateWht*0.01 else dbo.Acc_TransactionDT.Amount*100/(100+dbo.Acc_TransactionDT.RateVat)*dbo.Acc_TransactionDT.RateWht*0.01 end) as WhtAmount
+FROM            dbo.Acc_TransactionHD INNER JOIN
+                         dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo INNER JOIN
+                         dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
+wHERE dbo.Acc_TransactionHD.AccDocType='PC'
+GO
+/****** Object:  View [dbo].[vPC_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3111,7 +2771,7 @@ from Acc_AdditionData where Seq=0
 ) d on a.AccDocNo=d.DocNo
 where a.AccDocType='PC'
 GO
-/****** Object:  View [dbo].[vPR_D]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPR_D]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3142,7 +2802,7 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
                          dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
 wHERE dbo.Acc_TransactionHD.AccDocType='PR'
 GO
-/****** Object:  View [dbo].[vPR_H]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPR_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3186,7 +2846,7 @@ where Seq=0
 ) d on a.AccDocNo=d.DocNo 
 where a.AccDocType='PR'
 GO
-/****** Object:  View [dbo].[vSO_D]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSO_D]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3219,7 +2879,7 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
                          dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
 wHERE dbo.Acc_TransactionHD.AccDocType='SO'
 GO
-/****** Object:  View [dbo].[vSO_H]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSO_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3248,7 +2908,7 @@ left join (
 ) c on a.DocStatus=c.StatusCode
 where a.AccDocType='SO'
 GO
-/****** Object:  View [dbo].[vSR_D]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSR_D]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3280,7 +2940,7 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
                          dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
 wHERE dbo.Acc_TransactionHD.AccDocType='SR'
 GO
-/****** Object:  View [dbo].[vSR_H]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSR_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3309,7 +2969,7 @@ left join (
 ) c on a.DocStatus=c.StatusCode
 where a.AccDocType='SR'
 GO
-/****** Object:  View [dbo].[vDO_D]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vDO_D]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3346,7 +3006,7 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
                          dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
 wHERE dbo.Acc_TransactionHD.AccDocType='DO'
 GO
-/****** Object:  View [dbo].[vDO_H]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vDO_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3387,7 +3047,7 @@ left join (
 ) d on a.AccDocNo=d.DocNo 
 where a.AccDocType='DO'
 GO
-/****** Object:  View [dbo].[vDI_D]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vDI_D]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3424,7 +3084,7 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
                          dbo.vMas_Product ON dbo.Acc_TransactionDT.SaleProductCode = dbo.vMas_Product.ProductCode
 wHERE dbo.Acc_TransactionHD.AccDocType='DI'
 GO
-/****** Object:  View [dbo].[vDI_H]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vDI_H]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3464,7 +3124,7 @@ left join (
 ) d on a.AccDocNo=d.DocNo 
 where a.AccDocType='DI'
 GO
-/****** Object:  View [dbo].[vMas_DocConfigStandard]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_DocConfigStandard]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3477,7 +3137,7 @@ from Mas_DocConfigStandard a
 left join Mas_DocConfig b 
 on a.DocConfigId=b.DocConfigID
 GO
-/****** Object:  View [dbo].[vPV_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPV_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3494,7 +3154,7 @@ FROM            dbo.Acc_JournalHD LEFT JOIN
                          dbo.Acc_AdditionData ON dbo.Acc_JournalHD.JournalNo = dbo.Acc_AdditionData.DocNo
 WHERE   SUBSTRING(dbo.Acc_JournalHD.JournalNo,1,2)  in (select distinct substring(Category,1,2) as Category from vMas_DocConfigStandard where AccBook ='PV')
 GO
-/****** Object:  View [dbo].[vRV_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vRV_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3515,7 +3175,7 @@ FROM            dbo.Acc_JournalHD LEFT JOIN
                          dbo.Acc_AdditionData ON dbo.Acc_JournalHD.JournalNo = dbo.Acc_AdditionData.DocNo
 WHERE   SUBSTRING(dbo.Acc_JournalHD.JournalNo,1,2)  in (select distinct substring(Category,1,2) as Category from vMas_DocConfigStandard where AccBook ='RV')
 GO
-/****** Object:  View [dbo].[vMas_AccountSheet]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_AccountSheet]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3529,7 +3189,32 @@ AccCode,AccName
 from Acc_JournalHD,Mas_AccCode  
 group by Year(EntryDate),AccCode,AccName
 GO
-/****** Object:  View [dbo].[vSum_BalanceMonthly]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vTrial_Balance]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+CREATE view [dbo].[vTrial_Balance] 
+as 
+select 
+Period,AccMainCode,AccMainName,AccCode,AccName,
+case when Dr>Cr then Dr-Cr else 0 end as Dr,
+case when Dr<Cr then Cr-Dr else 0 end as Cr
+from (
+select year(a.EntryDate) as Period,c.AccCode,c.AccName,c.AccMainCode,d.AccName as AccMainName,
+sum(b.Debit) as Dr,sum(b.Credit) as Cr 
+from Acc_JournalHD a inner join Acc_JournalDT b on a.EntryId=b.EntryId
+left join Mas_AccCode c on b.AccCode=c.AccCode
+left join Mas_AccCode d on c.AccMainCode=d.AccCode
+group by year(a.EntryDate),c.AccCode,c.AccName,c.AccMainCode,d.AccName
+) t
+GO
+/****** Object:  View [dbo].[vSum_BalanceMonthly]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3578,7 +3263,7 @@ left join
 ) t on
 s.FiscalYear=t.Period and s.AccCode=t.AccCode 
 GO
-/****** Object:  View [dbo].[vSum_BalanceMonthlyCalculate]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_BalanceMonthlyCalculate]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3619,7 +3304,7 @@ isnull((case when t.totalDr<t.TotalCr then t.TotalCr-t.TotalDr else 0 END),0) as
 from 
 vSum_BalanceMonthly t
 GO
-/****** Object:  View [dbo].[vSum_BalanceMonthlyAccumulate]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_BalanceMonthlyAccumulate]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3687,7 +3372,7 @@ from (
 	from vSum_BalanceMonthlyCalculate	
 ) t
 GO
-/****** Object:  View [dbo].[vSum_BalanceMonthlyCompare]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_BalanceMonthlyCompare]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3739,7 +3424,7 @@ from (
 	on a.Period=b.Period and a.AccCode=b.AccCode
 ) t
 GO
-/****** Object:  View [dbo].[vSO_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSO_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3759,7 +3444,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'SO')
 GO
-/****** Object:  View [dbo].[vSR_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSR_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3777,7 +3462,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'SR')
 GO
-/****** Object:  View [dbo].[vSR_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSR_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3799,7 +3484,7 @@ group by AccSourceDocNo,AccSourceDocItem
 ) b
 on a.AccDocNo=b.SoNo and a.AccItemNo=b.SoItemNo
 GO
-/****** Object:  View [dbo].[vCalculate_Depre_Straight]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vCalculate_Depre_Straight]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3856,7 +3541,7 @@ from (
 	where IsService=0 and isMaterial=0 and b.TotalYears>0
 ) t 
 GO
-/****** Object:  View [dbo].[vCalculate_Depre_Double]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vCalculate_Depre_Double]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3904,7 +3589,7 @@ where pc.AccDocType='PC' and c.TotalYears>0
 and di.AccDocType='DI'
 
 GO
-/****** Object:  View [dbo].[vPO_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPO_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3923,7 +3608,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'PO')
 GO
-/****** Object:  View [dbo].[vPR_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPR_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3940,7 +3625,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'PR')
 GO
-/****** Object:  View [dbo].[vPR_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPR_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3962,7 +3647,7 @@ group by AccSourceDocNo,AccSourceDocItem
 on a.AccDocNo=b.PoNo and a.AccItemNo=b.PoItemNo
 where a.AccEffectiveDate<=GETDATE() and a.DocStatus<99
 GO
-/****** Object:  View [dbo].[vSum_JournalByPrefix]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_JournalByPrefix]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3976,7 +3661,7 @@ AccCode,AccName,sum(Debit) as Dr,sum(Credit) as Cr
 from vJournal_All 
 group by SUBSTRING(JournalNo,1,3),AccCode,AccName
 GO
-/****** Object:  View [dbo].[vStock_Onhand]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vStock_Onhand]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3997,7 +3682,7 @@ FROM            dbo.Acc_StockTransaction AS a INNER JOIN
 WHERE a.TransQty<>0
 GROUP BY a.WarehouseCode, a.StockProductCode, b.UnitStock, b.ProductName, b.ProductColor, b.ProductBrand, a.AssetAccCode, c.AccName, b.AssetAccMainCode, b.AssetAccMainName
 GO
-/****** Object:  View [dbo].[vStock_Card]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vStock_Card]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4032,33 +3717,7 @@ FROM            dbo.Acc_StockTransaction AS a INNER JOIN
 where d.DocStatus<>99
 
 GO
-/****** Object:  View [dbo].[vAP_Payment]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-
-CREATE view [dbo].[vAP_Payment]
-as
-select a.*,b.AccDesc,isnull(b.TotalPay,0) as TotalPayment
-from vAP_H a
-left join
-(
-	SELECT AccSourceDocNo as AccRefNo,
-	max(DocNo) as AccDesc,
-	sum(case when substring(AccDocType,1,2) IN('CN','DN') THEN DNetAmt*-1 ELSE DNetAmt END) as TotalPay
-	from vTransaction_All
-	where DocStatus<>99
-	AND AccSourceDocNo<>'' and substring(AccDocType,1,2) IN('PC','PV','CN','DN')
-	group by AccSourceDocNo
-) b
-on a.AccdocNo=b.AccRefNo
-where a.DocStatus<>99
-GO
-/****** Object:  View [dbo].[vTrialBalance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vTrialBalance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4083,7 +3742,7 @@ where a.JournalNo not like 'BL%'
 group by year(a.EntryDate),Month(a.EntryDate),c.AccCode,c.AccName,c.AccMainCode,d.AccName
 ) t
 GO
-/****** Object:  View [dbo].[vProfitLoss]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vProfitLoss]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4115,33 +3774,7 @@ from (
 ) h left join vMas_AccCode d on
 h.AccCode=d.AccCode
 GO
-/****** Object:  View [dbo].[vAR_Payment]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-
-CREATE view [dbo].[vAR_Payment]
-as
-select a.*,b.AccDesc,isnull(b.TotalPay,0) as TotalPayment
-from vAR_H a
-left join
-(
-	SELECT AccSourceDocNo as AccRefNo,
-	max(DocNo) as AccDesc,
-	sum(case when substring(AccDocType,1,2) IN('CN','DN') THEN DNetAmt*-1 ELSE DNetAmt END) as TotalPay
-	from vTransaction_All
-	where DocStatus<>99
-	AND AccSourceDocNo<>'' and AccDocType IN('RC','RV','CN','DN')
-	group by AccSourceDocNo
-) b
-on a.AccdocNo=b.AccRefNo
-where a.DocStatus<>99
-GO
-/****** Object:  View [dbo].[vSum_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4162,7 +3795,7 @@ FROM (
 	GROUP BY dbo.vTrial_Balance.AccCode, dbo.vTrial_Balance.AccName, dbo.vMas_AccCode.AccType, dbo.vMas_AccCode.AccTypeName
 ) t
 GO
-/****** Object:  View [dbo].[vSum_Stock]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_Stock]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4176,7 +3809,7 @@ case when SUM(SumQty)>0 then SUM(SumAmount)/SUM(SumQty) else 0 end as AvgPrice
 FROM            dbo.vStock_Onhand
 GROUP BY AssetAccCode, AssetAccName
 GO
-/****** Object:  View [dbo].[vPO_Delivery]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPO_Delivery]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4194,7 +3827,7 @@ INNER JOIN dbo.Acc_StockTransaction ON dbo.Acc_TransactionDT.StockTransNo=dbo.Ac
 WHERE dbo.Acc_StockTransaction.TransQty>0
 AND dbo.Acc_TransactionHD.DocStatus<>99
 GO
-/****** Object:  View [dbo].[vPO_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPO_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4215,7 +3848,7 @@ group by AccSourceDocNo,AccSourceDocItem
 on a.AccDocNo=b.PoNo and a.AccItemNo=b.PoItemNo
 where a.DocStatus<>99
 GO
-/****** Object:  View [dbo].[vTransaction_Link]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vTransaction_Link]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4271,7 +3904,7 @@ left join vDO_D do
 on tr.AccSourceDocNo=do.AccDocNo 
 and tr.AccSourceDocItem=do.AccItemNo
 GO
-/****** Object:  View [dbo].[vSum_AllType]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_AllType]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4285,7 +3918,7 @@ inner join Mas_AccType
 on substring(AccCode,1,1)=Mas_AccType.AccTypeID
 group by AccTypeID,AccTypeName
 GO
-/****** Object:  View [dbo].[vTransaction_LinkBack]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vTransaction_LinkBack]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4359,7 +3992,7 @@ and tr.AccSourceDocItem=do.AccSourceDocItem
 and tr.AccdocNo<>do.AccdocNo
 
 GO
-/****** Object:  View [dbo].[vDO_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vDO_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4380,7 +4013,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'DO')
 GO
-/****** Object:  View [dbo].[vSO_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSO_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4399,7 +4032,7 @@ group by AccSourceDocNo,AccSourceDocItem
 ) b
 on a.AccDocNo=b.SoNo and a.AccItemNo=b.SoItemNo
 GO
-/****** Object:  View [dbo].[vSO_Delivery]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSO_Delivery]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4416,7 +4049,7 @@ FROM            dbo.Acc_TransactionHD INNER JOIN
 INNER JOIN dbo.Acc_StockTransaction ON dbo.Acc_TransactionDT.StockTransNo=dbo.Acc_StockTransaction.TransID 
 WHERE dbo.Acc_StockTransaction.TransQty<0
 GO
-/****** Object:  View [dbo].[vStock_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vStock_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4444,7 +4077,7 @@ from (
 ) t
 
 GO
-/****** Object:  View [dbo].[vOrder_Balance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vOrder_Balance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4470,7 +4103,59 @@ from (
 	a.Price,a.Qty
 ) t
 GO
-/****** Object:  View [dbo].[vAcc_CodeConfig]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vBalanceSheet]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create view [dbo].[vBalanceSheet]
+as
+SELECT        Period, AccCode, AccName, Dr AS Debit, Cr AS Credit
+FROM            vTrial_Balance
+WHERE        (Dr + cr) > 0 AND AccMainCode < '400000'
+UNION ALL
+SELECT        a.Period, b.AccCode, b.AccName, a.Debit, a.Credit
+FROM            (SELECT        Period, sum(Dr) - Sum(Cr) AS Debit, 0 AS Credit
+                          FROM            vTrial_Balance
+                          WHERE        AccMainCode >= '400000'
+                          GROUP BY Period
+                          HAVING         sum(Dr) > Sum(Cr)
+                          UNION ALL
+                          SELECT        Period, 0 AS Debit, sum(Cr) - Sum(Dr) AS Credit
+                          FROM            vTrial_Balance
+                          WHERE        AccMainCode >= '400000'
+                          GROUP BY Period
+                          HAVING        sum(Cr) > Sum(Dr)) a, Mas_AccCode b
+WHERE        b.AccCode = dbo.GetAccConfig('GL_CONFIG', 'ProfitLoss')
+GO
+/****** Object:  View [dbo].[vPC_CheckPO]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE view [dbo].[vPC_CheckPO]
+as
+select 
+b.AccDocNo,b.AccItemNo,b.VatType,b.RateVat,b.RateWht,
+(b.TotalAmount+b.VatAmount-b.WhtAmount) as TotalNet,
+sum(a.TotalAmount+a.VatAmount-a.WhtAmount) as TotalPayment,
+case when b.VatType=2 then
+(b.TotalAmount+b.VatAmount-b.WhtAmount)-sum(a.TotalAmount+a.VatAmount-a.WhtAmount) 
+else
+b.TotalAmount-sum(a.TotalAmount)
+end 
+as TotalAmount
+from vPC_D a
+inner join vPO_D b
+on a.AccSourceDocNo=b.AccDocNo 
+and a.AccSourceDocItem=b.AccItemNo 
+group by b.AccDocNo,b.AccItemNo,
+b.TotalAmount,b.VatAmount,b.WhtAmount,b.VatType,b.RateVat,b.RateWht
+
+GO
+/****** Object:  View [dbo].[vAcc_CodeConfig]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4480,7 +4165,7 @@ as
 select a.*,b.AccName from Mas_AccConfig a inner join Mas_AccCode b
 on a.ConfigValue=b.AccCode 
 GO
-/****** Object:  View [dbo].[vDI_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vDI_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4501,7 +4186,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'DI')
 GO
-/****** Object:  View [dbo].[vHR_PayrollSlip]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vHR_PayrollSlip]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4538,7 +4223,7 @@ GROUP BY [SlipNo]
       ,[Cancelby]
       ,[Createby]
 GO
-/****** Object:  View [dbo].[vHR_WorkTimeDetail]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vHR_WorkTimeDetail]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4577,7 +4262,7 @@ as
 	where a.CheckInDate between f.StartDate and f.EndDate
 	and a.CheckInDate between d.BeginDate and d.EndDate
 GO
-/****** Object:  View [dbo].[vHR_WorkTimeSummary]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vHR_WorkTimeSummary]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4634,7 +4319,7 @@ from
 group by Year(CheckIndate),Month(CheckInDate),
 StaffId,StaffName,DayCheck,SalaryPerDay,SalaryPerHour,SalaryPerMonth
 GO
-/****** Object:  View [dbo].[vJournal_ByPeriod]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vJournal_ByPeriod]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4649,7 +4334,7 @@ where b.PeriodId=c.PeriodId
 and b.FromDate<=a.EntryDate and b.ToDate>=a.EntryDate
 
 GO
-/****** Object:  View [dbo].[vMas_AccConfigCode]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_AccConfigCode]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4660,7 +4345,7 @@ select a.*,b.AccNAme
 from Mas_AccConfig a inner join Mas_AccCode b
 on a.ConfigValue=b.AccCode
 GO
-/****** Object:  View [dbo].[vMas_DocConfigSchema]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_DocConfigSchema]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4671,7 +4356,7 @@ select a.TName,a.EName,b.*
 from Mas_DocConfig a inner join Mas_DocConfigSchema b
 on a.DocConfigID=b.DocConfigID
 GO
-/****** Object:  View [dbo].[vMas_HROrgChart]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_HROrgChart]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4688,7 +4373,7 @@ inner join Mas_HRDepartment c
 on b.DivisionId=c.DivisionId
 where c.HeadDepartmentId=0
 GO
-/****** Object:  View [dbo].[vMas_User]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vMas_User]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4700,7 +4385,7 @@ inner join Mas_HRStaff b
 on a.Username=b.UserID
 where b.StaffType<>99
 GO
-/****** Object:  View [dbo].[vPC_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vPC_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4720,7 +4405,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'PC')
 GO
-/****** Object:  View [dbo].[vProfileConfig]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vProfileConfig]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4743,7 +4428,7 @@ dbo.GetAccConfig('PROFILE_CONFIG','COMPANY_TEL') as CompanyTel,
 dbo.GetAccConfig('PROFILE_CONFIG','COMPANY_LOGO') as CompanyLogo,
 dbo.GetAccConfig('PROFILE_CONFIG','COMPANY_EMAIL') as CompanyEMail
 GO
-/****** Object:  View [dbo].[vRC_All]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vRC_All]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4763,7 +4448,7 @@ FROM            dbo.Acc_TransactionHD LEFT JOIN
                          dbo.Acc_TransactionDT ON dbo.Acc_TransactionHD.AccDocNo = dbo.Acc_TransactionDT.AccDocNo
 WHERE        (dbo.Acc_TransactionHD.AccDocType = N'RC')
 GO
-/****** Object:  View [dbo].[vRV_LinkJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vRV_LinkJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4786,17 +4471,17 @@ from (
 	isnull(cu.TaxNumber,'-') as CustTaxID,isnull(cu.Branch,'-') as CustBranch,
 	rd.InvoiceNo as DocNo,rd.InvoiceItemNo as ItemNo,id.AmtCharge,id.AmtAdvance,rd.SICode,cd.AdvNO,cd.VenderBillingNo,rd.ReceiptNo,rh.ReceiptDate,rd.ItemNo as ReceiptItemNo,rd.Net,rd.Amt50Tavi,
 	cd.ClrNo,cd.JobNo,rh.BranchCode 
-	from [job_damon].dbo.Job_ReceiptDetail rd
-	inner join [job_damon].dbo.Job_ReceiptHeader rh
+	from [job_3x].dbo.Job_ReceiptDetail rd
+	inner join [job_3x].dbo.Job_ReceiptHeader rh
 	on rd.BranchCode=rh.BranchCode and rd.ReceiptNo=rh.ReceiptNo
-	left join [job_damon].dbo.Job_InvoiceDetail id 
+	left join [job_3x].dbo.Job_InvoiceDetail id 
 	on rd.BranchCode=id.BranchCode and rd.InvoiceNo=id.DocNo and rd.InvoiceItemNo=id.ItemNo 	
-	left join [job_damon].dbo.Mas_Company cu
+	left join [job_3x].dbo.Mas_Company cu
 	on rh.BillToCustCode=cu.CustCode and rh.BillToCustBranch=cu.Branch
 	left join 
 	(
-		select a.* from [job_damon].dbo.Job_ClearDetail a
-		inner join [job_damon].dbo.Job_ClearHeader b
+		select a.* from [job_3x].dbo.Job_ClearDetail a
+		inner join [job_3x].dbo.Job_ClearHeader b
 		on a.ClrNo=b.ClrNO and a.BranchCode=b.BranchCode
 		where b.DocStatus<>99
 	) cd 
@@ -4807,7 +4492,7 @@ from (
 group by BranchCode,CustTaxID,CustBranch,CustName,DocNo,ItemNo,SICode,AmtCharge,AmtAdvance,ReceiptNo,ReceiptDate,ReceiptItemNo,Net ,Amt50Tavi
 ) t
 GO
-/****** Object:  View [dbo].[vStock_Document]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vStock_Document]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4830,7 +4515,7 @@ on c.AccDocNo=d.AccDocNo
 where d.AccDocType like 'PC%'
 ) t
 GO
-/****** Object:  View [dbo].[vSum_StockByType]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_StockByType]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4847,7 +4532,7 @@ sum(TransQty*TransPrice*TransRate) as TotalValue
 from Acc_StockTransaction
 group by substring(RefDocNo,1,6)
 GO
-/****** Object:  View [dbo].[vSum_TransactionByDocType]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_TransactionByDocType]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4868,7 +4553,7 @@ inner join (
 ) d on h.AccDocNo=d.AccDocNo
 group by h.AccDocType,concat(year(h.AccBatchDate),FORMAT(Month(h.AccBatchDate),'00'))
 GO
-/****** Object:  View [dbo].[vSum_TransactionByType]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  View [dbo].[vSum_TransactionByType]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4888,7 +4573,7 @@ inner join (
 ) d on h.AccDocNo=d.AccDocNo
 group by SUBSTRING(h.AccDocNo,1,3)
 GO
-/****** Object:  StoredProcedure [dbo].[Calculate_Depre]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Calculate_Depre]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4941,7 +4626,7 @@ select * from tb order by AssetAccCode,AccEffectiveDate
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[CancelDI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CancelDI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4988,7 +4673,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[CancelDO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CancelDO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5039,7 +4724,7 @@ WHERE DocNo=@dono AND Seq=0
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[CancelJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CancelJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5080,7 +4765,7 @@ begin
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[CancelPC]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CancelPC]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5110,7 +4795,7 @@ select DocNo,Text6 as CancelBy,Text7 as CancelReason,Date2 as CancelDate from Ac
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[CancelPI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CancelPI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5155,7 +4840,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[CancelPO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CancelPO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5187,7 +4872,7 @@ select DocNo,Text6 as CancelBy,Text7 as CancelReason,Date2 as CancelDate FROM Ac
 End 
 
 GO
-/****** Object:  StoredProcedure [dbo].[CancelPR]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CancelPR]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5219,7 +4904,7 @@ select DocNo,Text4 as CancelBy,Text5 as CancelReason,Date4 as CancelDate FROM Ac
 End 
 
 GO
-/****** Object:  StoredProcedure [dbo].[CloseDI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CloseDI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5239,7 +4924,7 @@ begin
 End 
 
 GO
-/****** Object:  StoredProcedure [dbo].[ClosePO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[ClosePO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5259,7 +4944,7 @@ begin
 End 
 
 GO
-/****** Object:  StoredProcedure [dbo].[ClosePR]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[ClosePR]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5279,7 +4964,7 @@ begin
 End 
 
 GO
-/****** Object:  StoredProcedure [dbo].[CopyTransaction]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[CopyTransaction]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5316,7 +5001,7 @@ and not exists(select 1 from Acc_TransactionDT where AccDocNo=@docno and AccItem
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[DELETE_ALL_JOURNAL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[DELETE_ALL_JOURNAL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5330,7 +5015,7 @@ delete from Acc_JournalHD
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[DELETE_ALL_TRANSCTION]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[DELETE_ALL_TRANSCTION]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5350,7 +5035,7 @@ delete from Mas_Projects
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[DELETE_JOB_JOURNAL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[DELETE_JOB_JOURNAL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5428,7 +5113,7 @@ where not exists(select 1 from Acc_JournalHD where EntryId=a.EntryId)
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Generate_GLClosingProfit]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Generate_GLClosingProfit]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5491,7 +5176,7 @@ select * from vJournal_D where EntryId=@id;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Generate_GLClosingVAT]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Generate_GLClosingVAT]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5546,7 +5231,7 @@ end
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Generate_GLClosingWHT]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Generate_GLClosingWHT]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5621,7 +5306,7 @@ end
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Generate_ReportGL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Generate_ReportGL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5690,7 +5375,7 @@ select *,ABS(SUM(CASE WHEN JournalNo<>'-' THEN Debit-Credit ELSE 0 END) OVER(PAR
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Generate_ReportGL_ByJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Generate_ReportGL_ByJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5727,7 +5412,7 @@ group by AccCode,AccName
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_DateCompare]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetBalance_DateCompare]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5798,7 +5483,7 @@ order by AccCode
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_JournalByJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetBalance_JournalByJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5828,7 +5513,7 @@ drop table #tmpbal;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_QuarterCompare]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetBalance_QuarterCompare]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5938,7 +5623,7 @@ order by AccCode
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetBalance_YearCompare]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetBalance_YearCompare]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6014,7 +5699,7 @@ order by AccCode
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6105,7 +5790,7 @@ end
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetBalanceSheetCompare_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6197,7 +5882,7 @@ end
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetCashFlow]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetCashFlow]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6273,7 +5958,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetCashFlow_ByDate]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetCashFlow_ByDate]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6344,7 +6029,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetGLTemplate]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetGLTemplate]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6413,7 +6098,7 @@ from (
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetReceiptAPFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetReceiptAPFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6434,20 +6119,20 @@ sum(case when id.AmtAdvance>0 then rd.Amt else 0 end) as AmtAdvance,
 sum(case when id.AmtAdvance>0 then rd.AmtVat else 0 end) as AmtAdvaceVAT,
 sum(case when id.AmtAdvance>0 and rd.Rate50Tavi=1 then rd.Amt50Tavi else 0 end) as AmtAdvanceWHT1,
 sum(case when id.AmtAdvance>0 and rd.Rate50Tavi<>1 then rd.Amt50Tavi else 0 end) as AmtAdvanceWHT3
-FROM [job_demo].dbo.Job_ReceiptDetail rd
-inner join [job_demo].dbo.Job_ReceiptHeader rh
+FROM [job_3x].dbo.Job_ReceiptDetail rd
+inner join [job_3x].dbo.Job_ReceiptHeader rh
 on rd.ReceiptNo=rh.ReceiptNo
-inner join [job_demo].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearDetail cd
 on rd.BranchCode=cd.BranchCode
 and rd.InvoiceNo=cd.Linkbillno 
 and rd.InvoiceItemNo=cd.LinkItem 
-left join [job_demo].dbo.Job_PaymentDetail pm 
+left join [job_3x].dbo.Job_PaymentDetail pm 
 on cd.VenderBillingNo=concat(pm.DocNo,'#',pm.ItemNo)
-inner join [job_demo].dbo.Job_InvoiceDetail id 
+inner join [job_3x].dbo.Job_InvoiceDetail id 
 on rd.BranchCode=id.BranchCode 
 and rd.InvoiceNo=id.DocNo
 and rd.InvoiceItemNo =id.ItemNo 
-inner join [job_demo].dbo.Job_InvoiceHeader ih 
+inner join [job_3x].dbo.Job_InvoiceHeader ih 
 on rd.BranchCode=ih.BranchCode 
 and rd.InvoiceNo=ih.DocNo
 inner join vMas_Product p on cd.SICode=p.ProductCode 
@@ -6458,7 +6143,7 @@ select * from src where AmtAdvance >0 and ((AdvNO ='' and PayNO='')  or PayNO<>'
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetRefundFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetRefundFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6469,8 +6154,8 @@ CREATE PROCEDURE [dbo].[GetRefundFromJob]
 AS
 BEGIN
 select a.AccCode,a.AccName,sum(d.UsedAmount+d.ChargeVAT) as Dr,0 as Cr 
-from [job_demo].dbo.Job_ClearDetail d 
-inner join [job_demo].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
+from [job_3x].dbo.Job_ClearDetail d 
+inner join [job_3x].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
 inner join dbo.vMas_Product p 
 on d.SICode=p.ProductCode,
 dbo.vMas_AccCode a
@@ -6480,8 +6165,8 @@ and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','CashOut')
 group by a.AccCode,a.AccName
 union all
 select a.AccCode,a.AccName,0 as Dr,sum(d.UsedAmount+d.ChargeVAT) as Cr 
-from [job_demo].dbo.Job_ClearDetail d 
-inner join [job_demo].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
+from [job_3x].dbo.Job_ClearDetail d 
+inner join [job_3x].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
 inner join dbo.vMas_Product p 
 on d.SICode=p.ProductCode,
 dbo.vMas_AccCode a
@@ -6492,7 +6177,7 @@ group by a.AccCode,a.AccName
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetStockCard]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetStockCard]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6549,7 +6234,7 @@ drop table #tmpstock;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6765,7 +6450,7 @@ drop table #tmptb
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[GetWorkSheet_ByHeader_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7016,11 +6701,12 @@ drop table #tmptb
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AddDeductPayroll]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AddDeductPayroll]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -7135,7 +6821,7 @@ and b.AccCode=CONCAT(AccCodeDebit,AccCodeCredit)
 where SlipNo=@slipNo
 end
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdjustSIJournalFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdjustSIJournalFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7152,8 +6838,8 @@ select jh.EntryID,
 jd.Seq+ROW_NUMBER() OVER(PARTITION BY ih.DocNo ORDER BY ih.DocNo) as Seq,
 p.IncomeAccCode as AccCode,id.SDescription as AccName,'ปรับปรุงยอดที่ไม่ได้ทำเบิกจ่าย' as AccDesc,id.AmtAdvance as Debit,0 as Credit
 from 
-[job_demo].dbo.Job_InvoiceDetail id inner join 
-[job_demo].dbo.Job_InvoiceHeader ih on
+[job_3x].dbo.Job_InvoiceDetail id inner join 
+[job_3x].dbo.Job_InvoiceHeader ih on
 id.BranchCode=ih.BranchCode and id.DocNo=ih.DocNo
 inner join Acc_JournalHD jh on 
 ih.DocNo=jh.JournalNo
@@ -7165,7 +6851,7 @@ inner join vMas_Product p on id.SICode=p.ProductCode
 where not ih.CancelProve<>''
 and ih.DocDate>=@datefrom and ih.DocDate<=@dateto
 and exists(select LinkBillNo,LinkItem 
-			from [job_demo].dbo.Job_ClearDetail cd inner join [job_demo].dbo.Job_ClearHeader ch
+			from [job_3x].dbo.Job_ClearDetail cd inner join [job_3x].dbo.Job_ClearHeader ch
 			on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
 			where cd.LinkBillNo=id.DocNo and cd.LinkItem=id.ItemNo and ch.DocStatus<>99 
 			and cd.SICode=id.SICode and not isnull(cd.AdvNO,'')<>'')
@@ -7176,8 +6862,8 @@ select jh.EntryID,
 jd.Seq+ROW_NUMBER() OVER(PARTITION BY ih.DocNo ORDER BY ih.DocNo) as Seq,
 dbo.GetAccConfig('AP_CONFIG','Purchase'),id.SDescription,'ปรับปรุงยอดที่ไม่ได้ทำเบิกจ่าย',0 as Debit,id.AmtAdvance as Credit
 from 
-[job_demo].dbo.Job_InvoiceDetail id inner join 
-[job_demo].dbo.Job_InvoiceHeader ih on
+[job_3x].dbo.Job_InvoiceDetail id inner join 
+[job_3x].dbo.Job_InvoiceHeader ih on
 id.BranchCode=ih.BranchCode and id.DocNo=ih.DocNo
 inner join Acc_JournalHD jh on 
 ih.DocNo=jh.JournalNo
@@ -7189,12 +6875,12 @@ inner join vMas_Product p on id.SICode=p.ProductCode
 where not ih.CancelProve<>''
 and ih.DocDate>=@datefrom and ih.DocDate<=@dateto
 and exists(select LinkBillNo,LinkItem 
-			from [job_demo].dbo.Job_ClearDetail cd inner join [job_demo].dbo.Job_ClearHeader ch
+			from [job_3x].dbo.Job_ClearDetail cd inner join [job_3x].dbo.Job_ClearHeader ch
 			on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
 			where cd.LinkBillNo=id.DocNo and cd.LinkItem=id.ItemNo and ch.DocStatus<>99 
 			and cd.SICode=id.SICode and not isnull(cd.AdvNO,'')<>'')
 and not exists(select LinkBillNo,LinkItem 
-			from [job_demo].dbo.Job_ClearDetail cd inner join [job_demo].dbo.Job_ClearHeader ch
+			from [job_3x].dbo.Job_ClearDetail cd inner join [job_3x].dbo.Job_ClearHeader ch
 			on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
 			where cd.LinkBillNo=id.DocNo and cd.LinkItem=id.ItemNo and ch.DocStatus<>99 
 			and cd.SICode=id.SICode and not isnull(cd.AdvNO,'')<>'' AND isnull(cd.VenderBillingNo,'')<>'')
@@ -7205,8 +6891,8 @@ select jh.EntryID,
 jd.Seq+ROW_NUMBER() OVER(PARTITION BY ih.DocNo ORDER BY ih.DocNo) as Seq,
 p.AssetAccCode,id.SDescription,'ปรับปรุงยอดที่ไม่ได้ทำเบิกจ่าย',0 as Debit,id.AmtAdvance as Credit
 from 
-[job_demo].dbo.Job_InvoiceDetail id inner join 
-[job_demo].dbo.Job_InvoiceHeader ih on
+[job_3x].dbo.Job_InvoiceDetail id inner join 
+[job_3x].dbo.Job_InvoiceHeader ih on
 id.BranchCode=ih.BranchCode and id.DocNo=ih.DocNo
 inner join Acc_JournalHD jh on 
 ih.DocNo=jh.JournalNo
@@ -7218,12 +6904,12 @@ inner join vMas_Product p on id.SICode=p.ProductCode
 where not ih.CancelProve<>''
 and ih.DocDate>=@datefrom and ih.DocDate<=@dateto
 and exists(select LinkBillNo,LinkItem 
-			from [job_demo].dbo.Job_ClearDetail cd inner join [job_demo].dbo.Job_ClearHeader ch
+			from [job_3x].dbo.Job_ClearDetail cd inner join [job_3x].dbo.Job_ClearHeader ch
 			on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
 			where cd.LinkBillNo=id.DocNo and cd.LinkItem=id.ItemNo and ch.DocStatus<>99 
 			and cd.SICode=id.SICode and not isnull(cd.AdvNO,'')<>'')
 and exists(select LinkBillNo,LinkItem 
-			from [job_demo].dbo.Job_ClearDetail cd inner join [job_demo].dbo.Job_ClearHeader ch
+			from [job_3x].dbo.Job_ClearDetail cd inner join [job_3x].dbo.Job_ClearHeader ch
 			on cd.BranchCode=ch.BranchCode and cd.ClrNo=ch.ClrNo
 			where cd.LinkBillNo=id.DocNo and cd.LinkItem=id.ItemNo and ch.DocStatus<>99 
 			and cd.SICode=id.SICode and not isnull(cd.AdvNO,'')<>'' AND isnull(cd.VenderBillingNo,'')<>'')
@@ -7237,7 +6923,7 @@ on a.EntryID=b.EntryID
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7251,7 +6937,7 @@ GO
 /*
 delete b
 from Acc_TransactionHD b
-inner join [job_demo].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_AdvHeader a
 on b.AccDocNo=a.AdvNo 
 
 delete b
@@ -7271,7 +6957,7 @@ BEGIN
 --delete existing
 delete b
 from Acc_TransactionHD b
-inner join [job_demo].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_AdvHeader a
 on b.AccDocNo=a.AdvNo 
 and a.AdvDate>=@datefrom and a.AdvDate<=@dateto and a.CustCode like @custcode+'%'
 
@@ -7293,11 +6979,11 @@ a.CustCode,isnull(c.TaxNumber,''),isnull(c.NameThai,''),isnull(c.TAddress,'')
 a.AdvDate,
 (case when isnull(a.paymentRef,'')='' then 1 else 2 end)
 ,a.InvNo
-from [job_demo].dbo.Job_AdvHeader a 
-left join [job_demo].dbo.Mas_Company c 
+from [job_3x].dbo.Job_AdvHeader a 
+left join [job_3x].dbo.Mas_Company c 
 on a.CustCode=c.CustCode and a.CustBranch=c.Branch
 where isnull(a.CancelProve,'')='' and a.DocStatus>1
-and exists(select 1 from [job_demo].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
+and exists(select 1 from [job_3x].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
 and not exists(select 1 from Acc_TransactionHD where AccDocno=a.AdvNo)
 and a.AdvDate>=@datefrom and a.AdvDate<=@dateto and a.CustCode like @custcode+'%'
 
@@ -7316,8 +7002,8 @@ b.ForJNo,
 (case when b.ChargeVAT>0 then b.VATRate else 0 end) as RateVat,
 (case when b.Charge50Tavi>0 then b.Rate50Tavi else 0 end) as RateWht,
 1 as VatType
-from [job_demo].dbo.Job_AdvDetail b 
-inner join [job_demo].dbo.Job_AdvHeader a 
+from [job_3x].dbo.Job_AdvDetail b 
+inner join [job_3x].dbo.Job_AdvHeader a 
 on b.AdvNo=a.AdvNo and b.BranchCode=a.BranchCode 
 where isnull(a.CancelProve,'')='' 
 and a.AdvDate>=@datefrom and a.AdvDate<=@dateto and a.CustCode like @custcode+'%'
@@ -7328,7 +7014,7 @@ where not exists(select 1 from Acc_TransactionDT where AccDocNo=t.AdvNo and AccI
 --Delete First
 
 delete a
-from Acc_TransactionHD a inner join [job_demo].dbo.Job_AdvHeader b
+from Acc_TransactionHD a inner join [job_3x].dbo.Job_AdvHeader b
 on a.AccDocNo=b.PaymentRef 
 where b.PaymentRef<>''
 and b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto and b.CustCode like @custcode+'%'
@@ -7346,12 +7032,12 @@ b.ControlNo,b.VoucherDate,b.VoucherDate,b.RecUser,'',u.TName,u.TPosition,b.RecUs
 b.VoucherDate,
 (case when b.CancelProve<>'' then 99 else 1 end),b.TRemark
 from 
-[job_demo].dbo.Job_AdvHeader a
-inner join [job_demo].dbo.Job_CashControl b
+[job_3x].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_CashControl b
 on a.PaymentRef=b.ControlNo and a.BranchCode=b.BranchCode 
-left join [job_demo].dbo.Mas_User u on b.RecUser=u.UserID
+left join [job_3x].dbo.Mas_User u on b.RecUser=u.UserID
 where isnull(a.CancelProve,'')=''
-and exists(select 1 from [job_demo].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
+and exists(select 1 from [job_3x].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
 and a.PaymentRef<>''
 and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto and a.CustCode like @custcode+'%'
 and not exists(select 1 from Acc_TransactionHD where AccDocNo=b.ControlNo)
@@ -7373,14 +7059,14 @@ t.ForJNo,
 from (
 	select b.ControlNo,d.*
 	from 
-	[job_demo].dbo.Job_AdvHeader a
-	inner join [job_demo].dbo.Job_CashControl b
+	[job_3x].dbo.Job_AdvHeader a
+	inner join [job_3x].dbo.Job_CashControl b
 	on a.PaymentRef=b.ControlNo and a.BranchCode=b.BranchCode 
-	left join [job_demo].dbo.Mas_User u on b.RecUser=u.UserID
-	inner join [job_demo].dbo.Job_AdvDetail d
+	left join [job_3x].dbo.Mas_User u on b.RecUser=u.UserID
+	inner join [job_3x].dbo.Job_AdvDetail d
 	on a.BranchCode=d.BranchCode and a.Advno=d.AdvNo
 	where isnull(a.CancelProve,'')=''
-	and exists(select 1 from [job_demo].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
+	and exists(select 1 from [job_3x].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
 	and a.PaymentRef<>''
 	and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto and a.CustCode like @custcode+'%'
 ) t inner join Acc_TransactionHD h on t.ControlNo=h.AccDocNo
@@ -7389,20 +7075,20 @@ end
 /*
 --date lost in process (no detail)
 select a.AdvNo,a.DocStatus,a.CustCode,d.AdvAmount from
-[job_demo].dbo.Job_AdvHeader a left join Acc_TransactionHD b
+[job_3x].dbo.Job_AdvHeader a left join Acc_TransactionHD b
 on a.Advno=b.AccDocNo 
-left join [job_demo].dbo.Job_AdvDetail d
+left join [job_3x].dbo.Job_AdvDetail d
 on a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNo
 where b.AccDocNo is null and isnull(a.CancelProve,'')='' and d.AdvAmount is not null
 and a.DocStatus>1
 
 ---data lost in process (payment ref not fund0
 select a.* from 
-[job_demo].dbo.Job_AdvHeader a
-left join [job_demo].dbo.Job_CashControl b
+[job_3x].dbo.Job_AdvHeader a
+left join [job_3x].dbo.Job_CashControl b
 on a.PaymentRef=b.ControlNo 
 where isnull(a.CancelProve,'')=''
-and exists(select 1 from [job_demo].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
+and exists(select 1 from [job_3x].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
 and a.PaymentRef<>'' and b.ControlNo is null 
 
 ---summary doc status--
@@ -7430,7 +7116,7 @@ select * from vMas_Product where PRoductname like '%Cost%'
 */
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7447,7 +7133,7 @@ GO
 /*
 delete b
 from Acc_TransactionHD b
-inner join [job_demo].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_AdvHeader a
 on b.AccDocNo=a.AdvNo 
 
 delete b
@@ -7467,7 +7153,7 @@ BEGIN
 --delete existing
 delete b
 from Acc_TransactionHD b
-inner join [job_demo].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_AdvHeader a
 on b.AccDocNo=concat('PO-',a.AdvNo)
 and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto and a.CustCode like @custcode+'%'
 and a.ApproveBy<>''
@@ -7490,12 +7176,12 @@ a.PaymentDate,
 a.AdvDate,
 (case when isnull(a.paymentRef,'')='' then 0 else 1 end)
 ,a.PaymentRef
-from [job_demo].dbo.Job_AdvHeader a 
-inner join [job_demo].dbo.Job_CashControl b on a.PaymentRef=b.ControlNo
-left join [job_demo].dbo.Mas_Company c 
+from [job_3x].dbo.Job_AdvHeader a 
+inner join [job_3x].dbo.Job_CashControl b on a.PaymentRef=b.ControlNo
+left join [job_3x].dbo.Mas_Company c 
 on a.CustCode=c.CustCode and a.CustBranch=c.Branch
 where isnull(a.CancelProve,'')='' and a.DocStatus>1
-and exists(select 1 from [job_demo].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
+and exists(select 1 from [job_3x].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
 and not exists(select 1 from Acc_TransactionHD where AccDocNo=concat('PO-',a.AdvNo))
 and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto and a.CustCode like @custcode+'%'
 
@@ -7514,10 +7200,10 @@ b.ForJNo,
 (case when b.ChargeVAT>0 then b.VATRate else 0 end) as RateVat,
 (case when b.Charge50Tavi>0 then b.Rate50Tavi else 0 end) as RateWht,
 1 as VatType
-from [job_demo].dbo.Job_AdvDetail b 
-inner join [job_demo].dbo.Job_AdvHeader a 
+from [job_3x].dbo.Job_AdvDetail b 
+inner join [job_3x].dbo.Job_AdvHeader a 
 on b.AdvNo=a.AdvNo and b.BranchCode=a.BranchCode 
-inner join [job_demo].dbo.Job_CashControl c on a.PaymentRef=c.ControlNo
+inner join [job_3x].dbo.Job_CashControl c on a.PaymentRef=c.ControlNo
 where isnull(a.CancelProve,'')='' 
 and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto and a.CustCode like @custcode+'%'
 ) t inner join Acc_TransactionHD s on t.AccDocNo=s.AccDocNo
@@ -7527,20 +7213,20 @@ end
 /*
 --date lost in process (no detail)
 select a.AdvNo,a.DocStatus,a.CustCode,d.AdvAmount from
-[job_demo].dbo.Job_AdvHeader a left join Acc_TransactionHD b
+[job_3x].dbo.Job_AdvHeader a left join Acc_TransactionHD b
 on a.Advno=b.AccDocNo 
-left join [job_demo].dbo.Job_AdvDetail d
+left join [job_3x].dbo.Job_AdvDetail d
 on a.BranchCode=d.BranchCode and a.AdvNo=d.AdvNo
 where b.AccDocNo is null and isnull(a.CancelProve,'')='' and d.AdvAmount is not null
 and a.DocStatus>1
 
 ---data lost in process (payment ref not fund0
 select a.* from 
-[job_demo].dbo.Job_AdvHeader a
-left join [job_demo].dbo.Job_CashControl b
+[job_3x].dbo.Job_AdvHeader a
+left join [job_3x].dbo.Job_CashControl b
 on a.PaymentRef=b.ControlNo 
 where isnull(a.CancelProve,'')=''
-and exists(select 1 from [job_demo].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
+and exists(select 1 from [job_3x].dbo.Job_AdvDetail where BranchCode=a.BranchCode and Advno=a.AdvNo)
 and a.PaymentRef<>'' and b.ControlNo is null 
 
 ---summary doc status--
@@ -7568,7 +7254,7 @@ select * from vMas_Product where PRoductname like '%Cost%'
 */
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7592,14 +7278,14 @@ begin
 declare @maxid int=(SELECT isnull(MAX(EntryId),0) from Acc_JournalHD);
 /*1.1 Delete Existing Data*/
 delete c
-from [job_demo].dbo.Job_AdvHeader a inner join Acc_JournalHD b
+from [job_3x].dbo.Job_AdvHeader a inner join Acc_JournalHD b
 on a.AdvNo=b.JournalNo 
 inner join Acc_JournalDT c on b.EntryID=c.EntryID 
 where a.DocStatus<>99 
 and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto
 
 delete b
-from [job_demo].dbo.Job_AdvHeader a inner join Acc_JournalHD b
+from [job_3x].dbo.Job_AdvHeader a inner join Acc_JournalHD b
 on a.AdvNo=b.JournalNo 
 where a.DocStatus<>99 
 and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto
@@ -7613,13 +7299,13 @@ AccCode,AccName,AccDesc,Debit,Credit
 from (
 	--Dr. เงินทดรองจ่ายพนักงาน (ยอด Net+Wht)
 	select b.AdvNo,b.PaymentDate,a.AccCode,b.PayChqTo as AccName,b.TRemark as AccDesc,(b.TotalAdvance+b.Total50Tavi) as Debit,0 as Credit
-	from [job_demo].dbo.Job_AdvHeader b,Mas_AccCode a
+	from [job_3x].dbo.Job_AdvHeader b,Mas_AccCode a
 	where a.AccCode=dbo.GetAccConfig('ADV_CONFIG','Cashin')
 	and b.DocStatus<>99
 	union all
 	--Cr.เงินสดย่อย (ยอด net)
 	select b.AdvNo,b.PaymentDate,a.AccCode,c.SDescription,c.ForJNo as AccDesc,0 as Debit,c.AdvNet as Credit
-	from [job_demo].dbo.Job_AdvHeader b inner join [job_demo].dbo.Job_AdvDetail c
+	from [job_3x].dbo.Job_AdvHeader b inner join [job_3x].dbo.Job_AdvDetail c
 	on b.BranchCode=c.BranchCode and b.AdvNo=c.AdvNo 
 	,Mas_AccCode a
 	where a.AccCode=dbo.GetAccConfig('ADV_CONFIG','CashOut')
@@ -7627,10 +7313,10 @@ from (
 	union all
 	--Cr. หัก ณ ที่จ่ายในนามลูกค้า
 	select b.AdvNo,b.PaymentDate,a.AccCode,c.SDescription,concat(isnull(e.NameThai,b.CustCode),' #',b.Doc50Tavi) as AccDesc,0 as Debit,c.Charge50Tavi as Credit
-	from [job_demo].dbo.Job_AdvHeader b inner join [job_demo].dbo.Job_AdvDetail c
+	from [job_3x].dbo.Job_AdvHeader b inner join [job_3x].dbo.Job_AdvDetail c
 	on b.BranchCode=c.BranchCode and b.AdvNo=c.AdvNo 
-	left join [job_demo].dbo.Mas_Company e on b.CustCode=e.CustCode and b.CustBranch=e.Branch
-	inner join [job_demo].dbo.Job_SrvSingle d on c.SICode=d.SICode
+	left join [job_3x].dbo.Mas_Company e on b.CustCode=e.CustCode and b.CustBranch=e.Branch
+	inner join [job_3x].dbo.Job_SrvSingle d on c.SICode=d.SICode
 	,Mas_AccCode a
 	where a.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxCustomer')
 	and b.DocStatus<>99
@@ -7638,10 +7324,10 @@ from (
 	union all
 	--Cr. หัก ณ ที่จ่าย
 	select b.AdvNo,b.PaymentDate,a.AccCode,c.SDescription,concat(isnull(e.TName,c.VenCode),' #',b.Doc50Tavi) as AccDesc,0 as Debit,c.Charge50Tavi as Credit
-	from [job_demo].dbo.Job_AdvHeader b inner join [job_demo].dbo.Job_AdvDetail c
+	from [job_3x].dbo.Job_AdvHeader b inner join [job_3x].dbo.Job_AdvDetail c
 	on b.BranchCode=c.BranchCode and b.AdvNo=c.AdvNo 
-	left join [job_demo].dbo.Job_SrvSingle d on c.SICode=d.SICode
-	left join [job_demo].dbo.Mas_Vender e on c.VenCode=e.VenCode
+	left join [job_3x].dbo.Job_SrvSingle d on c.SICode=d.SICode
+	left join [job_3x].dbo.Mas_Vender e on c.VenCode=e.VenCode
 	,Mas_AccCode a
 	where a.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxCompany')
 	and b.DocStatus<>99
@@ -7659,7 +7345,7 @@ a.AdvNO as JournalNo,
 a.PaymentDate as EntryDate,
 DATEADD(d,7,a.PaymentDate) as EffectiveDate,
 @userid,a.PaymentRef,(a.TotalAdvance+a.Total50Tavi),(a.TotalAdvance+a.Total50Tavi)
-from [job_demo].dbo.Job_AdvHeader a
+from [job_3x].dbo.Job_AdvHeader a
 where a.DocStatus<>99 
 and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto
 and a.AdvNo not in(select JournalNo FROM Acc_JournalHD)
@@ -7668,7 +7354,7 @@ order by a.AdvNo
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7686,14 +7372,14 @@ as
 begin
 
 update a set a.PaymentDate=b.VoucherDate
-from [job_demo].dbo.Job_AdvHeader a
-inner join [job_demo].dbo.Job_CashControl b
+from [job_3x].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_CashControl b
 on a.PaymentRef=b.ControlNo 
 where a.PaymentDate<>b.VoucherDate
 
 delete c from Acc_JournalDT c
 where exists(
-select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_AdvHeader b	
+select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_AdvHeader b	
 on a.JournalNo=concat('PV-A',b.PaymentRef)
 where b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto
 and b.CustCode like @custcode+'%'
@@ -7701,7 +7387,7 @@ and a.EntryId=c.EntryId
 )
 
 delete a 
-from Acc_JournalHD a inner join [job_demo].dbo.Job_AdvHeader b	
+from Acc_JournalHD a inner join [job_3x].dbo.Job_AdvHeader b	
 on a.JournalNo=concat('PV-A',b.PaymentRef)
 where b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto
 and b.CustCode like @custcode+'%';
@@ -7713,12 +7399,12 @@ select * into #tmp1 from (
 	d.ForJno as SubAccname,
 	sum(case when isnull(s.IsCredit,1)=0 then d.AdvAmount else d.AdvAmount+d.ChargeVAT-d.Charge50Tavi end) as Debit,0 as Credit,
 	isnull(s.NameThai,d.SDescription) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a on 
 	concat(a.AccMainName,'-',u.TName)=a.AccName	
 	where h.DocStatus<>99 
@@ -7730,12 +7416,12 @@ select * into #tmp1 from (
 	d.AdvNo as SubAccname,
 	sum(d.ChargeVAT) as Debit,0 as Credit,
 	(case when u.VenCode is null then h.PayChqTo else u.TName end) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_Vender u on d.VenCode=u.VenCode
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_Vender u on d.VenCode=u.VenCode
 	where h.DocStatus<>99 and isnull(s.IsCredit,1)=0 and d.ChargeVAT>0
 	and h.CustCode like @custcode+'%' and v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto
 	group by h.PaymentRef,d.AdvNo,(case when u.VenCode is null then h.PayChqTo else u.TName end)
@@ -7745,12 +7431,12 @@ select * into #tmp1 from (
 	d.AdvNo as SubAccname,
 	0 as Debit,sum(d.Charge50Tavi) as Credit,
 	case when u.VenCode is null then h.PayChqTo else u.TName end as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_Vender u on d.VenCode=u.VenCode
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_Vender u on d.VenCode=u.VenCode
 	where h.DocStatus<>99 and d.Charge50Tavi>0 and isnull(s.IsCredit,1)=0
 	and (case when u.VenCode is null then h.PayChqTo else u.TName end) like '%จำกัด%'
 	and h.CustCode like @custcode+'%' and v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto	
@@ -7761,12 +7447,12 @@ select * into #tmp1 from (
 	d.AdvNo as SubAccname,
 	0 as Debit,sum(d.Charge50Tavi) as Credit,
 	case when u.VenCode is null then h.PayChqTo else u.TName end as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_Vender u on d.VenCode=u.VenCode
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_Vender u on d.VenCode=u.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a on 
 	concat(a.AccMainName,'-',u.TName)=a.AccName	
 	where h.DocStatus<>99 and d.Charge50Tavi>0 and isnull(s.IsCredit,1)=0
@@ -7778,17 +7464,17 @@ select * into #tmp1 from (
 	,h.PaymentRef as RefNo,d.ForJno as SubAccname,
 	0 as Debit,sum(d.AdvAmount+d.ChargeVAT-d.Charge50Tavi) as Credit,
 	h.AdvNo as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on v.RecUser=u.UserID
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
 	left join (
 		select s.ControlNo,MAX(c.AccCode) as AccCode,MAX(b.BookName) as BookBranch
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		left join Mas_AccCode c on b.GLAccountCode=c.AccCode
 		on s.BookCode=b.BookCode
 		group by s.ControlNo
@@ -7806,9 +7492,9 @@ declare @id int=(select isnull(MAX(EntryID),0)  from Acc_JournalHD);
 insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @id+ROW_NUMBER() OVER(ORDER BY b.ControlNo),
 concat('PV-A',b.Controlno) as DocNo,b.VoucherDate,b.VoucherDate,b.RecUser,c.PRVoucher,sum(a.Debit),sum(a.Credit)
-from #tmp1 a inner join [job_demo].dbo.Job_CashControl b
+from #tmp1 a inner join [job_3x].dbo.Job_CashControl b
 on a.RefNo=b.ControlNo 
-inner join [job_demo].dbo.Job_CashControlSub c on b.ControlNo=c.ControlNo
+inner join [job_3x].dbo.Job_CashControlSub c on b.ControlNo=c.ControlNo
 group by b.Controlno,b.VoucherDate,c.PRVoucher,b.RecUser;
 
 insert into Acc_JournalDT(EntryId,Seq,AccCode,AccName,AccDesc,Debit,Credit)
@@ -7831,7 +7517,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -7851,15 +7537,15 @@ CREATE procedure [dbo].[Insert_AdvanceToJournal_V2]
 as
 begin
 update a set a.PaymentDate=b.VoucherDate
-from [job_demo].dbo.Job_AdvHeader a
-inner join [job_demo].dbo.Job_CashControl b
+from [job_3x].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_CashControl b
 on a.PaymentRef=b.ControlNo 
 where a.PaymentDate<>b.VoucherDate
 
 if @custcode=''
 begin
 	delete a 
-	from Acc_JournalHD a inner join [job_demo].dbo.Job_CashControl b	
+	from Acc_JournalHD a inner join [job_3x].dbo.Job_CashControl b	
 	on a.JournalNo=concat('PV-A',b.ControlNo)
 	where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto;
 
@@ -7869,12 +7555,12 @@ end
 select * into #tmp1 from (
 	select isnull(a.AccCode,dbo.GetAccConfig('ADV_CONFIG','DefaultCost')) as AccCode,h.PaymentRef as RefNo,d.ForJno as SubAccname,
 	sum(d.AdvNet) as Debit,0 as Credit,c.NameEng as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on h.PaymentBy=u.UserID
 	left join Mas_AccCode a on u.GLAccountCode=a.AccCode
 	where h.DocStatus<>99 and h.PaymentRef<>'' and isnull(s.IsCredit,1)=1 and isnull(s.IsExpense,0)=0
@@ -7885,12 +7571,12 @@ select * into #tmp1 from (
 	select isnull(a.AccCode,dbo.GetAccConfig('GL_CONFIG','WorkInProcess')) as AccCode,
 	h.PaymentRef as RefNo,d.ForJNo as SubAccname,
 	sum(d.AdvAmount) as Debit,0 as Credit,h.PayChqTo as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on h.PaymentBy=u.UserID
 	left join Mas_AccCode a on s.GLAccountCodeSales=a.AccCode
 	where h.DocStatus<>99 and h.PaymentRef<>'' and not isnull(s.IsCredit,1)=1
@@ -7900,12 +7586,12 @@ select * into #tmp1 from (
 	union all
     select a.AccCode as AccCode,h.PaymentRef as RefNo,d.ForJNo as SubAccname,
 	sum(d.ChargeVAT) as Debit,0 as Credit,concat(h.PayChqTo,' / ',d.SDescription,'=',d.AdvAmount,d.CurrencyCode) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on h.PaymentBy=u.UserID
 	,Mas_AccCode a
 	where h.DocStatus<>99 and h.PaymentRef<>'' and s.IsCredit=0 and s.IsExpense=1
@@ -7916,12 +7602,12 @@ select * into #tmp1 from (
 	union all
 	select a.AccCode as AccCode,h.PaymentRef as RefNo,d.ForJNo as SubAccname,
 	0 as Debit,sum(d.Charge50Tavi) as Credit,concat(u.TaxNumber,'-',u.TName) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	inner join [job_demo].dbo.Mas_Vender u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	inner join [job_3x].dbo.Mas_Vender u 
 	on d.VenCode=u.VenCode
 	,Mas_AccCode a
 	where h.DocStatus<>99 and h.PaymentRef<>'' and s.IsCredit=0 and s.IsExpense=1
@@ -7933,12 +7619,12 @@ select * into #tmp1 from (
 	union all
 	select a.AccCode as AccCode,h.PaymentRef as RefNo,d.ForJNo as SubAccname,
 	0 as Debit,sum(d.Charge50Tavi) as Credit,concat(u.TaxNumber,'-',u.TName) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_Vender u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_Vender u 
 	on d.VenCode=u.VenCode
 	,Mas_AccCode a
 	where h.DocStatus<>99 and h.PaymentRef<>'' and s.IsCredit=0 and s.IsExpense=1
@@ -7951,16 +7637,16 @@ select * into #tmp1 from (
 	select isnull(a.AccCode,dbo.GetAccConfig('ADV_CONFIG','CashOut')) as AccCode
 	,h.PaymentRef as RefNo,d.ForJno as SubAccname,
 	0 as Debit,sum(d.AdvNet) as Credit,c.NameEng as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on h.EmpCode=u.UserID
 	left join (
 		select s.ControlNo,MAX(b.GLAccountCode) as AccCode
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		on s.BookCode=b.BookCode
 		group by s.ControlNo
 	) a on v.ControlNo=a.ControlNo
@@ -7978,7 +7664,7 @@ declare @id int=(select isnull(MAX(EntryID),0)  from Acc_JournalHD);
 insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @id+ROW_NUMBER() OVER(ORDER BY b.ControlNo),
 concat('PV-A',b.Controlno) as DocNo,b.VoucherDate,b.VoucherDate,b.RecUser,b.TRemark,sum(a.Debit),sum(a.Credit)
-from #tmp1 a inner join [job_demo].dbo.Job_CashControl b
+from #tmp1 a inner join [job_3x].dbo.Job_CashControl b
 on a.RefNo=b.ControlNo
 group by b.Controlno,b.VoucherDate,b.TRemark,b.RecUser;
 
@@ -7995,7 +7681,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8021,14 +7707,14 @@ CREATE procedure [dbo].[Insert_AdvanceToJournal_V3]
 as
 begin
 update a set a.PaymentDate=b.VoucherDate
-from [job_demo].dbo.Job_AdvHeader a
-inner join [job_demo].dbo.Job_CashControl b
+from [job_3x].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_CashControl b
 on a.PaymentRef=b.ControlNo 
 where a.PaymentDate<>b.VoucherDate
 
 delete c from Acc_JournalDT c
 where exists(
-select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_AdvHeader b	
+select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_AdvHeader b	
 on a.JournalNo=concat('PV-A',b.PaymentRef)
 where b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto
 and b.CustCode like @custcode+'%'
@@ -8036,7 +7722,7 @@ and a.EntryId=c.EntryId
 )
 
 delete a 
-from Acc_JournalHD a inner join [job_demo].dbo.Job_AdvHeader b	
+from Acc_JournalHD a inner join [job_3x].dbo.Job_AdvHeader b	
 on a.JournalNo=concat('PV-A',b.PaymentRef)
 where b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto
 and b.CustCode like @custcode+'%';
@@ -8048,12 +7734,12 @@ select * into #tmp1 from (
 	d.ForJno as SubAccname,
 	sum(d.AdvNet+d.Charge50Tavi) as Debit,0 as Credit,
 	isnull(u.TName,h.EmpCode) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
 	left join Mas_AccCode a on u.GLAccountCode=a.AccCode
 	where h.DocStatus<>99 
 	and v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto
@@ -8064,16 +7750,16 @@ select * into #tmp1 from (
 	,h.PaymentRef as RefNo,d.ForJno as SubAccname,
 	0 as Debit,sum(d.AdvNet+d.Charge50Tavi) as Credit,
 	h.AdvNo as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on v.RecUser=u.UserID
 	left join (
 		select s.ControlNo,MAX(c.AccCode) as AccCode,MAX(b.BookName) as BookBranch
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		left join Mas_AccCode c on b.GLAccountCode=c.AccCode
 		on s.BookCode=b.BookCode
 		group by s.ControlNo
@@ -8092,9 +7778,9 @@ declare @id int=(select isnull(MAX(EntryID),0)  from Acc_JournalHD);
 insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @id+ROW_NUMBER() OVER(ORDER BY b.ControlNo),
 concat('PV-A',b.Controlno) as DocNo,b.VoucherDate,b.VoucherDate,b.RecUser,c.PRVoucher,sum(a.Debit),sum(a.Credit)
-from #tmp1 a inner join [job_demo].dbo.Job_CashControl b
+from #tmp1 a inner join [job_3x].dbo.Job_CashControl b
 on a.RefNo=b.ControlNo 
-inner join [job_demo].dbo.Job_CashControlSub c on b.ControlNo=c.ControlNo
+inner join [job_3x].dbo.Job_CashControlSub c on b.ControlNo=c.ControlNo
 group by b.Controlno,b.VoucherDate,c.PRVoucher,b.RecUser;
 
 insert into Acc_JournalDT(EntryId,Seq,AccCode,AccName,AccDesc,Debit,Credit)
@@ -8117,7 +7803,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_AdvanceToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8135,14 +7821,14 @@ as
 begin
 
 update a set a.PaymentDate=b.VoucherDate
-from [job_demo].dbo.Job_AdvHeader a
-inner join [job_demo].dbo.Job_CashControl b
+from [job_3x].dbo.Job_AdvHeader a
+inner join [job_3x].dbo.Job_CashControl b
 on a.PaymentRef=b.ControlNo 
 where a.PaymentDate<>b.VoucherDate
 
 delete c from Acc_JournalDT c
 where exists(
-select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_AdvHeader b	
+select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_AdvHeader b	
 on a.JournalNo=concat('PV-A',b.PaymentRef)
 where b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto
 and b.CustCode like @custcode+'%'
@@ -8150,7 +7836,7 @@ and a.EntryId=c.EntryId
 )
 
 delete a 
-from Acc_JournalHD a inner join [job_demo].dbo.Job_AdvHeader b	
+from Acc_JournalHD a inner join [job_3x].dbo.Job_AdvHeader b	
 on a.JournalNo=concat('PV-A',b.PaymentRef)
 where b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto
 and b.CustCode like @custcode+'%';
@@ -8162,12 +7848,12 @@ select * into #tmp1 from (
 	d.ForJno as SubAccname,
 	sum(d.AdvNet+d.Charge50Tavi) as Debit,0 as Credit,
 	isnull(u.TName,h.EmpCode) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a on 
 	concat(a.AccMainName,'-',u.TName)=a.AccName	
 	where h.DocStatus<>99 	
@@ -8178,16 +7864,16 @@ select * into #tmp1 from (
 	,h.PaymentRef as RefNo,d.ForJno as SubAccname,
 	0 as Debit,sum(d.AdvNet+d.Charge50Tavi) as Credit,
 	h.AdvNo as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on v.RecUser=u.UserID
 	left join (
 		select s.ControlNo,MAX(c.AccCode) as AccCode,MAX(b.BookName) as BookBranch
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		left join Mas_AccCode c on b.GLAccountCode=c.AccCode
 		on s.BookCode=b.BookCode
 		group by s.ControlNo
@@ -8205,9 +7891,9 @@ declare @id int=(select isnull(MAX(EntryID),0)  from Acc_JournalHD);
 insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @id+ROW_NUMBER() OVER(ORDER BY b.ControlNo),
 concat('PV-A',b.Controlno) as DocNo,b.VoucherDate,b.VoucherDate,b.RecUser,c.PRVoucher,sum(a.Debit),sum(a.Credit)
-from #tmp1 a inner join [job_demo].dbo.Job_CashControl b
+from #tmp1 a inner join [job_3x].dbo.Job_CashControl b
 on a.RefNo=b.ControlNo 
-inner join [job_demo].dbo.Job_CashControlSub c on b.ControlNo=c.ControlNo
+inner join [job_3x].dbo.Job_CashControlSub c on b.ControlNo=c.ControlNo
 group by b.Controlno,b.VoucherDate,c.PRVoucher,b.RecUser;
 
 insert into Acc_JournalDT(EntryId,Seq,AccCode,AccName,AccDesc,Debit,Credit)
@@ -8230,7 +7916,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ARFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ARFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8246,7 +7932,7 @@ CREATE procedure [dbo].[Insert_ARFromJob]
 as
 begin
 --delete existsing data
-delete a from Acc_TransactionHD a inner join [job_demo].dbo.Job_InvoiceHeader b on a.AccDocNo=b.DocNo
+delete a from Acc_TransactionHD a inner join [job_3x].dbo.Job_InvoiceHeader b on a.AccDocNo=b.DocNo
 where b.DocDate>=@datefrom and b.DocDate<=@dateto and b.BillToCustCode like @billingcode
 --delete related detals
 delete a from Acc_TransactionDT a where AccDocNo not in(select AccDocNo from Acc_TransactionHD b where AccDocNo=b.AccDocNo)
@@ -8274,10 +7960,10 @@ id.SICode,cd.Jobno,
 (case when cd.SICode not like 'ADV%' then id.Rate50Tavi else 0 end) as TaxRate,
 (case when cd.SICode not like 'ADV%' then id.IsTaxCharge else 0 end) as VatType
 from 
-[job_demo].dbo.Job_ClearDetail cd right join 
-[job_demo].dbo.Job_InvoiceDetail id 
+[job_3x].dbo.Job_ClearDetail cd right join 
+[job_3x].dbo.Job_InvoiceDetail id 
 on cd.BranchCode=id.BranchCode and cd.LinkBillNo=id.DocNo and cd.LinkItem=id.Itemno 
-inner join [job_demo].dbo.Job_InvoiceHeader ih 
+inner join [job_3x].dbo.Job_InvoiceHeader ih 
 on id.BranchCode=ih.BranchCode and id.DocNo=ih.DocNo 
 where isnull(ih.CancelProve,'')=''
 and not exists(select 1 from Acc_TransactionDT where AccDocNo=id.DocNo)
@@ -8290,15 +7976,15 @@ AccPostDate,FiscalYear,DocStatus,DocRefNo)
 select ih.DocNo,ih.DocDate,isnull(ih.DueDate,ih.DocDate),ih.CustCode,concat(c.TaxNumber,'/',c.Branch),
 c.NameThai,c.TAddress,ih.EmpCode,'SI',
 ih.DocDate,ih.DocDate,2,ih.RefNo
-from [job_demo].dbo.Job_InvoiceHeader ih 
-left join [job_demo].dbo.Mas_Company c on ih.CustCode=c.CustCode
+from [job_3x].dbo.Job_InvoiceHeader ih 
+left join [job_3x].dbo.Mas_Company c on ih.CustCode=c.CustCode
 and ih.CustBranch=c.Branch
 where isnull(ih.CancelProve,'')='' 
 and ih.DocDate>=@datefrom and ih.DocDate<=@dateto and ih.BillToCustCode like @billingcode
 and exists(select 1 from Acc_TransactionDT where AccDocNo=ih.DocNo)
 and not exists(select 1 from Acc_TransactionHD where AccDocNo=ih.DocNo)
 
-select a.* from Acc_TransactionHD a inner join [job_demo].dbo.Job_InvoiceHeader b on a.AccDocNo=b.DocNo
+select a.* from Acc_TransactionHD a inner join [job_3x].dbo.Job_InvoiceHeader b on a.AccDocNo=b.DocNo
 where b.DocDate>=@datefrom and b.DocDate<=@dateto and b.BillToCustCode like @billingcode
 end
 /*
@@ -8307,17 +7993,17 @@ select h.* from Acc_TransactionHD h where not exists(select 1 from Acc_Transacti
 select h.* from Acc_TransactionDT h where not exists(select 1 from Acc_TransactionHD where AccDocNo=h.AccDocNo)
 
 select ih.RefNo,id.* 
-from [job_demo].dbo.Job_InvoiceHeader ih 
-inner join [job_demo].dbo.Job_InvoiceDetail id 
+from [job_3x].dbo.Job_InvoiceHeader ih 
+inner join [job_3x].dbo.Job_InvoiceDetail id 
 on ih.DocNo=id.DocNo 
-left join [job_demo].dbo.Job_ClearDetail cd on id.DocNo=cd.LinkBillNo and id.ItemNo=cd.LinkItem
+left join [job_3x].dbo.Job_ClearDetail cd on id.DocNo=cd.LinkBillNo and id.ItemNo=cd.LinkItem
 where isnull(ih.CancelProve,'')='' 
 and not exists(select 1 from Acc_TransactionHD where AccDocNo=ih.DocNo)
 */
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BD]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BD]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8359,7 +8045,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8367,10 +8053,10 @@ GO
 
 
 /*
-select * from [job_demo].dbo.Job_PaymentHeader where DocNo='PAY-2510-1988'
-select * from [job_demo].dbo.Job_CashControl where ControlNo='2510-621'
-select * from [job_demo].dbo.Job_CashControlDoc where ControlNo='2510-621'
-select * from [job_demo].dbo.Job_CashControlSub where ControlNo='2510-621'
+select * from [job_3x].dbo.Job_PaymentHeader where DocNo='PAY-2510-1988'
+select * from [job_3x].dbo.Job_CashControl where ControlNo='2510-621'
+select * from [job_3x].dbo.Job_CashControlDoc where ControlNo='2510-621'
+select * from [job_3x].dbo.Job_CashControlSub where ControlNo='2510-621'
 go
 */
 CREATE procedure [dbo].[Insert_BillPayFromJob]
@@ -8384,7 +8070,7 @@ as
 begin
 --delete first
 delete h from Acc_TransactionHD h
-inner join [job_demo].dbo.Job_PaymentHeader d 
+inner join [job_3x].dbo.Job_PaymentHeader d 
 on h.AccDocNo=d.DocNo
 where h.AccBatchDate>=@datefrom and h.AccBatchDate<=@dateto
 and d.VenCode like @vencode+'%'
@@ -8403,8 +8089,8 @@ select d.DocNo,d.ItemNo,d.ClrRefNo,d.ClrItemNo,0,
 d.Qty,d.UnitPrice,d.QtyUnit,h.CurrencyCode,h.ExchangeRate,d.Amt,d.SICode,d.ForJNo,
 round((d.amtvat*100/d.amt),0),
 round((d.amtWht*100/d.amt),0),1
-from [job_demo].dbo.Job_PaymentDetail d 
-inner join [job_demo].dbo.Job_PaymentHeader h on d.BranchCode=h.BranchCode and d.DocNo=h.DocNo 
+from [job_3x].dbo.Job_PaymentDetail d 
+inner join [job_3x].dbo.Job_PaymentHeader h on d.BranchCode=h.BranchCode and d.DocNo=h.DocNo 
 where isnull(h.CancelProve,'')='' and d.Amt>0
 and h.DocDate>=@datefrom and h.DocDate<=@dateto and h.VenCode like @vencode+'%'
 
@@ -8413,15 +8099,15 @@ insert into Acc_TransactionHD
 IssueBy,AccPostDate,FiscalYear,DocStatus,DocRefNo,AccDocType)
 select DocNo,DocDate,DocDate,h.VenCode,concat(v.TaxNumber,'/',v.BranchCode),v.TName,concat(v.TAddress1,' ',v.TAddress2),
 h.EmpCode,h.DocDate,h.DocDate,0,h.PoNo,'PI'
-from [job_demo].dbo.Job_PaymentHeader h
-left join [job_demo].dbo.Mas_Vender v on h.VenCode =v.VenCode
+from [job_3x].dbo.Job_PaymentHeader h
+left join [job_3x].dbo.Mas_Vender v on h.VenCode =v.VenCode
 where isnull(CancelProve,'')=''  and h.TotalExpense>0
-and exists(select 1 from [job_demo].dbo.Job_PaymentDetail where DocNo=h.DocNo)
+and exists(select 1 from [job_3x].dbo.Job_PaymentDetail where DocNo=h.DocNo)
 and h.DocDate>=@datefrom and h.DocDate<=@dateto and h.VenCode like @vencode+'%'
 
 --delete first
 delete h from Acc_TransactionHD h
-inner join [job_demo].dbo.Job_PaymentHeader d 
+inner join [job_3x].dbo.Job_PaymentHeader d 
 on h.AccDocNo=d.PaymentRef
 where d.PaymentDate>=@datefrom and d.PaymentDate<=@dateto
 and d.VenCode like @vencode+'%' and d.PaymentRef<>''
@@ -8439,10 +8125,10 @@ select h.PaymentRef,ROW_NUMBER() OVER(PARTITION BY h.PaymentRef ORDER BY d.DocNo
 d.Qty,d.UnitPrice,d.QtyUnit,h.CurrencyCode,h.ExchangeRate,d.Amt,d.SICode,d.ForJNo,
 round((d.amtvat*100/d.amt),0),
 round((d.amtWht*100/d.amt),0),1
-from [job_demo].dbo.Job_CashControlDoc c 
-inner join [job_demo].dbo.Job_PaymentHeader h on c.BranchCode=h.BranchCode and c.ControlNo=h.PaymentRef
+from [job_3x].dbo.Job_CashControlDoc c 
+inner join [job_3x].dbo.Job_PaymentHeader h on c.BranchCode=h.BranchCode and c.ControlNo=h.PaymentRef
 and c.DocNo=h.DocNo
-inner join [job_demo].dbo.Job_PaymentDetail d on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
+inner join [job_3x].dbo.Job_PaymentDetail d on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
 where isnull(h.CancelProve,'')='' and h.PaymentRef<>'' and d.Amt>0
 and h.PaymentDate>=@datefrom and h.PaymentDate<=@dateto and h.VenCode like @vencode+'%'
 
@@ -8452,38 +8138,38 @@ IssueBy,AccPostDate,FiscalYear,DocStatus,DocRefNo,AccDocType)
 select distinct c.ControlNo,c.VoucherDate,c.VoucherDate,
 c.CustCode,concat(u.TaxNumber,'/',u.BranchCode),isnull(u.TName,''),concat(u.TAddress1,' ',u.TAddress2),
 c.RecUser,c.RecDate,c.RecDate,0,c.ControlNo,'PS1'
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_CashControl c on h.PaymentRef=c.ControlNo 
-left join [job_demo].dbo.Mas_Vender u on h.VenCode =u.VenCode
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_CashControl c on h.PaymentRef=c.ControlNo 
+left join [job_3x].dbo.Mas_Vender u on h.VenCode =u.VenCode
 where isnull(h.CancelProve,'')=''  and h.TotalExpense>0 and h.PaymentRef<>''
-and exists(select 1 from [job_demo].dbo.Job_PaymentDetail where DocNo=h.DocNo)
+and exists(select 1 from [job_3x].dbo.Job_PaymentDetail where DocNo=h.DocNo)
 and h.PaymentDate>=@datefrom and h.PaymentDate<=@dateto and h.VenCode like @vencode+'%'
 
 end
 /**patch data**/
---update [job_demo].dbo.Job_PaymentDetail set Amt=Qty*UnitPrice where Amt=0
---update [job_demo].dbo.Job_PaymentHeader set ExchangeRate=1 where ExchangeRate=0
---update h set h.VenCode='V0012' from [job_demo].dbo.Job_PaymentHeader h where not exists(select 1 from [job_demo].dbo.Mas_Vender where VenCode=h.VenCode)
---select amt,amtwht,(amtWht*100/amt) as ratecak from [job_demo].dbo.Job_PaymentDetail d  where AmtWHT>0 order by 2 desc
---select amt,amtvat,round((amtvat*100/amt),0) as ratecak from [job_demo].dbo.Job_PaymentDetail d  where AmtVAT>0 order by 2 desc
+--update [job_3x].dbo.Job_PaymentDetail set Amt=Qty*UnitPrice where Amt=0
+--update [job_3x].dbo.Job_PaymentHeader set ExchangeRate=1 where ExchangeRate=0
+--update h set h.VenCode='V0012' from [job_3x].dbo.Job_PaymentHeader h where not exists(select 1 from [job_3x].dbo.Mas_Vender where VenCode=h.VenCode)
+--select amt,amtwht,(amtWht*100/amt) as ratecak from [job_3x].dbo.Job_PaymentDetail d  where AmtWHT>0 order by 2 desc
+--select amt,amtvat,round((amtvat*100/amt),0) as ratecak from [job_3x].dbo.Job_PaymentDetail d  where AmtVAT>0 order by 2 desc
 
 /**data lost**/
 /*
 select d2.* 
-from [job_demo].dbo.Job_ClearDetail d1
-right join [job_demo].dbo.Job_PaymentDetail d2 on
+from [job_3x].dbo.Job_ClearDetail d1
+right join [job_3x].dbo.Job_PaymentDetail d2 on
 d2.ClrRefNo=d1.ClrNo and d2.ClrItemNo=d1.ItemNo 
 where d1.VenderBillingNo=concat(d2.DocNo,'#',d2.ItemNo)
 
 select d1.* 
-from [job_demo].dbo.Job_ClearDetail d1
-left join [job_demo].dbo.Job_PaymentDetail d2 on
+from [job_3x].dbo.Job_ClearDetail d1
+left join [job_3x].dbo.Job_PaymentDetail d2 on
 d1.VenderBillingNo= concat(d2.DocNo,'#',d2.ItemNo)
 where d2.DocNo is null and d1.VenderBillingNo<>''
 */
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8494,10 +8180,10 @@ GO
 
 
 /*
-select * from [job_demo].dbo.Job_PaymentHeader where DocNo='PAY-2510-1988'
-select * from [job_demo].dbo.Job_CashControl where ControlNo='2510-621'
-select * from [job_demo].dbo.Job_CashControlDoc where ControlNo='2510-621'
-select * from [job_demo].dbo.Job_CashControlSub where ControlNo='2510-621'
+select * from [job_3x].dbo.Job_PaymentHeader where DocNo='PAY-2510-1988'
+select * from [job_3x].dbo.Job_CashControl where ControlNo='2510-621'
+select * from [job_3x].dbo.Job_CashControlDoc where ControlNo='2510-621'
+select * from [job_3x].dbo.Job_CashControlSub where ControlNo='2510-621'
 go
 */
 CREATE procedure [dbo].[Insert_BillPayFromJob_V2]
@@ -8511,7 +8197,7 @@ as
 begin
 --delete first
 delete h from Acc_TransactionHD h
-inner join [job_demo].dbo.Job_PaymentHeader d 
+inner join [job_3x].dbo.Job_PaymentHeader d 
 on h.AccDocNo=d.DocNo
 where h.AccBatchDate>=@datefrom and h.AccBatchDate<=@dateto
 and d.VenCode like @vencode+'%'
@@ -8535,9 +8221,9 @@ d.SICode,d.ForJNo,
 (case when isnull(s.IsCredit,1)=1 then 0 else round((d.amtvat*100/d.amt),0) end) as VatRate,
 (case when isnull(s.IsCredit,1)=1 then 0 else round((d.amtWht*100/d.amt),0) end) as TaxRate
 ,1 as VatType
-from [job_demo].dbo.Job_PaymentDetail d 
-inner join [job_demo].dbo.Job_PaymentHeader h on d.BranchCode=h.BranchCode and d.DocNo=h.DocNo 
-left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode
+from [job_3x].dbo.Job_PaymentDetail d 
+inner join [job_3x].dbo.Job_PaymentHeader h on d.BranchCode=h.BranchCode and d.DocNo=h.DocNo 
+left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode
 where isnull(h.CancelProve,'')='' and d.Amt>0
 and h.DocDate>=@datefrom and h.DocDate<=@dateto and h.VenCode like @vencode+'%'
 
@@ -8546,37 +8232,37 @@ insert into Acc_TransactionHD
 IssueBy,AccPostDate,FiscalYear,DocStatus,DocRefNo,AccDocType)
 select DocNo,DocDate,DocDate,h.VenCode,concat(v.TaxNumber,'/',v.BranchCode),v.TName,concat(v.TAddress1,' ',v.TAddress2),
 h.EmpCode,h.DocDate,h.DocDate,0,h.PoNo,'PI'
-from [job_demo].dbo.Job_PaymentHeader h
-left join [job_demo].dbo.Mas_Vender v on h.VenCode =v.VenCode
+from [job_3x].dbo.Job_PaymentHeader h
+left join [job_3x].dbo.Mas_Vender v on h.VenCode =v.VenCode
 where isnull(CancelProve,'')=''  and h.TotalExpense>0
-and exists(select 1 from [job_demo].dbo.Job_PaymentDetail where DocNo=h.DocNo)
+and exists(select 1 from [job_3x].dbo.Job_PaymentDetail where DocNo=h.DocNo)
 and h.DocDate>=@datefrom and h.DocDate<=@dateto and h.VenCode like @vencode+'%'
 
 end
 /**patch data**/
---update [job_demo].dbo.Job_PaymentDetail set Amt=Qty*UnitPrice where Amt=0
---update [job_demo].dbo.Job_PaymentHeader set ExchangeRate=1 where ExchangeRate=0
---update h set h.VenCode='V0012' from [job_demo].dbo.Job_PaymentHeader h where not exists(select 1 from [job_demo].dbo.Mas_Vender where VenCode=h.VenCode)
---select amt,amtwht,(amtWht*100/amt) as ratecak from [job_demo].dbo.Job_PaymentDetail d  where AmtWHT>0 order by 2 desc
---select amt,amtvat,round((amtvat*100/amt),0) as ratecak from [job_demo].dbo.Job_PaymentDetail d  where AmtVAT>0 order by 2 desc
+--update [job_3x].dbo.Job_PaymentDetail set Amt=Qty*UnitPrice where Amt=0
+--update [job_3x].dbo.Job_PaymentHeader set ExchangeRate=1 where ExchangeRate=0
+--update h set h.VenCode='V0012' from [job_3x].dbo.Job_PaymentHeader h where not exists(select 1 from [job_3x].dbo.Mas_Vender where VenCode=h.VenCode)
+--select amt,amtwht,(amtWht*100/amt) as ratecak from [job_3x].dbo.Job_PaymentDetail d  where AmtWHT>0 order by 2 desc
+--select amt,amtvat,round((amtvat*100/amt),0) as ratecak from [job_3x].dbo.Job_PaymentDetail d  where AmtVAT>0 order by 2 desc
 
 /**data lost**/
 /*
 select d2.* 
-from [job_demo].dbo.Job_ClearDetail d1
-right join [job_demo].dbo.Job_PaymentDetail d2 on
+from [job_3x].dbo.Job_ClearDetail d1
+right join [job_3x].dbo.Job_PaymentDetail d2 on
 d2.ClrRefNo=d1.ClrNo and d2.ClrItemNo=d1.ItemNo 
 where d1.VenderBillingNo=concat(d2.DocNo,'#',d2.ItemNo)
 
 select d1.* 
-from [job_demo].dbo.Job_ClearDetail d1
-left join [job_demo].dbo.Job_PaymentDetail d2 on
+from [job_3x].dbo.Job_ClearDetail d1
+left join [job_3x].dbo.Job_PaymentDetail d2 on
 d1.VenderBillingNo= concat(d2.DocNo,'#',d2.ItemNo)
 where d2.DocNo is null and d1.VenderBillingNo<>''
 */
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8666,7 +8352,7 @@ where h.TotalDebit<>d.Dr or h.TotalCredit<>d.Cr
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8682,14 +8368,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a 
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId 
 )
 
 delete a from Acc_JournalHD a 
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto;
 
@@ -8704,21 +8390,21 @@ isnull(a2.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueExpense'))
 end) as AccCodeD,
 sum(case when isnull(s.IsCredit,1)=1 then d.Total+d.AmtWHT else d.Amt end) as Amt,
 sum(case when isnull(s.IsCredit,1)=1 then 0 else d.AmtVAT end) as AmtVAT
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_PaymentDetail d
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_PaymentDetail d
 on h.DocNo=d.DocNo 
-left join [job_demo].dbo.Job_Order j on d.ForJNo=j.JNo 
-left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
-left join [job_demo].dbo.Job_SrvSingle s on d.SIcode=s.SICode
+left join [job_3x].dbo.Job_Order j on d.ForJNo=j.JNo 
+left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+left join [job_3x].dbo.Job_SrvSingle s on d.SIcode=s.SICode
 left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
-left join [job_demo].dbo.Mas_Vender v
+left join [job_3x].dbo.Mas_Vender v
 on h.VenCode=v.VenCode 
 left join (select * from vMas_AccCode where AccCode like '5___-__-____') a2 
 on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
 left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') b 
 on concat(b.AccMainName,'-',v.TName)=b.AccName
-left join [job_demo].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
+left join [job_3x].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
 where isnull(h.CancelProve,'')='' --and h.ApproveBy<>''
 and h.DocDate>=@datefrom and h.DocDate<=@dateto
 group by  h.DocNo,h.DocDate,isnull(v.TName,''),isnull(v.TaxNumber,''),h.EmpCode,h.PoNo,h.ReFNo,d.SDescription,d.ForJNo,
@@ -8764,7 +8450,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8783,7 +8469,7 @@ CREATE procedure [dbo].[Insert_BillPayToJournal_V2]
 as
 begin
 delete a from Acc_JournalHD a 
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=b.DocNo 
 where b.DocDate>=@datefrom and b.DocDate<=@dateto;
 
@@ -8796,17 +8482,17 @@ isnull(b.AccCode,dbo.GetAccConfig('AP_CONFIG','Purchase')) as AccCodeC
 ,isnull(isnull(a.AccCode,g.GLAccountCode),dbo.GetAccConfig('GL_CONFIG','DefaultCost')) as AccCodeD,
 sum(case when isnull(s.IsCredit,1)=1 then d.Total+d.AmtWHT else d.Amt end) as Amt,
 sum(case when isnull(s.IsCredit,1)=1 then 0 else d.AmtVAT end) as AmtVAT
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_PaymentDetail d
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_PaymentDetail d
 on h.DocNo=d.DocNo 
-left join [job_demo].dbo.Job_Order j on d.ForJNo=j.JNo 
-left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
-left join [job_demo].dbo.Job_SrvSingle s on d.SIcode=s.SICode
+left join [job_3x].dbo.Job_Order j on d.ForJNo=j.JNo 
+left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+left join [job_3x].dbo.Job_SrvSingle s on d.SIcode=s.SICode
 left join Mas_AccCode a on s.GLAccountCodeCost=a.AccCode
-left join [job_demo].dbo.Mas_Vender v
+left join [job_3x].dbo.Mas_Vender v
 on h.VenCode=v.VenCode 
 left join Mas_AccCode b on v.GLAccountCode=b.AccCode
-left join [job_demo].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
+left join [job_3x].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
 where isnull(h.CancelProve,'')='' --and h.ApproveBy<>''
 and h.DocDate>=@datefrom and h.DocDate<=@dateto
 group by  h.DocNo,h.DocDate,isnull(v.TName,''),h.EmpCode,h.PoNo,h.ReFNo,d.SDescription,d.ForJNo,
@@ -8854,7 +8540,7 @@ drop table #tmp2;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8877,14 +8563,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a 
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId 
 )
 
 delete a from Acc_JournalHD a 
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto;
 
@@ -8895,17 +8581,17 @@ isnull(b.AccCode,dbo.GetAccConfig('AP_CONFIG','Purchase')) as AccCodeC
 ,isnull(a.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueExpense')) as AccCodeD,
 sum(case when isnull(s.IsCredit,1)=1 then d.Total+d.AmtWHT else d.Amt end) as Amt,
 sum(case when isnull(s.IsCredit,1)=1 then 0 else d.AmtVAT end) as AmtVAT
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_PaymentDetail d
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_PaymentDetail d
 on h.DocNo=d.DocNo 
-left join [job_demo].dbo.Job_Order j on d.ForJNo=j.JNo 
-left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
-left join [job_demo].dbo.Job_SrvSingle s on d.SIcode=s.SICode
+left join [job_3x].dbo.Job_Order j on d.ForJNo=j.JNo 
+left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+left join [job_3x].dbo.Job_SrvSingle s on d.SIcode=s.SICode
 left join Mas_AccCode a on s.GLAccountCodeCost=a.AccCode
-left join [job_demo].dbo.Mas_Vender v
+left join [job_3x].dbo.Mas_Vender v
 on h.VenCode=v.VenCode 
 left join Mas_AccCode b on v.GLAccountCode=b.AccCode
-left join [job_demo].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
+left join [job_3x].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
 where isnull(h.CancelProve,'')='' --and h.ApproveBy<>''
 and h.DocDate>=@datefrom and h.DocDate<=@dateto
 group by  h.DocNo,h.DocDate,isnull(v.TName,''),isnull(v.TaxNumber,''),h.EmpCode,h.PoNo,h.ReFNo,d.SDescription,d.ForJNo,
@@ -8949,7 +8635,7 @@ drop table #tmp2;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_BillPayToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -8976,14 +8662,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a 
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId 
 )
 
 delete a from Acc_JournalHD a 
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto;
 
@@ -8998,21 +8684,21 @@ isnull(a2.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueExpense'))
 end) as AccCodeD,
 sum(case when isnull(s.IsCredit,1)=1 then d.Total+d.AmtWHT else d.Amt end) as Amt,
 sum(case when isnull(s.IsCredit,1)=1 then 0 else d.AmtVAT end) as AmtVAT
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_PaymentDetail d
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_PaymentDetail d
 on h.DocNo=d.DocNo 
-left join [job_demo].dbo.Job_Order j on d.ForJNo=j.JNo 
-left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
-left join [job_demo].dbo.Job_SrvSingle s on d.SIcode=s.SICode
+left join [job_3x].dbo.Job_Order j on d.ForJNo=j.JNo 
+left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+left join [job_3x].dbo.Job_SrvSingle s on d.SIcode=s.SICode
 left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
-left join [job_demo].dbo.Mas_Vender v
+left join [job_3x].dbo.Mas_Vender v
 on h.VenCode=v.VenCode 
 left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueExpense')+'-____') a2 
 on concat(a2.AccMainName,'-',v.TName)=a2.AccName
 left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') b 
 on concat(b.AccMainName,'-',v.TName)=b.AccName
-left join [job_demo].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
+left join [job_3x].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
 where isnull(h.CancelProve,'')='' --and h.ApproveBy<>''
 and h.DocDate>=@datefrom and h.DocDate<=@dateto
 group by  h.DocNo,h.DocDate,isnull(v.TName,''),isnull(v.TaxNumber,''),h.EmpCode,h.PoNo,h.ReFNo,d.SDescription,d.ForJNo,
@@ -9057,7 +8743,7 @@ drop table #tmp2;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9092,14 +8778,14 @@ Begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-A',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-A',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -9115,23 +8801,23 @@ from (
 	convert(decimal(18,2),(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.UsedAmount+d.ChargeVAT-d.Tax50Tavi end)) as AmountNet,
 	(case when d.VenderCode='' and ad.VenCode<>'' then ad.VenCode else d.VenderCode end) as VenCode,
 	isnull(u.TName,ah.EmpCode) as UserName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_AdvDetail ad
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_AdvDetail ad
 	on d.AdvNO=ad.AdvNo and d.AdvItemNo=ad.ItemNo 
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	inner join [job_demo].dbo.Job_AdvHeader ah
+	inner join [job_3x].dbo.Job_AdvHeader ah
 	on ad.AdvNo=ah.AdvNO 
-	left join [job_demo].dbo.Mas_User u 
+	left join [job_3x].dbo.Mas_User u 
 	on ah.EmpCode=u.UserID 
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
 	left join Mas_AccCode a1 on s.GLAccountCodeCost=a1.AccCode
 	left join Mas_AccCode a2 on s.GLAccountCodeSales=a2.AccCode
 	left join Mas_AccCode a3 on u.GLAccountCode=a3.AccCode
 	where h.DocStatus<>99
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto 	
-) t left join [job_demo].dbo.Mas_Vender v on t.VenCode=v.VenCode
+) t left join [job_3x].dbo.Mas_Vender v on t.VenCode=v.VenCode
 
 delete d from Acc_JournalDT d where exists(
 select 1 from Acc_JournalHD a inner join #tmp1 b 
@@ -9184,7 +8870,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9203,14 +8889,14 @@ Begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-A',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-A',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -9231,22 +8917,22 @@ from (
 	(case when d.VenderCode='' and ad.VenCode<>'' then ad.VenCode else d.VenderCode end) as VenCode,
 	v.TaxNumber,v.TName,
 	isnull(u.TName,ah.EmpCode) as UserName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_AdvDetail ad
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_AdvDetail ad
 	on d.AdvNO=ad.AdvNo and d.AdvItemNo=ad.ItemNo 
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	inner join [job_demo].dbo.Job_AdvHeader ah
+	inner join [job_3x].dbo.Job_AdvHeader ah
 	on ad.AdvNo=ah.AdvNO 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on ah.CustCode=c.CustCode and ah.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_Order j
+	left join [job_3x].dbo.Job_Order j
 	on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company b
+	left join [job_3x].dbo.Mas_Company b
 	on j.CustCode=b.CustCode and j.CustBranch=b.Branch
-	left join [job_demo].dbo.Mas_User u 
+	left join [job_3x].dbo.Mas_User u 
 	on ah.EmpCode=u.UserID 
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 	on concat(a1.AccMainName,'-',b.NameThai)=a1.AccName	
@@ -9254,7 +8940,7 @@ from (
 	on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a3 
 	on concat(a3.AccMainName,'-',u.TName)=a3.AccName	
-	left join [job_demo].dbo.Mas_Vender v on d.VenderCode=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on d.VenderCode=v.VenCode
 	where h.DocStatus<>99
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto 	
 ) t 
@@ -9319,7 +9005,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromAdvance_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9360,14 +9046,14 @@ Begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-A',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-A',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -9388,22 +9074,22 @@ from (
 	(case when d.VenderCode='' and ad.VenCode<>'' then ad.VenCode else d.VenderCode end) as VenCode,
 	v.TaxNumber,v.TName,
 	isnull(u.TName,ah.EmpCode) as UserName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_AdvDetail ad
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_AdvDetail ad
 	on d.AdvNO=ad.AdvNo and d.AdvItemNo=ad.ItemNo 
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	inner join [job_demo].dbo.Job_AdvHeader ah
+	inner join [job_3x].dbo.Job_AdvHeader ah
 	on ad.AdvNo=ah.AdvNO 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on ah.CustCode=c.CustCode and ah.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_Order j
+	left join [job_3x].dbo.Job_Order j
 	on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company b
+	left join [job_3x].dbo.Mas_Company b
 	on j.CustCode=b.CustCode and j.CustBranch=b.Branch
-	left join [job_demo].dbo.Mas_User u 
+	left join [job_3x].dbo.Mas_User u 
 	on ah.EmpCode=u.UserID 
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 	on concat(a1.AccMainName,'-',b.NameThai)=a1.AccName	
@@ -9411,7 +9097,7 @@ from (
 	on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a3 
 	on concat(a3.AccMainName,'-',u.TName)=a3.AccName	
-	left join [job_demo].dbo.Mas_Vender v on d.VenderCode=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on d.VenderCode=v.VenCode
 	where h.DocStatus<>99
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto 	
 ) t 
@@ -9467,7 +9153,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9500,14 +9186,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-P',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-P',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -9522,22 +9208,22 @@ from (
 	(case when s.IsCredit=0 and s.IsExpense=1 then d.Tax50Tavi else 0 end) as AmountWht,
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.BNet end) as AmountNet,
 	(case when d.VenderCode='' and ah.VenCode<>'' then ah.VenCode else d.VenderCode end) as VenCode
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_PaymentDetail ad
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_PaymentDetail ad
 	on d.ClrNo=ad.ClrRefNo and d.ItemNo=ad.ClrItemNo 
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	inner join [job_demo].dbo.Job_PaymentHeader ah
+	inner join [job_3x].dbo.Job_PaymentHeader ah
 	on ad.DocNo=ah.DocNo 
-	inner join [job_demo].dbo.Mas_User u 
+	inner join [job_3x].dbo.Mas_User u 
 	on ah.EmpCode=u.UserID 
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
 	left join Mas_Acccode a1 on s.GLAccountCodeSales=a1.AccCode 
 	left join Mas_Acccode a2 on s.GLAccountCodeCost=a2.AccCode 
 	where h.DocStatus<>99 and s.IsCredit=0 
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto 	
-) t left join [job_demo].dbo.Mas_Vender v on t.VenCode=v.VenCode
+) t left join [job_3x].dbo.Mas_Vender v on t.VenCode=v.VenCode
 
 delete d from Acc_JournalDT d where exists(
 select 1 from Acc_JournalHD a inner join #tmp1 b 
@@ -9587,7 +9273,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromBillPay_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9606,14 +9292,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-P',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-P',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -9633,20 +9319,20 @@ from (
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.BNet end) as AmountNet,
 	(case when d.VenderCode='' and ah.VenCode<>'' then ah.VenCode else d.VenderCode end) as VenCode,
 	v.TaxNumber,v.TName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_PaymentDetail ad
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_PaymentDetail ad
 	on d.ClrNo=ad.ClrRefNo and d.ItemNo=ad.ClrItemNo 
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	inner join [job_demo].dbo.Job_PaymentHeader ah
+	inner join [job_3x].dbo.Job_PaymentHeader ah
 	on ad.DocNo=ah.DocNo 
-	inner join [job_demo].dbo.Mas_User u 
+	inner join [job_3x].dbo.Mas_User u 
 	on ah.EmpCode=u.UserID 
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
-	inner join [job_demo].dbo.Job_Order j on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_Vender v on ah.VenCode=v.VenCode
+	inner join [job_3x].dbo.Job_Order j on d.JobNo=j.JNo 
+	left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_Vender v on ah.VenCode=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 	on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueExpense')+'-____') a2 
@@ -9705,7 +9391,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9733,20 +9419,20 @@ from (
 	(case when s.IsCredit=0 and s.IsExpense=1 then d.Tax50Tavi else 0 end) as AmountWht,
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.BNet end) as AmountNet,
 	j.forwarderCode as VenCode
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	inner join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	inner join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
-	inner join [job_demo].dbo.Job_Order j on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Vender v on j.forwarderCode=v.VenCode
+	inner join [job_3x].dbo.Job_Order j on d.JobNo=j.JNo 
+	left join [job_3x].dbo.Mas_Vender v on j.forwarderCode=v.VenCode
 	where h.DocStatus<>99 and d.AdvNO='' and d.VenderBillingNo=''
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto 	
 	and not (s.IsCredit=0 and s.IsExpense=0)
 	and d.BNet>0
 	and not h.CancelProve<>''
-) t left join [job_demo].dbo.Mas_Vender v on t.VenCode=v.VenCode
+) t left join [job_3x].dbo.Mas_Vender v on t.VenCode=v.VenCode
 
 
 delete d from Acc_JournalDT d where exists(
@@ -9800,7 +9486,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9821,14 +9507,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-C',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-C',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -9846,19 +9532,19 @@ from (
 	(case when s.IsCredit=0 and s.IsExpense=1 then d.Tax50Tavi else 0 end) as AmountWht,
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.BNet end) as AmountNet,
 	isnull(d.VenderCode,j.ForwarderCode) as VenCode,d.Pay50TaviTo as VenderName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
-	inner join [job_demo].dbo.Job_Order j on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+	inner join [job_3x].dbo.Job_Order j on d.JobNo=j.JNo 
+	left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 	on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
 	left join (select * from vMas_AccCode where AccCode like '5___-__-____') a2 
 	on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
-	left join [job_demo].dbo.Mas_Vender v on isnull(d.VenderCode,j.ForwarderCode)=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on isnull(d.VenderCode,j.ForwarderCode)=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') a3 
 	on concat(a3.AccMainName,'-',v.TName)=a3.AccName	
 	where h.DocStatus<>99 and d.AdvNO='' and d.VenderBillingNo=''
@@ -9919,7 +9605,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -9951,14 +9637,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-C',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-C',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -9973,20 +9659,20 @@ from (
 	(case when s.IsCredit=0 and s.IsExpense=1 then d.Tax50Tavi else 0 end) as AmountWht,
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.BNet end) as AmountNet,
 	isnull(d.VenderCode,j.ForwarderCode) as VenCode,d.Pay50TaviTo as VenderName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
-	inner join [job_demo].dbo.Job_Order j on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Vender v on j.forwarderCode=v.VenCode
+	inner join [job_3x].dbo.Job_Order j on d.JobNo=j.JNo 
+	left join [job_3x].dbo.Mas_Vender v on j.forwarderCode=v.VenCode
 	left join Mas_AccCode a1 on s.GLAccountCodeCost=a1.AccCode
 	left join Mas_AccCode a2 on s.GLAccountCodeSales=a2.AccCode
 	where h.DocStatus<>99 and d.AdvNO='' and d.VenderBillingNo=''
 	and not (s.IsCredit=0 and s.IsExpense=0) and d.BNet>0
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto 		
-) t left join [job_demo].dbo.Mas_Vender v on t.VenCode=v.VenCode
+) t left join [job_3x].dbo.Mas_Vender v on t.VenCode=v.VenCode
 
 
 delete d from Acc_JournalDT d where exists(
@@ -10040,11 +9726,12 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V3]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearExpenseFromManualEntry_V3]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -10059,14 +9746,14 @@ begin
 delete c from Acc_JournalDT c
 where exists(
 select 1 from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-C',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 and a.EntryID=c.EntryId
 )
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ClearHeader b 
+inner join [job_3x].dbo.Job_ClearHeader b 
 on a.JournalNo=concat('AJ-C',b.ClrNo)
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
@@ -10075,27 +9762,30 @@ from (
 	select isnull(v.TaxNumber,'') as TaxNumnber,isnull(v.TName,d.Pay50TaviTo) as TName,
 	d.ClrNo,d.ItemNo,d.JobNo,h.ClrDate,h.EmpCode as AdvBy,
 	h.TRemark,h.CTN_NO,h.EmpCode as ClrBy,d.SIcode,d.SDescription,
-	isnull((case when s.IsCredit=1 then a1.AccCode else a2.AccCode end),
-	dbo.GetAccConfig('GL_CONFIG','DefaultCost')) as AccCodeDebit ,
+	(case when s.IsCredit=1 then 
+	 isnull(a1.AccCode,dbo.GetAccConfig('GL_CONFIG','WorkinProcess')) 
+	 else 
+	 isnull(a2.AccCode,dbo.GetAccConfig('GL_CONFIG','DefaultCost')) 
+	 end) as AccCodeDebit ,
 	isnull(a3.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueExpense')) as AccCodeCredit,
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.UsedAmount end) as Amount,
 	(case when s.IsCredit=0 and s.IsExpense=1 then d.ChargeVAT else 0 end) as AmountVat,
 	(case when s.IsCredit=0 and s.IsExpense=1 then d.Tax50Tavi else 0 end) as AmountWht,
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.BNet end) as AmountNet,
 	isnull(d.VenderCode,j.ForwarderCode) as VenCode,d.Pay50TaviTo as VenderName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
-	inner join [job_demo].dbo.Job_Order j on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+	inner join [job_3x].dbo.Job_Order j on d.JobNo=j.JNo 
+	left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 	on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
 	left join (select * from vMas_AccCode where AccCode like '5___-__-____') a2 
 	on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
-	left join [job_demo].dbo.Mas_Vender v on isnull(d.VenderCode,j.ForwarderCode)=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on isnull(d.VenderCode,j.ForwarderCode)=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueExpense')+'-____') a3 
 	on concat(a3.AccMainName,'-',v.TName)=a3.AccName	
 	where h.DocStatus<>99 and d.AdvNO='' and d.VenderBillingNo=''
@@ -10155,7 +9845,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10165,10 +9855,10 @@ GO
 
 
 
---update [job_demo].dbo.Job_ClearDetail set SIcode='CSS-061' where SICode='CSS-061S'
---update [job_demo].dbo.Job_ClearDetail set SIcode='EX-P-013' where SICode='EX-P-0130'
---update [job_demo].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CCC'
---update [job_demo].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CAI'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='CSS-061' where SICode='CSS-061S'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='EX-P-013' where SICode='EX-P-0130'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CCC'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CAI'
 --/*
 CREATE procedure [dbo].[Insert_ClearFromJob]
 (
@@ -10180,10 +9870,10 @@ as
 begin
 --delete first
 delete a from Acc_TransactionHD a
-where exists(select 1 from [job_demo].dbo.Job_ClearDetail h
+where exists(select 1 from [job_3x].dbo.Job_ClearDetail h
              where h.ClrNo=a.AccDocNo 
 			 and h.Date50Tavi>=@datefrom and h.Date50Tavi<=@dateto
-			 and exists(select 1 from [job_demo].dbo.Job_ClearHeader hd where hd.ClrNo=h.ClrNo and isnull(hd.CancelProve,'')='' and hd.DocStatus>0 and hd.ClearType<3)
+			 and exists(select 1 from [job_3x].dbo.Job_ClearHeader hd where hd.ClrNo=h.ClrNo and isnull(hd.CancelProve,'')='' and hd.DocStatus>0 and hd.ClearType<3)
 			 )
 
 delete from Acc_TransactionDT 
@@ -10203,13 +9893,13 @@ from (
 	@userid as UserID,'PC' as DocType,
 	h.ClrDate as FiscalYear,h.ClrDate as PostDate,
 	1 as DocStatus,h.CTN_NO
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h
 	on d.BranchCode=h.BranchCode and d.Clrno=h.Clrno
 	left join vMas_Product p on d.SICode=p.ProductCode
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	left join [job_demo].dbo.Mas_Vender v on d.VenderCode=v.VenCode
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	left join [job_3x].dbo.Mas_Vender v on d.VenderCode=v.VenCode
 	where isnull(h.CancelProve,'')='' and h.DocStatus>0 and h.ClearType<3	
 	and d.VenderBillingNo=''
 	and isnull(d.Date50Tavi,h.ClrDate)>=@datefrom and isnull(d.Date50Tavi,h.ClrDate)<=@dateto
@@ -10239,13 +9929,13 @@ from (
 	(case when s.IsCredit=1 then UsedAmount+ChargeVAT-Tax50Tavi else UsedAmount end) as Amount,
 	(case when s.IsCredit=1 then 0 else VATRate end) as VATRate,
 	(case when s.IsCredit=1 then 0 else Tax50TaviRate end) as Tax50TaviRate
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h
 	on d.BranchCode=h.BranchCode and d.Clrno=h.Clrno
 	left join vMas_Product p on d.SICode=p.ProductCode
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	left join [job_demo].dbo.Mas_Vender v on d.VenderCode=v.VenCode
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	left join [job_3x].dbo.Mas_Vender v on d.VenderCode=v.VenCode
 	where isnull(h.CancelProve,'')='' and h.DocStatus>0 and h.ClearType<3	
 	and d.VenderBillingNo=''
 	and isnull(d.Date50Tavi,h.ClrDate)>=@datefrom and isnull(d.Date50Tavi,h.ClrDate)<=@dateto
@@ -10272,7 +9962,7 @@ order by Balance
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10284,10 +9974,10 @@ GO
 
 
 
---update [job_demo].dbo.Job_ClearDetail set SIcode='CSS-061' where SICode='CSS-061S'
---update [job_demo].dbo.Job_ClearDetail set SIcode='EX-P-013' where SICode='EX-P-0130'
---update [job_demo].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CCC'
---update [job_demo].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CAI'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='CSS-061' where SICode='CSS-061S'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='EX-P-013' where SICode='EX-P-0130'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CCC'
+--update [job_3x].dbo.Job_ClearDetail set SIcode='CST-066' where SICode='CST-066CAI'
 --/*
 CREATE procedure [dbo].[Insert_ClearFromJob_V2]
 (
@@ -10299,7 +9989,7 @@ as
 begin
 --delete first
 delete a from Acc_TransactionHD a
-where exists(select 1 from [job_demo].dbo.Job_ClearHeader h
+where exists(select 1 from [job_3x].dbo.Job_ClearHeader h
              where h.ClrNo=a.DocRefNo
 			 and h.ClrDate>=@datefrom and h.ClrDate<=@dateto
 			 and h.DocStatus<>99
@@ -10322,13 +10012,13 @@ from (
 	@userid as UserID,'PC' as DocType,
 	h.ClrDate as FiscalYear,h.ClrDate as PostDate,
 	1 as DocStatus,h.CTN_NO
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h
 	on d.BranchCode=h.BranchCode and d.Clrno=h.Clrno
 	left join vMas_Product p on d.SICode=p.ProductCode
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	left join [job_demo].dbo.Mas_Vender v on d.VenderCode=v.VenCode
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	left join [job_3x].dbo.Mas_Vender v on d.VenderCode=v.VenCode
 	where isnull(h.CancelProve,'')='' and h.DocStatus>0 and h.ClearType<3	
 	and d.VenderBillingNo=''
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto
@@ -10358,13 +10048,13 @@ from (
 	(case when s.IsCredit=1 then UsedAmount+ChargeVAT-Tax50Tavi else UsedAmount end) as Amount,
 	(case when s.IsCredit=1 then 0 else VATRate end) as VATRate,
 	(case when s.IsCredit=1 then 0 else Tax50TaviRate end) as Tax50TaviRate
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h
 	on d.BranchCode=h.BranchCode and d.Clrno=h.Clrno
 	left join vMas_Product p on d.SICode=p.ProductCode
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	left join [job_demo].dbo.Mas_Vender v on d.VenderCode=v.VenCode
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	left join [job_3x].dbo.Mas_Vender v on d.VenderCode=v.VenCode
 	where isnull(h.CancelProve,'')='' and h.DocStatus>0 and h.ClearType<3	
 	and d.VenderBillingNo=''
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto
@@ -10391,7 +10081,7 @@ order by Balance
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10421,28 +10111,28 @@ as
 begin
 
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CashControl b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('RV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 and a.EntryId=c.EntryId)
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b 
+inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('RV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CashControl b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
-and not exists(select 1 from [job_demo].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
+and not exists(select 1 from [job_3x].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
 and a.EntryId=c.EntryId)
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b 
+inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
-and not exists(select 1 from [job_demo].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
+and not exists(select 1 from [job_3x].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
 
 select * into #tmp1
 from ( 
@@ -10451,30 +10141,30 @@ from (
 	round(cast(a.AdvNet-isnull(c.ClrNet,0) as decimal(10,4)),2) as TotalUsed,
 	isnull(a2.AccCode,dbo.GetAccConfig('ADV_CONFIG','CashIn')) as AccCodeUser,u.TName as UserName,a.ForJno as JNo
 	from 
-	[job_demo].dbo.Job_CashControl v inner join 
+	[job_3x].dbo.Job_CashControl v inner join 
 	(
 		select ControlNo,DocNo,acType,sum(PaidAmount) as PaidAmount 
-		from [job_demo].dbo.Job_CashControlDoc 
+		from [job_3x].dbo.Job_CashControlDoc 
 		where DocType='CLR' and PaidAmount<>0
 		group by ControlNo,DocNo,acType
 	) d on v.ControlNo=d.ControlNo
-	inner join [job_demo].dbo.Job_CashControlSub s on
+	inner join [job_3x].dbo.Job_CashControlSub s on
 	d.ControlNo=s.ControlNo and d.acType=s.acType
-	inner join [job_demo].dbo.Job_AdvDetail a
+	inner join [job_3x].dbo.Job_AdvDetail a
 	on d.DocNo=concat(a.AdvNo,'#',a.ItemNo)
 	left join 
 	(select cd.AdvNo,ah.EmpCode as AdvBy,cd.AdvItemNo,sum(cd.BNet) as ClrNet
-	 from [job_demo].dbo.Job_ClearDetail cd
-	 inner join [job_demo].dbo.Job_ClearHeader ch  
+	 from [job_3x].dbo.Job_ClearDetail cd
+	 inner join [job_3x].dbo.Job_ClearHeader ch  
 	 on cd.ClrNo=ch.ClrNo  
-	 inner join [job_demo].dbo.Job_AdvHeader ah 
+	 inner join [job_3x].dbo.Job_AdvHeader ah 
 	 on cd.AdvNo=ah.AdvNo
 	 where ch.DocStatus<>99 
 	 and cd.AdvNO<>''
 	 group by cd.AdvNo,ah.EmpCode,cd.AdvItemNo 
 	) c on a.AdvNo=c.AdvNO and a.ItemNo=c.AdvItemNo
-	inner join [job_demo].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
-	left join [job_demo].dbo.Mas_User u on c.AdvBy=u.UserID 
+	inner join [job_3x].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
+	left join [job_3x].dbo.Mas_User u on c.AdvBy=u.UserID 
 	left join Mas_AccCode a1 on b.GLAccountCode=a1.AccCode
 	left join Mas_AccCode a2 on u.GLAccountCode=a2.AccCode
 	where v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto
@@ -10548,7 +10238,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromAdvance_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10564,28 +10254,28 @@ as
 begin
 
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CashControl b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('RV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 and a.EntryId=c.EntryId)
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b 
+inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('RV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CashControl b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
-and not exists(select 1 from [job_demo].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
+and not exists(select 1 from [job_3x].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
 and a.EntryId=c.EntryId)
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b 
+inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-A',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
-and not exists(select 1 from [job_demo].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
+and not exists(select 1 from [job_3x].dbo.Job_CashControlDoc where ControlNo=b.ControlNo and DocType='ADV')
 
 select * into #tmp1
 from ( 
@@ -10594,31 +10284,31 @@ from (
 	round(cast(a.AdvNet-isnull(c.ClrNet,0) as decimal(10,4)),2) as TotalUsed,
 	isnull(a2.AccCode,dbo.GetAccConfig('ADV_CONFIG','CashIn')) as AccCodeUser,u.TName as UserName,a.ForJno as JNo
 	from 
-	[job_demo].dbo.Job_CashControl v inner join 
+	[job_3x].dbo.Job_CashControl v inner join 
 	(
 		select ControlNo,DocNo,acType,sum(PaidAmount) as PaidAmount 
-		from [job_demo].dbo.Job_CashControlDoc 
+		from [job_3x].dbo.Job_CashControlDoc 
 		where DocType='CLR' and PaidAmount<>0
 		group by ControlNo,DocNo,acType
 	) d on v.ControlNo=d.ControlNo
-	inner join [job_demo].dbo.Job_CashControlSub s on
+	inner join [job_3x].dbo.Job_CashControlSub s on
 	d.ControlNo=s.ControlNo and d.acType=s.acType
-	inner join [job_demo].dbo.Job_AdvDetail a
+	inner join [job_3x].dbo.Job_AdvDetail a
 	on d.DocNo=concat(a.AdvNo,'#',a.ItemNo)
 	left join 
 	(select cd.AdvNo,ah.CustCode,ah.CustBranch,ah.EmpCode as AdvBy,cd.AdvItemNo,sum(cd.BNet) as ClrNet
-	 from [job_demo].dbo.Job_ClearDetail cd
-	 inner join [job_demo].dbo.Job_ClearHeader ch  
+	 from [job_3x].dbo.Job_ClearDetail cd
+	 inner join [job_3x].dbo.Job_ClearHeader ch  
 	 on cd.ClrNo=ch.ClrNo  
-	 inner join [job_demo].dbo.Job_AdvHeader ah 
+	 inner join [job_3x].dbo.Job_AdvHeader ah 
 	 on cd.AdvNo=ah.AdvNo	 
 	 where ch.DocStatus<>99 
 	 and cd.AdvNO<>''
 	 group by cd.AdvNo,ah.CustCode,ah.CustBranch,ah.EmpCode,cd.AdvItemNo 
 	) c on a.AdvNo=c.AdvNO and a.ItemNo=c.AdvItemNo
-	inner join [job_demo].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
-	left join [job_demo].dbo.Mas_User u on c.AdvBy=u.UserID 
-	left join [job_demo].dbo.Mas_Company cu on c.Custcode=cu.custcode and c.CustBranch=cu.Branch
+	inner join [job_3x].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
+	left join [job_3x].dbo.Mas_User u on c.AdvBy=u.UserID 
+	left join [job_3x].dbo.Mas_Company cu on c.Custcode=cu.custcode and c.CustBranch=cu.Branch
 	left join Mas_AccCode a1 on b.GLAccountCode=a1.AccCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a2 
 	on concat(a2.AccMainName,'-',u.TName)=a2.AccName	
@@ -10694,7 +10384,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10730,13 +10420,13 @@ as
 begin
 
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CashControl b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-C',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 and a.EntryId=c.EntryId)
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b 
+inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-C',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 
@@ -10754,26 +10444,26 @@ from (
 	d.PaidAmount*-1 as PaidAmount,
 	a.JobNo as JNo,s.PRType	
 	from 
-	[job_demo].dbo.Job_CashControl h inner join 
+	[job_3x].dbo.Job_CashControl h inner join 
 		(
 		select ControlNo,DocNo,acType,sum(PaidAmount) as PaidAmount 
-		from [job_demo].dbo.Job_CashControlDoc 
+		from [job_3x].dbo.Job_CashControlDoc 
 		where DocType='CLR' and PaidAmount<>0
 		group by ControlNo,DocNo,acType
 	) d on h.ControlNo=d.ControlNo
-	inner join [job_demo].dbo.Job_CashControlSub s on
+	inner join [job_3x].dbo.Job_CashControlSub s on
 	d.ControlNo=s.ControlNo and d.acType=s.acType
-	inner join [job_demo].dbo.Job_ClearDetail a
+	inner join [job_3x].dbo.Job_ClearDetail a
 	on d.DocNo=concat(a.ClrNo,'#',a.ItemNo)
-	inner join [job_demo].dbo.Job_Order j on a.JobNo=j.JNo 
-	inner join [job_demo].dbo.Job_ClearHeader c 
+	inner join [job_3x].dbo.Job_Order j on a.JobNo=j.JNo 
+	inner join [job_3x].dbo.Job_ClearHeader c 
 	on a.ClrNo=c.ClrNo 
-	left join [job_demo].dbo.Mas_User u on c.EmpCode=u.UserID
-	left join [job_demo].dbo.Job_SrvSingle i on a.SIcode=i.SICode 
-	left join [job_demo].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
+	left join [job_3x].dbo.Mas_User u on c.EmpCode=u.UserID
+	left join [job_3x].dbo.Job_SrvSingle i on a.SIcode=i.SICode 
+	left join [job_3x].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
 	left join dbo.Mas_AccCode ad on u.GLAccountCode=ad.AccCode
 	left join dbo.Mas_AccCode ac on b.GLAccountCode=ac.AccCode
-	left join [job_demo].dbo.Mas_Vender v on isnull(a.VenderCode,j.ForwarderCode)=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on isnull(a.VenderCode,j.ForwarderCode)=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueExpense')+'-____') a3 
 	on concat(a3.AccMainName,'-',v.TName)=a3.AccName	
 	where isnull(h.CancelProve,'')='' and isnull(a.VenderBillingNo,'')=''
@@ -10877,7 +10567,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ClearMoneyFromNoAdvance_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -10914,13 +10604,13 @@ as
 begin
 
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CashControl b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-C',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 and a.EntryId=c.EntryId)
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b 
+inner join [job_3x].dbo.Job_CashControl b 
 on a.JournalNo=concat('PV-C',b.ControlNo)
 where b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto
 
@@ -10938,26 +10628,26 @@ from (
 	d.PaidAmount*-1 as PaidAmount,
 	a.JobNo as JNo,s.PRType	
 	from 
-	[job_demo].dbo.Job_CashControl h inner join 
+	[job_3x].dbo.Job_CashControl h inner join 
 		(
 		select ControlNo,DocNo,acType,sum(PaidAmount) as PaidAmount 
-		from [job_demo].dbo.Job_CashControlDoc 
+		from [job_3x].dbo.Job_CashControlDoc 
 		where DocType='CLR' and PaidAmount<>0
 		group by ControlNo,DocNo,acType
 	) d on h.ControlNo=d.ControlNo
-	inner join [job_demo].dbo.Job_CashControlSub s on
+	inner join [job_3x].dbo.Job_CashControlSub s on
 	d.ControlNo=s.ControlNo and d.acType=s.acType
-	inner join [job_demo].dbo.Job_ClearDetail a
+	inner join [job_3x].dbo.Job_ClearDetail a
 	on d.DocNo=concat(a.ClrNo,'#',a.ItemNo)
-	inner join [job_demo].dbo.Job_Order j on a.JobNo=j.JNo 
-	inner join [job_demo].dbo.Job_ClearHeader c 
+	inner join [job_3x].dbo.Job_Order j on a.JobNo=j.JNo 
+	inner join [job_3x].dbo.Job_ClearHeader c 
 	on a.ClrNo=c.ClrNo 
-	left join [job_demo].dbo.Mas_User u on c.EmpCode=u.UserID
-	left join [job_demo].dbo.Job_SrvSingle i on a.SIcode=i.SICode 
-	left join [job_demo].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
+	left join [job_3x].dbo.Mas_User u on c.EmpCode=u.UserID
+	left join [job_3x].dbo.Job_SrvSingle i on a.SIcode=i.SICode 
+	left join [job_3x].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
 	left join dbo.Mas_AccCode ad on u.GLAccountCode=ad.AccCode
 	left join dbo.Mas_AccCode ac on b.GLAccountCode=ac.AccCode
-	left join [job_demo].dbo.Mas_Vender v on isnull(a.VenderCode,j.ForwarderCode)=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on isnull(a.VenderCode,j.ForwarderCode)=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') a3 
 	on concat(a3.AccMainName,'-',v.TName)=a3.AccName	
 	where isnull(h.CancelProve,'')='' and isnull(a.VenderBillingNo,'')=''
@@ -11062,7 +10752,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11080,13 +10770,13 @@ CREATE procedure [dbo].[Insert_CNDNFromJob]
 as
 begin
 delete a from Acc_TransactionHD a
-inner join [job_demo].dbo.Job_CNDNHeader b 
+inner join [job_3x].dbo.Job_CNDNHeader b 
 on a.AccDocNo=b.DocNo
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and b.CustCode like @custcode+'%'; 
 
 delete a from Acc_TransactionDT a 
-inner join [job_demo].dbo.Job_CNDNHeader b 
+inner join [job_3x].dbo.Job_CNDNHeader b 
 on a.AccDocNo=b.DocNo
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and b.CustCode like @custcode+'%'; 
@@ -11104,14 +10794,14 @@ d.DocNo,d.ItemNo,d.BillingNo as SourceDocNo,d.BillItemNo as SourceDocItem,0 as S
 (case when d.SICode not like 'ADV%' then d.VATRate else 0 end),
 (case when d.SICode not like 'ADV%' then d.WHTRate else 0 end)
 ,1
-from [job_demo].dbo.Job_CNDNDetail d
-inner join [job_demo].dbo.Job_CNDNHeader h
+from [job_3x].dbo.Job_CNDNDetail d
+inner join [job_3x].dbo.Job_CNDNHeader h
 on d.BranchCode=h.BranchCode 
 and d.DocNo=h.DocNo
-inner join [job_demo].dbo.Job_InvoiceHeader i 
+inner join [job_3x].dbo.Job_InvoiceHeader i 
 on d.BranchCode=i.BranchCode and d.BillingNo=i.DocNo
-inner join [job_demo].dbo.Job_InvoiceDetail s on d.BillingNo=s.DocNo and d.BillItemNo=s.ItemNo
-inner join [job_demo].dbo.Job_SrvSingle c on s.SICode=c.SICode
+inner join [job_3x].dbo.Job_InvoiceDetail s on d.BillingNo=s.DocNo and d.BillItemNo=s.ItemNo
+inner join [job_3x].dbo.Job_SrvSingle c on s.SICode=c.SICode
 where h.CancelDate is null and d.CorrectAmt<>0 and c.IsExpense=0 and c.IsCredit=0
 and h.DocDate>=@datefrom and h.DocDate<=@dateto
 and h.CustCode like @custcode+'%'; 
@@ -11122,8 +10812,8 @@ IssueBy,AccDocType,AccPostDate,FiscalYear,DocStatus,DocRefNo)
 select h.DocNo,h.DocDate,h.DocDate,h.CustCode,concat(c.TaxNumber,'/',c.Branch),c.NameThai,c.TAddress,
 h.EmpCode,'CN3',h.DocDate,h.DocDate,1,h.Remark
 from
-[job_demo].dbo.Job_CNDNHeader h 
-left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+[job_3x].dbo.Job_CNDNHeader h 
+left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
 where h.CancelDate is null 
 and exists(select 1 from Acc_TransactionDT where AccDocNo=h.DocNo)
 and h.DocDate>=@datefrom and h.DocDate<=@dateto
@@ -11131,7 +10821,7 @@ and h.CustCode like @custcode+'%';
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11161,17 +10851,17 @@ select * into #tmp1 from (
 	f.Amt as ReceiveAmt,f.AmtVAT as ReceiveVat,b.BillingNo,
 	b.SDescription
 	from 
-	[job_demo].dbo.Job_CNDNHeader a
-	inner join [job_demo].dbo.Job_CNDNDetail b 
+	[job_3x].dbo.Job_CNDNHeader a
+	inner join [job_3x].dbo.Job_CNDNDetail b 
 	on a.DocNo=b.DocNo 
-	inner join [job_demo].dbo.Job_InvoiceHeader d 
+	inner join [job_3x].dbo.Job_InvoiceHeader d 
 	on b.BillingNo=d.DocNo 
-	inner join [job_demo].dbo.Mas_Company c 
+	inner join [job_3x].dbo.Mas_Company c 
 	on d.BillToCustCode=c.CustCode and d.BillToCustBranch=c.Branch
-	inner join [job_demo].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
+	inner join [job_3x].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
 	inner join Mas_AccCode a1 on e.GLAccountCodeCost=a1.AccCode 
 	inner join Mas_AccCode a2 on c.GLAccountCode=a2.AccCode 
-	left join [job_demo].dbo.Job_ReceiptDetail f on 
+	left join [job_3x].dbo.Job_ReceiptDetail f on 
 	b.BillingNo=f.InvoiceNo and b.BillItemNo=f.InvoiceItemNo
 	where a.DocStatus<>99 
 and a.DocDate>=@datefrom and a.DocDate<=@dateto 
@@ -11233,236 +10923,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromPI]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
-CREATE procedure [dbo].[Insert_CNDNFromPI]
-(
-@userid varchar(20),
-@docno varchar(20),
-@doctype varchar(3),--CN/DN
-@docdate date,
-@reason varchar(1000),
-@vatrate float,
-@whtrate float,
-@vattype int,
-@pino varchar(20),
-@itemno int=0,
-@qty float=0,
-@amount float=0
-)
-as
-begin
-declare @author varchar(20)= dbo.GetAuthorize(@userid,'ACC','CNDN')
-if NOT CHARINDEX('I',@author,1)>0
-begin
-	return
-end
-
-declare @header varchar(20);
-set @header=CONCAT(@doctype,FORMAT(@docdate,'yyMM'));
-
-declare @running varchar(20);
-
-set @running=dbo.GetNewRunning(@doctype,'T',@docdate);
-if @docno<>'' 
-begin
- set @running=@docno;
-end
-
-insert into Acc_TransactionHD
-select 
-@running as AccDocNo,
-@docdate as AccBatchDate,
-@docdate as AccEffectiveDate,
-PartyCode,
-PartyTaxCode,
-PartyName,
-PartyAddress,
-@userid as IssueBy,
-@doctype as AccDocType,
-'1900-01-01' as AccPostDate,
-@docdate as FiscalYear,
-0 as DocStatus,
-@pino
-from vAP_H where AccDocNo=@pino
-and not exists(select AccDocNo from Acc_TransactionHD where AccDocNo=@running)
-
-declare @ino int=(select isnull(MAX(AccItemNo),0) from Acc_TransactionDT where AccDocNo=@running);
-if @ino is null
-begin
- set @ino=0;
-end
-
-
-if @itemno=0
-begin
-	insert into Acc_TransactionDT
-	select 
-	@running as AccDocNo,
-	(ROW_NUMBER() OVER (PARTITION BY AccEffectiveDate ORDER BY AccBatchDate))+@ino as AccItemNo,
-	AccDocNo,
-	AccItemNo,
-	0 as StockTransNo,
-	Qty*(case when @doctype='CN' then -1 else 1 end),
-	(TotalAmount/ExchangeRate)/Qty,
-	UnitMea,
-	Currency,
-	ExchangeRate,
-	TotalAmount*(case when @doctype='CN' then -1 else 1 end),
-	SaleProductCode,
-	@reason,@vatrate,@whtrate,VatType
-	from vAP_D a where AccDocNo=@pino
-	and not exists(select 1 from vTransaction_D where AccDocNo=@running AND AccSourceDocNo=@pino)	
-end
-else
-begin
-	insert into Acc_TransactionDT
-	select 
-	@running as AccDocNo,
-	(ROW_NUMBER() OVER (PARTITION BY AccEffectiveDate ORDER BY AccBatchDate))+@ino as AccItemNo,
-	AccDocNo,
-	AccItemNo,
-	0 as StockTransNo,
-	@qty*(case when @doctype='CN' then -1 else 1 end),
-	@amount/@qty,
-	UnitMea,
-	Currency,
-	ExchangeRate,
-	@amount*(case when @doctype='CN' then -1 else 1 end),
-	SaleProductCode,
-	@reason,@vatrate,@whtrate,@vattype
-	from vAP_D a where AccDocNo=@pino and AccItemNo=@itemno
-end
-
-delete a from Acc_TransactionHD a where not exists(select 1 from Acc_TransactionDT where AccDocNo=a.AccDocNo)	
-
-select AccDocNo as DocNo,AccBatchDate as DocDate,AccEffectiveDate as DueDate, 
-PartyCode as CustCode,PartyName as CustName,TotalAmount,TotalVat,TotalWht,TotalNet
-from vTransaction_H
-where AccDocNo=@running;
-end 
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNFromSI]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-CREATE procedure [dbo].[Insert_CNDNFromSI]
-(
-@userid varchar(20),
-@docno varchar(20),
-@doctype varchar(3),
-@docdate date,
-@reason varchar(1000),
-@vatrate float,
-@whtrate float,
-@vattype int,
-@sino varchar(20),
-@itemno int=0,
-@qty float=0,
-@amount float=0
-)
-as
-begin
-declare @author varchar(20)= dbo.GetAuthorize(@userid,'ACC','CNDN')
-if NOT CHARINDEX('I',@author,1)>0
-begin
-	return
-end
-
-declare @header varchar(20);
-set @header=CONCAT(@doctype,FORMAT(@docdate,'yyMM'));
-
-declare @running varchar(20);
-
-set @running=dbo.GetNewRunning(@doctype,'T',@docdate);
-if @docno<>'' 
-begin
- set @running=@docno;
-end
-
-insert into Acc_TransactionHD
-select 
-@running as AccDocNo,
-@docdate as AccBatchDate,
-@docdate as AccEffectiveDate,
-PartyCode,
-PartyTaxCode,
-PartyName,
-PartyAddress,
-@userid as IssueBy,
-@doctype as AccDocType,
-'1900-01-01' as AccPostDate,
-@docdate as FiscalYear,
-0 as DocStatus,
-@sino
-from vAR_H where AccDocNo=@sino
-and not exists(select AccDocNo from Acc_TransactionHD where AccDocNo=@running)
-
-declare @ino int=(select isnull(MAX(AccItemNo),0) from Acc_TransactionDT where AccDocNo=@running);
-if @ino is null
-begin
- set @ino=0;
-end
-
-
-if @itemno=0
-begin
-	insert into Acc_TransactionDT
-	select 
-	@running as AccDocNo,
-	(ROW_NUMBER() OVER (PARTITION BY AccEffectiveDate ORDER BY AccBatchDate))+@ino as AccItemNo,
-	AccDocNo,
-	AccItemNo,
-	0 as StockTransNo,
-	Qty*(case when @doctype='CN' then -1 else 1 end),
-	(TotalAmount/ExchangeRate)/Qty,
-	UnitMea,
-	Currency,
-	ExchangeRate,
-	TotalAmount*(case when @doctype='CN' then -1 else 1 end),
-	SaleProductCode,
-	@reason,@vatrate,@whtrate,VatType
-	from vAR_D a where AccDocNo=@sino
-	and not exists(select 1 from vTransaction_D where AccDocNo=@running AND AccSourceDocNo=@sino)	
-end
-else
-begin
-	insert into Acc_TransactionDT
-	select 
-	@running as AccDocNo,
-	(ROW_NUMBER() OVER (PARTITION BY AccEffectiveDate ORDER BY AccBatchDate))+@ino as AccItemNo,
-	AccDocNo,
-	AccItemNo,
-	0 as StockTransNo,
-	@qty*(case when @doctype='CN' then -1 else 1 end),
-	@amount/@qty,
-	UnitMea,
-	Currency,
-	ExchangeRate,
-	@amount*(case when @doctype='CN' then -1 else 1 end),
-	SaleProductCode,
-	@reason,@vatrate,@whtrate,@vattype
-	from vAR_D a where AccDocNo=@sino and AccItemNo=@itemno
-end
-
-delete a from Acc_TransactionHD a where not exists(select 1 from Acc_TransactionDT where AccDocNo=a.AccDocNo)	
-
-select AccDocNo as DocNo,AccBatchDate as DocDate,AccEffectiveDate as DueDate, 
-PartyCode as CustCode,PartyName as CustName,TotalAmount,TotalVat,TotalWht,TotalNet
-from vTransaction_H
-where AccDocNo=@running;
-end 
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11487,12 +10948,12 @@ CREATE procedure [dbo].[Insert_CNDNToJournal]
 as 
 begin
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CNDNHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CNDNHeader b 
 on a.JournalNo=concat('AJ-R',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_CNDNHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_CNDNHeader b 
 on a.JournalNo=concat('AJ-R',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 
@@ -11507,17 +10968,17 @@ b.CorrectAmt-b.OriginalAmt as Amt,b.VATAmt as AmtVat,ABS(b.DiffAmt)+ABS(b.VATAmt
 f.Amt as ReceiveAmt,f.AmtVAT as ReceiveVat,b.BillingNo,
 b.SDescription
 from 
-[job_demo].dbo.Job_CNDNHeader a
-inner join [job_demo].dbo.Job_CNDNDetail b 
+[job_3x].dbo.Job_CNDNHeader a
+inner join [job_3x].dbo.Job_CNDNDetail b 
 on a.DocNo=b.DocNo 
-inner join [job_demo].dbo.Job_InvoiceHeader d 
+inner join [job_3x].dbo.Job_InvoiceHeader d 
 on b.BillingNo=d.DocNo 
-inner join [job_demo].dbo.Mas_Company c 
+inner join [job_3x].dbo.Mas_Company c 
 on d.BillToCustCode=c.CustCode and d.BillToCustBranch=c.Branch
-inner join [job_demo].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
+inner join [job_3x].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
 inner join Mas_AccCode a1 on e.GLAccountCodeCost=a1.AccCode 
 inner join Mas_AccCode a2 on c.GLAccountCode=a2.AccCode 
-left join [job_demo].dbo.Job_ReceiptDetail f on 
+left join [job_3x].dbo.Job_ReceiptDetail f on 
 b.BillingNo=f.InvoiceNo and b.BillItemNo=f.InvoiceItemNo
 where a.DocStatus<>99 
 and a.DocDate>=@datefrom and a.DocDate<=@dateto 
@@ -11579,7 +11040,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CNDNToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11608,12 +11069,12 @@ CREATE procedure [dbo].[Insert_CNDNToJournal_V2]
 as 
 begin
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_CNDNHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_CNDNHeader b 
 on a.JournalNo=concat('AJ-R',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_CNDNHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_CNDNHeader b 
 on a.JournalNo=concat('AJ-R',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 
@@ -11632,14 +11093,14 @@ b.CorrectAmt-b.OriginalAmt as Amt,b.VATAmt as AmtVat,ABS(b.DiffAmt)+ABS(b.VATAmt
 f.Amt as ReceiveAmt,f.AmtVAT as ReceiveVat,b.BillingNo,
 b.SDescription
 from 
-[job_demo].dbo.Job_CNDNHeader a
-inner join [job_demo].dbo.Job_CNDNDetail b 
+[job_3x].dbo.Job_CNDNHeader a
+inner join [job_3x].dbo.Job_CNDNDetail b 
 on a.DocNo=b.DocNo 
-inner join [job_demo].dbo.Job_InvoiceHeader d 
+inner join [job_3x].dbo.Job_InvoiceHeader d 
 on b.BillingNo=d.DocNo 
-left join [job_demo].dbo.Mas_Company c 
+left join [job_3x].dbo.Mas_Company c 
 on concat(isnull(d.BillToCustCode,d.CustCode),isnull(d.BillToCustBranch,d.CustBranch))=concat(c.CustCode,c.Branch)
-inner join [job_demo].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
+inner join [job_3x].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
 left join (select * from vMas_AccCode where AccCode like 
 dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
@@ -11652,7 +11113,7 @@ on concat(ar.AccMainName,'-',c.NameThai)=ar.AccName
 left join (select * from vMas_AccCode where AccCode like 
 dbo.GetAccConfig('AR_CONFIG','Advance')+'-____') av 
 on concat(av.AccMainName,'-',c.NameThai)=av.AccName	
-left join [job_demo].dbo.Job_ReceiptDetail f on 
+left join [job_3x].dbo.Job_ReceiptDetail f on 
 b.BillingNo=f.InvoiceNo and b.BillItemNo=f.InvoiceItemNo
 where a.DocStatus<>99 
 and a.DocDate>=@datefrom and a.DocDate<=@dateto 
@@ -11714,7 +11175,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CostFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11742,16 +11203,16 @@ select * into #tmp1 from (
 	isnull(a2.AccCode,dbo.GetAccConfig('GL_CONFIG','WorkInProcess')) as AccCodeC,
 	a.UsedAmount as Amt,a.ChargeVAT as AmtVat,a.Tax50Tavi as Amt50Tavi,(a.UsedAmount+a.ChargeVAT-a.Tax50Tavi) as AmtTotal,
 	a.SIcode,a.SDescription,a.JobNo ,b.EmpCode,e.TaxNumber,e.TName as VenderName
-	from [job_demo].dbo.Job_ClearDetail a
-	inner join [job_demo].dbo.Job_ClearHeader b 
+	from [job_3x].dbo.Job_ClearDetail a
+	inner join [job_3x].dbo.Job_ClearHeader b 
 	on a.ClrNo=b.ClrNo 
-	inner join [job_demo].dbo.Job_AdvHeader c
+	inner join [job_3x].dbo.Job_AdvHeader c
 	on a.AdvNo=c.AdvNo 
-	inner join [job_demo].dbo.Job_SrvSingle d
+	inner join [job_3x].dbo.Job_SrvSingle d
 	on a.SICode=d.SICode 
 	left join Mas_AccCode a1 on d.GLAccountCodeSales=a1.AccCode
 	left join Mas_AccCode a2 on d.GLAccountCodeCost=a2.AccCode
-	left join [job_demo].dbo.Mas_Vender e on a.VenderCode=e.VenCode
+	left join [job_3x].dbo.Mas_Vender e on a.VenderCode=e.VenCode
 	where b.DocStatus<>99 and d.IsExpense=1
 	and a.Date50Tavi>=@datefrom and a.Date50Tavi<=@dateto 
 ) tb
@@ -11803,7 +11264,7 @@ drop table #tmp1
 end 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CostFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11925,7 +11386,7 @@ from (
     (
         select distinct  
         a.AccDocNo,a.AccBatchDate,a.AccEffectiveDate,a.IssueBy,a.SalesDescription,b.TotalExpense as Dr,b.TotalExpense as Cr
-        from vPC_D a inner join [job_demo].dbo.Job_ClearHeader b on a.DocRefNo=b.ClrNo 
+        from vPC_D a inner join [job_3x].dbo.Job_ClearHeader b on a.DocRefNo=b.ClrNo 
 		left join (
 			select DocRefNo,MAX(AccDocNo) as AccDocNo
 			from Acc_TransactionHD
@@ -11981,7 +11442,7 @@ select EntryId,Seq,AccCode,AccDesc,d.AccDocNo,Dr,Cr from (
         and a.WhtAmount>0 AND b.AccCode=dbo.GetAccConfig('ADV_CONFIG','TaxPerson')
 		and a.PartyTaxCode not like '0%'
     ) t inner join vPC_D d on t.AccDocNo=d.AccDocNo and t.AccItemNo=d.AccItemNo
-    inner join [job_demo].dbo.Job_ClearHeader b on d.DocRefNo=b.ClrNo 
+    inner join [job_3x].dbo.Job_ClearHeader b on d.DocRefNo=b.ClrNo 
     group by d.AccDocNo,d.SalesDescription,t.AccCode,t.AccName,t.AccDesc
 ) d 
 left join (
@@ -12006,7 +11467,7 @@ where h.TotalDebit<>d.Dr or h.TotalCredit<>d.Cr
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12033,12 +11494,12 @@ from (
 --Cr.ภาษีซื้อ
 select c.AccCode,cd.SDescription as AccName,cd.ChargeVAT as Debit,0 as Credit 
 ,cd.JobNo as AccDesc,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
-inner join [job_demo].dbo.Job_AdvDetail a
+inner join [job_3x].dbo.Job_AdvDetail a
 on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode,
@@ -12053,12 +11514,12 @@ union all
 select c.AccCode,cd.SDescription,
 0 as Debit,cd.UsedAmount+cd.ChargeVAT-cd.Tax50Tavi as Credit	
 ,cd.JobNo,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
-inner join [job_demo].dbo.Job_AdvDetail a
+inner join [job_3x].dbo.Job_AdvDetail a
 on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode,
@@ -12071,12 +11532,12 @@ union all
 --Cr.หัก ณ ที่จ่าย
 select c.AccCode,cd.SDescription,0 as Debit,cd.Tax50Tavi as Credit 
 ,cd.JobNo,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
-inner join [job_demo].dbo.Job_AdvDetail a
+inner join [job_3x].dbo.Job_AdvDetail a
 on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode,
@@ -12091,12 +11552,12 @@ union all
 select p.ExpenseAccCode as AccCode,cd.SDescription as AccName,
 cd.UsedAmount as Debit,0 as Credit
 ,cd.JobNo as AccDesc,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
-left join [job_demo].dbo.Job_AdvDetail a
+left join [job_3x].dbo.Job_AdvDetail a
 on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode 
@@ -12106,12 +11567,12 @@ union all
 --Dr.ภาษีซื้อยังไม่ถึงกำหนด
 select c.AccCode,cd.SDescription as AccName,cd.ChargeVAT as Debit,0 as Credit 
 ,cd.JobNo as AccDesc,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
-left join [job_demo].dbo.Job_AdvDetail a
+left join [job_3x].dbo.Job_AdvDetail a
 on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode,
@@ -12126,12 +11587,12 @@ union all
 select c.AccCode as AccCode,cd.SDescription as AccName,
 0 as Debit,cd.UsedAmount+cd.ChargeVAT as Credit
 ,cd.JobNo as AccDesc,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
-left join [job_demo].dbo.Job_AdvDetail a
+left join [job_3x].dbo.Job_AdvDetail a
 on cd.AdvNO=a.AdvNo and cd.AdvItemNo=a.ItemNo 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode ,
@@ -12148,10 +11609,10 @@ select @maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
 ClrNo,ClrDate,ClrDate,@userid,'-',TotalClr,TotalClr
 from (
 select ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode
@@ -12166,7 +11627,7 @@ EXEC dbo.Insert_RefundFromJob @datefrom,@dateto,@userid
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CostToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12190,12 +11651,12 @@ from (
 --Dr.ภาษีซื้อ
 select c.AccCode,concat(isnull(v.TaxNumber,''),' - ',isnull(v.TName,'')) as AccDesc,cd.ChargeVAT as Debit,0 as Credit 
 ,cd.JobNo as AccName,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_Order j on cd.JobNo=j.JNo 
-left join [job_demo].dbo.Mas_Vender v on cd.VenderCode=v.VenCode
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_Order j on cd.JobNo=j.JNo 
+left join [job_3x].dbo.Mas_Vender v on cd.VenderCode=v.VenCode
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode,
@@ -12211,10 +11672,10 @@ select c.AccCode,concat(ch.ClrNo,(case when ch.ReceiveRef<>'' then ' PV#' else '
 0 as Debit,
 (case when s.IsCredit=0 then cd.UsedAmount+cd.ChargeVAT-cd.Tax50Tavi else cd.UsedAmount+cd.ChargeVAT end) as Credit	
 ,cd.JobNo,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode,
@@ -12228,10 +11689,10 @@ union all
 select c.AccCode,cd.SDescription,0 as Debit,
 cd.Tax50Tavi as Credit 
 ,cd.JobNo,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode,
@@ -12246,12 +11707,12 @@ union all
 select u.GLAccountCode as AccCode,cd.SDescription as AccName,
 cd.UsedAmount+cd.ChargeVAT as Debit,0 as Credit
 ,cd.JobNo as AccDesc,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Mas_User u
+inner join [job_3x].dbo.Mas_User u
 on ch.EmpCode=u.UserID
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
 where ch.DocStatus<>99 and s.IsCredit=1
 and isnull(cd.VenderbillingNo,'')='' and isnull(cd.AdvNo,'')=''
@@ -12261,10 +11722,10 @@ union all
 select s.GLAccountCodeCost as AccCode,cd.SDescription as AccName,
 cd.UsedAmount as Debit,0 as Credit
 ,cd.JobNo as AccDesc,cd.ClrNo,ch.ClrDate
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
 where ch.DocStatus<>99 and not s.IsCredit=1 and s.IsExpense=1
 and isnull(cd.VenderbillingNo,'')='' and isnull(cd.AdvNo,'')=''
@@ -12277,10 +11738,10 @@ select @maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
 ClrNo,ClrDate,ClrDate,@userid,'-',TotalClr,TotalClr
 from (
 select ch.ClrNo,ch.ClrDate,sum(cd.UsedAmount+cd.ChargeVAT) as totalClr
-from [job_demo].dbo.Job_ClearDetail cd
-inner join [job_demo].dbo.Job_ClearHeader ch
+from [job_3x].dbo.Job_ClearDetail cd
+inner join [job_3x].dbo.Job_ClearHeader ch
 on cd.ClrNo=ch.ClrNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on cd.SICode=s.SICode 
 inner join vMas_Product p
 on cd.SICode=p.ProductCode
@@ -12295,7 +11756,7 @@ where t.ClrNo not in(select JournalNo from Acc_JournalHD)
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_CustAdvanceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_CustAdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12309,12 +11770,12 @@ CREATE procedure [dbo].[Insert_CustAdvanceToJournal]
 as
 begin
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('PV-R',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('PV-R',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 
@@ -12325,15 +11786,15 @@ select 0 as RowType,a.DocNo,a.ReFNo,a.Docdate,isnull(a.DueDate,a.DocDate) as Due
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','ChequeIn')) as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.CustCode,a.CustBranch)=concat(cb.CustCode,cb.Branch)
 	left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product p on b.SICode=p.ProductCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AR_CONFIG','ChequeIn')+'-____') ac 
@@ -12349,14 +11810,14 @@ select 0 as RowType,a.DocNo,a.ReFNo,a.Docdate,isnull(a.DueDate,a.DocDate) as Due
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Advance')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','ChequeIn')) as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.CustCode,a.CustBranch)=concat(cb.CustCode,cb.Branch)
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AR_CONFIG','ChequeIn')+'-____') ac 
 	on concat(ac.AccMainName,'-',cb.NameThai)=ac.AccName	
@@ -12404,7 +11865,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DepreByDate]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DepreByDate]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12470,7 +11931,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DIFromPC]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DIFromPC]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12593,7 +12054,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DIFromPI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DIFromPI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12716,7 +12177,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DIFromPO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DIFromPO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12844,7 +12305,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DOFromRC]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DOFromRC]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12947,7 +12408,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DOFromSI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DOFromSI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13051,7 +12512,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DOFromSO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DOFromSO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13141,7 +12602,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_DPToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_DPToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13168,7 +12629,7 @@ as
 begin
 ---delete first
 delete h from Acc_JournalHD h
-inner join [job_demo].dbo.Job_CashControl d on h.JournalNo=concat('PV-',d.ControlNo) 
+inner join [job_3x].dbo.Job_CashControl d on h.JournalNo=concat('PV-',d.ControlNo) 
 where EntryDate>=@datefrom and EntryDate<=@dateto
 
 delete d from Acc_JournalDT d left join Acc_JournalHD h 
@@ -13179,7 +12640,7 @@ declare @id int=(select isnull(max(EntryId),0) from Acc_JournalHD);
 
 insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Description,TotalDebit,TotalCredit)
 select @id+ROW_NUMBER() OVER(ORDER BY AccDocNo),concat('PV-',AccDocNo),AccBatchDate,AccEffectiveDate,@userid,DocRefNo,0,0 
-from vTransaction_H h inner join [job_demo].dbo.Job_CashControl d on h.AccDocNo=d.ControlNo 
+from vTransaction_H h inner join [job_3x].dbo.Job_CashControl d on h.AccDocNo=d.ControlNo 
 where AccDocType='DP'
 and AccBatchDate>=@datefrom and AccBatchDate<=@dateto
 and not exists(select 1 from Acc_JournalHD where JournalNo=concat('PV-',h.AccDocNo));
@@ -13243,7 +12704,7 @@ select * from vTrialBalance
 */
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13253,7 +12714,7 @@ GO
 
 /**
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_InvoiceHeader b on a.JournalNo=b.DocNo
+inner join [job_3x].dbo.Job_InvoiceHeader b on a.JournalNo=b.DocNo
 
 delete b from Acc_JournalDT b
 where EntryID not in(select EntryId from Acc_JournalHD)
@@ -13268,7 +12729,7 @@ as
 begin
 
 /**set a/r and set costing of sales**/
-delete a from Acc_TransactionHD a inner join [job_demo].dbo.Job_InvoiceHeader b on a.AccDocNo=b.DocNo
+delete a from Acc_TransactionHD a inner join [job_3x].dbo.Job_InvoiceHeader b on a.AccDocNo=b.DocNo
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 
 delete a from Acc_TransactionDT a where not exists(select 1 from Acc_TransactionHD b where AccDocNo=b.AccDocNo)
@@ -13291,8 +12752,8 @@ id.SICode,ih.RefNo,
 (case when id.AmtAdvance>0 then 0 else id.Rate50Tavi end),
 (case when id.AmtCharge>0 then 1 else 0 end)
 from 
-[job_demo].dbo.Job_InvoiceDetail id 
-inner join [job_demo].dbo.Job_InvoiceHeader ih 
+[job_3x].dbo.Job_InvoiceDetail id 
+inner join [job_3x].dbo.Job_InvoiceHeader ih 
 on id.BranchCode=ih.BranchCode and id.DocNo=ih.DocNo 
 where isnull(ih.CancelProve,'')=''
 and not exists(select 1 from Acc_TransactionDT where AccDocNo=id.DocNo)
@@ -13305,8 +12766,8 @@ AccPostDate,FiscalYear,DocStatus,DocRefNo)
 select ih.DocNo,ih.DocDate,isnull(ih.DueDate,ih.DocDate),ih.CustCode,concat(c.TaxNumber,'/',c.Branch),
 c.NameThai,c.TAddress,ih.EmpCode,'SI',
 ih.DocDate,ih.DocDate,2,ih.RefNo
-from [job_demo].dbo.Job_InvoiceHeader ih 
-left join [job_demo].dbo.Mas_Company c on ih.CustCode=c.CustCode
+from [job_3x].dbo.Job_InvoiceHeader ih 
+left join [job_3x].dbo.Mas_Company c on ih.CustCode=c.CustCode
 and ih.CustBranch=c.Branch
 where isnull(ih.CancelProve,'')='' 
 and exists(select 1 from Acc_TransactionDT where AccDocNo=ih.DocNo)
@@ -13320,17 +12781,17 @@ select h.* from Acc_TransactionHD h where not exists(select 1 from Acc_Transacti
 select h.* from Acc_TransactionDT h where not exists(select 1 from Acc_TransactionHD where AccDocNo=h.AccDocNo)
 
 select ih.RefNo,id.* 
-from [job_demo].dbo.Job_InvoiceHeader ih 
-inner join [job_demo].dbo.Job_InvoiceDetail id 
+from [job_3x].dbo.Job_InvoiceHeader ih 
+inner join [job_3x].dbo.Job_InvoiceDetail id 
 on ih.DocNo=id.DocNo 
-left join [job_demo].dbo.Job_ClearDetail cd on id.DocNo=cd.LinkBillNo and id.ItemNo=cd.LinkItem
+left join [job_3x].dbo.Job_ClearDetail cd on id.DocNo=cd.LinkBillNo and id.ItemNo=cd.LinkItem
 where isnull(ih.CancelProve,'')='' 
 and not exists(select 1 from Acc_TransactionHD where AccDocNo=ih.DocNo)
 */
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13360,13 +12821,13 @@ c.TaxNumber,c.NameThai as CustName,c.CustCode,
 a.EmpCode,b.SIcode,b.SDescription,
 isnull(ad.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 ac.AccCode as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal
-from [job_demo].dbo.Job_InvoiceHeader a 
-inner join [job_demo].dbo.Job_InvoiceDetail b 
+from [job_3x].dbo.Job_InvoiceHeader a 
+inner join [job_3x].dbo.Job_InvoiceDetail b 
 on a.DocNo=b.DocNo 
-left join [job_demo].dbo.Mas_Company c
+left join [job_3x].dbo.Mas_Company c
 on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
 left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-left join [job_demo].dbo.Job_SrvSingle d 
+left join [job_3x].dbo.Job_SrvSingle d 
 on b.SICode=d.SICode 
 left join dbo.Mas_AccCode ac on d.GLAccountCodeCost=ac.AccCode
 where not isnull(a.CancelProve,'')<>'' 
@@ -13377,12 +12838,12 @@ select 1 as RowType,a.DocNo,a.RefNo,a.Docdate,isnull(a.DueDate,a.DocDate),c.TaxN
 a.EmpCode,b.SIcode,b.SDescription,
 dbo.GetAccConfig('AR_CONFIG','Advance') as AccCodeD,
 ac.AccCode as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet
-from [job_demo].dbo.Job_InvoiceHeader a 
-inner join [job_demo].dbo.Job_InvoiceDetail b 
+from [job_3x].dbo.Job_InvoiceHeader a 
+inner join [job_3x].dbo.Job_InvoiceDetail b 
 on a.DocNo=b.DocNo 
-left join [job_demo].dbo.Mas_Company c
+left join [job_3x].dbo.Mas_Company c
 on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
-left join [job_demo].dbo.Job_SrvSingle d 
+left join [job_3x].dbo.Job_SrvSingle d 
 on b.SICode=d.SICode 
 left join dbo.Mas_AccCode ac on d.GLAccountCodeCost=ac.AccCode
 where not isnull(a.CancelProve,'')<>'' 
@@ -13436,7 +12897,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13468,13 +12929,13 @@ c.TaxNumber,c.NameThai as CustName,c.CustCode,
 a.EmpCode,b.SIcode,b.SDescription,
 isnull(ad.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 ac.AccCode as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal
-from [job_demo].dbo.Job_InvoiceHeader a 
-inner join [job_demo].dbo.Job_InvoiceDetail b 
+from [job_3x].dbo.Job_InvoiceHeader a 
+inner join [job_3x].dbo.Job_InvoiceDetail b 
 on a.DocNo=b.DocNo 
-left join [job_demo].dbo.Mas_Company c
+left join [job_3x].dbo.Mas_Company c
 on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
 left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-left join [job_demo].dbo.Job_SrvSingle d 
+left join [job_3x].dbo.Job_SrvSingle d 
 on b.SICode=d.SICode 
 left join dbo.Mas_AccCode ac on d.GLAccountCodeCost=ac.AccCode
 --left join dbo.Mas_Products ac on b.SICode=ac.ProductCode
@@ -13486,12 +12947,12 @@ select 1 as RowType,a.DocNo,a.RefNo,a.Docdate,isnull(a.DueDate,a.DocDate),c.TaxN
 a.EmpCode,b.SIcode,b.SDescription,
 dbo.GetAccConfig('AR_CONFIG','Advance') as AccCodeD,
 ac.AccCode as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet
-from [job_demo].dbo.Job_InvoiceHeader a 
-inner join [job_demo].dbo.Job_InvoiceDetail b 
+from [job_3x].dbo.Job_InvoiceHeader a 
+inner join [job_3x].dbo.Job_InvoiceDetail b 
 on a.DocNo=b.DocNo 
-left join [job_demo].dbo.Mas_Company c
+left join [job_3x].dbo.Mas_Company c
 on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
-left join [job_demo].dbo.Job_SrvSingle d 
+left join [job_3x].dbo.Job_SrvSingle d 
 on b.SICode=d.SICode 
 left join dbo.Mas_AccCode ac on d.GLAccountCodeCost=ac.AccCode
 --left join dbo.Mas_Products ac on b.SICode=ac.ProductCode
@@ -13546,7 +13007,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13562,12 +13023,12 @@ CREATE procedure [dbo].[Insert_InvoiceToJournal_MNL]
 as
 begin
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('SI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('SI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 
@@ -13578,15 +13039,15 @@ select * into #tmp1 from (
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','DefaultSale')) as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.CustCode,a.CustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(cb.CustCode,cb.Branch)
 	left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product p on b.SICode=p.ProductCode
 	left join (select * from vMas_AccCode where AccCode like '4___-__-____') ac 
@@ -13602,14 +13063,14 @@ select * into #tmp1 from (
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Advance')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','WorkInProcess')) as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.CustCode,a.CustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(cb.CustCode,cb.Branch)
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') ac 
 	on concat(ac.AccMainName,'-',c.NameThai)=ac.AccName	
@@ -13678,7 +13139,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13712,13 +13173,13 @@ select * into #tmp1 from (
 	a.EmpCode,b.SIcode,b.SDescription,
 	isnull(ad.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 	isnull(ac.IncomeAccCode,dbo.GetAccConfig('GL_CONFIG','DefaultSale')) as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
 	left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product ac on b.SICode=ac.ProductCode
 	where not isnull(a.CancelProve,'')<>'' 
@@ -13729,12 +13190,12 @@ select * into #tmp1 from (
 	a.EmpCode,b.SIcode,b.SDescription,
 	dbo.GetAccConfig('AR_CONFIG','Advance') as AccCodeD,
 	isnull(d.GLAccountCodeCost,dbo.GetAccConfig('GL_CONFIG','WorkInProcess')) as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product ac on b.SICode=ac.ProductCode
 	where not isnull(a.CancelProve,'')<>'' 
@@ -13786,7 +13247,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13819,12 +13280,12 @@ CREATE procedure [dbo].[Insert_InvoiceToJournal_V3]
 as
 begin
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('SI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('SI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 
@@ -13835,13 +13296,13 @@ select * into #tmp1 from (
 	dbo.GetAccConfig('GL_CONFIG','AccrueIncome') as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','DefaultSale')) as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
 	left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product p on b.SICode=p.ProductCode
 	left join dbo.Mas_AccCode ac on p.IncomeAccCode=ac.AccCode
@@ -13854,12 +13315,12 @@ select * into #tmp1 from (
 	dbo.GetAccConfig('GL_CONFIG','AccrueIncome') as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','WorkInProcess')) as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on a.BillToCustCode=c.CustCode and a.BillToCustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.Mas_AccCode ac on d.GLAccountCodeCost=ac.AccCode
 	where not isnull(a.CancelProve,'')<>'' 
@@ -13922,7 +13383,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_InvoiceToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13939,12 +13400,12 @@ CREATE procedure [dbo].[Insert_InvoiceToJournal_V4]
 as
 begin
 delete c from Acc_JournalDT c 
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('SI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_InvoiceHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_InvoiceHeader b 
 on a.JournalNo=concat('SI-',b.DocNo)
 where b.DocDate>=@datefrom and b.DocDate<=@dateto
 
@@ -13955,15 +13416,15 @@ select * into #tmp1 from (
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','DefaultSale')) as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.CustCode,a.CustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(cb.CustCode,cb.Branch)
 	left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product p on b.SICode=p.ProductCode
 	left join (select * from vMas_AccCode where AccCode like '4___-__-____') ac 
@@ -13979,14 +13440,14 @@ select * into #tmp1 from (
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Advance')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','WorkInProcess')) as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.CustCode,a.CustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(cb.CustCode,cb.Branch)
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') ac 
 	on concat(ac.AccMainName,'-',c.NameThai)=ac.AccName	
@@ -14054,7 +13515,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_Journal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_Journal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14120,130 +13581,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_JVFromCNDN]    Script Date: 26/10/2026 12:33:14 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-CREATE procedure [dbo].[Insert_JVFromCNDN]
-(
-@docno nvarchar(50),
-@type nvarchar(5),--AR/AP
-@userid nvarchar(50),
-@postdate nvarchar(20)=''
-)
-as
-begin
-declare @author varchar(20)= dbo.GetAuthorize(@userid,'ACC','CNDN')
-if NOT CHARINDEX('P',@author,1)>0
-begin
-	return
-end
-
-declare @maxid int;
-set @maxid=(SELECT MAX(EntryId) as t from Acc_JournalHD)
-
-insert into Acc_JournalHD
-select @maxid+1 as EntryID,
-concat('AJ-',h.AccDocNo) as JvNo,@postdate  as EntryDate,
-h.AccEffectiveDate,@userid as UserID,
-h.DocRefNo,0,0
-from vTransaction_H h
-where h.AccDocNo=@docno
-and not exists(select JournalNo from Acc_JournalHD where JournalNo=concat('AJ-',@docno))
-
-declare @eid int=(select EntryId from Acc_JournalHD where JournalNo=concat('AJ-',@docno));
-
-declare @codeD varchar(20)=(CASE WHEN @type='AR' THEN dbo.GetAccConfig('AR_CONFIG','Sales') ELSE dbo.GetAccConfig('AP_CONFIG','Purchase') END);
-declare @codeV varchar(20)=(CASE WHEN @type='AR' THEN dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat') ELSE dbo.GetAccConfig('VAT_CONFIG','UndueInputVat') END);
-
-insert into Acc_JournalDT
-select * from (
-select @eid as EntryId,
-ROW_NUMBER() OVER(ORDER BY RefNo) as Seq,
-b.AccCode,a.AccDesc,a.RefNo,a.Debit,a.Credit from
-(	
-	select 
-	@codeD as AccCode,
-	d.DocNo,
-	case when (d.TotalAmount+d.VatAmount)>0 then (d.TotalAmount+d.VatAmount) else 0 end as Debit,
-	case when (d.TotalAmount+d.VatAmount)<0 then (d.TotalAmount+d.VatAmount)*-1 else 0 end as Credit,
-	concat(d.SaleProductCode,' / ', d.SalesDescription) as AccDesc,
-	d.AccSourceDocNo as RefNo
-	from vTransaction_D d	
-	where d.DocNo=@docno and @type='AR'
-	union all
-	select 
-	@codeD as AccCode,
-	d.DocNo,
-	case when (d.TotalAmount+d.VatAmount)<0 then (d.TotalAmount+d.VatAmount)*-1 else 0 end as Debit,
-	case when (d.TotalAmount+d.VatAmount)>0 then (d.TotalAmount+d.VatAmount) else 0 end as Credit,	
-	concat(d.SaleProductCode,' / ', d.SalesDescription) as AccDesc,
-	d.AccSourceDocNo as RefNo
-	from vTransaction_D d	
-	where d.DocNo=@docno and @type='AP'
-	union all
-	select 
-	@codeV as AccCode,
-	h.AccDocNo,	
-	case when (h.TotalVat)<0 then (h.TotalVat)*-1 else 0 end as Debit,
-	case when (h.TotalVat)>0 then (h.TotalVat) else 0 end as Credit,
-	h.PartyName as AccDesc,h.DocRefNo as RefNo
-	from vTransaction_H h
-	where h.AccDocNo=@docno
-	and h.TotalVat<>0 and @type='AR'
-	union all
-	select 
-	@codeV as AccCode,
-	h.AccDocNo,	
-	case when (h.TotalVat)>0 then (h.TotalVat) else 0 end as Debit,
-	case when (h.TotalVat)<0 then (h.TotalVat)*-1 else 0 end as Credit,	
-	h.PartyName as AccDesc,h.DocRefNo as RefNo
-	from vTransaction_H h
-	where h.AccDocNo=@docno
-	and h.TotalVat<>0 and @type='AP'
-	union all
-	select 
-	d.IncomeAccCode as AccCode,
-	d.AccDocNo,
-	case when d.DAmt<0 then d.DAmt*-1 else 0 end as Debit,
-	case when d.DAmt>0 then d.DAmt else 0 end as Credit,
-	concat(d.SaleProductCode,' / ', d.SalesDescription) as AccDesc,
-	d.AccSourceDocNo as RefNo
-	from vTransaction_All d	
-	where d.AccDocNo=@docno
-	and @type='AR'
-	union all
-	select 
-	(case when d.IsService=1 then d.ExpenseAccCode else d.AssetAccCode end) as AccCode,
-	d.AccDocNo,
-	case when d.DAmt>0 then d.DAmt else 0 end as Debit,
-	case when d.DAmt<0 then d.DAmt*-1 else 0 end as Credit,
-	concat(d.SaleProductCode,' / ', d.SalesDescription) as AccDesc,
-	d.AccSourceDocNo as RefNo
-	from vTransaction_All d	
-	where d.AccDocNo=@docno
-	and @type='AP'
-) a inner join vMas_AccCode b on a.AccCode=b.AccCode
-) tb
-where Not Exists(select EntryId from Acc_JournalDT where EntryID=tb.EntryId and Seq=tb.Seq)
-
-EXEC dbo.UpdateTotalDebitCredit
-
-update a set a.AccPostDate=@postdate
-from Acc_TransactionHD a
-inner join Acc_JournalHD b
-on a.AccDocNo=concat('AJ-',b.JournalNo) 
-where a.DocStatus=0 and a.AccDocNo=@docno;
-
-select * from Acc_JournalHD where EntryId=@eid;
-end
-
-
-GO
-/****** Object:  StoredProcedure [dbo].[Insert_PayrollByStaff]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PayrollByStaff]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14289,7 +13627,7 @@ and not exists(select 1 from Acc_HRPayRoll where StaffId=@staffid and PaymentDat
 select * from Acc_HRPayRoll where PaymentDate=@paydate and StaffId=@staffid
 end
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PayrollToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PayrollToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14376,7 +13714,7 @@ select * from vJournal_All where EntryId=@id
 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PCFromPI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PCFromPI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14548,7 +13886,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PCFromPO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PCFromPO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14707,7 +14045,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PIFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14728,15 +14066,15 @@ insert into Acc_TransactionHD
 select h.DocNo,@docdate,h.DocDate,
 isnull(c.VenCode,'-'),isnull(c.TaxNumber,'-'),isnull(c.TName,'-'),CONCAT(isnull(c.TAddress1,''),' ',isnull(c.TAddress2,'')),@userid,
 'PI','1900-01-01',@docdate,1,concat(h.RefNo,' #',h.PoNo)
-from [job_demo].dbo.Job_PaymentHeader h
-left join [job_demo].dbo.Mas_Vender c
+from [job_3x].dbo.Job_PaymentHeader h
+left join [job_3x].dbo.Mas_Vender c
 on h.VenCode=c.VenCode
 where not h.CancelProve<>'' 
 and h.DocDate>=@datefrom and h.DocDate<=@dateto 
 and h.DocNo not in (select AccDocNo from Acc_TransactionHD)
 and exists(
-select d.DocNo from [job_demo].dbo.Job_PaymentDetail d
-inner join [job_demo].dbo.Job_SrvSingle s
+select d.DocNo from [job_3x].dbo.Job_PaymentDetail d
+inner join [job_3x].dbo.Job_SrvSingle s
 on d.SICode=s.SICode 
 and s.IsExpense=1
 and d.BranchCode=h.BranchCode and d.DocNo=h.DocNo 
@@ -14752,10 +14090,10 @@ ROW_NUMBER() OVER(PARTITION BY d.DocNo ORDER BY d.ItemNo),'',0,0,d.Qty,
 (case when d.AmtVAT>0 then h.VATRate else 0 end) as VatRate,
 (case when d.AmtWHT>0 then h.TaxRate else 0 end) as TaxRate,
 1 as VatRate
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_PaymentDetail d
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_PaymentDetail d
 on h.DocNo=d.DocNo 
-inner join [job_demo].dbo.Job_SrvSingle s
+inner join [job_3x].dbo.Job_SrvSingle s
 on d.SICode=s.SICode 
 inner join vMas_Product p on d.SICode=p.ProductCode
 where not h.CancelProve<>'' and s.IsExpense=1
@@ -14764,7 +14102,7 @@ and h.DocNo not in (select AccDocNo from Acc_TransactionDT)
 end 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIFromPO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PIFromPO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14921,13 +14259,11 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-
 
 
 
@@ -14971,9 +14307,8 @@ b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
 (
 	select 
 	dbo.GetAccConfig('AP_CONFIG','Purchase') as AccCode,
-	h.AccDocNo,0 as Debit,h.TotalAmount+h.VatAmount as Credit,
-	concat(h.SaleProductCode,' / ',h.SalesDescription) as AccDesc,
-	(case when h.AccSourceDocNo='' then AccDocNo else AccSourceDocNo end) as RefNo
+	h.AccDocNo,0 as Debit,h.Amount+h.VatAmount as Credit,
+	concat(h.SaleProductCode,' / ',h.SalesDescription) as AccDesc,h.AccSourceDocNo as RefNo
 	from vAP_D h
 	where h.AccDocNo=@pino
 	union
@@ -14986,9 +14321,8 @@ b.AccCode,a.AccDesc,RefNo,a.Debit,a.Credit from
 	union
 	select 
 	(case when d.IsService=0 then d.AssetAccCode else d.ExpenseAccCode end) as AccCode,
-	d.AccDocNo,d.TotalAmount as Debit,0 as Credit,
-	concat(d.SaleProductCode,' / ',d.SalesDescription) as AccDesc,
-	(case when d.AccSourceDocNo='' then AccDocNo else AccSourceDocNo end) as RefNo
+	d.AccDocNo,d.Amount as Debit,0 as Credit,
+	concat(d.SaleProductCode,' / ',d.SalesDescription) as AccDesc,AccSourceDocNo as RefNo
 	from vAP_D d	
 	where d.AccDocNo=@pino 
 ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
@@ -15014,7 +14348,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal_ByDate]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PIToJournal_ByDate]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15089,8 +14423,9 @@ on a.AccDocNo=b.JournalNo
 where a.DocStatus=1
 
 end
+
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_POFromPR]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_POFromPR]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15196,7 +14531,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostClearToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PostClearToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15213,7 +14548,7 @@ CREATE procedure [dbo].[Insert_PostClearToJournal]
 as
 begin
 --delete first
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_ClearHeader b on a.JournalNo=b.ClrNo
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_ClearHeader b on a.JournalNo=b.ClrNo
 where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
 
 delete a from Acc_JournalDT a where not exists(select 1 from Acc_JournalHD where EntryID=a.EntryID)
@@ -15227,7 +14562,7 @@ from (
     (
         select distinct  
         a.AccDocNo,a.AccBatchDate,a.AccEffectiveDate,a.IssueBy,a.SalesDescription,b.TotalExpense as Dr,b.TotalExpense as Cr
-        from vPC_D a inner join [job_demo].dbo.Job_ClearHeader b on a.DocRefNo=b.ClrNo 
+        from vPC_D a inner join [job_3x].dbo.Job_ClearHeader b on a.DocRefNo=b.ClrNo 
 		where b.ClrDate>=@datefrom and b.ClrDate<=@dateto
     ) t
 ) h where not exists(select 1 from Acc_JournalHD where JournalNo=h.AccDocNo)
@@ -15258,7 +14593,7 @@ select EntryId,Seq,AccCode,AccDesc,AccDocNo,Dr,Cr from (
         and a.AccSourceDocItem=0
 		and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto
     ) t inner join vPC_D d on t.AccDocNo=d.AccDocNo and t.AccItemNo=d.AccItemNo
-    inner join [job_demo].dbo.Job_ClearHeader b on d.DocRefNo=b.ClrNo 
+    inner join [job_3x].dbo.Job_ClearHeader b on d.DocRefNo=b.ClrNo 
     group by d.AccDocNo,d.SalesDescription,t.AccCode,t.AccName,t.AccDesc
 ) d 
 --select * from vMas_AccConfigCode 
@@ -15273,7 +14608,7 @@ where h.TotalDebit<>d.Dr or h.TotalCredit<>d.Cr
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostCNDNToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PostCNDNToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15289,7 +14624,7 @@ CREATE procedure [dbo].[Insert_PostCNDNToJournal]
 as
 begin
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CNDNHeader b on
+inner join [job_3x].dbo.Job_CNDNHeader b on
 a.JournalNo=b.DocNo
 where b.DocDate>=@datefrom and b.DocDate<=@dateto and b.CustCode like @custcode+'%';
 
@@ -15303,7 +14638,7 @@ insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Desc
 select @id+ROW_NUMBER() OVER(ORDER BY AccDocNo) as EntryID,
 a.AccDocNo as JournalNo,a.AccBatchDate,a.AccEffectiveDate,IssueBy,AccDocNo,0,0
 from vTransaction_H a 
-inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo
+inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo
 where a.AccDocType='CN3'
 and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
 order by a.AccDocNo
@@ -15317,7 +14652,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode as AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,0 as Debit,
 	sum(ABS(a.Amount+a.DVatAmt-a.DWhtAmt)) as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
 	vMas_AccCode p 
 	where a.AccDocType='CN3'  and a.Qty<0 and p.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
@@ -15327,7 +14662,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode as AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(ABS(a.Amount+a.DVatAmt-a.DWhtAmt)) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
 	vMas_AccCode p 
 	where a.AccDocType='CN3'  and a.Qty>0  and p.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
@@ -15337,7 +14672,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode as AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,0 as Debit,
 	sum(ABS(a.DWhtAmt)) as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
 	vMas_AccCode p 
 	where a.AccDocType='CN3'  and a.Qty<0 and p.AccCode=dbo.GetAccConfig('WHT_CONFIG','IncomeTax')
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
@@ -15347,7 +14682,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode as AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(ABS(a.DWhtAmt)) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,
 	vMas_AccCode p 
 	where a.AccDocType='CN3'  and a.Qty>0 and p.AccCode=dbo.GetAccConfig('WHT_CONFIG','IncomeTax')
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
@@ -15357,7 +14692,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,a.IncomeAccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(ABS(case when a.ProductCode like 'A%' then a.Amount+a.DVatAmt else a.Amount end)) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo
 	where a.AccDocType='CN3' and a.Qty<0
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
 	group by a.AccDocNo,a.AccItemNo,a.IncomeAccCode,a.SalesDescription,a.AccSourceDocNo
@@ -15366,7 +14701,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,a.IncomeAccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	0 as Debit,sum(ABS(case when a.ProductCode like 'A%' then a.Amount+a.DVatAmt else a.Amount end)) as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo
 	where a.AccDocType='CN3' and a.Qty>0
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
 	group by a.AccDocNo,a.AccItemNo,a.IncomeAccCode,a.SalesDescription,a.AccSourceDocNo
@@ -15375,7 +14710,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(ABS(a.DVatAmt)) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,vMas_AccCode p
 	where a.AccDocType='CN3' AND a.ProductCode like 'S%' and p.AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat')
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
 	and ABS(a.DVatAmt)>0 and a.Qty<0
@@ -15385,7 +14720,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	0 as Debit,sum(a.DVatAmt) as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_CNDNHeader b on a.AccDocNo=b.DocNo,vMas_AccCode p
 	where a.AccDocType='CN3' AND a.ProductCode like 'S%' and p.AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat')
 	and a.AccBatchDate>=@datefrom and a.AccBatchDate<=@dateto and b.CustCode like @custcode+'%'
 	and ABS(a.DVatAmt)>0 and a.Qty>0
@@ -15405,7 +14740,7 @@ where h.TotalDebit<>d.Dr or h.TotalCredit<>d.Cr
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostInvoiceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PostInvoiceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15501,7 +14836,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PostReceiptToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PostReceiptToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15520,7 +14855,7 @@ CREATE procedure [dbo].[Insert_PostReceiptToJournal]
 as
 begin
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ReceiptHeader b on
+inner join [job_3x].dbo.Job_ReceiptHeader b on
 replace(a.JournalNo,'RV-','')=b.ReceiptNo
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @custcode+'%';
 
@@ -15534,7 +14869,7 @@ insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Desc
 select @id+ROW_NUMBER() OVER(ORDER BY AccDocNo) as EntryID,
 concat('RV-',a.AccDocNo) as JournalNo,a.AccBatchDate,a.AccEffectiveDate,IssueBy,AccDocNo,0,0
 from vTransaction_H a 
-inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
+inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
 where a.AccDocType='RC '
 and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @custcode+'%'
 order by a.AccDocNo
@@ -15548,7 +14883,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,a.AssetAccCode as AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,0 as Debit,
 	sum(a.Amount+a.DVatAmt) as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
 	where a.AccDocType='RC' 
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @custcode+'%'
 	group by a.AccDocNo,a.AccItemno,a.AssetAccCode,a.SalesDescription,a.AccSourceDocNo
@@ -15557,7 +14892,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(case when a.ProductCode like 'A%' then a.Amount+a.DVatAmt else a.DNetAmt end) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
 	where a.AccDocType='RC' and p.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @custcode+'%'
 	group by a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription,a.AccSourceDocNo
@@ -15566,7 +14901,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(a.DWhtAmt) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
 	where a.AccDocType='RC' AND a.ProductCode like 'S%' and p.AccCode=dbo.GetAccConfig('WHT_CONFIG','IncomeTax')
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @custcode+'%'
 	and a.DWhtAmt>0
@@ -15576,7 +14911,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(a.DVatAmt) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
 	where a.AccDocType='RC' AND a.ProductCode like 'S%' and p.AccCode=dbo.GetAccConfig('VAT_CONFIG','UndueOutputVat')
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @custcode+'%'
 	and a.DVatAmt>0
@@ -15586,7 +14921,7 @@ AccCode,AccName,AccDesc,Debit,Credit from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	0 as Debit,sum(a.DVatAmt) as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
 	where a.AccDocType='RC' AND a.ProductCode like 'S%' and p.AccCode=dbo.GetAccConfig('VAT_CONFIG','OutputVat')
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @custcode+'%'
 	and a.DVatAmt>0
@@ -15606,7 +14941,7 @@ where h.TotalDebit<>d.Dr or h.TotalCredit<>d.Cr
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15617,7 +14952,7 @@ as
 begin
 --ลบก่อน
 delete a
-from dbo.Mas_Products a inner join [job_damon].dbo.Job_SrvSingle s 
+from dbo.Mas_Products a inner join [job_3x].dbo.Job_SrvSingle s 
 on a.ProductCode=s.SICode 
 --รหัสค่าบริการที่คิด VAT หัก 3 เข้ากลุ่มสินค้า SV1
 insert into dbo.Mas_Products 
@@ -15625,7 +14960,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV1'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=3
@@ -15635,7 +14970,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV2'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=1
@@ -15645,7 +14980,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV3'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=1
@@ -15655,7 +14990,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV4'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=0
@@ -15665,7 +15000,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV5'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=3
@@ -15675,7 +15010,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV6'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=0
@@ -15685,7 +15020,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CSV'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=1
@@ -15695,7 +15030,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CTR'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND s.Rate50Tavi=1
@@ -15705,7 +15040,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CSN'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND NOT s.Rate50Tavi=1
@@ -15715,7 +15050,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CEX'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=0 and s.IsExpense=1
@@ -15725,13 +15060,14 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','ADV'
-from [job_damon].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsCredit=1 and s.IsExpense=0
 end
+
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_demo]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_3x]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15741,12 +15077,12 @@ GO
 
 
 
-CREATE procedure [dbo].[Insert_ProductsCodeFromjob_demo]
+CREATE procedure [dbo].[Insert_ProductsCodeFromjob_3x]
 as
 begin
 --ลบก่อน
 delete a
-from dbo.Mas_Products a inner join [job_demo].dbo.Job_SrvSingle s 
+from dbo.Mas_Products a inner join [job_3x].dbo.Job_SrvSingle s 
 on a.ProductCode=s.SICode 
 --รหัสค่าบริการที่คิด VAT หัก 3 เข้ากลุ่มสินค้า SV1
 insert into dbo.Mas_Products 
@@ -15754,7 +15090,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV1'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=3
@@ -15764,7 +15100,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV2'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=1
@@ -15774,7 +15110,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV3'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=1
@@ -15784,7 +15120,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV4'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=0
@@ -15794,7 +15130,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV5'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=3
@@ -15804,7 +15140,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV6'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=0
@@ -15814,7 +15150,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CSV'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=1
@@ -15824,7 +15160,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CTR'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND s.Rate50Tavi=1
@@ -15834,7 +15170,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CSN'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND NOT s.Rate50Tavi=1
@@ -15844,7 +15180,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CEX'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=0 and s.IsExpense=1
@@ -15854,7 +15190,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','ADV'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3x].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsCredit=1 and s.IsExpense=0
@@ -15895,7 +15231,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_3xacc]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15903,12 +15239,14 @@ GO
 
 
 
-CREATE procedure [dbo].[Insert_ProductsCodeFromJob_V2]
+
+
+CREATE procedure [dbo].[Insert_ProductsCodeFromjob_3xacc]
 as
 begin
 --ลบก่อน
 delete a
-from dbo.Mas_Products a inner join [job_demo].dbo.Job_SrvSingle s 
+from dbo.Mas_Products a inner join [job_3xacc].dbo.Job_SrvSingle s 
 on a.ProductCode=s.SICode 
 --รหัสค่าบริการที่คิด VAT หัก 3 เข้ากลุ่มสินค้า SV1
 insert into dbo.Mas_Products 
@@ -15916,7 +15254,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV1'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=3
@@ -15926,7 +15264,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV2'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=1
@@ -15936,7 +15274,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV3'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=1
@@ -15946,7 +15284,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV4'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=0
@@ -15956,7 +15294,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV5'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=3
@@ -15966,7 +15304,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','SV6'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=0
@@ -15976,7 +15314,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CSV'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=1
@@ -15986,7 +15324,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CTR'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND s.Rate50Tavi=1
@@ -15996,7 +15334,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CSN'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND NOT s.Rate50Tavi=1
@@ -16006,7 +15344,7 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','CEX'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsHaveSlip=0 and s.IsExpense=1
@@ -16016,12 +15354,340 @@ insert into dbo.Mas_Products
 Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
 select s.SICode,s.NameThai,
 '','',0,'SHP',0,'SHP','SHP','ADV'
-from [job_demo].dbo.Job_SrvSingle s
+from [job_3xacc].dbo.Job_SrvSingle s
 left join Mas_Products a
 on s.SICode=a.ProductCode
 where a.ProductCode is null and s.IsCredit=1 and s.IsExpense=0
 
 
+--Create SubAccounts
+declare @codeca nvarchar(20)=dbo.GetAccConfig('ADV_CONFIG','CashIn')
+declare @codear nvarchar(20)=dbo.GetAccConfig('AR_CONFIG','Sales')
+declare @codeap nvarchar(20)=dbo.GetAccConfig('AP_CONFIG','Purchase')
+declare @codead nvarchar(20)=dbo.GetAccConfig('AR_CONFIG','Advance')
+declare @codeci nvarchar(20)=dbo.GetAccConfig('AR_CONFIG','ChequeIn')
+declare @codewp nvarchar(20)=dbo.GetAccConfig('GL_CONFIG','WorkInProcess')
+declare @codeai nvarchar(20)=dbo.GetAccConfig('GL_CONFIG','AccrueIncome')
+declare @codeae nvarchar(20)=dbo.GetAccConfig('GL_CONFIG','AccrueExpense')
+
+EXEC dbo.Insert_SubAccCodefromUser @codeca,0
+
+EXEC dbo.Insert_SubAccCodefromCustomer @codear,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codead,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codewp,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codeai,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codeci,0
+
+EXEC dbo.Insert_SubAccCodefromVender @codeap,0
+EXEC dbo.Insert_SubAccCodefromVender @codeae,0
+
+--EXEC dbo.Insert_SubAccCodeFromService 'S','4100-00',0
+EXEC dbo.Insert_SubAccCodeFromSCharge 'S','4100-01',0
+EXEC dbo.Insert_SubAccCodeFromTCharge 'S','4100-02',0
+EXEC dbo.Insert_SubAccCodeFromOCharge 'S','4100-05',0
+EXEC dbo.Insert_SubAccCodeFromService 'A','5200-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'ERN','5100-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'CSS','5130-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'CST','5110-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'EXC','5390-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'EX-','5300-00',0
+end
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromjob_demoacc]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+CREATE procedure [dbo].[Insert_ProductsCodeFromjob_demoacc]
+as
+begin
+--ลบก่อน
+delete a
+from dbo.Mas_Products a inner join [job_demoacc].dbo.Job_SrvSingle s 
+on a.ProductCode=s.SICode 
+--รหัสค่าบริการที่คิด VAT หัก 3 เข้ากลุ่มสินค้า SV1
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV1'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=3
+--รหัสค่าบริการที่ไม่คิด VAT หัก 1 เข้ากลุ่มสินค้า SV2 (ค่าขนส่งต่างๆ)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV2'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=1
+--รหัสค่าบริการที่คิด VAT และ หัก 1 เข้ากลุ่ม SV3 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV3'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=1
+--รหัสค่าบริการที่คิด VAT และ ไม่มีหัก  เข้ากลุ่ม SV4 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV4'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=0
+--รหัสค่าบริการที่ไม่คิด VAT และ หัก 3 เข้ากลุ่ม SV5 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV5'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=3
+--รหัสค่าบริการที่ไม่คิด VAT และ ไม่หักเลยเข้ากลุ่ม SV6 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV6'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=0
+--รหัสค่าใช้จ่ายต้นทุนที่คิด VAT หัก 3 เข้ากลุ่ม CSV
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CSV'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่คิด VAT หัก 1 เข้ากลุ่ม CTR
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CTR'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND s.Rate50Tavi=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่คิด VAT ไม่ได้หัก 1 เข้ากลุ่ม CSN
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CSN'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND NOT s.Rate50Tavi=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่มีใบเสร็จเข้ากลุ่ม CEX
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CEX'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=0 and s.IsExpense=1
+--รหัสเงินค่าใช้จ่ายของลูกค้าเข้า ADV
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','ADV'
+from [job_demoacc].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsCredit=1 and s.IsExpense=0
+
+
+--Create SubAccounts
+declare @codeca nvarchar(20)=dbo.GetAccConfig('ADV_CONFIG','CashIn')
+declare @codear nvarchar(20)=dbo.GetAccConfig('AR_CONFIG','Sales')
+declare @codeap nvarchar(20)=dbo.GetAccConfig('AP_CONFIG','Purchase')
+declare @codead nvarchar(20)=dbo.GetAccConfig('AR_CONFIG','Advance')
+declare @codeci nvarchar(20)=dbo.GetAccConfig('AR_CONFIG','ChequeIn')
+declare @codewp nvarchar(20)=dbo.GetAccConfig('GL_CONFIG','WorkInProcess')
+declare @codeai nvarchar(20)=dbo.GetAccConfig('GL_CONFIG','AccrueIncome')
+declare @codeae nvarchar(20)=dbo.GetAccConfig('GL_CONFIG','AccrueExpense')
+
+EXEC dbo.Insert_SubAccCodefromUser @codeca,0
+
+EXEC dbo.Insert_SubAccCodefromCustomer @codear,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codead,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codewp,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codeai,0
+EXEC dbo.Insert_SubAccCodefromCustomer @codeci,0
+
+EXEC dbo.Insert_SubAccCodefromVender @codeap,0
+EXEC dbo.Insert_SubAccCodefromVender @codeae,0
+
+--EXEC dbo.Insert_SubAccCodeFromService 'S','4100-00',0
+EXEC dbo.Insert_SubAccCodeFromSCharge 'S','4100-01',0
+EXEC dbo.Insert_SubAccCodeFromTCharge 'S','4100-02',0
+EXEC dbo.Insert_SubAccCodeFromOCharge 'S','4100-05',0
+EXEC dbo.Insert_SubAccCodeFromService 'A','5200-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'ERN','5100-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'CSS','5130-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'CST','5110-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'EXC','5390-00',0
+EXEC dbo.Insert_SubAccCodeFromService 'EX-','5300-00',0
+end
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[Insert_ProductsCodeFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+CREATE procedure [dbo].[Insert_ProductsCodeFromJob_V2]
+as
+begin
+--ลบก่อน
+delete a
+from dbo.Mas_Products a inner join [job_3x].dbo.Job_SrvSingle s 
+on a.ProductCode=s.SICode 
+--รหัสค่าบริการที่คิด VAT หัก 3 เข้ากลุ่มสินค้า SV1
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV1'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=3
+--รหัสค่าบริการที่ไม่คิด VAT หัก 1 เข้ากลุ่มสินค้า SV2 (ค่าขนส่งต่างๆ)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV2'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=1
+--รหัสค่าบริการที่คิด VAT และ หัก 1 เข้ากลุ่ม SV3 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV3'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=1
+--รหัสค่าบริการที่คิด VAT และ ไม่มีหัก  เข้ากลุ่ม SV4 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV4'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=1 and s.Rate50Tavi=0
+--รหัสค่าบริการที่ไม่คิด VAT และ หัก 3 เข้ากลุ่ม SV5 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV5'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=3
+--รหัสค่าบริการที่ไม่คิด VAT และ ไม่หักเลยเข้ากลุ่ม SV6 (ถ้ามี)
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','SV6'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null AND s.IsCredit=0 AND s.IsExpense=0 AND s.IsTaxCharge=0 and s.Rate50Tavi=0
+--รหัสค่าใช้จ่ายต้นทุนที่คิด VAT หัก 3 เข้ากลุ่ม CSV
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CSV'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่คิด VAT หัก 1 เข้ากลุ่ม CTR
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CTR'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND s.Rate50Tavi=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่คิด VAT ไม่ได้หัก 1 เข้ากลุ่ม CSN
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CSN'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=1 and s.IsExpense=1 and s.IsTaxCharge=0 AND NOT s.Rate50Tavi=1
+--รหัสค่าใช้จ่ายต้นทุนที่ไม่มีใบเสร็จเข้ากลุ่ม CEX
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','CEX'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsHaveSlip=0 and s.IsExpense=1
+--รหัสเงินค่าใช้จ่ายของลูกค้าเข้า ADV
+insert into dbo.Mas_Products 
+(ProductCode,ProductName,
+Brand,Color,Size,SizeUnit,Volume,VolumeUnit,UnitStock,ProductTypeCode)
+select s.SICode,s.NameThai,
+'','',0,'SHP',0,'SHP','SHP','ADV'
+from [job_3x].dbo.Job_SrvSingle s
+left join Mas_Products a
+on s.SICode=a.ProductCode
+where a.ProductCode is null and s.IsCredit=1 and s.IsExpense=0
+
+/*
 --Create SubAccounts
 declare @codeca nvarchar(20)=dbo.GetAccConfig('ADV_CONFIG','CashIn')
 declare @codear nvarchar(20)=dbo.GetAccConfig('AR_CONFIG','Sales')
@@ -16050,10 +15716,11 @@ EXEC dbo.Insert_SubAccCodeFromService 'CSS','5130-00',0
 EXEC dbo.Insert_SubAccCodeFromService 'CST','5110-00',0
 EXEC dbo.Insert_SubAccCodeFromService 'EXC','5390-00',0
 EXEC dbo.Insert_SubAccCodeFromService 'EX-','5300-00',0
+*/
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16069,7 +15736,7 @@ as
 begin
 --delete first
 delete h from Acc_TransactionHD h
-inner join [job_demo].dbo.Job_PaymentHeader d 
+inner join [job_3x].dbo.Job_PaymentHeader d 
 on h.AccDocNo=d.PaymentRef
 where d.PaymentDate>=@datefrom and d.PaymentDate<=@dateto
 and d.VenCode like @vencode+'%' and d.PaymentRef<>''
@@ -16087,10 +15754,10 @@ select h.PaymentRef,ROW_NUMBER() OVER(PARTITION BY h.PaymentRef ORDER BY d.DocNo
 d.Qty,d.UnitPrice,d.QtyUnit,h.CurrencyCode,h.ExchangeRate,d.Amt,d.SICode,d.ForJNo,
 round((d.amtvat*100/d.amt),0),
 round((d.amtWht*100/d.amt),0),1
-from [job_demo].dbo.Job_CashControlDoc c 
-inner join [job_demo].dbo.Job_PaymentHeader h on c.BranchCode=h.BranchCode and c.ControlNo=h.PaymentRef
+from [job_3x].dbo.Job_CashControlDoc c 
+inner join [job_3x].dbo.Job_PaymentHeader h on c.BranchCode=h.BranchCode and c.ControlNo=h.PaymentRef
 and c.DocNo=h.DocNo
-inner join [job_demo].dbo.Job_PaymentDetail d on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
+inner join [job_3x].dbo.Job_PaymentDetail d on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
 where isnull(h.CancelProve,'')='' and h.PaymentRef<>'' and d.Amt>0
 and h.PaymentDate>=@datefrom and h.PaymentDate<=@dateto and h.VenCode like @vencode+'%'
 
@@ -16100,38 +15767,38 @@ IssueBy,AccPostDate,FiscalYear,DocStatus,DocRefNo,AccDocType)
 select distinct c.ControlNo,c.VoucherDate,c.VoucherDate,
 c.CustCode,concat(u.TaxNumber,'/',u.BranchCode),isnull(u.TName,''),concat(u.TAddress1,' ',u.TAddress2),
 c.RecUser,c.RecDate,c.RecDate,0,c.ControlNo,'PC'
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_CashControl c on h.PaymentRef=c.ControlNo 
-left join [job_demo].dbo.Mas_Vender u on h.VenCode =u.VenCode
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_CashControl c on h.PaymentRef=c.ControlNo 
+left join [job_3x].dbo.Mas_Vender u on h.VenCode =u.VenCode
 where isnull(h.CancelProve,'')=''  and h.TotalExpense>0 and h.PaymentRef<>''
-and exists(select 1 from [job_demo].dbo.Job_PaymentDetail where DocNo=h.DocNo)
+and exists(select 1 from [job_3x].dbo.Job_PaymentDetail where DocNo=h.DocNo)
 and h.PaymentDate>=@datefrom and h.PaymentDate<=@dateto and h.VenCode like @vencode+'%'
 
 end
 /**patch data**/
---update [job_demo].dbo.Job_PaymentDetail set Amt=Qty*UnitPrice where Amt=0
---update [job_demo].dbo.Job_PaymentHeader set ExchangeRate=1 where ExchangeRate=0
---update h set h.VenCode='V0012' from [job_demo].dbo.Job_PaymentHeader h where not exists(select 1 from [job_demo].dbo.Mas_Vender where VenCode=h.VenCode)
---select amt,amtwht,(amtWht*100/amt) as ratecak from [job_demo].dbo.Job_PaymentDetail d  where AmtWHT>0 order by 2 desc
---select amt,amtvat,round((amtvat*100/amt),0) as ratecak from [job_demo].dbo.Job_PaymentDetail d  where AmtVAT>0 order by 2 desc
+--update [job_3x].dbo.Job_PaymentDetail set Amt=Qty*UnitPrice where Amt=0
+--update [job_3x].dbo.Job_PaymentHeader set ExchangeRate=1 where ExchangeRate=0
+--update h set h.VenCode='V0012' from [job_3x].dbo.Job_PaymentHeader h where not exists(select 1 from [job_3x].dbo.Mas_Vender where VenCode=h.VenCode)
+--select amt,amtwht,(amtWht*100/amt) as ratecak from [job_3x].dbo.Job_PaymentDetail d  where AmtWHT>0 order by 2 desc
+--select amt,amtvat,round((amtvat*100/amt),0) as ratecak from [job_3x].dbo.Job_PaymentDetail d  where AmtVAT>0 order by 2 desc
 
 /**data lost**/
 /*
 select d2.* 
-from [job_demo].dbo.Job_ClearDetail d1
-right join [job_demo].dbo.Job_PaymentDetail d2 on
+from [job_3x].dbo.Job_ClearDetail d1
+right join [job_3x].dbo.Job_PaymentDetail d2 on
 d2.ClrRefNo=d1.ClrNo and d2.ClrItemNo=d1.ItemNo 
 where d1.VenderBillingNo=concat(d2.DocNo,'#',d2.ItemNo)
 
 select d1.* 
-from [job_demo].dbo.Job_ClearDetail d1
-left join [job_demo].dbo.Job_PaymentDetail d2 on
+from [job_3x].dbo.Job_ClearDetail d1
+left join [job_3x].dbo.Job_PaymentDetail d2 on
 d1.VenderBillingNo= concat(d2.DocNo,'#',d2.ItemNo)
 where d2.DocNo is null and d1.VenderBillingNo<>''
 */
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16150,9 +15817,9 @@ begin
 --**PV from AP**--
 --delete first
 delete h from Acc_TransactionHD h
-inner join [job_demo].dbo.Job_PaymentHeader d 
+inner join [job_3x].dbo.Job_PaymentHeader d 
 on h.AccDocNo=d.PaymentRef
-inner join [job_demo].dbo.Job_CashControl v on d.PaymentRef=v.ControlNo
+inner join [job_3x].dbo.Job_CashControl v on d.PaymentRef=v.ControlNo
 where v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto
 and d.PaymentRef<>''
 
@@ -16174,12 +15841,12 @@ d.SICode,d.ForJNo,
 (case when isnull(s.IsCredit,1)=1 then 0 else round((d.amtvat*100/d.amt),0) end) as VatRate,
 (case when isnull(s.IsCredit,1)=1 then 0 else round((d.amtWht*100/d.amt),0) end) as TaxRate
 ,1 as VatType
-from [job_demo].dbo.Job_CashControlDoc c 
-inner join [job_demo].dbo.Job_CashControl v on c.ControlNo=v.ControlNo
-inner join [job_demo].dbo.Job_PaymentHeader h on c.BranchCode=h.BranchCode and c.ControlNo=h.PaymentRef
+from [job_3x].dbo.Job_CashControlDoc c 
+inner join [job_3x].dbo.Job_CashControl v on c.ControlNo=v.ControlNo
+inner join [job_3x].dbo.Job_PaymentHeader h on c.BranchCode=h.BranchCode and c.ControlNo=h.PaymentRef
 and c.DocNo=h.DocNo
-inner join [job_demo].dbo.Job_PaymentDetail d on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
-left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode
+inner join [job_3x].dbo.Job_PaymentDetail d on h.BranchCode=d.BranchCode and h.DocNo=d.DocNo 
+left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode
 where isnull(h.CancelProve,'')='' and h.PaymentRef<>'' and d.Amt>0
 and v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto 
 
@@ -16189,17 +15856,17 @@ IssueBy,AccPostDate,FiscalYear,DocStatus,DocRefNo,AccDocType)
 select distinct c.ControlNo,c.VoucherDate,c.VoucherDate,
 c.CustCode,concat(u.TaxNumber,'/',u.BranchCode),isnull(u.TName,''),concat(u.TAddress1,' ',u.TAddress2),
 c.RecUser,c.RecDate,c.RecDate,0,c.ControlNo,'PC'
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_CashControl c on h.PaymentRef=c.ControlNo 
-inner join [job_demo].dbo.Job_CashControl v on c.ControlNo=v.ControlNo
-left join [job_demo].dbo.Mas_Vender u on h.VenCode =u.VenCode
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_CashControl c on h.PaymentRef=c.ControlNo 
+inner join [job_3x].dbo.Job_CashControl v on c.ControlNo=v.ControlNo
+left join [job_3x].dbo.Mas_Vender u on h.VenCode =u.VenCode
 where isnull(h.CancelProve,'')=''  and h.TotalExpense>0 and h.PaymentRef<>''
-and exists(select 1 from [job_demo].dbo.Job_PaymentDetail where DocNo=h.DocNo)
+and exists(select 1 from [job_3x].dbo.Job_PaymentDetail where DocNo=h.DocNo)
 and v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto 
 
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PV-B',b.PaymentRef)
 and b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto;
 
@@ -16207,9 +15874,9 @@ delete b from Acc_JournalDT b
 where not exists(select 1 from Acc_JournalHD where EntryId=b.EntryId)
 
 update a set a.PaymentDate=c.VoucherDate
-from [job_demo].dbo.Job_PaymentHeader a
-left join [job_demo].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
-left join [job_demo].dbo.Job_CashControl c on d.ControlNo=c.ControlNo and isnull(c.CancelProve,'')=''
+from [job_3x].dbo.Job_PaymentHeader a
+left join [job_3x].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
+left join [job_3x].dbo.Job_CashControl c on d.ControlNo=c.ControlNo and isnull(c.CancelProve,'')=''
 where a.PaymentRef<>'' 
 and c.VoucherDate<>a.PaymentDate
 
@@ -16221,21 +15888,21 @@ select * into #tmp3 from (
 	sum(b.Amt+b.AmtVAT) as Totalpay,sum(case when s.IsCredit=1 then 0 else b.AmtWHT end) as WhdAmt,
 	sum(case when s.IsCredit=1 then 0 else b.AmtVAT end) as TotalVat,
 	sum(case when s.IsCredit=1 then b.Total+b.AmtWHT else b.Total end) as TotalNet
-	from [job_demo].dbo.Job_PaymentHeader a
-	inner join [job_demo].dbo.Job_PaymentDetail b
+	from [job_3x].dbo.Job_PaymentHeader a
+	inner join [job_3x].dbo.Job_PaymentDetail b
 	on a.DocNo=b.DocNo 	
-	left join [job_demo].dbo.Job_SrvSingle s on b.SICode=s.SICode
+	left join [job_3x].dbo.Job_SrvSingle s on b.SICode=s.SICode
 	left join (
 		select s.ControlNo,MAX(b.GLAccountCode) as AccCode
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		on s.BookCode=b.BookCode
 		group by s.ControlNo
 	) c on a.PaymentRef=c.ControlNo
-	left join [job_demo].dbo.Mas_Vender v on a.VenCode=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on a.VenCode=v.VenCode
 	left join dbo.Mas_AccCode av on v.GLAccountCode=av.AccCode
-	left join [job_demo].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
-	left join [job_demo].dbo.Job_CashControl h on d.ControlNo=h.ControlNo and isnull(h.CancelProve,'')=''
+	left join [job_3x].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
+	left join [job_3x].dbo.Job_CashControl h on d.ControlNo=h.ControlNo and isnull(h.CancelProve,'')=''
 	where a.PaymentRef<>''
 	and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto
 	group by isnull(c.AccCode,dbo.GetAccConfig('AP_CONFIG','CashOut')),
@@ -16302,7 +15969,7 @@ drop table #tmp3;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V3]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromBillPay_V3]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16331,16 +15998,16 @@ begin
 
 update p 
 set p.PaymentRef=a.ControlNo,p.PaymentDate=a.VoucherDate
-from [job_demo].dbo.Job_PaymentHeader p
-inner join [job_demo].dbo.Job_CashControlDoc c
+from [job_3x].dbo.Job_PaymentHeader p
+inner join [job_3x].dbo.Job_CashControlDoc c
 on p.DocNo=c.DocNo
-inner join [job_demo].dbo.Job_CashControl a
+inner join [job_3x].dbo.Job_CashControl a
 on c.ControlNo=a.ControlNo
 where isnull(a.CancelProve,'')=''
 and a.VoucherDate>=@datefrom and a.VoucherDate<=@dateto
 
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_PaymentHeader b
+inner join [job_3x].dbo.Job_PaymentHeader b
 on a.JournalNo=concat('PV-P',b.PaymentRef)
 and b.PaymentDate>=@datefrom and b.PaymentDate<=@dateto;
 
@@ -16356,23 +16023,23 @@ select * into #tmp1 from (
 	sum(case when s.IsCredit=1 then 0 else b.AmtWHT end) as WhdAmt,
 	sum(case when s.IsCredit=1 then 0 else b.AmtVAT end) as TotalVat,
 	sum(b.Total) as TotalNet
-	from [job_demo].dbo.Job_PaymentHeader a
-	inner join [job_demo].dbo.Job_PaymentDetail b
+	from [job_3x].dbo.Job_PaymentHeader a
+	inner join [job_3x].dbo.Job_PaymentDetail b
 	on a.DocNo=b.DocNo 	
-	left join [job_demo].dbo.Job_SrvSingle s on b.SICode=s.SICode
+	left join [job_3x].dbo.Job_SrvSingle s on b.SICode=s.SICode
 	left join (
 		select s.ControlNo,MAX(c.AccCode) as AccCode
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		on s.BookCode=b.BookCode
 		left join Mas_AccCode c on b.GLAccountCode=c.AccCode
 		group by s.ControlNo
 	) c on a.PaymentRef=c.ControlNo
-	left join [job_demo].dbo.Mas_Vender v on a.VenCode=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on a.VenCode=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') av 
 	on concat(av.AccMainName,'-',v.TName)=av.AccName
-	left join [job_demo].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
-	left join [job_demo].dbo.Job_CashControl h on d.ControlNo=h.ControlNo and isnull(h.CancelProve,'')=''
+	left join [job_3x].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
+	left join [job_3x].dbo.Job_CashControl h on d.ControlNo=h.ControlNo and isnull(h.CancelProve,'')=''
 	where a.PaymentRef<>''
 	and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto
 	group by isnull(c.AccCode,dbo.GetAccConfig('AP_CONFIG','CashOut')),
@@ -16441,7 +16108,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromPC]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromPC]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16596,7 +16263,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromPI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromPI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16740,7 +16407,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromPO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromPO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16901,7 +16568,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_PVFromTransaction]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_PVFromTransaction]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17033,7 +16700,7 @@ end
 select * from vJournal_All where EntryId=@eid;
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickBuyAsset]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_QuickBuyAsset]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17145,7 +16812,7 @@ select JournalNo,AccRemark,AccCode,AccName,AccDesc,Debit,Credit from vJournal_Al
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickCashSaleProduct]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_QuickCashSaleProduct]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17315,7 +16982,7 @@ where JournalNo=@journalno;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_QuickJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17377,7 +17044,7 @@ begin
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickPayment]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_QuickPayment]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17502,7 +17169,7 @@ select JournalNo,AccRemark,AccCode,AccName,AccDesc,Debit,Credit from vJournal_Al
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickReceive]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_QuickReceive]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17638,7 +17305,7 @@ select JournalNo,AccRemark,AccCode,AccName,AccDesc,Debit,Credit from vJournal_Al
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_QuickSellProduct]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_QuickSellProduct]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17772,7 +17439,7 @@ select JournalNo,AccRemark,AccCode,AccName,AccDesc,Debit,Credit from vJournal_Al
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RCFromSI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RCFromSI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -17932,7 +17599,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RCFromSO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RCFromSO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18074,7 +17741,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18090,13 +17757,13 @@ CREATE procedure [dbo].[Insert_ReceiptFromJob]
 as
 begin
 delete a from Acc_TransactionHD a
-inner join [job_demo].dbo.Job_ReceiptHeader b 
+inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.AccDocNo=b.ReceiptNo
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 and b.BillToCustCode like @custcode+'%'; 
 
 delete a from Acc_TransactionDT a 
-inner join [job_demo].dbo.Job_ReceiptHeader b 
+inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.AccDocNo=b.ReceiptNo
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 and b.BillToCustCode like @custcode+'%'; 
@@ -18114,13 +17781,13 @@ d.ReceiptNo,d.ItemNo,d.InvoiceNo as SourceDocNo,d.InvoiceItemNo as SourceDocItem
 (case when d.SICode not like 'ADV%' then d.VatRate else 0 end),
 (case when d.SICode not like 'ADV%' then d.Rate50Tavi else 0 end)
 ,1
-from [job_demo].dbo.Job_ReceiptDetail d
-inner join [job_demo].dbo.Job_ReceiptHeader h
+from [job_3x].dbo.Job_ReceiptDetail d
+inner join [job_3x].dbo.Job_ReceiptHeader h
 on d.BranchCode=h.BranchCode 
 and d.ReceiptNo=h.ReceiptNo
-inner join [job_demo].dbo.Job_InvoiceHeader i 
+inner join [job_3x].dbo.Job_InvoiceHeader i 
 on d.BranchCode=i.BranchCode and d.InvoiceNo=i.DocNo
-inner join [job_demo].dbo.Job_InvoiceDetail s on d.InvoiceNo=s.DocNo and d.InvoiceItemNo=s.ItemNo
+inner join [job_3x].dbo.Job_InvoiceDetail s on d.InvoiceNo=s.DocNo and d.InvoiceItemNo=s.ItemNo
 where isnull(h.CancelProve,'')=''
 and h.ReceiptDate>=@datefrom and h.ReceiptDate<=@dateto
 and h.BillToCustCode like @custcode+'%'; 
@@ -18131,15 +17798,15 @@ IssueBy,AccDocType,AccPostDate,FiscalYear,DocStatus,DocRefNo)
 select h.ReceiptNo,h.ReceiptDate,h.ReceiptDate,h.BillToCustCode,concat(c.TaxNumber,'/',c.Branch),c.NameThai,c.TAddress,
 h.EmpCode,'RC',h.ReceiptDate,h.ReceiptDate,1,h.TRemark
 from
-[job_demo].dbo.Job_ReceiptHeader h 
-left join [job_demo].dbo.Mas_Company c on h.BillToCustCode=c.CustCode and h.BillToCustBranch=c.Branch
+[job_3x].dbo.Job_ReceiptHeader h 
+left join [job_3x].dbo.Mas_Company c on h.BillToCustCode=c.CustCode and h.BillToCustBranch=c.Branch
 where isnull(h.CancelProve,'')='' 
 and h.ReceiptDate>=@datefrom and h.ReceiptDate<=@dateto
 and h.BillToCustCode like @custcode+'%'; 
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18167,30 +17834,30 @@ select * into #tmp1 from (
 	a.Amt,a.AmtVAT,a.Amt50Tavi,a.Amt+a.AmtVAT as AmtTotal,
 	a1.AccCode as AccCodeD,a2.AccCode as AccCodeC,a.InvoiceNo,
 	a3.AccCode as AccCodeAR,a4.AccCode as AccCodeJV,f.NameThai as CustName,b.EmpCode ,d.SDescription
-	from [job_demo].dbo.Job_ReceiptDetail a
-	inner join [job_demo].dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	left join [job_demo].dbo.Job_CashControlSub c 
+	left join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join [job_demo].dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join [job_demo].dbo.Job_InvoiceHeader i 
+	inner join [job_3x].dbo.Job_InvoiceHeader i 
 	on d.DocNo=i.DocNo 
-	inner join [job_demo].dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
 	left join dbo.Mas_AccCode a1 
 	on e.GLAccountCodeCost=a1.AccCode
 	left join dbo.Mas_AccCode a2
 	on e.GLAccountCodeSales=a2.AccCode
-	left join [job_demo].dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join dbo.Mas_AccCode a3
 	on f.GLAccountCode=a3.AccCode
-	left join [job_demo].dbo.Mas_BookAccount g
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
-	left join [job_demo].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	left join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and d.AmtCharge>0
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
@@ -18260,7 +17927,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18359,7 +18026,7 @@ group by r.ReceiptNo,r.ReceiptDAte,r.CustTaxID,r.custName
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18373,12 +18040,12 @@ CREATE procedure [dbo].[Insert_ReceiptToJournal_MNL]
 as
 begin
 delete c from Acc_JournalDT c
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_ReceiptHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.JournalNo=concat('RC-',b.ReceiptNo)
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_ReceiptHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.JournalNo=concat('RC-',b.ReceiptNo)
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 
@@ -18394,18 +18061,18 @@ select * into #tmp1 from (
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) end) as AccCodeC,
 	isnull(ad.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueIncome')) as AccCodeD,a.InvoiceNo,
 	f.NameThai as CustName,b.EmpCode ,d.SDescription
-	from job_demo.dbo.Job_ReceiptDetail a
-	inner join job_demo.dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	left join job_demo.dbo.Job_CashControlSub c 
+	left join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join job_demo.dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join job_demo.dbo.Job_InvoiceHeader i 
+	inner join [job_3x].dbo.Job_InvoiceHeader i 
 	on d.DocNo=i.DocNo 
-	inner join job_demo.dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
-	left join job_demo.dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AR_CONFIG','Advance')+'-____') ab 
 	on concat(ab.AccMainName,'-',f.NameThai)=ab.AccName	
@@ -18413,7 +18080,7 @@ select * into #tmp1 from (
 	on concat(ac.AccMainName,'-',f.NameThai)=ac.AccName	
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueIncome')+'-____') ad 
 	on concat(ad.AccMainName,'-',f.NameThai)=ad.AccName	
-	left join job_demo.dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	left join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 ) tb
@@ -18474,7 +18141,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18503,30 +18170,30 @@ select * into #tmp1 from (
 	a.Amt,a.AmtVAT,a.Amt50Tavi,a.Amt+a.AmtVAT as AmtTotal,
 	a1.AccCode as AccCodeD,a2.AccCode as AccCodeC,a.InvoiceNo,
 	a3.AccCode as AccCodeAR,a4.AccCode as AccCodeJV,f.NameThai as CustName,b.EmpCode ,d.SDescription
-	from [job_demo].dbo.Job_ReceiptDetail a
-	inner join [job_demo].dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	left join [job_demo].dbo.Job_CashControlSub c 
+	left join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join [job_demo].dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join [job_demo].dbo.Job_InvoiceHeader i 
+	inner join [job_3x].dbo.Job_InvoiceHeader i 
 	on d.DocNo=i.DocNo 
-	inner join [job_demo].dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
 	left join dbo.Mas_AccCode a1 
 	on e.GLAccountCodeCost=a1.AccCode
 	left join dbo.Mas_AccCode a2
 	on e.GLAccountCodeSales=a2.AccCode
-	left join [job_demo].dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join dbo.Mas_AccCode a3
 	on f.GLAccountCode=a3.AccCode
-	left join [job_demo].dbo.Mas_BookAccount g
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
-	left join [job_demo].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	left join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and d.AmtCharge>0
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
@@ -18596,7 +18263,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V3]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V3]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18625,12 +18292,12 @@ CREATE procedure [dbo].[Insert_ReceiptToJournal_V3]
 as
 begin
 delete c from Acc_JournalDT c
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_ReceiptHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.JournalNo=concat('RC-',b.ReceiptNo)
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_ReceiptHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.JournalNo=concat('RC-',b.ReceiptNo)
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 
@@ -18644,20 +18311,20 @@ select * into #tmp1 from (
 	(case when d.AmtAdvance>0 then dbo.GetAccConfig('AR_CONFIG','Advance') else dbo.GetAccConfig('AR_CONFIG','Sales') end) as AccCodeD,
 	dbo.GetAccConfig('GL_CONFIG','AccrueIncome') as AccCodeC,a.InvoiceNo,
 	f.NameThai as CustName,b.EmpCode ,d.SDescription
-	from job_demo.dbo.Job_ReceiptDetail a
-	inner join job_demo.dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	left join job_demo.dbo.Job_CashControlSub c 
+	left join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join job_demo.dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join job_demo.dbo.Job_InvoiceHeader i 
+	inner join [job_3x].dbo.Job_InvoiceHeader i 
 	on d.DocNo=i.DocNo 
-	inner join job_demo.dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
-	left join job_demo.dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
-	left join job_demo.dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	left join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 ) tb
@@ -18717,7 +18384,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V4]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_ReceiptToJournal_V4]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18732,12 +18399,12 @@ CREATE procedure [dbo].[Insert_ReceiptToJournal_V4]
 as
 begin
 delete c from Acc_JournalDT c
-where exists(select 1 from Acc_JournalHD a inner join [job_demo].dbo.Job_ReceiptHeader b 
+where exists(select 1 from Acc_JournalHD a inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.JournalNo=concat('RC-',b.ReceiptNo)
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 and a.EntryId=c.EntryId)
 
-delete a from Acc_JournalHD a inner join [job_demo].dbo.Job_ReceiptHeader b 
+delete a from Acc_JournalHD a inner join [job_3x].dbo.Job_ReceiptHeader b 
 on a.JournalNo=concat('RC-',b.ReceiptNo)
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 
@@ -18753,18 +18420,18 @@ select * into #tmp1 from (
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) end) as AccCodeC,
 	isnull(ad.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueIncome')) as AccCodeD,a.InvoiceNo,
 	f.NameThai as CustName,b.EmpCode ,d.SDescription
-	from job_demo.dbo.Job_ReceiptDetail a
-	inner join job_demo.dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	left join job_demo.dbo.Job_CashControlSub c 
+	left join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join job_demo.dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join job_demo.dbo.Job_InvoiceHeader i 
+	inner join [job_3x].dbo.Job_InvoiceHeader i 
 	on d.DocNo=i.DocNo 
-	inner join job_demo.dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
-	left join job_demo.dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AR_CONFIG','Advance')+'-____') ab 
 	on concat(ab.AccMainName,'-',f.NameThai)=ab.AccName	
@@ -18772,7 +18439,7 @@ select * into #tmp1 from (
 	on concat(ac.AccMainName,'-',f.NameThai)=ac.AccName	
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueIncome')+'-____') ad 
 	on concat(ad.AccMainName,'-',f.NameThai)=ad.AccName	
-	left join job_demo.dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	left join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 ) tb
@@ -18832,7 +18499,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RefundFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RefundFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18857,8 +18524,8 @@ ROW_NUMBER() OVER(PARTITION BY ClrNo ORDER BY ClrNo) as Seq,
 AccCode,AccName,AccDesc,Dr,Cr
 from (
 select h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription as AccDesc,sum(d.UsedAmount+d.ChargeVAT) as Dr,0 as Cr 
-from [job_demo].dbo.Job_ClearDetail d 
-inner join [job_demo].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
+from [job_3x].dbo.Job_ClearDetail d 
+inner join [job_3x].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
 inner join dbo.vMas_Product p 
 on d.SICode=p.ProductCode,
 dbo.vMas_AccCode a
@@ -18868,8 +18535,8 @@ and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','CashOut')
 group by h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription
 union all
 select h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription,0 as Dr,sum(d.UsedAmount+d.ChargeVAT) as Cr 
-from [job_demo].dbo.Job_ClearDetail d 
-inner join [job_demo].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
+from [job_3x].dbo.Job_ClearDetail d 
+inner join [job_3x].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
 inner join dbo.vMas_Product p 
 on d.SICode=p.ProductCode,
 dbo.vMas_AccCode a
@@ -18885,8 +18552,8 @@ select @maxid+ROW_NUMBER() OVER(ORDER BY ClrNo) as EntryID,
 ClrNo,ClrDate,ClrDate,@userid,'-',sum(Dr),sum(Cr)
 from (
 select h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription as AccDesc,sum(d.UsedAmount+d.ChargeVAT) as Dr,0 as Cr 
-from [job_demo].dbo.Job_ClearDetail d 
-inner join [job_demo].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
+from [job_3x].dbo.Job_ClearDetail d 
+inner join [job_3x].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
 inner join dbo.vMas_Product p 
 on d.SICode=p.ProductCode,
 dbo.vMas_AccCode a
@@ -18896,8 +18563,8 @@ and a.AccCode=dbo.GetAccConfig('ADV_CONFIG','CashOut')
 group by h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription
 union all
 select h.ClrNo,h.ClrDate,a.AccCode,a.AccName,d.SDescription,0 as Dr,sum(d.UsedAmount+d.ChargeVAT) as Cr 
-from [job_demo].dbo.Job_ClearDetail d 
-inner join [job_demo].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
+from [job_3x].dbo.Job_ClearDetail d 
+inner join [job_3x].dbo.Job_ClearHeader h on d.ClrNo=h.ClrNo 
 inner join dbo.vMas_Product p 
 on d.SICode=p.ProductCode,
 dbo.vMas_AccCode a
@@ -18911,7 +18578,7 @@ group by ClrNo,ClrDAte
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVfromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RVfromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -18926,7 +18593,7 @@ CREATE procedure [dbo].[Insert_RVfromJob]
 as
 begin
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_ReceiptHeader b on
+inner join [job_3x].dbo.Job_ReceiptHeader b on
 replace(a.JournalNo,'RV-','')=b.ReceiptNo
 where b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @billingcode
 
@@ -18940,7 +18607,7 @@ insert into Acc_JournalHD(EntryId,JournalNo,EntryDate,EffectiveDate,EntryBy,Desc
 select @id+ROW_NUMBER() OVER(ORDER BY AccDocNo) as EntryID,
 concat('RV-',a.AccDocNo) as JournalNo,a.AccBatchDate,a.AccEffectiveDate,IssueBy,DocRefNo,0,0
 from vTransaction_H a 
-inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
+inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
 where a.AccDocType='RC '
 and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @billingcode
 order by a.AccDocNo
@@ -18953,7 +18620,7 @@ AccCode,AccName,AccDesc,sum(Debit) as Dr,sum(Credit) as Cr from (
 	a.AccDocNo,a.AccItemNo,a.AssetAccCode as AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,0 as Debit,
 	sum(a.Amount+a.DVatAmt) as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo
 	where a.AccDocType='RC' 
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @billingcode
 	group by a.AccDocNo,a.AccItemno,a.AssetAccCode,a.SalesDescription,a.AccSourceDocNo
@@ -18962,7 +18629,7 @@ AccCode,AccName,AccDesc,sum(Debit) as Dr,sum(Credit) as Cr from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(a.DNetAmt) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
 	where a.AccDocType='RC' and p.AccCode=dbo.GetAccConfig('AR_CONFIG','CashIn')
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @billingcode
 	group by a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription,a.AccSourceDocNo
@@ -18971,7 +18638,7 @@ AccCode,AccName,AccDesc,sum(Debit) as Dr,sum(Credit) as Cr from (
 	a.AccDocNo,a.AccItemNo,p.AccCode,a.SalesDescription as AccName,a.AccSourceDocNo as AccDesc,
 	sum(a.DWhtAmt) as Debit,0 as Credit
 	from vTransaction_All a
-	inner join [job_demo].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
+	inner join [job_3x].dbo.Job_ReceiptHeader b on a.AccDocNo=b.ReceiptNo,vMas_AccCode p
 	where a.AccDocType='RC' AND a.ProductCode like 'S%' and p.AccCode=dbo.GetAccConfig('WHT_CONFIG','IncomeTax')
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto and b.BillToCustCode like @billingcode
 	and a.DWhtAmt>0
@@ -18990,7 +18657,7 @@ where h.TotalDebit<>d.Dr or h.TotalCredit<>d.Cr
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V2]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V2]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19023,7 +18690,7 @@ CREATE procedure [dbo].[Insert_RVFromJob_V2]
 as
 begin
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b
+inner join [job_3x].dbo.Job_CashControl b
 on a.JournalNo=concat('RV-R',b.ControlNo)
 and b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto;
 
@@ -19040,25 +18707,25 @@ select * into #tmp1 from (
 	isnull(a3.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) end) 
 	as AccCodeC,
 	a4.AccCode as AccCodeD,f.NameThai as CustName,h.RecUser as EmpCode,i.DocNo as InvoiceNo
-	from job_demo.dbo.Job_ReceiptDetail a
-	inner join job_demo.dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	inner join job_demo.dbo.Job_CashControlSub c 
+	inner join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join job_demo.dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join job_demo.dbo.Job_InvoiceHeader i on d.DocNo=i.DocNo
-	inner join job_demo.dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_InvoiceHeader i on d.DocNo=i.DocNo
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
-	left join job_demo.dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join dbo.Mas_AccCode a3
 	on f.GLAccountCode=a3.AccCode
-	left join job_demo.dbo.Mas_BookAccount g
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
-	inner join job_demo.dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	inner join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and h.VoucherDate>=@datefrom and h.VoucherDate<=@dateto
 ) tb 
@@ -19099,7 +18766,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V3]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromJob_V3]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19116,7 +18783,7 @@ CREATE procedure [dbo].[Insert_RVFromJob_V3]
 as
 begin
 delete a from Acc_JournalHD a
-inner join [job_demo].dbo.Job_CashControl b
+inner join [job_3x].dbo.Job_CashControl b
 on a.JournalNo=concat('RV-R',b.ControlNo)
 and b.VoucherDate>=@datefrom and b.VoucherDate<=@dateto;
 
@@ -19133,25 +18800,25 @@ select * into #tmp1 from (
 	isnull(a3.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueIncome')) as AccCodeC,
 	isnull(a4.AccCode,dbo.GetAccConfig('AR_CONFIG','CashIn')) as AccCodeD,
 	f.NameThai as CustName,h.RecUser as EmpCode,i.DocNo as InvoiceNo
-	from job_demo.dbo.Job_ReceiptDetail a
-	inner join job_demo.dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	inner join job_demo.dbo.Job_CashControlSub c 
+	inner join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join job_demo.dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join job_demo.dbo.Job_InvoiceHeader i on d.DocNo=i.DocNo
-	inner join job_demo.dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_InvoiceHeader i on d.DocNo=i.DocNo
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
-	left join job_demo.dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueIncome')+'-____') a3
 	on concat(a3.AccMainName,'-',f.NameThai)=a3.AccName
-	left join job_demo.dbo.Mas_BookAccount g
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
-	inner join job_demo.dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	inner join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and h.VoucherDate>=@datefrom and h.VoucherDate<=@dateto
 	union all
@@ -19161,12 +18828,12 @@ select * into #tmp1 from (
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','ChequeIn')) as AccCodeC,
 	isnull(a4.AccCode,dbo.GetAccConfig('AR_CONFIG','CashIn')) as AccCodeD,
 	f.NameThai as CustName,h.RecUser as EmpCode,c.PRVoucher as InvoiceNo
-	from [job_demo].dbo.Job_CashControlSub c 
-	inner join [job_demo].dbo.Job_CashControl h on 
+	from [job_3x].dbo.Job_CashControlSub c 
+	inner join [job_3x].dbo.Job_CashControl h on 
 	c.ControlNo=h.ControlNo
-	inner join [job_demo].dbo.Job_Order j on c.ForJNo=j.JNo 
-	left join job_demo.dbo.Mas_Company f on j.CustCode=f.CustCode and j.CustBranch=f.Branch
-	left join job_demo.dbo.Mas_BookAccount g
+	inner join [job_3x].dbo.Job_Order j on c.ForJNo=j.JNo 
+	left join [job_3x].dbo.Mas_Company f on j.CustCode=f.CustCode and j.CustBranch=f.Branch
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
@@ -19214,7 +18881,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromRC]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromRC]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19367,7 +19034,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromSI]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromSI]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19480,7 +19147,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_RVFromSO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_RVFromSO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19601,7 +19268,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SalaryToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SalaryToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19662,7 +19329,7 @@ on a.EntryId=b.eid and a.ItemNo=b.itemno
 drop table #tmpsal
 end
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SIFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19705,8 +19372,8 @@ ROW_NUMBER() OVER(ORDER BY d.ItemNo),'',0,0,
 (case when d.AmtCharge>0 AND d.AmtVat>0 then d.VATRate else 0 end),
 (case when d.AmtCharge>0 AND d.Amt50Tavi>0 then d.Rate50Tavi else 0 end),
 1
-from [job_demo].dbo.Job_InvoiceHeader h
-inner join [job_demo].dbo.Job_InvoiceDetail d
+from [job_3x].dbo.Job_InvoiceHeader h
+inner join [job_3x].dbo.Job_InvoiceDetail d
 on h.DocNo=d.DocNo 
 inner join vMas_Product p on d.SICode=p.ProductCode
 where h.DocDate>=@datefrom and h.DocDate<=@dateto
@@ -19718,8 +19385,8 @@ select h.DocNo,@docdate,h.DocDate,
 isnull(c.CustCode,'-'),isnull(c.TaxNumber,'-'),
 isnull(c.NameThai,'-'),CONCAT(isnull(c.TAddress1,''),' ',isnull(c.TAddress2,'')),@userid,
 'SI','1900-01-01',@docdate,1,h.RefNo
-from [job_demo].dbo.Job_InvoiceHeader h
-left join [job_demo].dbo.Mas_Company c
+from [job_3x].dbo.Job_InvoiceHeader h
+left join [job_3x].dbo.Mas_Company c
 on h.BillToCustCode=c.CustCode and h.BillToCustBranch=c.Branch
 where h.DocDate>=@datefrom and h.DocDate<=@dateto
 and not isnull(h.CancelProve,'')<>''
@@ -19728,7 +19395,7 @@ and h.DocNo not in (select AccDocNo from Acc_TransactionHD)
 end 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIFromSO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SIFromSO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19848,12 +19515,11 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
 
 
 
@@ -19901,7 +19567,7 @@ b.AccCode,a.AccDesc,a.RefNo,a.Debit,a.Credit from
 	dbo.GetAccConfig('AR_CONFIG','Sales') as AccCode,
 	d.AccDocNo,d.TotalAmount+d.VatAmount as Debit,0 as Credit,
 	concat(d.SaleProductCode,' / ', d.SalesDescription) as AccDesc,
-	(case when d.AccSourceDocNo='' then d.AccDocNo else d.AccSourceDocNo end) as RefNo
+	d.AccSourceDocNo as RefNo
 	from vAR_D d	
 	where d.AccDocNo=@invno
 	union all
@@ -19917,7 +19583,7 @@ b.AccCode,a.AccDesc,a.RefNo,a.Debit,a.Credit from
 	d.IncomeAccCode as AccCode,
 	d.AccDocNo,0 as Debit,d.TotalAmount as Credit,
 	concat(d.SaleProductCode,' / ', d.SalesDescription) as AccDesc,
-	(case when d.AccSourceDocNo='' then d.AccDocNo else d.AccSourceDocNo end) as RefNo
+	d.AccSourceDocNo as RefNo
 	from vAR_D d	
 	where d.AccDocNo=@invno
 ) a inner join vMas_AccCode b on a.AccCode=b.AccCode
@@ -19942,7 +19608,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal_ByDate]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SIToJournal_ByDate]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20016,8 +19682,9 @@ inner join Acc_JournalHD b
 on a.AccDocNo=b.JournalNo
 where a.DocStatus=1
 end
+
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SOFromSR]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SOFromSR]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20105,7 +19772,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_StockFromDO]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_StockFromDO]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20230,7 +19897,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_StockFromTransaction]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_StockFromTransaction]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20278,7 +19945,7 @@ select * from vStock_Card where AccDocNo=@docno;
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromCustomer]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromCustomer]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20299,14 +19966,14 @@ begin
 	declare @maxid int=(SELECT CAST(substring(@maxcode,len(@maxcode)-3,4) as int))
 
 	update c set c.GLAccountCode=''
-	from [job_demo].dbo.Mas_Company c 
+	from [job_3x].dbo.Mas_Company c 
 	where not exists(select 1 from Mas_AccCode where AccCode=c.GLAccountCode)
 
 	insert into Mas_AccCode 
 	select concat(@mainacc,'-',FORMAT(@maxid+ROW_NUMBER() OVER(ORDER BY CustCode),'0000')) as AccCode,
 	concat(b.AccName,'-',a.NameThai) as AccName,concat(b.AccNameEN,'-',a.NameEng) as AccNameEN,
 	b.AccTypeID,@mainacc
-	from [job_demo].dbo.Mas_Company a
+	from [job_3x].dbo.Mas_Company a
 	,Mas_AccCode b 
 	where b.AccCode=@mainacc
 	--and isnull(a.GLAccountCode,'')=''
@@ -20314,7 +19981,7 @@ begin
 		
 	update c set c.GLAccountCode=a.AccCode
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Mas_Company c 	
+	[job_3x].dbo.Mas_Company c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and concat(b.AccName,'-',c.NameThai)=a.AccName
@@ -20322,14 +19989,14 @@ begin
 
 	select c.GLAccountCode,a.* 
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Mas_Company c 	
+	[job_3x].dbo.Mas_Company c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and concat(b.AccName,'-',c.NameThai)=a.AccName
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromOCharge]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromOCharge]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20353,7 +20020,7 @@ begin
 	select concat(@mainacc,'-',FORMAT(@maxid+ROW_NUMBER() OVER(ORDER BY SICode),'0000')) as AccCode,
 	concat(b.AccName,'-',a.NameThai) as AccName,concat(b.AccNameEN,'-',a.NameEng) as AccNameEN,
 	b.AccTypeID,@mainacc
-	from [job_demo].dbo.Job_SrvSingle a
+	from [job_3x].dbo.Job_SrvSingle a
 	,Mas_AccCode b 
 	where b.AccCode=@mainacc
 	and a.SICode like @prefix+'%'
@@ -20363,7 +20030,7 @@ begin
 		
 	update c set c.GLAccountCodeCost=a.AccCode
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20372,7 +20039,7 @@ begin
 
 	select c.GLAccountCodeCost,a.* 
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20381,7 +20048,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromSCharge]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromSCharge]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20406,7 +20073,7 @@ begin
 	select concat(@mainacc,'-',FORMAT(@maxid+ROW_NUMBER() OVER(ORDER BY SICode),'0000')) as AccCode,
 	concat(b.AccName,'-',a.NameThai) as AccName,concat(b.AccNameEN,'-',a.NameEng) as AccNameEN,
 	b.AccTypeID,@mainacc
-	from [job_demo].dbo.Job_SrvSingle a
+	from [job_3x].dbo.Job_SrvSingle a
 	,Mas_AccCode b 
 	where b.AccCode=@mainacc
 	and a.SICode like @prefix+'%'
@@ -20416,7 +20083,7 @@ begin
 		
 	update c set c.GLAccountCodeCost=a.AccCode
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20425,7 +20092,7 @@ begin
 
 	select c.GLAccountCodeCost,a.* 
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20434,7 +20101,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromService]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromService]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20461,7 +20128,7 @@ begin
 	select concat(@mainacc,'-',FORMAT(@maxid+ROW_NUMBER() OVER(ORDER BY SICode),'0000')) as AccCode,
 	concat(b.AccName,'-',a.NameThai) as AccName,concat(b.AccNameEN,'-',a.NameEng) as AccNameEN,
 	b.AccTypeID,@mainacc
-	from [job_demo].dbo.Job_SrvSingle a
+	from [job_3x].dbo.Job_SrvSingle a
 	,Mas_AccCode b 
 	where b.AccCode=@mainacc
 	and a.SICode like @prefix+'%'
@@ -20470,7 +20137,7 @@ begin
 		
 	update c set c.GLAccountCodeCost=a.AccCode
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20479,7 +20146,7 @@ begin
 
 	select c.GLAccountCodeCost,a.* 
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20487,7 +20154,7 @@ begin
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromTCharge]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromTCharge]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20512,7 +20179,7 @@ begin
 	select concat(@mainacc,'-',FORMAT(@maxid+ROW_NUMBER() OVER(ORDER BY SICode),'0000')) as AccCode,
 	concat(b.AccName,'-',a.NameThai) as AccName,concat(b.AccNameEN,'-',a.NameEng) as AccNameEN,
 	b.AccTypeID,@mainacc
-	from [job_demo].dbo.Job_SrvSingle a
+	from [job_3x].dbo.Job_SrvSingle a
 	,Mas_AccCode b 
 	where b.AccCode=@mainacc
 	and a.SICode like @prefix+'%'
@@ -20522,7 +20189,7 @@ begin
 		
 	update c set c.GLAccountCodeCost=a.AccCode
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20531,7 +20198,7 @@ begin
 
 	select c.GLAccountCodeCost,a.* 
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Job_SrvSingle c 	
+	[job_3x].dbo.Job_SrvSingle c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and c.SICode like @prefix+'%'
@@ -20540,7 +20207,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromUser]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromUser]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20561,14 +20228,14 @@ begin
 	declare @maxid int=(SELECT CAST(substring(@maxcode,len(@maxcode)-3,4) as int))
 
 	update c set c.GLAccountCode=''
-	from [job_demo].dbo.Mas_User c 
+	from [job_3x].dbo.Mas_User c 
 	where not exists(select 1 from Mas_AccCode where AccCode=c.GLAccountCode)
 
 	insert into Mas_AccCode 
 	select concat(@mainacc,'-',FORMAT(@maxid+ROW_NUMBER() OVER(ORDER BY a.TName),'0000')) as AccCode,
 	concat(b.AccName,'-',a.TName) as AccName,concat(b.AccName,'-',a.TName) as AccNameEN,
 	b.AccTypeID,@mainacc
-	from (select distinct TName from [job_demo].dbo.Mas_User where lower(UserID) Not in('admin','boat','test','tawan','pasit')) a
+	from (select distinct TName from [job_3x].dbo.Mas_User where lower(UserID) Not in('admin','boat','test','tawan','pasit')) a
 	,Mas_AccCode b 
 	where b.AccCode=@mainacc
 	--and isnull(a.GLAccountCode,'')=''
@@ -20577,7 +20244,7 @@ begin
 	
 	update c set c.GLAccountCode=a.AccCode
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Mas_User c 	
+	[job_3x].dbo.Mas_User c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and concat(b.AccName,'-',c.TName)=a.AccName
@@ -20585,14 +20252,14 @@ begin
 
 	select c.GLAccountCode,a.* 
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Mas_User c 	
+	[job_3x].dbo.Mas_User c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and concat(b.AccName,'-',c.TName)=a.AccName
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromVender]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_SubAccCodeFromVender]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20612,14 +20279,14 @@ begin
 	declare @maxid int=(SELECT CAST(substring(@maxcode,len(@maxcode)-3,4) as int))
 
 	update c set c.GLAccountCode=''
-	from [job_demo].dbo.Mas_Vender c 
+	from [job_3x].dbo.Mas_Vender c 
 	where not exists(select 1 from Mas_AccCode where AccCode=c.GLAccountCode)
 
 	insert into Mas_AccCode 
 	select concat(@mainacc,'-',FORMAT(@maxid+ROW_NUMBER() OVER(ORDER BY VenCode),'0000')) as AccCode,
 	concat(b.AccName,'-',a.TName) as AccName,concat(b.AccNameEN,'-',a.TName) as AccNameEN,
 	b.AccTypeID,@mainacc
-	from [job_demo].dbo.Mas_Vender a
+	from [job_3x].dbo.Mas_Vender a
 	,Mas_AccCode b 
 	where b.AccCode=@mainacc
 	--and isnull(a.GLAccountCode,'')=''
@@ -20627,7 +20294,7 @@ begin
 	
 	update c set c.GLAccountCode=a.AccCode
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Mas_Vender c 	
+	[job_3x].dbo.Mas_Vender c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and concat(b.AccName,'-',c.TName)=a.AccName
@@ -20635,14 +20302,14 @@ begin
 
 	select c.GLAccountCode,a.* 
 	from Mas_AccCode a,Mas_AccCode b,
-	[job_demo].dbo.Mas_Vender c 	
+	[job_3x].dbo.Mas_Vender c 	
 	where a.AccMainCode=@mainacc
 	and b.AccCode=@mainacc 
 	and concat(b.AccName,'-',c.TName)=a.AccName
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_Transaction]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_Transaction]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20755,7 +20422,7 @@ begin
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20771,13 +20438,13 @@ as
 DELETE FROM Acc_WHTaxDetail
 WHERE [PayDate]>=@datefrom and [PayDate]<=@dateto
 AND exists(
-   select 1 from [job_demo].dbo.Job_WHTaxDetail where [DocNo]=Acc_WHTaxDetail.DocNo 
+   select 1 from [job_3x].dbo.Job_WHTaxDetail where [DocNo]=Acc_WHTaxDetail.DocNo 
    and [PayDate]>=@datefrom and [PayDate]<=@dateto
   )
 
 DELETE FROM Acc_WHTax
 WHERE exists(
-   select 1 from [job_demo].dbo.Job_WHTaxDetail where [DocNo]=Acc_WHTax.DocNo 
+   select 1 from [job_3x].dbo.Job_WHTaxDetail where [DocNo]=Acc_WHTax.DocNo 
    and [PayDate]>=@datefrom and [PayDate]<=@dateto
   )
 
@@ -20793,7 +20460,7 @@ SELECT [DocNo]
       ,[DocRefType]
       ,[DocRefNo]
       ,[PayRate]
-  FROM [job_demo].[dbo].[Job_WHTaxDetail]
+  FROM [job_3x].[dbo].[Job_WHTaxDetail]
   where [PayDate]>=@datefrom and [PayDate]<=@dateto
 
 INSERT INTO Acc_WHTax
@@ -20836,14 +20503,14 @@ SELECT
       ,[Branch2]
       ,[Branch3]
       ,[IsCSV]
-  FROM [job_demo].[dbo].[Job_WHTax] h
+  FROM [job_3x].[dbo].[Job_WHTax] h
   where exists(
-   select 1 from [job_demo].dbo.Job_WHTaxDetail where [BranchCode]=h.BranchCode and [DocNo]=h.DocNo 
+   select 1 from [job_3x].dbo.Job_WHTaxDetail where [BranchCode]=h.BranchCode and [DocNo]=h.DocNo 
    and [PayDate]>=@datefrom and [PayDate]<=@dateto
   )
 
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromPC]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromPC]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20907,7 +20574,7 @@ where not exists(select 1 from Acc_WHTaxDetail where DocNo=t.AccDocNo and Itemno
 select * from Acc_WhTax where DocNo=@docno 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromTransaction]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Insert_WHTaxFromTransaction]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21046,7 +20713,7 @@ a.DocNo=b.DocNo where a.DocNo=@docno
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_AdvanceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_AdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21066,12 +20733,12 @@ from (
 	d.ForJno as SubAccname,
 	sum(case when isnull(s.IsCredit,1)=0 then d.AdvAmount else d.AdvAmount+d.ChargeVAT-d.Charge50Tavi end) as Debit,0 as Credit,
 	isnull(s.NameThai,d.SDescription) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a on 
 	concat(a.AccMainName,'-',u.TName)=a.AccName	
 	where h.DocStatus<>99 
@@ -21083,12 +20750,12 @@ from (
 	d.AdvNo as SubAccname,
 	sum(d.ChargeVAT) as Debit,0 as Credit,
 	(case when u.VenCode is null then h.PayChqTo else u.TName end) as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_Vender u on d.VenCode=u.VenCode
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_Vender u on d.VenCode=u.VenCode
 	where h.DocStatus<>99 and isnull(s.IsCredit,1)=0 and d.ChargeVAT>0
 	and v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto
 	group by h.PaymentRef,d.AdvNo,(case when u.VenCode is null then h.PayChqTo else u.TName end)
@@ -21098,12 +20765,12 @@ from (
 	d.AdvNo as SubAccname,
 	0 as Debit,sum(d.Charge50Tavi) as Credit,
 	case when u.VenCode is null then h.PayChqTo else u.TName end as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_Vender u on d.VenCode=u.VenCode
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_Vender u on d.VenCode=u.VenCode
 	where h.DocStatus<>99 and d.Charge50Tavi>0 and isnull(s.IsCredit,1)=0
 	and (case when u.VenCode is null then h.PayChqTo else u.TName end) like '%จำกัด%'
 	and v.VoucherDate>=@datefrom and v.VoucherDate<=@dateto	
@@ -21114,12 +20781,12 @@ from (
 	d.AdvNo as SubAccname,
 	0 as Debit,sum(d.Charge50Tavi) as Credit,
 	case when u.VenCode is null then h.PayChqTo else u.TName end as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
-	left join [job_demo].dbo.Mas_Vender u on d.VenCode=u.VenCode
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Mas_Vender u on d.VenCode=u.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a on 
 	concat(a.AccMainName,'-',u.TName)=a.AccName	
 	where h.DocStatus<>99 and d.Charge50Tavi>0 and isnull(s.IsCredit,1)=0
@@ -21131,17 +20798,17 @@ from (
 	,h.PaymentRef as RefNo,d.ForJno as SubAccname,
 	0 as Debit,sum(d.AdvAmount+d.ChargeVAT-d.Charge50Tavi) as Credit,
 	h.AdvNo as CustName
-	from [job_demo].dbo.Job_AdvHeader h
-	inner join [job_demo].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
-	inner join [job_demo].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
-	left join [job_demo].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
-	left join [job_demo].dbo.Mas_User u 
+	from [job_3x].dbo.Job_AdvHeader h
+	inner join [job_3x].dbo.Job_AdvDetail d on h.AdvNo=d.AdvNo 
+	inner join [job_3x].dbo.Job_CashControl v on h.PaymentRef=v.ControlNo
+	left join [job_3x].dbo.Mas_Company c on h.CustCode=c.CustCode and h.CustBranch=c.Branch
+	left join [job_3x].dbo.Mas_User u 
 	on v.RecUser=u.UserID
-	left join [job_demo].dbo.Job_SrvSingle s on d.SICode=s.SICode 
+	left join [job_3x].dbo.Job_SrvSingle s on d.SICode=s.SICode 
 	left join (
 		select s.ControlNo,MAX(c.AccCode) as AccCode,MAX(b.BookName) as BookBranch
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		left join Mas_AccCode c on b.GLAccountCode=c.AccCode
 		on s.BookCode=b.BookCode
 		group by s.ControlNo
@@ -21176,7 +20843,7 @@ end
 drop table #tmp1 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[Process_BillPayToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_BillPayToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21202,21 +20869,21 @@ isnull(a2.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueExpense'))
 end) as AccCodeD,
 sum(case when isnull(s.IsCredit,1)=1 then d.Total+d.AmtWHT else d.Amt end) as Amt,
 sum(case when isnull(s.IsCredit,1)=1 then 0 else d.AmtVAT end) as AmtVAT
-from [job_demo].dbo.Job_PaymentHeader h
-inner join [job_demo].dbo.Job_PaymentDetail d
+from [job_3x].dbo.Job_PaymentHeader h
+inner join [job_3x].dbo.Job_PaymentDetail d
 on h.DocNo=d.DocNo 
-left join [job_demo].dbo.Job_Order j on d.ForJNo=j.JNo 
-left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
-left join [job_demo].dbo.Job_SrvSingle s on d.SIcode=s.SICode
+left join [job_3x].dbo.Job_Order j on d.ForJNo=j.JNo 
+left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+left join [job_3x].dbo.Job_SrvSingle s on d.SIcode=s.SICode
 left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
-left join [job_demo].dbo.Mas_Vender v
+left join [job_3x].dbo.Mas_Vender v
 on h.VenCode=v.VenCode 
 left join (select * from vMas_AccCode where AccCode like '5___-__-____') a2 
 on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
 left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') b 
 on concat(b.AccMainName,'-',v.TName)=b.AccName
-left join [job_demo].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
+left join [job_3x].dbo.Job_SrvGroup g on s.GroupCode=g.GroupCode
 where isnull(h.CancelProve,'')='' --and h.ApproveBy<>''
 and h.DocDate>=@datefrom and h.DocDate<=@dateto
 group by  h.DocNo,h.DocDate,isnull(v.TName,''),isnull(v.TaxNumber,''),h.EmpCode,h.PoNo,h.ReFNo,d.SDescription,d.ForJNo,
@@ -21269,7 +20936,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21299,22 +20966,22 @@ from (
 	(case when d.VenderCode='' and ad.VenCode<>'' then ad.VenCode else d.VenderCode end) as VenCode,
 	v.TaxNumber,v.TName,
 	isnull(u.TName,ah.EmpCode) as UserName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_AdvDetail ad
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_AdvDetail ad
 	on d.AdvNO=ad.AdvNo and d.AdvItemNo=ad.ItemNo 
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	inner join [job_demo].dbo.Job_AdvHeader ah
+	inner join [job_3x].dbo.Job_AdvHeader ah
 	on ad.AdvNo=ah.AdvNO 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on ah.CustCode=c.CustCode and ah.CustBranch=c.Branch
-	left join [job_demo].dbo.Job_Order j
+	left join [job_3x].dbo.Job_Order j
 	on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company b
+	left join [job_3x].dbo.Mas_Company b
 	on j.CustCode=b.CustCode and j.CustBranch=b.Branch
-	left join [job_demo].dbo.Mas_User u 
+	left join [job_3x].dbo.Mas_User u 
 	on ah.EmpCode=u.UserID 
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 	on concat(a1.AccMainName,'-',b.NameThai)=a1.AccName	
@@ -21322,7 +20989,7 @@ from (
 	on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a3 
 	on concat(a3.AccMainName,'-',u.TName)=a3.AccName	
-	left join [job_demo].dbo.Mas_Vender v on d.VenderCode=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on d.VenderCode=v.VenCode
 	where h.DocStatus<>99
 	and h.ClrDate>=@datefrom and h.ClrDate<=@dateto 	
 ) t 
@@ -21372,7 +21039,7 @@ end
 drop table #tmp1 
 end
 GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_ClearExpenseFromManualEntry]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21405,19 +21072,19 @@ from (
 	(case when s.IsCredit=0 and s.IsExpense=1 then d.Tax50Tavi else 0 end) as AmountWht,
 	(case when s.IsCredit=1 then d.UsedAmount+d.ChargeVAT else d.BNet end) as AmountNet,
 	isnull(d.VenderCode,j.ForwarderCode) as VenCode,d.Pay50TaviTo as VenderName
-	from [job_demo].dbo.Job_ClearDetail d
-	inner join [job_demo].dbo.Job_ClearHeader h 
+	from [job_3x].dbo.Job_ClearDetail d
+	inner join [job_3x].dbo.Job_ClearHeader h 
 	on d.ClrNo=h.ClrNo 
-	left join [job_demo].dbo.Mas_User u on h.EmpCode=u.UserID
-	inner join [job_demo].dbo.Job_SrvSingle s on 
+	left join [job_3x].dbo.Mas_User u on h.EmpCode=u.UserID
+	inner join [job_3x].dbo.Job_SrvSingle s on 
 	d.SICode=s.SIcode 
-	inner join [job_demo].dbo.Job_Order j on d.JobNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
+	inner join [job_3x].dbo.Job_Order j on d.JobNo=j.JNo 
+	left join [job_3x].dbo.Mas_Company c on j.Custcode=c.CustCode and j.CustBranch=c.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 	on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
 	left join (select * from vMas_AccCode where AccCode like '5___-__-____') a2 
 	on concat(a2.AccMainName,'-',s.NameThai)=a2.AccName	
-	left join [job_demo].dbo.Mas_Vender v on isnull(d.VenderCode,j.ForwarderCode)=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on isnull(d.VenderCode,j.ForwarderCode)=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') a3 
 	on concat(a3.AccMainName,'-',v.TName)=a3.AccName	
 	where h.DocStatus<>99 and d.AdvNO='' and d.VenderBillingNo=''
@@ -21483,7 +21150,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromAdvance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21506,31 +21173,31 @@ from (
 	round(cast(a.AdvNet-isnull(c.ClrNet,0) as decimal(10,4)),2) as TotalUsed,
 	isnull(a2.AccCode,dbo.GetAccConfig('ADV_CONFIG','CashIn')) as AccCodeUser,u.TName as UserName,a.ForJno as JNo
 	from 
-	[job_demo].dbo.Job_CashControl v inner join 
+	[job_3x].dbo.Job_CashControl v inner join 
 	(
 		select ControlNo,DocNo,acType,sum(PaidAmount) as PaidAmount 
-		from [job_demo].dbo.Job_CashControlDoc 
+		from [job_3x].dbo.Job_CashControlDoc 
 		where DocType='CLR' and PaidAmount<>0
 		group by ControlNo,DocNo,acType
 	) d on v.ControlNo=d.ControlNo
-	inner join [job_demo].dbo.Job_CashControlSub s on
+	inner join [job_3x].dbo.Job_CashControlSub s on
 	d.ControlNo=s.ControlNo and d.acType=s.acType
-	inner join [job_demo].dbo.Job_AdvDetail a
+	inner join [job_3x].dbo.Job_AdvDetail a
 	on d.DocNo=concat(a.AdvNo,'#',a.ItemNo)
 	left join 
 	(select cd.AdvNo,ah.CustCode,ah.CustBranch,ah.EmpCode as AdvBy,cd.AdvItemNo,sum(cd.BNet) as ClrNet
-	 from [job_demo].dbo.Job_ClearDetail cd
-	 inner join [job_demo].dbo.Job_ClearHeader ch  
+	 from [job_3x].dbo.Job_ClearDetail cd
+	 inner join [job_3x].dbo.Job_ClearHeader ch  
 	 on cd.ClrNo=ch.ClrNo  
-	 inner join [job_demo].dbo.Job_AdvHeader ah 
+	 inner join [job_3x].dbo.Job_AdvHeader ah 
 	 on cd.AdvNo=ah.AdvNo	 
 	 where ch.DocStatus<>99 
 	 and cd.AdvNO<>''
 	 group by cd.AdvNo,ah.CustCode,ah.CustBranch,ah.EmpCode,cd.AdvItemNo 
 	) c on a.AdvNo=c.AdvNO and a.ItemNo=c.AdvItemNo
-	inner join [job_demo].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
-	left join [job_demo].dbo.Mas_User u on c.AdvBy=u.UserID 
-	left join [job_demo].dbo.Mas_Company cu on c.Custcode=cu.custcode and c.CustBranch=cu.Branch
+	inner join [job_3x].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
+	left join [job_3x].dbo.Mas_User u on c.AdvBy=u.UserID 
+	left join [job_3x].dbo.Mas_Company cu on c.Custcode=cu.custcode and c.CustBranch=cu.Branch
 	left join Mas_AccCode a1 on b.GLAccountCode=a1.AccCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('ADV_CONFIG','CashIn')+'-____') a2 
 	on concat(a2.AccMainName,'-',u.TName)=a2.AccName	
@@ -21614,7 +21281,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_ClearMoneyFromNoAdvance]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21666,26 +21333,26 @@ from (
 	d.PaidAmount*-1 as PaidAmount,
 	a.JobNo as JNo,s.PRType	
 	from 
-	[job_demo].dbo.Job_CashControl h inner join 
+	[job_3x].dbo.Job_CashControl h inner join 
 		(
 		select ControlNo,DocNo,acType,sum(PaidAmount) as PaidAmount 
-		from [job_demo].dbo.Job_CashControlDoc 
+		from [job_3x].dbo.Job_CashControlDoc 
 		where DocType='CLR' and PaidAmount<>0
 		group by ControlNo,DocNo,acType
 	) d on h.ControlNo=d.ControlNo
-	inner join [job_demo].dbo.Job_CashControlSub s on
+	inner join [job_3x].dbo.Job_CashControlSub s on
 	d.ControlNo=s.ControlNo and d.acType=s.acType
-	inner join [job_demo].dbo.Job_ClearDetail a
+	inner join [job_3x].dbo.Job_ClearDetail a
 	on d.DocNo=concat(a.ClrNo,'#',a.ItemNo)
-	inner join [job_demo].dbo.Job_Order j on a.JobNo=j.JNo 
-	inner join [job_demo].dbo.Job_ClearHeader c 
+	inner join [job_3x].dbo.Job_Order j on a.JobNo=j.JNo 
+	inner join [job_3x].dbo.Job_ClearHeader c 
 	on a.ClrNo=c.ClrNo 
-	left join [job_demo].dbo.Mas_User u on c.EmpCode=u.UserID
-	left join [job_demo].dbo.Job_SrvSingle i on a.SIcode=i.SICode 
-	left join [job_demo].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
+	left join [job_3x].dbo.Mas_User u on c.EmpCode=u.UserID
+	left join [job_3x].dbo.Job_SrvSingle i on a.SIcode=i.SICode 
+	left join [job_3x].dbo.Mas_BookAccount b on s.BookCode=b.BookCode
 	left join dbo.Mas_AccCode ad on u.GLAccountCode=ad.AccCode
 	left join dbo.Mas_AccCode ac on b.GLAccountCode=ac.AccCode
-	left join [job_demo].dbo.Mas_Vender v on isnull(a.VenderCode,j.ForwarderCode)=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on isnull(a.VenderCode,j.ForwarderCode)=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') a3 
 	on concat(a3.AccMainName,'-',v.TName)=a3.AccName	
 	where isnull(h.CancelProve,'')='' and isnull(a.VenderBillingNo,'')=''
@@ -21842,7 +21509,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_CNDNToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_CNDNToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21890,14 +21557,14 @@ b.CorrectAmt-b.OriginalAmt as Amt,b.VATAmt as AmtVat,ABS(b.DiffAmt)+ABS(b.VATAmt
 f.Amt as ReceiveAmt,f.AmtVAT as ReceiveVat,b.BillingNo,
 b.SDescription
 from 
-[job_demo].dbo.Job_CNDNHeader a
-inner join [job_demo].dbo.Job_CNDNDetail b 
+[job_3x].dbo.Job_CNDNHeader a
+inner join [job_3x].dbo.Job_CNDNDetail b 
 on a.DocNo=b.DocNo 
-inner join [job_demo].dbo.Job_InvoiceHeader d 
+inner join [job_3x].dbo.Job_InvoiceHeader d 
 on b.BillingNo=d.DocNo 
-left join [job_demo].dbo.Mas_Company c 
+left join [job_3x].dbo.Mas_Company c 
 on concat(isnull(d.BillToCustCode,d.CustCode),isnull(d.BillToCustBranch,d.CustBranch))=concat(c.CustCode,c.Branch)
-inner join [job_demo].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
+inner join [job_3x].dbo.Job_SrvSingle e on b.SIcode=e.SICode 
 left join (select * from vMas_AccCode where AccCode like 
 dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') a1 
 on concat(a1.AccMainName,'-',c.NameThai)=a1.AccName	
@@ -21910,7 +21577,7 @@ on concat(ar.AccMainName,'-',c.NameThai)=ar.AccName
 left join (select * from vMas_AccCode where AccCode like 
 dbo.GetAccConfig('AR_CONFIG','Advance')+'-____') av 
 on concat(av.AccMainName,'-',c.NameThai)=av.AccName	
-left join [job_demo].dbo.Job_ReceiptDetail f on 
+left join [job_3x].dbo.Job_ReceiptDetail f on 
 b.BillingNo=f.InvoiceNo and b.BillItemNo=f.InvoiceItemNo
 where a.DocStatus<>99 
 and a.DocDate>=@datefrom and a.DocDate<=@dateto 
@@ -21999,7 +21666,7 @@ drop table #tmp1
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_CustAdvanceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_CustAdvanceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22021,15 +21688,15 @@ select 0 as RowType,a.DocNo,a.ReFNo,a.Docdate,isnull(a.DueDate,a.DocDate) as Due
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','ChequeIn')) as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.CustCode,a.CustBranch)=concat(cb.CustCode,cb.Branch)
 	left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product p on b.SICode=p.ProductCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AR_CONFIG','ChequeIn')+'-____') ac 
@@ -22045,14 +21712,14 @@ select 0 as RowType,a.DocNo,a.ReFNo,a.Docdate,isnull(a.DueDate,a.DocDate) as Due
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Advance')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','ChequeIn')) as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.CustCode,a.CustBranch)=concat(cb.CustCode,cb.Branch)
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AR_CONFIG','ChequeIn')+'-____') ac 
 	on concat(ac.AccMainName,'-',cb.NameThai)=ac.AccName	
@@ -22106,7 +21773,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_InvoiceToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_InvoiceToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22129,15 +21796,15 @@ select * into #tmp1 from (
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','DefaultSale')) as AccCodeC,b.Amt,b.AmtVat,b.Amt+b.AmtVat as AmtTotal,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.CustCode,a.CustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(cb.CustCode,cb.Branch)
 	left join dbo.Mas_AccCode ad on c.GLAccountCode=ad.AccCode
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join dbo.vMas_Product p on b.SICode=p.ProductCode
 	left join (select * from vMas_AccCode where AccCode like '4___-__-____') ac 
@@ -22153,14 +21820,14 @@ select * into #tmp1 from (
 	isnull(ab.AccCode,dbo.GetAccConfig('AR_CONFIG','Advance')) as AccCodeD,
 	isnull(ac.AccCode,dbo.GetAccConfig('GL_CONFIG','WorkInProcess')) as AccCodeC,b.Amt+b.AmtVat as Amt,0 as AmtVat,b.Amt+b.AmtVat as AmtNet,
 	b.AmtCredit as TotalCustAdv
-	from [job_demo].dbo.Job_InvoiceHeader a 
-	inner join [job_demo].dbo.Job_InvoiceDetail b 
+	from [job_3x].dbo.Job_InvoiceHeader a 
+	inner join [job_3x].dbo.Job_InvoiceDetail b 
 	on a.DocNo=b.DocNo 
-	left join [job_demo].dbo.Mas_Company c
+	left join [job_3x].dbo.Mas_Company c
 	on concat(a.CustCode,a.CustBranch)=concat(c.CustCode,c.Branch)
-	left join [job_demo].dbo.Mas_Company cb
+	left join [job_3x].dbo.Mas_Company cb
 	on concat(a.BillToCustCode,a.BillToCustBranch)=concat(cb.CustCode,cb.Branch)
-	left join [job_demo].dbo.Job_SrvSingle d 
+	left join [job_3x].dbo.Job_SrvSingle d 
 	on b.SICode=d.SICode 
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','WorkInProcess')+'-____') ac 
 	on concat(ac.AccMainName,'-',c.NameThai)=ac.AccName	
@@ -22226,7 +21893,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_PVFromBillPay]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_PVFromBillPay]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22264,23 +21931,23 @@ select * into #tmp1 from (
 	sum(case when s.IsCredit=1 then 0 else b.AmtWHT end) as WhdAmt,
 	sum(case when s.IsCredit=1 then 0 else b.AmtVAT end) as TotalVat,
 	sum(b.Total) as TotalNet
-	from [job_demo].dbo.Job_PaymentHeader a
-	inner join [job_demo].dbo.Job_PaymentDetail b
+	from [job_3x].dbo.Job_PaymentHeader a
+	inner join [job_3x].dbo.Job_PaymentDetail b
 	on a.DocNo=b.DocNo 	
-	left join [job_demo].dbo.Job_SrvSingle s on b.SICode=s.SICode
+	left join [job_3x].dbo.Job_SrvSingle s on b.SICode=s.SICode
 	left join (
 		select s.ControlNo,MAX(c.AccCode) as AccCode
-		from [job_demo].dbo.Job_CashControlSub s
-		inner join [job_demo].dbo.Mas_BookAccount b
+		from [job_3x].dbo.Job_CashControlSub s
+		inner join [job_3x].dbo.Mas_BookAccount b
 		on s.BookCode=b.BookCode
 		left join Mas_AccCode c on b.GLAccountCode=c.AccCode
 		group by s.ControlNo
 	) c on a.PaymentRef=c.ControlNo
-	left join [job_demo].dbo.Mas_Vender v on a.VenCode=v.VenCode
+	left join [job_3x].dbo.Mas_Vender v on a.VenCode=v.VenCode
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AP_CONFIG','Purchase')+'-____') av 
 	on concat(av.AccMainName,'-',v.TName)=av.AccName
-	left join [job_demo].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
-	left join [job_demo].dbo.Job_CashControl h on d.ControlNo=h.ControlNo and isnull(h.CancelProve,'')=''
+	left join [job_3x].dbo.Job_CashControlDoc d on a.DocNo=d.DocNo and a.PaymentRef=d.ControlNo 
+	left join [job_3x].dbo.Job_CashControl h on d.ControlNo=h.ControlNo and isnull(h.CancelProve,'')=''
 	where a.PaymentRef<>''
 	and a.PaymentDate>=@datefrom and a.PaymentDate<=@dateto
 	group by isnull(c.AccCode,dbo.GetAccConfig('AP_CONFIG','CashOut')),
@@ -22382,7 +22049,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_ReceiptToJournal]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_ReceiptToJournal]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22409,18 +22076,18 @@ select * into #tmp1 from (
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','Sales')) end) as AccCodeC,
 	isnull(ad.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueIncome')) as AccCodeD,a.InvoiceNo,
 	f.NameThai as CustName,b.EmpCode ,d.SDescription
-	from [job_demo].dbo.Job_ReceiptDetail a
-	inner join [job_demo].dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	left join [job_demo].dbo.Job_CashControlSub c 
+	left join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join [job_demo].dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join [job_demo].dbo.Job_InvoiceHeader i 
+	inner join [job_3x].dbo.Job_InvoiceHeader i 
 	on d.DocNo=i.DocNo 
-	inner join [job_demo].dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
-	left join [job_demo].dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('AR_CONFIG','Advance')+'-____') ab 
 	on concat(ab.AccMainName,'-',f.NameThai)=ab.AccName	
@@ -22428,7 +22095,7 @@ select * into #tmp1 from (
 	on concat(ac.AccMainName,'-',f.NameThai)=ac.AccName	
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueIncome')+'-____') ad 
 	on concat(ad.AccMainName,'-',f.NameThai)=ad.AccName	
-	left join [job_demo].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	left join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and b.ReceiptDate>=@datefrom and b.ReceiptDate<=@dateto
 ) tb
@@ -22515,7 +22182,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[Process_RVFromJob]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[Process_RVFromJob]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22544,25 +22211,25 @@ select * into #tmp1 from (
 	isnull(a3.AccCode,dbo.GetAccConfig('GL_CONFIG','AccrueIncome')) as AccCodeC,
 	isnull(a4.AccCode,dbo.GetAccConfig('AR_CONFIG','CashIn')) as AccCodeD,
 	f.NameThai as CustName,h.RecUser as EmpCode,i.DocNo as InvoiceNo
-	from [job_demo].dbo.Job_ReceiptDetail a
-	inner join [job_demo].dbo.Job_ReceiptHeader b 
+	from [job_3x].dbo.Job_ReceiptDetail a
+	inner join [job_3x].dbo.Job_ReceiptHeader b 
 	on a.ReceiptNo=b.ReceiptNo 
-	inner join [job_demo].dbo.Job_CashControlSub c 
+	inner join [job_3x].dbo.Job_CashControlSub c 
 	on a.ControlNo=c.ControlNo 
-	inner join [job_demo].dbo.Job_InvoiceDetail d
+	inner join [job_3x].dbo.Job_InvoiceDetail d
 	on a.InvoiceNo=d.DocNo and a.InvoiceItemNo=d.ItemNo 
-	inner join [job_demo].dbo.Job_InvoiceHeader i on d.DocNo=i.DocNo
-	inner join [job_demo].dbo.Job_SrvSingle e 
+	inner join [job_3x].dbo.Job_InvoiceHeader i on d.DocNo=i.DocNo
+	inner join [job_3x].dbo.Job_SrvSingle e 
 	on d.SICode=e.SICode 
-	left join [job_demo].dbo.Mas_Company f on
+	left join [job_3x].dbo.Mas_Company f on
 	b.BillToCustCode=f.CustCode and b.BillToCustBranch=f.Branch
 	left join (select * from vMas_AccCode where AccCode like dbo.GetAccConfig('GL_CONFIG','AccrueIncome')+'-____') a3
 	on concat(a3.AccMainName,'-',f.NameThai)=a3.AccName
-	left join [job_demo].dbo.Mas_BookAccount g
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
-	inner join [job_demo].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
+	inner join [job_3x].dbo.Job_CashControl h on c.ControlNo=h.ControlNo
 	where not isnull(b.CancelProve,'')<>''
 	and c.PRType='R'
 	and h.VoucherDate>=@datefrom and h.VoucherDate<=@dateto
@@ -22573,12 +22240,12 @@ select * into #tmp1 from (
 	isnull(ac.AccCode,dbo.GetAccConfig('AR_CONFIG','ChequeIn')) as AccCodeC,
 	isnull(a4.AccCode,dbo.GetAccConfig('AR_CONFIG','CashIn')) as AccCodeD,
 	f.NameThai as CustName,h.RecUser as EmpCode,c.PRVoucher as InvoiceNo
-	from [job_demo].dbo.Job_CashControlSub c 
-	inner join [job_demo].dbo.Job_CashControl h on 
+	from [job_3x].dbo.Job_CashControlSub c 
+	inner join [job_3x].dbo.Job_CashControl h on 
 	c.ControlNo=h.ControlNo
-	inner join [job_demo].dbo.Job_Order j on c.ForJNo=j.JNo 
-	left join [job_demo].dbo.Mas_Company f on j.CustCode=f.CustCode and j.CustBranch=f.Branch
-	left join [job_demo].dbo.Mas_BookAccount g
+	inner join [job_3x].dbo.Job_Order j on c.ForJNo=j.JNo 
+	left join [job_3x].dbo.Mas_Company f on j.CustCode=f.CustCode and j.CustBranch=f.Branch
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
@@ -22595,10 +22262,10 @@ select * into #tmp1 from (
 	dbo.GetAccConfig('AR_CONFIG','CashIn') as AccCodeC,
 	dbo.GetAccConfig('GL_CONFIG','BankCharge') as AccCodeD,
 	c.PayChqTo as CustName,h.RecUser as EmpCode,c.PRVoucher as InvoiceNo
-	from [job_demo].dbo.Job_CashControlSub c 
-	inner join [job_demo].dbo.Job_CashControl h on 
+	from [job_3x].dbo.Job_CashControlSub c 
+	inner join [job_3x].dbo.Job_CashControl h on 
 	c.ControlNo=h.ControlNo
-	left join [job_demo].dbo.Mas_BookAccount g
+	left join [job_3x].dbo.Mas_BookAccount g
 	on c.BookCode=g.BookCode
 	left join dbo.Mas_AccCode a4
 	on g.GLAccountCode=a4.AccCode
@@ -22651,7 +22318,7 @@ drop table #tmp1;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetDataPurchase]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetDataPurchase]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -22823,7 +22490,7 @@ end
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetDataSale]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetDataSale]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23033,7 +22700,7 @@ end
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetJournalDetail]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetJournalDetail]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23101,7 +22768,7 @@ declare @logdata nvarchar(max)=concat(@id,'|',@seq,'|',@acccode,'|',@accname,'|'
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetJournalHeader]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetJournalHeader]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23168,7 +22835,7 @@ EXEC dbo.SetTWTLog @dbname,@userid,'ACCOUNT','SetJournalHeader',@logtype,@logdat
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetTransactionDetail]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetTransactionDetail]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23247,7 +22914,7 @@ select * from vTransaction_D where DocNo=@accdocno AND AccItemNo=@itemno;
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetTransactionHeader]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetTransactionHeader]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23317,7 +22984,7 @@ select * from vTransaction_H where AccDocNo=@accdocno
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetTransactionStock]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetTransactionStock]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23387,7 +23054,7 @@ EXEC dbo.SetTWTLog @dbname,@userid,'ACCOUNT','SetTransactionStock',@mode,@logdat
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[SetTWTLog]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[SetTWTLog]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23413,7 +23080,7 @@ select CONCAT(@dbname,'/',@userid),@appid,@modulename,@logaction,@logdata,GetDat
 end
 
 GO
-/****** Object:  StoredProcedure [dbo].[TestCall]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[TestCall]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23450,7 +23117,7 @@ select * from vSum_Balance
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[TestCall_MNL]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[TestCall_MNL]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23467,7 +23134,7 @@ EXEC dbo.DELETE_JOB_JOURNAL
 --EXEC dbo.Insert_SubAccCodeFromService 'S','4100-00',0
 --EXEC dbo.Insert_SubAccCodeFromService 'C','5200-00',0
 --EXEC dbo.Insert_SubAccCodeFromService 'E','5300-00',0
-EXEC dbo.Insert_ProductsCodeFromjob_demo 
+EXEC dbo.Insert_ProductsCodeFromjob_3x 
 
 EXEC dbo.Insert_AdvanceToJournal_MNL '2026-01-01','2026-07-31',''
 EXEC dbo.Insert_ClearExpenseFromAdvance_MNL '2026-01-01','2026-07-31'
@@ -23488,7 +23155,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[TestHR]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[TestHR]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23503,7 +23170,7 @@ EXEC dbo.Insert_AddDeductPayroll '2026-01-01','2026-01-31','ADMIN',2
 EXEC dbo.Insert_PayrollToJournal '2026-01-01','2026-01-31','2026-01-31','ADMIN','เงินเดือน มค.2569'
 end
 GO
-/****** Object:  StoredProcedure [dbo].[UpdatePO_STATUS]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[UpdatePO_STATUS]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23554,7 +23221,7 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[UpdatePR_STATUS]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[UpdatePR_STATUS]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23596,31 +23263,26 @@ end
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[UpdateTotalDebitCredit]    Script Date: 26/10/2026 12:33:14 ******/
+/****** Object:  StoredProcedure [dbo].[UpdateTotalDebitCredit]    Script Date: 26/10/2026 12:29:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
-
-
 CREATE procedure [dbo].[UpdateTotalDebitCredit]
 as
 begin
-update Acc_JournalDT set Debit=convert(decimal(10,2),Debit) where Debit<>convert(decimal(10,2),Debit)
-update Acc_JournalDT set Credit=convert(decimal(10,2),Credit) where Credit<>convert(decimal(10,2),Credit)
+update Acc_JournalDT set Debit=convert(decimal(28,5),Debit) where Debit<>convert(decimal(28,5),Debit)
+update Acc_JournalDT set Credit=convert(decimal(28,5),Credit) where Credit<>convert(decimal(28,5),Credit)
 update Acc_JournalDT set Debit=0 where Debit is null
 update Acc_JournalDT set Credit=0 where Credit is null
 
 update a
 set a.TotalDebit=b.sumA,a.TotalCredit=b.sumb
 from Acc_JournalHD a inner join 
-(select EntryId,convert(decimal(10,2),sum(Debit)) sumA,convert(decimal(10,2),sum(Credit)) sumb from Acc_JournalDT  group by EntryID) b 
+(select EntryId,convert(decimal(28,5),sum(Debit)) sumA,convert(decimal(28,5),sum(Credit)) sumb from Acc_JournalDT  group by EntryID) b 
 on a.EntryID=b.EntryID
-where round(a.TotalDebit,2)<>round(b.sumA,2)
-or round(a.TotalCredit,2)<>round(b.sumB,2)
+where round(isnull(a.TotalDebit,0),2)<>round(b.sumA,2)
+or round(isnull(a.TotalCredit,0),2)<>round(b.sumB,2)
 end
 
 GO

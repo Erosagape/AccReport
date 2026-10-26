@@ -69,16 +69,34 @@ group by Period,AccCode,AccName,AccMainCode,AccMainName
     End If
 End Code
 @If lang = "EN" Then
-    @<h2>Profit and Loss</h2>
+    @<h2 onclick="ShowMonth()">Profit and Loss</h2>
     @If yy <> "" Then
         @<b>Fiscal Year @(If(mm>0, mm & "/", "" ))@(Convert.ToInt32(yy)) </b>
     End If
 Else
-    @<h2>งบกำไรขาดทุน</h2>
+    @<h2 onclick="ShowMonth()">งบกำไรขาดทุน</h2>
     @If yy <> "" Then
         @<b>ประจำปี @(Convert.ToInt32(yy) + 543) @(If(mm>0, "เดือน " & mm, "" ))</b>
     End If
 End If
+<div id="dvMonth" style="display:none;">
+    Select Month :
+    <select id="cboMonth" onchange="SetMonthPeriod(this.value)">
+        <option value="">ALL</option>
+        <option value="1" @IIf(mm = "1", "selected", "")>1</option>
+        <option value="2" @IIf(mm = "2", "selected", "")>2</option>
+        <option value="3" @IIf(mm = "3", "selected", "")>3</option>
+        <option value="4" @IIf(mm = "4", "selected", "")>4</option>
+        <option value="5" @IIf(mm = "5", "selected", "")>5</option>
+        <option value="6" @IIf(mm = "6", "selected", "")>6</option>
+        <option value="7" @IIf(mm = "7", "selected", "")>7</option>
+        <option value="8" @IIf(mm = "8", "selected", "")>8</option>
+        <option value="9" @IIf(mm = "9", "selected", "")>9</option>
+        <option value="10" @IIf(mm = "10", "selected", "")>10</option>
+        <option value="11" @IIf(mm = "11", "selected", "")>11</option>
+        <option value="12" @IIf(mm = "12", "selected", "")>12</option>
+    </select>
+</div>
 <table border="1" style="border-collapse:collapse;border-style:solid;">
     <thead>
         <tr>
@@ -136,6 +154,12 @@ End If
 </table>
 @msg
 <script type="text/javascript">
+    function ShowMonth() {
+        document.getElementById("dvMonth").style.display = "inline";
+    }
+    function SetMonthPeriod(m) {
+        window.location.href = "?Form=ProfitLossDetail&SRC=@dbSource&DB=@dbName&Period=@yy&Month="+m+"&LANG=@lang";
+    }
     function PrintGL(accCode) {
         window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom=@dateFrom&DateTo=@dateTo";
     }

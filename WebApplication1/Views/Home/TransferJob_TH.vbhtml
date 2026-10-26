@@ -221,7 +221,7 @@ End Code
         <tr>
             <td>
                 1.1 ข้อมูลทั่วไป : <br />
-                <input type="checkbox" id="chkProduct" name="chkProduct" /> ข้อมูลค่าบริการ/บัญชีย่อย <br />
+                <input type="checkbox"  checked id="chkProduct" name="chkProduct" /> ข้อมูลค่าบริการ/บัญชีย่อย <br />
                 ระบบซื้อ : <br />
                 1.2 <input type="checkbox" id="chkTAdv" name="chkTAdv" /> ใบเบิกค่าใช้จ่าย <br />
                 1.3 <input type="checkbox" id="chkTPay" name="chkTPay" /> ใบรับวางบิลค่าใช้จ่าย <br />
@@ -239,22 +239,22 @@ End Code
             </td>
             <td>
                 บัญชีจ่าย/ซิ้อเงินสด <br />
-                2.1 <input type="checkbox" id="chkPAdv" name="chkPAdv" /> บันทึกบัญชีจ่ายเงินตามใบเบิกค่าใช้จ่าย <a href="#mdl21" data-toggle="modal" data-target="#mdl21">(PV-A)</a><br />
-                2.2 <input type="checkbox" id="chkPExpAdv" name="chkPExpAdv" /> บันทึกบัญชีเคลียร์ปิดค่าใช้จ่ายใบเบิก <a href="#mdl22" data-toggle="modal" data-target="#mdl22">(AJ-A)</a><br />
-                2.3 <input type="checkbox" id="chkPExpClr" name="chkPExpClr" /> บันทึกบัญชีค่าใช้จ่ายจากใบเคลียร์ <a href="#mdl23" data-toggle="modal" data-target="#mdl23">(AJ-C)</a><br />
+                2.1 <input type="checkbox"  checked id="chkPAdv" name="chkPAdv" /> บันทึกบัญชีจ่ายเงินตามใบเบิกค่าใช้จ่าย <a href="#mdl21" data-toggle="modal" data-target="#mdl21">(PV-A)</a><br />
+                2.2 <input type="checkbox"  checked id="chkPExpAdv" name="chkPExpAdv" /> บันทึกบัญชีเคลียร์ปิดค่าใช้จ่ายใบเบิก <a href="#mdl22" data-toggle="modal" data-target="#mdl22">(AJ-A)</a><br />
+                2.3 <input type="checkbox"  checked id="chkPExpClr" name="chkPExpClr" /> บันทึกบัญชีค่าใช้จ่ายจากใบเคลียร์ <a href="#mdl23" data-toggle="modal" data-target="#mdl23">(AJ-C)</a><br />
                 บัญชีเจ้าหนี้/ซื้อเงินเชื่อ <br />
-                2.4 <input type="checkbox" id="chkPInv" name="chkPInv" /> บันทึกบัญชีตั้งเจ้าหนี้จากใบรับวางบิล <a href="#mdl25" data-toggle="modal" data-target="#mdl25">(PI)</a><br />
-                2.5 <input type="checkbox" id="chkPExpBill" name="chkPExpBill" /> บันทึกบัญชีค่าใช้จ่ายจากใบรับวางบิล <a href="#mdl26" data-toggle="modal" data-target="#mdl26">(AJ-P)</a> <br />
-                2.6 <input type="checkbox" id="chkPBill" name="chkPBill" /> บันทึกบัญชีจ่ายชำระหนี้จากใบรับวางบิล <a href="#mdl27" data-toggle="modal" data-target="#mdl27">(PV-P)</a><br />
+                2.4 <input type="checkbox"  checked id="chkPInv" name="chkPInv" /> บันทึกบัญชีตั้งเจ้าหนี้จากใบรับวางบิล <a href="#mdl25" data-toggle="modal" data-target="#mdl25">(PI)</a><br />
+                2.5 <input type="checkbox"  checked id="chkPExpBill" name="chkPExpBill" /> บันทึกบัญชีค่าใช้จ่ายจากใบรับวางบิล <a href="#mdl26" data-toggle="modal" data-target="#mdl26">(AJ-P)</a> <br />
+                2.6 <input type="checkbox"  checked id="chkPBill" name="chkPBill" /> บันทึกบัญชีจ่ายชำระหนี้จากใบรับวางบิล <a href="#mdl27" data-toggle="modal" data-target="#mdl27">(PV-P)</a><br />
                 บัญชีรับ/ขายเงินสด <br />
-                2.7 <input type="checkbox" id="chkRInv" name="chkRInv" /> บันทึกบัญชีรายได้จากใบแจ้งหนี้ <a href="#mdl28" data-toggle="modal" data-target="#mdl28">(SI)</a><br />
-                2.8 <input type="checkbox" id="chkRTax" name="chkRTax" /> บันทึกบัญชีใบเสร็จรับเงิน/ใบกำกับภาษี <a href="#mdl29" data-toggle="modal" data-target="#mdl29">(RC)</a> <br />
-                2.9 <input type="checkbox" id="chkRPay" name="chkRPay" /> บันทึกบัญชีรับชำระหนี้จากลูกค้า <a href="#mdl210" data-toggle="modal" data-target="#mdl210">(RV-R)</a><br />
-                2.10 <input type="checkbox" id="chkRCN" name="chkRCN" /> บันทึกบัญชีปรับปรุงลูกหนี้จากใบเพิ่มหนี้/ลดหนี้ <a href="#mdl211" data-toggle="modal" data-target="#mdl211">(AJ-R)</a><br />
+                2.7 <input type="checkbox"  checked id="chkRInv" name="chkRInv" /> บันทึกบัญชีรายได้จากใบแจ้งหนี้ <a href="#mdl28" data-toggle="modal" data-target="#mdl28">(SI)</a><br />
+                2.8 <input type="checkbox"  checked id="chkRTax" name="chkRTax" /> บันทึกบัญชีใบเสร็จรับเงิน/ใบกำกับภาษี <a href="#mdl29" data-toggle="modal" data-target="#mdl29">(RC)</a> <br />
+                2.9 <input type="checkbox"  checked id="chkRPay" name="chkRPay" /> บันทึกบัญชีรับชำระหนี้จากลูกค้า <a href="#mdl210" data-toggle="modal" data-target="#mdl210">(RV-R)</a><br />
+                2.10 <input type="checkbox"  checked id="chkRCN" name="chkRCN" /> บันทึกบัญชีปรับปรุงลูกหนี้จากใบเพิ่มหนี้/ลดหนี้ <a href="#mdl211" data-toggle="modal" data-target="#mdl211">(AJ-R)</a><br />
                 บัญชีอื่นๆ <br />
-                2.11 <input type="checkbox" id="chkPClrAdv" name="chkPClrAdv" /> เคลียร์เงินทดรองคงค้างจากการเบิกค่าใช้จ่าย <a href="#mdl212" data-toggle="modal" data-target="#mdl212">(PV-A/RV-A)</a><br />
-                2.12 <input type="checkbox" id="chkPClrOth" name="chkPClrOth" /> เคลียร์เงินทดรองคงค้างจากใบเคลียร์ <a href="#mdl213" data-toggle="modal" data-target="#mdl213">(PV-C/RV-C)</a><br />
-                2.13 <input type="checkbox" id="chkCustAdv" name="chkCustAdv" /> เช็ครับล่วงหน้าจากลูกค้า <a href="#mdl214" data-toggle="modal" data-target="#mdl214">(PV-R)</a><br />
+                2.11 <input type="checkbox"  checked id="chkPClrAdv" name="chkPClrAdv" /> เคลียร์เงินทดรองคงค้างจากการเบิกค่าใช้จ่าย <a href="#mdl212" data-toggle="modal" data-target="#mdl212">(PV-A/RV-A)</a><br />
+                2.12 <input type="checkbox"  checked id="chkPClrOth" name="chkPClrOth" /> เคลียร์เงินทดรองคงค้างจากใบเคลียร์ <a href="#mdl213" data-toggle="modal" data-target="#mdl213">(PV-C/RV-C)</a><br />
+                2.13 <input type="checkbox"  checked id="chkCustAdv" name="chkCustAdv" /> เช็ครับล่วงหน้าจากลูกค้า <a href="#mdl214" data-toggle="modal" data-target="#mdl214">(PV-R)</a><br />
             </td>
         </tr>
     </table>
