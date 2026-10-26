@@ -343,6 +343,10 @@
     <Content Include="Views\Home\ReportEN.vbhtml" />
     <Content Include="Views\Home\ReportStock.vbhtml" />
     <Content Include="Views\Home\Warehouse.vbhtml" />
+    <Content Include="Views\Form\FormCN.vbhtml" />
+    <Content Include="Views\Form\FormDN.vbhtml" />
+    <Content Include="Views\Home\LinkGL.vbhtml" />
+    <Content Include="Views\Shared\_Layout_MNL.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

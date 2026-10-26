@@ -33,6 +33,10 @@ order by Period DESC
 "
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim dt = obj.GetDataFromSQL(sql)
+    Dim mm = ""
+    If Not Request.QueryString("MONTH") Is Nothing Then
+        mm = Request.QueryString("MONTH")
+    End If
     Dim period = ""
     Dim accu = ""
     Dim nextpage = ""
@@ -76,6 +80,39 @@ End Code
                 End If
             Next
         </select>
+        Select Month :
+        <select id="cboMonth" onchange="SetMonthPeriod(this.value)">
+            <option value="">ALL</option>
+            <option value="1" @IIf(mm = "1", "selected", "")>1</option>
+            <option value="2" @IIf(mm = "2", "selected", "")>2</option>
+            <option value="3" @IIf(mm = "3", "selected", "")>3</option>
+            <option value="4" @IIf(mm = "4", "selected", "")>4</option>
+            <option value="5" @IIf(mm = "5", "selected", "")>5</option>
+            <option value="6" @IIf(mm = "6", "selected", "")>6</option>
+            <option value="7" @IIf(mm = "7", "selected", "")>7</option>
+            <option value="8" @IIf(mm = "8", "selected", "")>8</option>
+            <option value="9" @IIf(mm = "9", "selected", "")>9</option>
+            <option value="10" @IIf(mm = "10", "selected", "")>10</option>
+            <option value="11" @IIf(mm = "11", "selected", "")>11</option>
+            <option value="12" @IIf(mm = "12", "selected", "")>12</option>
+        </select>
+        Filter JV :
+        <select id="cboFilter" onchange="SetFilter(this.value)">
+            <option value="">ALL</option>
+            <option value="PV-A" @IIf(filter = "PV-A", "selected", "")>PV-A / Advance Payment</option>
+            <option value="AJ-A" @IIf(filter = "AJ-A", "selected", "")>AJ-A / Advance Clearing</option>
+            <option value="AJ-C" @IIf(filter = "AJ-C", "selected", "")>AJ-C / Non-Advance Clearing</option>
+            <option value="PI-" @IIf(filter = "PI-", "selected", "")>PI / Billing Vender</option>
+            <option value="PV-P" @IIf(filter = "PV-P", "selected", "")>PV-P / Billing Payment</option>
+            <option value="SI-" @IIf(filter = "SI-", "selected", "")>SI / Billing Customer</option>
+            <option value="RC-" @IIf(filter = "RC-", "selected", "")>RC- / Billing Receipt</option>
+            <option value="PV-R" @IIf(filter = "PV-R", "selected", "")>PV-R / Customer Advance</option>
+            <option value="RV-R" @IIf(filter = "RV-R", "selected", "")>RV-R  / Receive Payment</option>
+            <option value="AJ-R" @IIf(filter = "AJ-R", "selected", "")>AJ-R / CN/DN Customer</option>
+            <option value="RV-A" @IIf(filter = "RV-A", "selected", "")>RV-A / Advance Return</option>
+            <option value="PV-CC" @IIf(filter = "PV-CC", "selected", "")>PV-C / Clearing Payment</option>
+            <option value="RV-CC" @IIf(filter = "RV-CC", "selected", "")>RV-C / Clearing Return</option>
+        </select>
         <a href="?Form=TrialBalance&LANG=@lang&SRC=@dbSource&DB=@dbName&Period=@period&month=@DateTime.Now.Month()"> Trial Balance</a>
         @Code
             @<input type="button" value="Switch to @nextpage" onclick="SetAccu(@type,'@period')" />
@@ -102,56 +139,104 @@ End Code
                         <tr>
                             <th rowspan="2">Acc Code</th>
                             <th rowspan="2">Acc Name</th>
-                            @If accu <> "" Then
+                            @If accu <> "" And mm = "" Then
                                 @<th colspan="2">Balance</th>
                             End If
-                            <th colspan="2">Jan</th>
-                            <th colspan="2">Feb</th>
-                            <th colspan="2">Mar</th>
-                            <th colspan="2">Apr</th>
-                            <th colspan="2">May</th>
-                            <th colspan="2">Jun</th>
-                            <th colspan="2">Jul</th>
-                            <th colspan="2">Aug</th>
-                            <th colspan="2">Sep</th>
-                            <th colspan="2">Oct</th>
-                            <th colspan="2">Nov</th>
-                            <th colspan="2">Dec</th>
-                            @If accu <> "" Then
-                            Else
+                            @If mm = "" Or mm = "1" Then
+                                @<th colspan="2"> Jan</th>
+                            End If
+                            @If mm = "" Or mm = "2" Then
+                                @<th colspan="2"> Feb</th>
+                            End If
+                            @If mm = "" Or mm = "3" Then
+                                @<th colspan="2"> Mar</th>
+                            End If
+                            @If mm = "" Or mm = "4" Then
+                                @<th colspan="2"> Apr</th>
+                            End If
+                            @If mm = "" Or mm = "5" Then
+                                @<th colspan="2"> May</th>
+                            End If
+                            @If mm = "" Or mm = "6" Then
+                                @<th colspan="2"> Jun</th>
+                            End If
+                            @If mm = "" Or mm = "7" Then
+                                @<th colspan="2"> Jul</th>
+                            End If
+                            @If mm = "" Or mm = "8" Then
+                                @<th colspan="2"> Aug</th>
+                            End If
+                            @If mm = "" Or mm = "9" Then
+                                @<th colspan="2"> Sep</th>
+                            End If
+                            @If mm = "" Or mm = "10" Then
+                                @<th colspan="2"> Oct</th>
+                            End If
+                            @If mm = "" Or mm = "11" Then
+                                @<th colspan="2"> Nov</th>
+                            End If
+                            @If mm = "" Or mm = "12" Then
+                                @<th colspan="2"> Dec</th>
+                            End If
+                            @If accu = "" And mm = "" Then
                                 @<th colspan="2"> Total</th>
+                            Else
                             End If
                         </tr>
                         <tr>
-                            @If accu <> "" Then
+                            @If accu <> "" And mm = "" Then
                                 @<th>Debit</th>
                                 @<th>Credit</th>
                             End If
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                            @If accu = "" Then
+                            @If mm = "" Or mm = "1" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "2" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "3" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "4" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "5" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "6" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "7" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "8" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "9" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "10" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "11" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If mm = "" Or mm = "12" Then
+                                @<th>Debit</th>
+                                @<th>Credit</th>
+                            End If
+                            @If accu = "" And mm = "" Then
                                 @<th>Debit</th>
                                 @<th>Credit</th>
                             Else
@@ -193,35 +278,59 @@ End Code
                             @<tr>
                                 <td>@dr("AccCode")</td>
                                 <td>@dr("AccName")</td>
-                                @If accu <> "" Then
+                                @If accu <> "" And mm = "" Then
                                     @<td style="text-align:right;">@obj.GetDouble(dr("BalDr")).ToString("#,##0.00")</td>
                                     @<td style="text-align:right;">@obj.GetDouble(dr("BalCr")).ToString("#,##0.00")</td>
                                 End If
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',1)">@obj.GetDouble(dr("Dr_Jan")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',1)">@obj.GetDouble(dr("Cr_Jan")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',2)">@obj.GetDouble(dr("Dr_Feb")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',2)">@obj.GetDouble(dr("Cr_Feb")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',3)">@obj.GetDouble(dr("Dr_Mar")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',3)">@obj.GetDouble(dr("Cr_Mar")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',4)">@obj.GetDouble(dr("Dr_Apr")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',4)">@obj.GetDouble(dr("Cr_Apr")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',5)">@obj.GetDouble(dr("Dr_May")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',5)">@obj.GetDouble(dr("Cr_May")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',6)">@obj.GetDouble(dr("Dr_Jun")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',6)">@obj.GetDouble(dr("Cr_Jun")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',7)">@obj.GetDouble(dr("Dr_Jul")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',7)">@obj.GetDouble(dr("Cr_Jul")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',8)">@obj.GetDouble(dr("Dr_Aug")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',8)">@obj.GetDouble(dr("Cr_Aug")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',9)">@obj.GetDouble(dr("Dr_Sep")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',9)">@obj.GetDouble(dr("Cr_Sep")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',10)">@obj.GetDouble(dr("Dr_Oct")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',10)">@obj.GetDouble(dr("Cr_Oct")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',11)">@obj.GetDouble(dr("Dr_Nov")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',11)">@obj.GetDouble(dr("Cr_Nov")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',12)">@obj.GetDouble(dr("Dr_Dec")).ToString("#,##0.00")</a></td>
-                                <td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',12)">@obj.GetDouble(dr("Cr_Dec")).ToString("#,##0.00")</a></td>
-                                @If accu = "" Then
+                                @If mm = "" Or mm = "1" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',1)"> @obj.GetDouble(dr("Dr_Jan")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',1)">@obj.GetDouble(dr("Cr_Jan")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "2" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',2)"> @obj.GetDouble(dr("Dr_Feb")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',2)">@obj.GetDouble(dr("Cr_Feb")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "3" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',3)"> @obj.GetDouble(dr("Dr_Mar")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',3)">@obj.GetDouble(dr("Cr_Mar")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "4" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',4)"> @obj.GetDouble(dr("Dr_Apr")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',4)">@obj.GetDouble(dr("Cr_Apr")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "5" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',5)"> @obj.GetDouble(dr("Dr_May")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',5)">@obj.GetDouble(dr("Cr_May")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "6" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',6)"> @obj.GetDouble(dr("Dr_Jun")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',6)">@obj.GetDouble(dr("Cr_Jun")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "7" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',7)"> @obj.GetDouble(dr("Dr_Jul")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',7)">@obj.GetDouble(dr("Cr_Jul")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "8" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',8)"> @obj.GetDouble(dr("Dr_Aug")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',8)">@obj.GetDouble(dr("Cr_Aug")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "9" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',9)"> @obj.GetDouble(dr("Dr_Sep")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',9)">@obj.GetDouble(dr("Cr_Sep")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "10" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',10)"> @obj.GetDouble(dr("Dr_Oct")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',10)">@obj.GetDouble(dr("Cr_Oct")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "11" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',11)"> @obj.GetDouble(dr("Dr_Nov")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',11)">@obj.GetDouble(dr("Cr_Nov")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If mm = "" Or mm = "12" Then
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',12)"> @obj.GetDouble(dr("Dr_Dec")).ToString("#,##0.00") </a></td>
+                                    @<td style="text-align:right;"><a href="#" onclick="PrintGL('@dr("AccCode")',12)">@obj.GetDouble(dr("Cr_Dec")).ToString("#,##0.00")</a></td>
+                                End If
+                                @If accu = "" And mm = "" Then
                                     @<td style="text-align:right;">@obj.GetDouble(dr("TotalDr")).ToString("#,##0.00")</td>
                                     @<td style="text-align:right;">@obj.GetDouble(dr("TotalCr")).ToString("#,##0.00")</td>
                                 End If
@@ -231,35 +340,59 @@ End Code
                     <tfoot>
                         <tr>
                             <td colspan="2"> Total</td>
-                            @If accu <> "" Then
+                            @If accu <> "" And mm = "" Then
                                 @<td style="text-align:right;">@bal(0).ToString("#,##0.00")</td>
                                 @<td style="text-align:right;">@bal(1).ToString("#,##0.00")</td>
                             End If
-                            <td style="text-align:right;">@jan(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@jan(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@feb(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@feb(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@mar(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@mar(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@apr(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@apr(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@may(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@may(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@jun(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@jun(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@jul(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@jul(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@aug(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@aug(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@sep(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@sep(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@oct(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@oct(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@nov(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@nov(1).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@dec(0).ToString("#,##0.00")</td>
-                            <td style="text-align:right;">@dec(1).ToString("#,##0.00")</td>
-                            @If accu = "" Then
+                            @If mm = "" Or mm = "1" Then
+                                @<td style="text-align:right;">@jan(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@jan(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "2" Then
+                                @<td style="text-align:right;">@feb(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@feb(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "3" Then
+                                @<td style="text-align:right;">@mar(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@mar(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "4" Then
+                                @<td style="text-align:right;">@apr(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@apr(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "5" Then
+                                @<td style="text-align:right;">@may(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@may(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "6" Then
+                                @<td style="text-align:right;">@jun(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@jun(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "7" Then
+                                @<td style="text-align:right;">@jul(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@jul(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "8" Then
+                                @<td style="text-align:right;">@aug(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@aug(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "9" Then
+                                @<td style="text-align:right;">@sep(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@sep(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "10" Then
+                                @<td style="text-align:right;">@oct(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@oct(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "11" Then
+                                @<td style="text-align:right;">@nov(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@nov(1).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "12" Then
+                                @<td style="text-align:right;">@dec(0).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@dec(1).ToString("#,##0.00")</td>
+                            End If
+                            @If accu = "" And mm = "" Then
                                 @<td style="text-align:right;">@tot(0).ToString("#,##0.00")</td>
                                 @<td style="text-align:right;">@tot(1).ToString("#,##0.00")</td>
                             End If
@@ -272,6 +405,8 @@ End Code
 End If
 <script type="text/javascript">
     var accu = '@type';
+    var month = '@mm';
+    var filter = '@filter';
     function CDate(dt) {
         let d = dt,
             month = '' + (d.getMonth()+1),
@@ -287,10 +422,21 @@ End If
         var m = mm - 1;
         var dateFrom = new Date(@period, m, 1);
         var dateTo = new Date(@period, m + 1, 0);
-        window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom="+CDate(dateFrom)+"&DateTo="+CDate(dateTo);
+        window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom="+CDate(dateFrom)+"&DateTo="+CDate(dateTo) +(filter==''?'':'&Filter=' +filter);
+    }
+    function SetFilter(v) {
+        filter = v;
+        month = document.getElementById("cboMonth").value;
+        SetMonthPeriod(month);
+    }
+
+    function SetMonthPeriod(mm) {
+        month = mm;
+        let yy = document.getElementById("cboPeriod").value;
+        SetPeriod(yy);
     }
     function SetPeriod(period) {
-        window.location.href = "?Form=MonthlyBalance_V2&SRC=@dbSource&DB=@dbName&Period=" + period + (accu==''?'':'&Type='+accu);
+        window.location.href = "?Form=MonthlyBalance_V2&SRC=@dbSource&DB=@dbName&Period=" + period + (accu==''?'':'&Type='+accu) + (month==''?'':'&Month=' + month) + (filter==''?'':'&Filter=' + filter);
     }
     function SetAccu(val, period) {
         switch (val) {
