@@ -349,6 +349,37 @@
     <Content Include="Views\Home\LinkGL.vbhtml" />
     <Content Include="Views\Shared\_Layout_MNL.vbhtml" />
     <Content Include="Views\Home\ProfitLossDetail.vbhtml" />
+    <Content Include="Views\Home\ReportSalary.vbhtml" />
+    <Content Include="Views\Home\ReportEmployee.vbhtml" />
+    <Content Include="Views\Home\ReportPayroll.vbhtml" />
+    <Content Include="Views\Home\ReportTime.vbhtml" />
+    <Content Include="Views\Home\ReportTaxEmp.vbhtml" />
+    <Content Include="Views\Home\ApproveCenter.vbhtml" />
+    <Content Include="Views\Home\HRBookAccount.vbhtml" />
+    <Content Include="Views\Home\HRCompany.vbhtml" />
+    <Content Include="Views\Home\HRContract.vbhtml" />
+    <Content Include="Views\Home\HRContractType.vbhtml" />
+    <Content Include="Views\Home\HRDepartment.vbhtml" />
+    <Content Include="Views\Home\HRDivision.vbhtml" />
+    <Content Include="Views\Home\HREmployment.vbhtml" />
+    <Content Include="Views\Home\HRLevel.vbhtml" />
+    <Content Include="Views\Home\HRMenu.vbhtml" />
+    <Content Include="Views\Home\HRPayroll.vbhtml" />
+    <Content Include="Views\Home\HRPosition.vbhtml" />
+    <Content Include="Views\Home\HRStaff.vbhtml" />
+    <Content Include="Views\Home\HRTaxDeduct.vbhtml" />
+    <Content Include="Views\Home\HRTaxDeductConfig.vbhtml" />
+    <Content Include="Views\Home\HRTaxEmpConfig.vbhtml" />
+    <Content Include="Views\Home\HRTimeConfig.vbhtml" />
+    <Content Include="Views\Home\HRTimeEntry.vbhtml" />
+    <Content Include="Views\Home\PayrollConfig.vbhtml" />
+    <Content Include="Views\Home\PayrollCreate.vbhtml" />
+    <Content Include="Views\Home\SalaryConfig.vbhtml" />
+    <Content Include="Views\Home\StockTrans.vbhtml" />
+    <Content Include="Views\Home\TransferJob_EN_v1.vbhtml" />
+    <Content Include="Views\Home\TransferJob_TH _v1.vbhtml" />
+    <Content Include="Views\Home\WHTaxCreate.vbhtml" />
+    <Content Include="Views\Form\PayrollSlip.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

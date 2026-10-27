@@ -80,6 +80,11 @@ End Code
         </div>
         <div class="row">
             <div class="col-sm-12">
+                <a href="?Form=ReportTaxEmp&SRC=@dbSource&DB=@dbname">Tax-Calculation Summary / สรุปภาษีเงินได้ของพนักงาน</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
                 <b>Transaction Data / ข้อมูลการทำรายการ</b>
             </div>
         </div>
