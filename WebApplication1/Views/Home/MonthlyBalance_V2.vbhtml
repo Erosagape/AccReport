@@ -99,19 +99,20 @@ End Code
         Filter JV :
         <select id="cboFilter" onchange="SetFilter(this.value)">
             <option value="">ALL</option>
-            <option value="PV-A" @IIf(filter = "PV-A", "selected", "")>PV-A / Advance Payment</option>
-            <option value="AJ-A" @IIf(filter = "AJ-A", "selected", "")>AJ-A / Advance Clearing</option>
-            <option value="AJ-C" @IIf(filter = "AJ-C", "selected", "")>AJ-C / Non-Advance Clearing</option>
-            <option value="PI-" @IIf(filter = "PI-", "selected", "")>PI / Billing Vender</option>
-            <option value="PV-P" @IIf(filter = "PV-P", "selected", "")>PV-P / Billing Payment</option>
-            <option value="SI-" @IIf(filter = "SI-", "selected", "")>SI / Billing Customer</option>
-            <option value="RC-" @IIf(filter = "RC-", "selected", "")>RC- / Billing Receipt</option>
-            <option value="PV-R" @IIf(filter = "PV-R", "selected", "")>PV-R / Customer Advance</option>
-            <option value="RV-R" @IIf(filter = "RV-R", "selected", "")>RV-R  / Receive Payment</option>
-            <option value="AJ-R" @IIf(filter = "AJ-R", "selected", "")>AJ-R / CN/DN Customer</option>
-            <option value="RV-A" @IIf(filter = "RV-A", "selected", "")>RV-A / Advance Return</option>
-            <option value="PV-CC" @IIf(filter = "PV-CC", "selected", "")>PV-C / Clearing Payment</option>
-            <option value="RV-CC" @IIf(filter = "RV-CC", "selected", "")>RV-C / Clearing Return</option>
+            <option value="PV-A" @IIf(filter = "PV-A", "selected", "")>PV-A / จ่ายเงินตามใบเบิก</option>
+            <option value="AJ-A" @IIf(filter = "AJ-A", "selected", "")>AJ-A / ปิดค่าใช้จ่ายจากใบเบิก</option>
+            <option value="AJ-C" @IIf(filter = "AJ-C", "selected", "")>AJ-C / ปิดค่าใช้จ่ายที่ไม่มีใบเบิก</option>
+            <option value="AJ-P" @IIf(filter = "AJ-P", "selected", "")>AJ-P / ปิดค่าใช้จ่ายจากใบค่าใช้จ่าย</option>
+            <option value="PI-" @IIf(filter = "PI-", "selected", "")>PI / ตั้งเจ้าหนี้</option>
+            <option value="PV-P" @IIf(filter = "PV-P", "selected", "")>PV-P / จ่ายชำระหนี้</option>
+            <option value="SI-" @IIf(filter = "SI-", "selected", "")>SI / ตั้งลูกหนี้</option>
+            <option value="RC-" @IIf(filter = "RC-", "selected", "")>RC- / ออกใบเสร็จ</option>
+            <option value="PV-R" @IIf(filter = "PV-R", "selected", "")>PV-R / เงินรับล่วงหน้าจากลูกค้า</option>
+            <option value="RV-R" @IIf(filter = "RV-R", "selected", "")>RV-R  / รับชำระหนี้จากลูกค้า</option>
+            <option value="AJ-R" @IIf(filter = "AJ-R", "selected", "")>AJ-R / เพิ่มหนี้-ลดหนี้</option>
+            <option value="RV-A" @IIf(filter = "RV-A", "selected", "")>RV-A / รับคืนเงินทดรองจ่าย</option>
+            <option value="PV-CC" @IIf(filter = "PV-CC", "selected", "")>PV-C / จ่ายเงินคืนตามใบเคลียร์</option>
+            <option value="RV-CC" @IIf(filter = "RV-CC", "selected", "")>RV-C / รับคืนเงินจากใบเคลียร์</option>
         </select>
         <a href="?Form=TrialBalance&LANG=@lang&SRC=@dbSource&DB=@dbName&Period=@period&month=@DateTime.Now.Month()"> Trial Balance</a>
         @Code
@@ -120,20 +121,21 @@ End Code
             sql = String.Format("EXEC dbo.GetWorkSheet_ByHeader_V2 {0},'{1}',{2}", period, filter, type)
             dt = obj.GetDataFromSQL(sql)
             If dt.Rows.Count > 0 Then
-                Dim jan(2) As Double
-                Dim feb(2) As Double
-                Dim mar(2) As Double
-                Dim apr(2) As Double
-                Dim may(2) As Double
-                Dim jun(2) As Double
-                Dim jul(2) As Double
-                Dim aug(2) As Double
-                Dim sep(2) As Double
-                Dim oct(2) As Double
-                Dim nov(2) As Double
-                Dim dec(2) As Double
-                Dim tot(2) As Double
-                Dim bal(2) As Double
+                Dim jan(4) As Double
+                Dim feb(4) As Double
+                Dim mar(4) As Double
+                Dim apr(4) As Double
+                Dim may(4) As Double
+                Dim jun(4) As Double
+                Dim jul(4) As Double
+                Dim aug(4) As Double
+                Dim sep(4) As Double
+                Dim oct(4) As Double
+                Dim nov(4) As Double
+                Dim dec(4) As Double
+                Dim tot(4) As Double
+                Dim bal(4) As Double
+                Dim tmp As Decimal = 0
                 @<table id="myTable" border="1" class="table DataTable" style="border-collapse:collapse;">
                     <thead>
                         <tr>
@@ -269,8 +271,35 @@ End Code
                             nov(1) += obj.GetDouble(dr("Cr_Nov"))
                             dec(0) += obj.GetDouble(dr("Dr_Dec"))
                             dec(1) += obj.GetDouble(dr("Cr_Dec"))
-                            tot(0) += (jan(0) + feb(0) + mar(0) + apr(0) + may(0) + jun(0) + jul(0) + aug(0) + sep(0) + oct(0) + nov(0) + dec(0))
-                            tot(1) += (jan(1) + feb(1) + mar(1) + apr(1) + may(1) + jun(1) + jul(1) + aug(1) + sep(1) + oct(1) + nov(1) + dec(1))
+                            If dr("AccCode").ToString().StartsWith("5") Then
+                                jan(2) += obj.GetDouble(dr("Dr_Jan"))
+                                feb(2) += obj.GetDouble(dr("Dr_Feb"))
+                                mar(2) += obj.GetDouble(dr("Dr_Mar"))
+                                apr(2) += obj.GetDouble(dr("Dr_Apr"))
+                                may(2) += obj.GetDouble(dr("Dr_May"))
+                                jun(2) += obj.GetDouble(dr("Dr_Jun"))
+                                jul(2) += obj.GetDouble(dr("Dr_Jul"))
+                                aug(2) += obj.GetDouble(dr("Dr_Aug"))
+                                sep(2) += obj.GetDouble(dr("Dr_Sep"))
+                                oct(2) += obj.GetDouble(dr("Dr_Oct"))
+                                nov(2) += obj.GetDouble(dr("Dr_Nov"))
+                                dec(2) += obj.GetDouble(dr("Dr_Dec"))
+                            End If
+                            If dr("AccCode").ToString().StartsWith("4") Then
+                                jan(3) += obj.GetDouble(dr("Cr_Jan"))
+                                feb(3) += obj.GetDouble(dr("Cr_Feb"))
+                                mar(3) += obj.GetDouble(dr("Cr_Mar"))
+                                apr(3) += obj.GetDouble(dr("Cr_Apr"))
+                                may(3) += obj.GetDouble(dr("Cr_May"))
+                                jun(3) += obj.GetDouble(dr("Cr_Jun"))
+                                jul(3) += obj.GetDouble(dr("Cr_Jul"))
+                                aug(3) += obj.GetDouble(dr("Cr_Aug"))
+                                sep(3) += obj.GetDouble(dr("Cr_Sep"))
+                                oct(3) += obj.GetDouble(dr("Cr_Oct"))
+                                nov(3) += obj.GetDouble(dr("Cr_Nov"))
+                                dec(3) += obj.GetDouble(dr("Cr_Dec"))
+                            End If
+
                             If accu <> "" Then
                                 bal(0) += obj.GetDouble(dr("BalDr"))
                                 bal(1) += obj.GetDouble(dr("BalCr"))
@@ -336,10 +365,232 @@ End Code
                                 End If
                             </tr>
                         Next
+                        @Code
+                            tot(0) += (jan(0) + feb(0) + mar(0) + apr(0) + may(0) + jun(0) + jul(0) + aug(0) + sep(0) + oct(0) + nov(0) + dec(0))
+                            tot(1) += (jan(1) + feb(1) + mar(1) + apr(1) + may(1) + jun(1) + jul(1) + aug(1) + sep(1) + oct(1) + nov(1) + dec(1))
+                            tot(2) += (jan(2) + feb(2) + mar(2) + apr(2) + may(2) + jun(2) + jul(2) + aug(2) + sep(2) + oct(2) + nov(2) + dec(2))
+                            tot(3) += (jan(3) + feb(3) + mar(3) + apr(3) + may(3) + jun(3) + jul(3) + aug(3) + sep(3) + oct(3) + nov(3) + dec(3))
+                        End Code
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2"> Total</td>
+                            <td colspan="2"> Income / Expense</td>
+                            @If accu <> "" And mm = "" Then
+                                @<td style="text-align:right;">@bal(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@bal(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "1" Then
+                                @<td style="text-align:right;">@jan(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@jan(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "2" Then
+                                @<td style="text-align:right;">@feb(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@feb(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "3" Then
+                                @<td style="text-align:right;">@mar(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@mar(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "4" Then
+                                @<td style="text-align:right;">@apr(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@apr(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "5" Then
+                                @<td style="text-align:right;">@may(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@may(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "6" Then
+                                @<td style="text-align:right;">@jun(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@jun(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "7" Then
+                                @<td style="text-align:right;">@jul(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@jul(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "8" Then
+                                @<td style="text-align:right;">@aug(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@aug(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "9" Then
+                                @<td style="text-align:right;">@sep(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@sep(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "10" Then
+                                @<td style="text-align:right;">@oct(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@oct(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "11" Then
+                                @<td style="text-align:right;">@nov(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@nov(3).ToString("#,##0.00")</td>
+                            End If
+                            @If mm = "" Or mm = "12" Then
+                                @<td style="text-align:right;">@dec(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@dec(3).ToString("#,##0.00")</td>
+                            End If
+                            @If accu = "" And mm = "" Then
+                                @<td style="text-align:right;">@tot(2).ToString("#,##0.00")</td>
+                                @<td style="text-align:right;">@tot(3).ToString("#,##0.00")</td>
+                            End If
+                        </tr>
+                        <tr>
+                            <td colspan="2"> P/L</td>
+                            @If accu <> "" And mm = "" Then
+                                If bal(3) > bal(2) Then
+                                    tmp = bal(3) - bal(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = bal(2) - bal(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "1" Then
+                                If jan(3) > jan(2) Then
+                                    tmp = jan(3) - jan(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = jan(2) - jan(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "2" Then
+                                If feb(3) > feb(2) Then
+                                    tmp = feb(3) - feb(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = feb(2) - feb(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "3" Then
+                                If mar(3) > mar(2) Then
+                                    tmp = mar(3) - mar(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = mar(2) - mar(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "4" Then
+                                If apr(3) > apr(2) Then
+                                    tmp = apr(3) - apr(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = apr(2) - apr(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "5" Then
+                                If may(3) > may(2) Then
+                                    tmp = may(3) - may(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = may(2) - may(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "6" Then
+                                If jun(3) > jun(2) Then
+                                    tmp = jun(3) - jun(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = jun(2) - jun(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "7" Then
+                                If jul(3) > jul(2) Then
+                                    tmp = jul(3) - jul(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = jul(2) - jul(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "8" Then
+                                If aug(3) > aug(2) Then
+                                    tmp = aug(3) - aug(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = aug(2) - aug(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "9" Then
+                                If sep(3) > sep(2) Then
+                                    tmp = sep(3) - sep(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = sep(2) - sep(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "10" Then
+                                If oct(3) > oct(2) Then
+                                    tmp = oct(3) - oct(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = oct(2) - oct(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "11" Then
+                                If nov(3) > nov(2) Then
+                                    tmp = nov(3) - nov(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = nov(2) - nov(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If mm = "" Or mm = "12" Then
+                                If dec(3) > dec(2) Then
+                                    tmp = dec(3) - dec(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = dec(2) - dec(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                            @If accu = "" And mm = "" Then
+                                If tot(3) > tot(2) Then
+                                    tmp = tot(3) - tot(2)
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                    @<td style="text-align:right;">0.00</td>
+                                Else
+                                    tmp = tot(2) - tot(3)
+                                    @<td style="text-align:right;">0.00</td>
+                                    @<td style="text-align:right;">@tmp.ToString("#,##0.00")</td>
+                                End If
+                            End If
+                        </tr>
+                        <tr>
+                            <td colspan="2"> Total Balance</td>
                             @If accu <> "" And mm = "" Then
                                 @<td style="text-align:right;">@bal(0).ToString("#,##0.00")</td>
                                 @<td style="text-align:right;">@bal(1).ToString("#,##0.00")</td>

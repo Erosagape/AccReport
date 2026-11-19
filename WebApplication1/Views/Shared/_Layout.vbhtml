@@ -259,7 +259,7 @@ End Code
                         <b> เชื่อมต่อข้อมูลกับระบบ Job</b>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=LinkJob&DB=@dbname&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource&lang=@lang"> เช็คยอดที่จะลงบันทึกบัญชีคร่าวๆ</a>
+                                <a href="@Url.Content("~")?Form=LinkGL&DB=@dbname&SRC=@dbSource&lang=@lang"> เช็คยอดที่จะลงบันทึกบัญชีคร่าวๆ</a>
                             </div>
                         </div>
                         <div class="row">
@@ -285,7 +285,7 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=Transaction&DB=@dbname&SRC=@dbSource&lang=@lang"> ผ่านรายการไปสมุดรายวัน</a>
+                                <a href="@Url.Content("~")?Form=Posting&DB=@dbname&SRC=@dbSource&lang=@lang"> ตรวจสอบข้อมูล</a>
                             </div>
                         </div>
                         <b> รายงานสรุปทางบัญชี</b>
@@ -330,11 +330,21 @@ End Code
                                 <a href="@Url.Content("~")?Form=MonthlyBalance_V2&DB=@dbName&Type=2&SRC=@dbSource&lang=@lang"> สรุปยอดยกไปสิ้นเดือน</a>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a href="@Url.Content("~")?Form=CloseAcc&DB=@dbName&SRC=@dbSource&lang=@lang"> ปิดบัญชีขั้นต้น</a>
+                            </div>
+                        </div>
                         <b> งบการเงิน</b>
                         ประจำปี(ค.ศ) <br /><input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="#" onclick="OpenForm('TrialBalance')">งบทดลอง</a>
+                                <a href="#" onclick="OpenForm('TrialBalance')">งบทดลอง (รายเดือน)</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a href="#" onclick="OpenForm('TrialBalance_V2')">งบทดลอง (ตามวันที่)</a>
                             </div>
                         </div>
                         <div class="row">
@@ -430,7 +440,7 @@ End Code
                         <b> Job System Integrated</b>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=LinkJobEN&DB=@dbName&IDEN=@ViewBag.SetIdentityInsert&SRC=@dbSource&lang=@lang"> View current state Of data</a>
+                                <a href="@Url.Content("~")?Form=LinkGL&DB=@dbName&SRC=@dbSource&lang=@lang"> View current state Of data</a>
                             </div>
                         </div>
                         <div class="row">
@@ -456,7 +466,7 @@ End Code
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="@Url.Content("~")?Form=Transaction&DB=@dbName&SRC=@dbSource&lang=@lang"> Posting Center</a>
+                                <a href="@Url.Content("~")?Form=Posting&DB=@dbName&SRC=@dbSource&lang=@lang"> Checking Data</a>
                             </div>
                         </div>
                         <b> Account Reports</b>
@@ -501,13 +511,23 @@ End Code
                                 <a href="@Url.Content("~")?Form=MonthlyBalance_V2&LANG=EN&DB=@dbName&Type=2&SRC=@dbSource&lang=@lang"> Accumulate Monthly Balance</a>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a href="@Url.Content("~")?Form=CloseAcc&DB=@dbName&SRC=@dbSource&lang=@lang"> Close Account</a>
+                            </div>
+                        </div>
                         <b> Accounts Sheet</b>
                         Period:
                         <br />
                         <input type="number" id="txtPeriod" value="@DateTime.Now.Year" />
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="#" onclick="OpenForm('TrialBalance')">Trial Balance</a>
+                                <a href="#" onclick="OpenForm('TrialBalance')">Trial Balance (Monthly)</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <a href="#" onclick="OpenForm('TrialBalance_V2')">Trial Balance (By Date)</a>
                             </div>
                         </div>
                         <div class="row">

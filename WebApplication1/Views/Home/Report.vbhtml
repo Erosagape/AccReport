@@ -248,19 +248,19 @@ End Code
             </optgroup>
             <optgroup label="Payment Report">
                 <option value="PC">รายงานใบเตรียมจ่าย</option>
-                <option value="PV">รายงานใบสำคัญจ่าย</option>
+                <option value="JournalPC">รายงานใบสำคัญจ่าย</option>
             </optgroup>
             <optgroup label="Payables Report">
                 <option value="AgingAP">รายงานอายุเจ้าหนี้</option>
-                <option value="AP">รายงานเจ้าหนี้</option>
+                <option value="JournalPC">รายงานเจ้าหนี้</option>
             </optgroup>
             <optgroup label="Receive Report">
                 <option value="RC">รายงานใบเสร็จรับเงิน</option>
-                <option value="RV">รายงานใบสำคัญรับ</option>
+                <option value="JournalRV">รายงานใบสำคัญรับ</option>
             </optgroup>
             <optgroup label="Receivables Report">
                 <option value="AgingAR">รายงานอายุลูกหนี้</option>
-                <option value="AR">รายงานลูกหนี้</option>
+                <option value="JournalRC">รายงานลูกหนี้</option>
             </optgroup>
             <optgroup label="Journal Report">
                 <option value="Journal">รายงานสมุดรายวัน</option>

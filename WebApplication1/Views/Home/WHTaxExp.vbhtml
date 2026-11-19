@@ -121,6 +121,12 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
                     strHeader &= CInt("0" & rh("Branch1").ToString).ToString("000000") & "|"    '#4 สาขาที่ผู้นำส่ง
                     strHeader &= "1" & "|"   '#5 ประเภทการนำส่ง (1=ผู้หักภาษี 2=ตัวแทน 3=ตัวกลาง 4=ยื่นรวม)
                 End If
+                If frm = "0" Then
+                    strHeader &= "PND1" & "|"   '#6 ประเภทแบบภาษี PND
+                End If
+                If frm = "1" Then
+                    strHeader &= "PND1A" & "|"   '#6 ประเภทแบบภาษี PND
+                End If
                 If frm = "7" Then
                     strHeader &= "PND53" & "|"   '#6 ประเภทแบบภาษี PND
                 End If
@@ -146,7 +152,12 @@ d.PayDate,d.PayTaxDesc,h.PayTaxType,h.TAddress3"
                     strHeader &= "0" & "|"    '#12 มาตรา 50(3)(4)(5)
                 End If
                 strHeader &= "0" & "|"    '#13 สถานะผู้ประกอบการรายใหญ่
-                strHeader &= CInt("0" & mm).ToString("00") & "|"    '#14 เดือนภาษี
+                If frm = "1" Then
+                    strHeader &= "00|"    '#14 เดือนภาษี
+                Else
+                    strHeader &= CInt("0" & mm).ToString("00") & "|"    '#14 เดือนภาษี
+                End If
+
                 strHeader &= CInt("0" & yy).ToString("0000") + 543 & "|"    '#15 ปีภาษี
                 strHeader &= "V" & "|"    '#16 ประเภทสาขา (V=สาขาภาษีมูลค่าเพิ่ม( S=สาขาภาษีธุรกิจเฉพาะ กรณีเป็นทั้งสอง ระบุ “V” กรณียื่นสื่อฯ ถ้าไม่มีค่าให้ระบุเป็น Null หรือ Pipe “|” ติดกัน)
                 strHeader &= CInt("0" & rh("SeqInForm").ToString).ToString("00") & "|"    '#17 ประเภทการยื่นแบบ
@@ -310,7 +321,8 @@ End Code
         <div class="col-sm-6">
             @Code
                 @<select name="FormType">
-                    <option value="1" @(IIf(frm = "1", Html.AttributeEncode("selected"), ""))>1</option>
+                    <option value="0" @(IIf(frm = "0", Html.AttributeEncode("selected"), ""))>1</option>
+                    <option value="1" @(IIf(frm = "1", Html.AttributeEncode("selected"), ""))>1ก</option>
                     <option value="4" @(IIf(frm = "4", Html.AttributeEncode("selected"), ""))>3</option>
                     <option value="7" @(IIf(frm = "7", Html.AttributeEncode("selected"), ""))>53</option>
                 </select>
@@ -323,6 +335,7 @@ End Code
         </div>
         <div class="col-sm-6">
             <select name="TaxLawNo">
+                <option value="0" @(IIf(tln = "0", Html.AttributeEncode("selected"), ""))>ไม่ระบุ</option>
                 <option value="1" @(IIf(tln = "1", Html.AttributeEncode("selected"), ""))>3 เตรส</option>
                 <option value="2" @(IIf(tln = "2", Html.AttributeEncode("selected"), ""))>65 จัดวา</option>
                 <option value="3" @(IIf(tln = "3", Html.AttributeEncode("selected"), ""))>69 ทวิ</option>

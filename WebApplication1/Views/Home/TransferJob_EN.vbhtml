@@ -214,9 +214,11 @@ End Code
         <tr>
             <td>
                 <b>Source Documents</b>
+                <input type="checkbox" onchange="checkAll1(this.checked)" /> Select/Unselect All
             </td>
             <td>
                 <b>Account Documents</b>
+                <input type="checkbox" onchange="checkAll2(this.checked)" checked /> Select/Unselect All
             </td>
         </tr>
         <tr>
@@ -262,3 +264,30 @@ End Code
     <input type="submit" name="Submit" value="Process" />
     <label>@msg</label>
 </form>
+<script type="text/javascript">
+    function checkAll2(chk) {
+        document.getElementById('chkCustAdv').checked = chk;
+        document.getElementById('chkPClrOth').checked = chk;
+        document.getElementById('chkPClrAdv').checked = chk;
+        document.getElementById('chkRCN').checked = chk;
+        document.getElementById('chkRPay').checked = chk;
+        document.getElementById('chkRTax').checked = chk;
+        document.getElementById('chkRInv').checked = chk;
+        document.getElementById('chkPBill').checked = chk;
+        document.getElementById('chkPExpBill').checked = chk;
+        document.getElementById('chkPInv').checked = chk;
+        document.getElementById('chkPExpClr').checked = chk;
+        document.getElementById('chkPExpAdv').checked = chk;
+        document.getElementById('chkPAdv').checked = chk;
+    }
+    function checkAll1(chk) {
+        document.getElementById('chkProduct').checked = chk;
+        document.getElementById('chkTAdv').checked = chk;
+        document.getElementById('chkTClr').checked = chk;
+        document.getElementById('chkTPay').checked = chk;
+        document.getElementById('chkTInv').checked = chk;
+        document.getElementById('chkTRcv').checked = chk;
+        document.getElementById('chkTCN').checked = chk;
+        document.getElementById('chkTWHT').checked = chk;
+    }
+</script>

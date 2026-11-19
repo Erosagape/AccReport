@@ -20,7 +20,7 @@
     End If
     Dim obj = New AccReport.CUtil(ViewBag.WebIP, dbSource)
     Dim sql = "
-select * from vJournal_All where JournalNo='{0}' order by AccCode,ItemNo
+select * from vJournal_All where JournalNo='{0}' order by AccDesc,AccCode,ItemNo
 "
 
     Dim dt = obj.GetDataFromSQL(String.Format(sql, docno))
@@ -77,23 +77,23 @@ End Code
                     irow += 1
                     totalDebit += Convert.ToDouble(dr("Debit"))
                     totalCredit += Convert.ToDouble(dr("Credit"))
-                    If chk<> dr("AccCode") Then
-                    @<tr>
-                        <td colspan="5" style="font-weight:bold;">
-                            @dr("AccCode").ToString() / @dr("AccName").ToString()
-                        </td>                         
-                    </tr>
-                    chk=dr("AccCode")
+                    If chk <> dr("AccDesc") Then
+                        @<tr>
+                            <td colspan="5" style="font-weight:bold;">
+                                @dr("AccDesc").ToString()
+                            </td>                         
+                        </tr>
+                        chk = dr("AccDesc")
                     End If
                     @<tr>
                         <td>
                             @irow
                         </td>
                         <td>
-                            @dr("AccRemark").ToString()
+                            @dr("AccCode").ToString() / @dr("AccName").ToString()
                         </td>
                         <td>
-                            @dr("AccDesc").ToString()
+                            @dr("AccRemark").ToString()
                         </td>
                         <td class="colnum">
                             @Convert.ToDouble(dr("Debit")).ToString("#,###,##0.00")

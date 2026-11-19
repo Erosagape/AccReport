@@ -103,6 +103,11 @@ End Code
                 <a href="?Form=HRPayroll&SRC=@dbSource&DB=@dbname">Payroll Slip / บันทึกสลิปเงินเดือน</a>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <a href="?Form=HRTaxCreate&SRC=@dbSource&DB=@dbname">Withholding-Tax Create / สร้างรายการ ภงด.1-1ก</a>
+            </div>
+        </div>
     </div>
     <div class="col-sm-6">
         <img src="/../Resource/payroll.png" style="width:100%" />

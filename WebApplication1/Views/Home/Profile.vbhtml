@@ -23,7 +23,8 @@
         sql = String.Format("UPDATE Mas_AccConfig SET ConfigValue='{2}' WHERE ConfigCode='{0}' And ConfigKey='{1}'", cfgCode, cfgKey, cfgValue)
         msg = obj.ExecuteSQL(sql)
 
-        Response.SetStatus(HttpStatusCode.ResetContent)
+        Response.StatusCode = 200
+        Response.SuppressFormsAuthenticationRedirect = True
     End If
     sql = "Select * FROM Mas_AccConfig WHERE ConfigCode='PROFILE_CONFIG'"
     Dim dt = obj.GetDataFromSQL(sql)

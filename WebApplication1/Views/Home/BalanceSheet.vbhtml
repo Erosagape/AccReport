@@ -73,7 +73,6 @@ End If
                 <th rowspan="2"> Acc.Code</th>
                 <th rowspan="2"> Acc.Name</th>
                 <th colspan="2"> @(Convert.ToInt32(yy) - 1)</th>
-                <th colspan="2"> Change</th>
                 <th colspan="2"> @(Convert.ToInt32(yy))</th>
             </tr>
         Else
@@ -81,13 +80,10 @@ End If
                 <th rowspan="2">เลขที่บัญชี</th>
                 <th rowspan="2">ชื่อบัญชี</th>
                 <th colspan="2">@(Convert.ToInt32(yy) + 542)</th>
-                <th colspan="2">เปลี่ยนแปลง</th>
                 <th colspan="2">@(Convert.ToInt32(yy) + 543)</th>
             </tr>
         End If
         <tr>
-            <th>Debit</th>
-            <th>Credit</th>
             <th>Debit</th>
             <th>Credit</th>
             <th>Debit</th>
@@ -98,8 +94,6 @@ End If
         @For Each dr In dt.Rows
             sumDebit1 += obj.GetDouble(dr("LastDr"))
             sumCredit1 += obj.GetDouble(dr("LastCr"))
-            sumDebit2 += obj.GetDouble(dr("ChangeDr"))
-            sumCredit2 += obj.GetDouble(dr("ChangeCr"))
             sumDebit3 += obj.GetDouble(dr("CurrentDr"))
             sumCredit3 += obj.GetDouble(dr("CurrentCr"))
             @<tr>
@@ -109,8 +103,6 @@ End If
                 <td>@dr("AccName").ToString()</td>
                 <td style="text-align:right;">@Convert.ToDouble(dr("LastDr")).ToString("#,##0.00")</td>
                 <td style="text-align:right;">@Convert.ToDouble(dr("LastCr")).ToString("#,##0.00")</td>
-                <td style="text-align:right;">@Convert.ToDouble(dr("ChangeDr")).ToString("#,##0.00")</td>
-                <td style="text-align:right;">@Convert.ToDouble(dr("ChangeCr")).ToString("#,##0.00")</td>
                 <td style="text-align:right;">@Convert.ToDouble(dr("CurrentDr")).ToString("#,##0.00")</td>
                 <td style="text-align:right;">@Convert.ToDouble(dr("CurrentCr")).ToString("#,##0.00")</td>
             </tr>
@@ -121,8 +113,6 @@ End If
             <td colspan="2">TOTAL</td>
             <td style="text-align:right;">@sumDebit1.ToString("#,##0.00")</td>
             <td style="text-align:right;">@sumCredit1.ToString("#,##0.00")</td>
-            <td style="text-align:right;">@sumDebit2.ToString("#,##0.00")</td>
-            <td style="text-align:right;">@sumCredit2.ToString("#,##0.00")</td>
             <td style="text-align:right;">@sumDebit3.ToString("#,##0.00")</td>
             <td style="text-align:right;">@sumCredit3.ToString("#,##0.00")</td>
         </tr>

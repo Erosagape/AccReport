@@ -248,19 +248,19 @@ End Code
             </optgroup>
             <optgroup label="Payment Report">
                 <option value="PC">Payment Report</option>
-                <option value="PV">P/V Report</option>
+                <option value="JournalPV">P/V Report</option>
             </optgroup>
             <optgroup label="Payables Report">
                 <option value="AgingAP">A/P Aging</option>
-                <option value="AP">A/P Report</option>
+                <option value="JournalPC">A/P Report</option>
             </optgroup>
             <optgroup label="Receive Report">
                 <option value="RC">Receipt Report</option>
-                <option value="RV">R/V Report</option>
+                <option value="JournalRV">R/V Report</option>
             </optgroup>
             <optgroup label="Receivables Report">
                 <option value="AgingAR">A/R Aging</option>
-                <option value="AR">A/R Report</option>
+                <option value="JournalRC">A/R Report</option>
             </optgroup>
             <optgroup label="Journal Report">
                 <option value="Journal">Journal Report</option>

@@ -27,13 +27,11 @@
     Dim accCode As String = ""
     If Not Request.QueryString("Code") Is Nothing Then
         accCode = Request.QueryString("Code")
+    Else
+        accCode = "1113-01"
     End If
     Dim sql = String.Format("
 DECLARE @@accCode varchar(20)='{1}'
-IF @@accCode=''
-BEGIN
-SET @@accCode=dbo.GetAccConfig('AP_CONFIG','CashOut')
-END
 EXEC dbo.GetCashFlow {0},@@accCode
 ", period, accCode)
 
@@ -51,10 +49,6 @@ EXEC dbo.GetCashFlow {0},@@accCode
     If dateCheck = 2 Then
         sql = String.Format("
 DECLARE @@accCode varchar(20)='{2}'
-IF @@accCode=''
-BEGIN
-SET @@accCode=dbo.GetAccConfig('AP_CONFIG','CashOut')
-END
 EXEC dbo.GetCashFlow_ByDate '{0}','{1}',@@accCode", dateFrom, dateTo, accCode)
     End If
     Dim dt As New Data.DataTable()
@@ -72,90 +66,94 @@ End If
     Dim dateGroup As String = ""
     Dim sumCashIn As Double = 0
     Dim sumCashOut As Double = 0
-    @<b>รหัสบัญชี : </b> @<a href="#" onclick="ChangeAccCode()">@dt.Rows(0)("AccCode") </a>
+    If accCode <> "" Then
+        @<b>รหัสบัญชี : </b> @<a href="#" onclick="ChangeAccCode()">@dt.Rows(0)("AccCode") </a>
+    Else
+        @<b>รหัสบัญชี : </b> @<a href="#" onclick="ChangeAccCode()">ทุกรหัส</a>
+    End If
     @<table border="1" style="border-style:solid;border-collapse:collapse;">
-    <thead>
-        <tr>
-            <th>
-                รายการเคลื่อนไหว
-            </th>
-            <th>เงินสดรับ</th>
-            <th>เงินสดจ่าย</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>
+                    รายการเคลื่อนไหว
+                </th>
+                <th>เงินสดรับ</th>
+                <th>เงินสดจ่าย</th>
+            </tr>
 
-    </thead>
-    @For Each dr As Data.DataRow In dt.Rows
-        currentRow += 1
-        If dateCheck = 2 And Not (dr("lvl") = 0 Or dr("lvl") >= 2) Then
-            Dim chk As String = dr("AccDesc").ToString()
-            If chk.Length > 10 Then
-                If dateGroup <> chk.Substring(0, 10) Then
-                    If dateGroup <> "" Then
-                        @<tr style="font-weight: bold;background-color:lightgreen;">
-                            <td style="text-align:left;">
-                                <b>@dateGroup</b>
-                            </td>
-                            <td style="text-align:right">
-                                @sumCashIn.ToString("#,##0.00")
-                            </td>
-                            <td style="text-align:right">
-                                @sumCashOut.ToString("#,##0.00")
-                            </td>
-                        </tr>
+        </thead>
+        @For Each dr As Data.DataRow In dt.Rows
+            currentRow += 1
+            If dateCheck = 2 And Not (dr("lvl") = 0 Or dr("lvl") >= 2) Then
+                Dim chk As String = dr("AccDesc").ToString()
+                If chk.Length > 10 Then
+                    If dateGroup <> chk.Substring(0, 10) Then
+                        If dateGroup <> "" Then
+                            @<tr style="font-weight: bold;background-color:lightgreen;">
+                                <td style="text-align:left;">
+                                    <b>@dateGroup</b>
+                                </td>
+                                <td style="text-align:right">
+                                    @sumCashIn.ToString("#,##0.00")
+                                </td>
+                                <td style="text-align:right">
+                                    @sumCashOut.ToString("#,##0.00")
+                                </td>
+                            </tr>
+                        End If
+                        dateGroup = chk.Substring(0, 10)
+                        sumCashIn = 0
+                        sumCashOut = 0
                     End If
-                    dateGroup = chk.Substring(0, 10)
-                    sumCashIn = 0
-                    sumCashOut = 0
                 End If
+                sumCashIn += obj.GetDouble(dr("CashIn"))
+                sumCashOut += obj.GetDouble(dr("CashOut"))
             End If
-            sumCashIn += obj.GetDouble(dr("CashIn"))
-            sumCashOut += obj.GetDouble(dr("CashOut"))
-        End If
-        @<tr>
-            <td>
-                @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
-                    @<b>@dr("AccDesc")</b>
-                    If dr("CashIn") > 0 Then
-                        @<b><u>+</u></b>
+            @<tr>
+                <td>
+                    @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
+                        @<b>@dr("AccDesc")</b>
+                        If dr("CashIn") > 0 Then
+                            @<b><u>+</u></b>
+                        Else
+                            @<b><u>-</u></b>
+                        End If
                     Else
-                        @<b><u>-</u></b>
+                        @<span>@dr("AccDesc")</span>
                     End If
-                Else
-                    @<span>@dr("AccDesc")</span>
+                </td>
+                <td style="text-align:right;">
+                    @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
+                        @<b>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</b>
+                    Else
+                        @<span>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</span>
+                    End If
+                </td>
+                <td style="text-align:right;">
+                    @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
+                        @<b>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</b>
+                    Else
+                        @<span>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</span>
+                    End If
+                </td>
+            </tr>
+            @If dateCheck = 2 And currentRow = totalRows - 3 Then
+                If dateGroup <> "" Then
+                    @<tr style="font-weight: bold;background-color:lightgreen;">
+                        <td style="text-align:left;">
+                            <b>@dateGroup</b>
+                        </td>
+                        <td style="text-align:right">
+                            @sumCashIn.ToString("#,##0.00")
+                        </td>
+                        <td style="text-align:right">
+                            @sumCashOut.ToString("#,##0.00")
+                        </td>
+                    </tr>
                 End If
-            </td>
-            <td style="text-align:right;">
-                @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
-                    @<b>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</b>
-                Else
-                    @<span>@obj.GetDouble(dr("CashIn")).ToString("#,##0.00")</span>
-                End If
-            </td>
-            <td style="text-align:right;">
-                @If dr("lvl") = 0 Or dr("lvl") >= 2 Then
-                    @<b>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</b>
-                Else
-                    @<span>@obj.GetDouble(dr("CashOut")).ToString("#,##0.00")</span>
-                End If
-            </td>
-        </tr>
-        @If dateCheck = 2 And currentRow = totalRows - 3 Then
-            If dateGroup <> "" Then
-                @<tr style="font-weight: bold;background-color:lightgreen;">
-                    <td style="text-align:left;">
-                        <b>@dateGroup</b>
-                    </td>
-                    <td style="text-align:right">
-                        @sumCashIn.ToString("#,##0.00")
-                    </td>
-                    <td style="text-align:right">
-                        @sumCashOut.ToString("#,##0.00")
-                    </td>
-                </tr>
             End If
-        End If
-    Next
-</table>
+        Next
+    </table>
 End If
 <script type="text/javascript">
     function ChangeAccCode() {
