@@ -56,7 +56,7 @@
     Dim sumPLDebit As Double = 0
     Dim sumPLCredit As Double = 0
 End Code
-<h3 onclick="ShowCliteria()">งบทดลอง</h3>
+<h3 onclick="ShowCliteria()"><u>งบทดลอง</u></h3>
 <b>เริ่มต้น @dateStart</b>
 <b>ตั้งแต่วันที่ @dateFrom ถึงวันที่ @dateTo</b>
 <b>ตั้งแต่รหัส @fromCode ถึง @toCode</b>

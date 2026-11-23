@@ -63,14 +63,14 @@ order by Period DESC
         End If
     End If
     If accu <> "" Then
-        @<h2>Monthly Balance (@accu)</h2>
+        @<h2>กระดาษทำการ (@accu)</h2>
     Else
-        @<h2>Monthly Balance (Draft)</h2>
+        @<h2>กระดาษทำการ</h2>
     End If
 End Code
 @If dt.Rows.Count > 0 Then
     @<div class="container">
-        Select Year:
+        ปี:
         <select id="cboPeriod" onchange="SetPeriod(this.value)">
             @For each dr In dt.Rows
                 If dr("Period").ToString().Equals(period) Then
@@ -80,7 +80,7 @@ End Code
                 End If
             Next
         </select>
-        Select Month :
+        เดือน :
         <select id="cboMonth" onchange="SetMonthPeriod(this.value)">
             <option value="">ALL</option>
             <option value="1" @IIf(mm = "1", "selected", "")>1</option>
@@ -96,7 +96,7 @@ End Code
             <option value="11" @IIf(mm = "11", "selected", "")>11</option>
             <option value="12" @IIf(mm = "12", "selected", "")>12</option>
         </select>
-        Filter JV :
+        กรองเอกสาร JV :
         <select id="cboFilter" onchange="SetFilter(this.value)">
             <option value="">ALL</option>
             <option value="PV-A" @IIf(filter = "PV-A", "selected", "")>PV-A / จ่ายเงินตามใบเบิก</option>
@@ -114,9 +114,9 @@ End Code
             <option value="PV-CC" @IIf(filter = "PV-CC", "selected", "")>PV-C / จ่ายเงินคืนตามใบเคลียร์</option>
             <option value="RV-CC" @IIf(filter = "RV-CC", "selected", "")>RV-C / รับคืนเงินจากใบเคลียร์</option>
         </select>
-        <a href="?Form=TrialBalance&LANG=@lang&SRC=@dbSource&DB=@dbName&Period=@period&month=@DateTime.Now.Month()"> Trial Balance</a>
+        <a href="?Form=TrialBalance&LANG=@lang&SRC=@dbSource&DB=@dbName&Period=@period&month=@DateTime.Now.Month()"> ดูงบทดลอง</a>
         @Code
-            @<input type="button" value="Switch to @nextpage" onclick="SetAccu(@type,'@period')" />
+            @<input type="button" value="ดูแบบ @nextpage" onclick="SetAccu(@type,'@period')" />
             'sql = String.Format("SELECT * FROM vSum_BalanceMonthly" & accu & " WHERE Period='{0}' and (balDr+Balcr+dr_jan+cr_jan+dr_feb+cr_feb+dr_mar+cr_mar+dr_jun+cr_jun+dr_jul+cr_jul+dr_aug+cr_aug+dr_sep+cr_sep+dr_oct+cr_oct+dr_nov+cr_nov+dr_dec+cr_dec)>0 ORDER BY AccCode", period)
             sql = String.Format("EXEC dbo.GetWorkSheet_ByHeader_V2 {0},'{1}',{2}", period, filter, type)
             dt = obj.GetDataFromSQL(sql)
@@ -139,108 +139,108 @@ End Code
                 @<table id="myTable" border="1" class="table DataTable" style="border-collapse:collapse;">
                     <thead>
                         <tr>
-                            <th rowspan="2">Acc Code</th>
-                            <th rowspan="2">Acc Name</th>
+                            <th rowspan="2">รหัส</th>
+                            <th rowspan="2">ชื่อบัญชี</th>
                             @If accu <> "" And mm = "" Then
-                                @<th colspan="2">Balance</th>
+                                @<th colspan="2">ยกมา</th>
                             End If
                             @If mm = "" Or mm = "1" Then
-                                @<th colspan="2"> Jan</th>
+                                @<th colspan="2">ม.ค.</th>
                             End If
                             @If mm = "" Or mm = "2" Then
-                                @<th colspan="2"> Feb</th>
+                                @<th colspan="2"> ก.พ.</th>
                             End If
                             @If mm = "" Or mm = "3" Then
-                                @<th colspan="2"> Mar</th>
+                                @<th colspan="2"> มี.ค.</th>
                             End If
                             @If mm = "" Or mm = "4" Then
-                                @<th colspan="2"> Apr</th>
+                                @<th colspan="2"> เม.ย.</th>
                             End If
                             @If mm = "" Or mm = "5" Then
-                                @<th colspan="2"> May</th>
+                                @<th colspan="2"> พ.ค.</th>
                             End If
                             @If mm = "" Or mm = "6" Then
-                                @<th colspan="2"> Jun</th>
+                                @<th colspan="2"> มิ.ย.</th>
                             End If
                             @If mm = "" Or mm = "7" Then
-                                @<th colspan="2"> Jul</th>
+                                @<th colspan="2"> ก.ค.</th>
                             End If
                             @If mm = "" Or mm = "8" Then
-                                @<th colspan="2"> Aug</th>
+                                @<th colspan="2"> ส.ค.</th>
                             End If
                             @If mm = "" Or mm = "9" Then
-                                @<th colspan="2"> Sep</th>
+                                @<th colspan="2"> ก.ย.</th>
                             End If
                             @If mm = "" Or mm = "10" Then
-                                @<th colspan="2"> Oct</th>
+                                @<th colspan="2"> ต.ค.</th>
                             End If
                             @If mm = "" Or mm = "11" Then
-                                @<th colspan="2"> Nov</th>
+                                @<th colspan="2"> พ.ย.</th>
                             End If
                             @If mm = "" Or mm = "12" Then
-                                @<th colspan="2"> Dec</th>
+                                @<th colspan="2"> ธ.ค.</th>
                             End If
                             @If accu = "" And mm = "" Then
-                                @<th colspan="2"> Total</th>
+                                @<th colspan="2"> ยกไป</th>
                             Else
                             End If
                         </tr>
                         <tr>
                             @If accu <> "" And mm = "" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "1" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "2" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "3" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "4" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "5" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "6" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "7" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "8" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "9" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "10" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "11" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If mm = "" Or mm = "12" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             End If
                             @If accu = "" And mm = "" Then
-                                @<th>Debit</th>
-                                @<th>Credit</th>
+                                @<th>Dr.</th>
+                                @<th>Cr.</th>
                             Else
                             End If
                         </tr>
@@ -374,7 +374,7 @@ End Code
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2"> Income / Expense</td>
+                            <td colspan="2"> รวมรายได้/ค่าใช้จ่าย</td>
                             @If accu <> "" And mm = "" Then
                                 @<td style="text-align:right;">@bal(2).ToString("#,##0.00")</td>
                                 @<td style="text-align:right;">@bal(3).ToString("#,##0.00")</td>
@@ -433,7 +433,7 @@ End Code
                             End If
                         </tr>
                         <tr>
-                            <td colspan="2"> P/L</td>
+                            <td colspan="2"> กำไร/ขาดทุน</td>
                             @If accu <> "" And mm = "" Then
                                 If bal(3) > bal(2) Then
                                     tmp = bal(3) - bal(2)
@@ -590,7 +590,7 @@ End Code
                             End If
                         </tr>
                         <tr>
-                            <td colspan="2"> Total Balance</td>
+                            <td colspan="2"> ยอดรวม</td>
                             @If accu <> "" And mm = "" Then
                                 @<td style="text-align:right;">@bal(0).ToString("#,##0.00")</td>
                                 @<td style="text-align:right;">@bal(1).ToString("#,##0.00")</td>

@@ -81,9 +81,10 @@ Else
     End If
 End If
 <div id="dvMonth" style="display:none;">
+    Year : <input type="number" id="txtPeriod" value="@yy" />
     Select Month :
     <select id="cboMonth" onchange="SetMonthPeriod(this.value)">
-        <option value="">ALL</option>
+        <option value="0">ALL</option>
         <option value="1" @IIf(mm = "1", "selected", "")>1</option>
         <option value="2" @IIf(mm = "2", "selected", "")>2</option>
         <option value="3" @IIf(mm = "3", "selected", "")>3</option>
@@ -144,7 +145,8 @@ End If
         document.getElementById("dvMonth").style.display = "inline";
     }
     function SetMonthPeriod(m) {
-        window.location.href = "?Form=ProfitLoss&SRC=@dbSource&DB=@dbName&Period=@yy&Month="+m+"&LANG=@lang";
+        let period = document.getElementById('txtPeriod').value;
+        window.location.href = "?Form=ProfitLoss&SRC=@dbSource&DB=@dbName&Period="+period+"&Month="+m+"&LANG=@lang";
     }
     function PrintGL(accCode) {
         window.location.href = "?Form=GeneralLedger&SRC=@dbSource&DB=@dbName&Code=" + accCode + "&DateFrom=@dateFrom&DateTo=@dateTo";

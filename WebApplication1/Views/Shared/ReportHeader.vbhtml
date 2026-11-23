@@ -52,7 +52,7 @@ End Code
 <div class="text-left">
     <div style="display:flex;">
         <div style="padding: 10px 10px 10px 10px;flex:10%">
-            <img src="~/@logoFileName" style="width:150px;" />
+            <img src="~/@logoFileName" style="width:150px;" onclick="BackToMainPage()" />
         </div>
         <div style="padding :5px;flex:90%">
             <b style="font-size:14px">@companyName</b>
@@ -65,5 +65,9 @@ End Code
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    function BackToMainPage() {
+        window.location.href = '@Url.Content("~")?Form=Index&DB=@dbName&SRC=@dbSource';
+    }
+</script>
 

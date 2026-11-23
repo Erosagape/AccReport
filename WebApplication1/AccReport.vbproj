@@ -380,6 +380,7 @@
     <Content Include="Views\Home\TransferJob_TH _v1.vbhtml" />
     <Content Include="Views\Home\WHTaxCreate.vbhtml" />
     <Content Include="Views\Form\PayrollSlip.vbhtml" />
+    <Content Include="Views\Home\TrialBalance_V2.vbhtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

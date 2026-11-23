@@ -56,12 +56,12 @@
     End Select
 End Code
 @If lang = "EN" Then
-    @<a href="#" onclick="SwitchMode()"><h2>Balance Sheet (@modeString)</h2></a>
+    @<a href="#" onclick="SwitchMode()"><h2><u>Balance Sheet (@modeString)</u></h2></a>
     @If yy <> "" Then
         @<b>Fiscal Year @(Convert.ToInt32(yy))</b>
     End If
 Else
-    @<a href="#" onclick="SwitchMode()"><h2>งบแสดงสถานะทางการเงิน (@modeString)</h2></a>
+    @<a href="#" onclick="SwitchMode()"><h2><u>งบแสดงสถานะทางการเงิน (@modeString)</u></h2></a>
     @If yy <> "" Then
         @<b>ประจำปี @(Convert.ToInt32(yy) + 543)</b>
     End If

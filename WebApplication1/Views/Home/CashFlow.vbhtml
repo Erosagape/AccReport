@@ -54,7 +54,7 @@ EXEC dbo.GetCashFlow_ByDate '{0}','{1}',@@accCode", dateFrom, dateTo, accCode)
     Dim dt As New Data.DataTable()
     dt = obj.GetDataFromSQL(sql)
 End Code
-<h3>งบกระแสเงินสด แบบทางตรง</h3>
+<h3><u onclick="ChangeAccCode()">งบกระแสเงินสด แบบทางตรง</u></h3>
 @If dateCheck = 2 Then
     @<b>ระหว่างวันที่ :</b> @dateFrom @<b>ถึงวันที่ : </b> @dateTo
 Else
@@ -67,9 +67,9 @@ End If
     Dim sumCashIn As Double = 0
     Dim sumCashOut As Double = 0
     If accCode <> "" Then
-        @<b>รหัสบัญชี : </b> @<a href="#" onclick="ChangeAccCode()">@dt.Rows(0)("AccCode") </a>
+        @<b>รหัสบัญชี : </b> @<a href="#">@dt.Rows(0)("AccCode") </a>
     Else
-        @<b>รหัสบัญชี : </b> @<a href="#" onclick="ChangeAccCode()">ทุกรหัส</a>
+        @<b>รหัสบัญชี : </b> @<a href="#">ทุกรหัส</a>
     End If
     @<table border="1" style="border-style:solid;border-collapse:collapse;">
         <thead>
